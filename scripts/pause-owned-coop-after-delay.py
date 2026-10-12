@@ -16,8 +16,8 @@ def main():
         raise SystemExit('Usage: pause-owned-coop-after-delay.py TRIAL_JSON SECONDS')
     filename = sys.argv[1]
     seconds = int(sys.argv[2])
-    if not 1 <= seconds <= 60:
-        raise SystemExit('Gameplay interval must be between 1 and 60 seconds')
+    if not 1 <= seconds <= 180:
+        raise SystemExit('Gameplay interval must be between 1 and 180 seconds')
     trial = json.loads(Path(filename).read_text())
     if time.time() + seconds + 30 >= trial['saveByUnix']:
         raise SystemExit('Insufficient save margin; refusing to start timer')
