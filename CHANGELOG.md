@@ -1,5 +1,15 @@
 # Changelog
 
+## Hosted browser startup
+
+- Deploy the verified static engine/frontend to Vercel and attach
+  `majesty.boland.co`; Cloudflare DNS remains the domain activation step.
+- Automatically download/cache the asset bundle and enter the native game on
+  the first visit; reuse the cached copy on returning visits. `/?setup=1` keeps file management accessible.
+- Supply isolation headers and serve a compressed, checksum-verified WASM
+  artifact. Game assets are served from Vercel Blob; player saves remain local.
+
+
 ## In development: Wayfinder browser content edition
 
 - Add reproducible packaging for the gameplay-qualified Wayfinder and Trail Lodge

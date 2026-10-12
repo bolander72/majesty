@@ -33,6 +33,41 @@ content milestone. Full-match and separate-network verification remain open
 work, to be revisited when a content or network change requires it. Preserve
 existing campaign progress and checkpoints while developing new content.
 
+## Hosted game
+
+The static browser engine is deployed at <https://majesty-tau.vercel.app>.
+`majesty.boland.co` is attached to the Vercel project and awaits its Cloudflare
+DNS record: CNAME `majesty` → `7f0010370b549dbf.vercel-dns-017.com`, DNS only.
+The root loads Majesty’s native menu automatically. A new browser downloads
+and verifies the hosted asset bundle, caches it locally, then starts the engine.
+There is no file picker or welcome screen. Use `/?setup=1` only for optional
+file/save management outside the normal game entry.
+
+Imports and saves belong to their website origin. A localhost collection is
+separate from the hosted domain; use the player backup page to carry existing
+saves across. No login is required. The static deployment contains the engine and frontend;
+the classic asset bundle is delivered separately through Vercel Blob. Player
+saves stay local. Original assets and personal saves remain excluded from Git.
+The Wayfinder entry requires its separately prepared content import for now.
+The multiplayer relay still requires its own production hosting/configuration;
+this static deployment does not establish public co-op readiness.
+
+Prepare a static deployment from a pinned local frontend receipt:
+
+```sh
+python3 scripts/prepare-vercel-site.py \
+  --source-package upstream/majesty-recomp/build/frontend-wayfinder396/site-edition.json \
+  --automatic-assets output/hosting403-automatic-assets.json \
+  --output output/hosting403
+```
+
+Choose a new output directory for each preparation. The builder verifies every
+source file, compresses WASM with a verified roundtrip, supplies COOP/COEP headers,
+and creates Vercel Build Output v3. Link that output directory explicitly to the
+`majesty` project, verify its owner/project, then deploy with
+`vercel deploy --prebuilt --prod`. Engine artifacts are local build inputs;
+pushing this source repository alone does not rebuild or redeploy the engine.
+
 ## Play locally
 
 ```sh
