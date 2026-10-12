@@ -15,6 +15,7 @@ if (new URLSearchParams(location.search).get('setup') !== '1') {
       await ensureAutomaticAssets(id, {
         status: id => window.recompLauncher.status(id),
         importZip: (id, file) => window.recompLauncher.importZip(id, file),
+        importFiles: (id, files) => window.recompLauncher.importFiles(id, files),
         signal: controller.signal,
         progress: (bytes, total) => { bar.hidden = false; bar.max = total; bar.value = bytes; },
       });

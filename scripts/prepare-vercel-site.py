@@ -59,6 +59,7 @@ def prepare(receipt, output, automatic_assets=None):
     shutil.copyfile(ROOT / 'web/hosting/autoload.mjs', static / 'hosting/autoload.mjs')
     shutil.copyfile(ROOT / 'web/hosting/boot.mjs', static / 'hosting/boot.mjs')
     shutil.copyfile(ROOT / 'web/hosting/automatic-assets.mjs', static / 'hosting/automatic-assets.mjs')
+    shutil.copyfile(ROOT / 'web/hosting/derived-assets.mjs', static / 'hosting/derived-assets.mjs')
     if automatic_assets:
         assets = json.loads(automatic_assets.read_text())
         if assets.get('format') != 'majesty-automatic-assets-v1':

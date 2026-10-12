@@ -1,4 +1,5 @@
 import {Sha256} from '../world/sha256.mjs';
+import {derivedDescriptor, collectGameFiles, buildDerivedFiles} from './derived-assets.mjs';
 
 export function assetDescriptor(value, id) {
   const record = value?.games?.[id];
@@ -46,11 +47,26 @@ export async function downloadAssets(record, folder, {fetchFile = fetch, signal,
 }
 
 export async function ensureAutomaticAssets(id, {
-  status, importZip, signal, progress, storage = navigator.storage, locks = navigator.locks,
+  status, importZip, importFiles, signal, progress, storage = navigator.storage, locks = navigator.locks,
   fetchFile = fetch,
 }) {
   if ((await status(id))?.status?.state === 'ready') return;
   if (!locks?.request) throw Error('This browser cannot prepare the game files.');
+  if (id === 'majesty-wayfinder') {
+    const response = await fetchFile(new URL('./automatic-assets.json', import.meta.url), {signal});
+    if (!response.ok) throw Error('Automatic content is unavailable.');
+    const recipe = derivedDescriptor(await response.json(), id);
+    if (typeof importFiles !== 'function') throw Error('Content preparation is unavailable.');
+    await ensureAutomaticAssets(recipe.baseId, {status, importZip, importFiles, signal, progress, storage, locks, fetchFile});
+    return locks.request('majesty-automatic-game-assets', {mode: 'exclusive', signal}, async () => {
+      if ((await status(id))?.status?.state === 'ready') return;
+      let game = await storage.getDirectory();
+      for (const name of [recipe.baseId, 'game']) game = await game.getDirectoryHandle(name);
+      const files = await buildDerivedFiles(await collectGameFiles(game), recipe, {fetchFile, signal});
+      await importFiles(id, files);
+      if ((await status(id))?.status?.state !== 'ready') throw Error('Content preparation did not finish.');
+    });
+  }
   return locks.request('majesty-automatic-game-assets', {mode: 'exclusive', signal}, async () => {
     if ((await status(id))?.status?.state === 'ready') return;
     const response = await fetchFile(new URL('./automatic-assets.json', import.meta.url), {signal});
