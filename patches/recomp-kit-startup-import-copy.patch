@@ -1,0 +1,67 @@
+--- a/runtime/imports.cpp
++++ b/runtime/imports.cpp
+@@ -436,7 +436,11 @@
+     // A guest exception can longjmp across fn(c). Keep no C++ owner live
+     // across that call, and do not retain a pointer into the movable vector.
+     char desc[512];
+-    snprintf(desc, sizeof desc, "%s", tramps()[idx].desc.c_str());
++    // Preserve snprintf's truncation without invoking the formatting machinery
++    // on every clock/file/render import. Only this stack copy survives fn(c).
++    const size_t desc_length = std::min(tramps()[idx].desc.size(), sizeof desc - 1);
++    memcpy(desc, tramps()[idx].desc.data(), desc_length);
++    desc[desc_length] = '\0';
+     ++tramps()[idx].calls;
+     ++g_import_calls;
+ 
+--- a/runtime/tests/runtime_tests.cpp
++++ b/runtime/tests/runtime_tests.cpp
+@@ -6819,6 +6819,41 @@
+     remove_tree(dir);
+ }
+ 
++// Dispatch names must remain terminated and unchanged when the called shim
++// grows the trampoline table. Cover both sides of the 512-byte stack boundary.
++static std::string g_dispatch_enter, g_dispatch_leave;
++static unsigned g_dispatch_allocations = 0;
++static void descriptor_growth_shim(X86 *c) {
++    for (unsigned i = 0; i < 128; ++i) {
++        std::string name = "growth" + std::to_string(g_dispatch_allocations++);
++        imports_alloc_trampoline("descriptor-test.dll", name.c_str(), nullptr, 0);
++    }
++    set_eax(c, 0x12345678);
++}
++static void test_import_descriptor_copy() {
++    section("import descriptor stack copy");
++    auto old_call = imports_set_call_observer_get();
++    auto old_return = imports_set_return_observer_get();
++    imports_set_call_observer([](const char *desc, const uint32_t *, uint32_t, uint32_t *) {
++        g_dispatch_enter = desc;
++        return true;
++    });
++    imports_set_return_observer([](const char *desc, uint32_t) { g_dispatch_leave = desc; });
++    X86 *c = loader_context();
++    for (size_t length :
++         {size_t(0), size_t(1), size_t(490), size_t(491), size_t(492), size_t(700)}) {
++        std::string name(length, '%');
++        std::string expected = (std::string("descriptor-test.dll!") + name).substr(0, 511);
++        imports_alloc_trampoline("descriptor-test.dll", name.c_str(), descriptor_growth_shim, 0);
++        check(call_import(c, "descriptor-test.dll", name.c_str(), {}) == 0x12345678,
++              "descriptor shim returns its value for length %zu", length);
++        check(g_dispatch_enter == expected && g_dispatch_leave == expected,
++              "descriptor survives table growth, truncates and terminates for length %zu", length);
++    }
++    imports_set_call_observer(old_call);
++    imports_set_return_observer(old_return);
++}
++
+ static void test_bounded_checkpoint_hash() {
+     section("bounded checkpoint hash");
+     char path[1024];
+@@ -6947,6 +6982,7 @@
+     scratch = 0x0ee00000;
+     test_startup_apis(loader_context());
+     test_import_return_trace();
++    test_import_descriptor_copy();
+     test_modules_and_wide();
+     test_preferred_ui_languages();
+     test_session_notification_service_unavailable();

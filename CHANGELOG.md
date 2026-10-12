@@ -1,5 +1,14 @@
 # Changelog
 
+## Faster home menu
+
+- Cache unchanged solo game-file hashes to avoid rereading the whole installation
+  on every launch. Multiplayer and managed-world checks still hash current bytes.
+- Use native WASM exception/nonlocal-return support and replace per-import
+  formatted call-name copies with bounded string copies.
+- Local returning-player menu startup fell from about 16 seconds to 7.7–8 seconds.
+  First visits still require downloading and verifying game data.
+
 ## Hosted browser startup
 
 - Deploy the verified static engine/frontend to Vercel and attach

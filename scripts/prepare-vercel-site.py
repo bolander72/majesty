@@ -24,6 +24,29 @@ def sha(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def fast_content_hashing(html):
+    start = html.index('  // Stream compatibility hashing off the UI thread; preserve the exact digest.')
+    end = html.index('  const digest = async values =>', start)
+    if html[start:end].count('await contentHasher.hash(file)') != 1:
+        raise ValueError('Review the compatibility hashing template')
+    replacement = '''  const {cachedFileHashes} = await import("../hosting/content-cache.mjs");
+  const fresh = multiplayerProfile !== null || frontierProfilePath !== null ||
+    prepareHeroRestore !== null || rules.some(([key]) => key !== "RECOMP_RULE_INVENTORY_COMPAT");
+  const hashes = await cachedFileHashes(files, cacheKey, {signal, fresh});
+  for (const value of hashes) entries.push(value);
+  signal?.throwIfAborted();
+'''
+    html = html[:start] + replacement + html[end:]
+    old = 'async function networkManifest(dir, game, signal) {'
+    if html.count(old) != 1:
+        raise ValueError('Review the content identity signature')
+    html = html.replace(old, 'async function networkManifest(dir, game, signal, cacheKey) {', 1)
+    old = 'const contentIdentity = await networkManifest(dir, game, signal);'
+    if html.count(old) != 1:
+        raise ValueError('Review content edition startup')
+    return html.replace(old, 'const contentIdentity = await networkManifest(dir, game, signal, dataId);', 1)
+
+
 def prepare(receipt, output, automatic_assets=None):
     if output.exists():
         raise ValueError('Preserve existing deployments; choose a new output directory')
@@ -60,6 +83,7 @@ def prepare(receipt, output, automatic_assets=None):
     shutil.copyfile(ROOT / 'web/hosting/boot.mjs', static / 'hosting/boot.mjs')
     shutil.copyfile(ROOT / 'web/hosting/automatic-assets.mjs', static / 'hosting/automatic-assets.mjs')
     shutil.copyfile(ROOT / 'web/hosting/derived-assets.mjs', static / 'hosting/derived-assets.mjs')
+    shutil.copyfile(ROOT / 'web/hosting/content-cache.mjs', static / 'hosting/content-cache.mjs')
     if automatic_assets:
         assets = json.loads(automatic_assets.read_text())
         if assets.get('format') != 'majesty-automatic-assets-v1':
@@ -92,7 +116,7 @@ def prepare(receipt, output, automatic_assets=None):
     html = html.replace('function rememberLog(t) {', 'function rememberLog(t) {\n'
                         '  if (t === "[player] menu ready") requestAnimationFrame(() =>\n'
                         '    requestAnimationFrame(() => { document.body.dataset.gameReady = "true"; }));', 1)
-    player.write_text(html)
+    player.write_text(fast_content_hashing(html))
     compressed = static / (WASM + '.br')
     script = '''const fs=require('fs'),z=require('zlib'),c=require('crypto');
 const input=fs.readFileSync(process.argv[1]);
