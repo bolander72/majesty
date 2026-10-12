@@ -6,16 +6,21 @@ the existing owned-session policy; this helper cannot create a browser.
 """
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
+from urllib.parse import parse_qs, urlsplit
 
 
 def main():
-    if len(sys.argv) != 3:
-        raise SystemExit('Usage: pause-owned-coop-after-delay.py TRIAL_JSON SECONDS')
+    if len(sys.argv) not in (3, 4):
+        raise SystemExit('Usage: pause-owned-coop-after-delay.py TRIAL_JSON SECONDS [HOST_TAB]')
     filename = sys.argv[1]
     seconds = int(sys.argv[2])
+    host_tab = sys.argv[3] if len(sys.argv) == 4 else None
+    if host_tab is not None and not re.fullmatch(r't[1-9][0-9]*', host_tab):
+        raise SystemExit('HOST_TAB must be an owned tab ID such as t3')
     if not 1 <= seconds <= 180:
         raise SystemExit('Gameplay interval must be between 1 and 180 seconds')
     trial = json.loads(Path(filename).read_text())
@@ -29,10 +34,18 @@ def main():
             raise SystemExit(result.stderr.strip() or 'Owned browser command rejected')
         return result.stdout
 
+    def select_host():
+        if host_tab:
+            browser('tab', host_tab)
+        if parse_qs(urlsplit(browser('get', 'url').strip()).query).get('role') != ['host']:
+            raise SystemExit('Pause requires the host tab; refusing a guest save request')
+
+    select_host()
     if 'Kingdom 1:' not in browser('get', 'text', 'body'):
         raise SystemExit('Native match is not live; refusing to start timer')
     print('Live match confirmed; fixed pause timer started', flush=True)
     time.sleep(seconds)
+    select_host()
     browser('eval', "document.querySelector('details[aria-label=\"Co-op world\"]').open=true")
     browser('find', 'role', 'button', 'click', '--name', 'Save and pause', '--exact')
     for _ in range(12):
