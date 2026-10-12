@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resume your shared kingdom</title>
+<style>body{margin:0;background:#142321;color:#eee8d0;font:16px/1.6 system-ui}main{max-width:680px;margin:8vh auto;padding:24px}h1{font:36px Georgia,serif}button,a,input{font:inherit}button{padding:12px 18px;background:#d8dba8;border:0;border-radius:4px;color:#172522;cursor:pointer}a{color:#d8dba8}input{box-sizing:border-box;width:100%;padding:10px;background:#203530;color:#eee8d0;border:1px solid #92a18a}section{border-top:1px solid #52665a;margin-top:24px;padding-top:12px}[hidden]{display:none}</style></head>
+<body><main><p>MAJESTY · SHARED WORLDS</p><h1>Resume your shared kingdom</h1>
+<p>The game has closed. Prepare a separate lobby save from the region’s last committed checkpoint, then invite your partner. The campaign waits until both players join and start together.</p>
+<button id="prepare" type="button">Prepare resume file</button><p id="status" role="status">Ready to check this profile’s checkpoint.</p>
+<section id="result" hidden><p id="instructions"></p><p><a id="host">Open game to resume</a></p>
+<label for="invitation">Partner’s resume invitation</label><input id="invitation" readonly><p id="scope"></p></section>
+<p><a href="./">Multiplayer setup</a></p></main><script type="module" src="resume-launcher.mjs"></script></body></html>

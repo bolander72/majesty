@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Isolated real-save backup verification</title>
+<style>body{background:#172522;color:#e5e8d4;font:16px/1.5 system-ui;max-width:1000px;margin:30px auto;padding:16px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#d5d9ac}</style>
+<h1>Isolated real-save backup verification</h1>
+<p>Copies the two owned resume073 test profiles into a private collection, exports and restores their complete backup into a fresh private collection, then verifies the saved bytes and native resume copy. No game engine, WASM, graphics, imported assets or other profiles are launched or changed.</p>
+<button id="run" type="button">Verify real saves through complete backup restore</button>
+<pre id="result" role="status">Ready. The restored collection is retained for future native gameplay qualification.</pre>
+<script type="module">
+import {exportPlayer,restorePlayer,clearBackupDownload} from './backups/storage.mjs';
+import {hashBlob,inspectBundle,validateDatabase} from './backups/bundle.mjs';
+import {prepareResume} from './multiplayer/resume-checkpoint.mjs';
+
+const fixtureName='majesty-native-backup073',profiles=['resume073-host','resume073-guest'];
+const nativePrefix='majesty-native-profile:majesty:';
+const sourcePrefix=fixtureName+':source:',restorePrefix=fixtureName+':restored:';
+function factory(prefix){return {
+  async databases(){return(await indexedDB.databases()).filter(d=>d.name.startsWith(prefix)).map(d=>({...d,name:d.name.slice(prefix.length)}));},
+  open(name,version){return version===undefined?indexedDB.open(prefix+name):indexedDB.open(prefix+name,version);},
+  deleteDatabase(name){return indexedDB.deleteDatabase(prefix+name);}
+};}
+const sourceDB=factory(sourcePrefix),restoredDB=factory(restorePrefix);
+async function directory(root,parts){for(const part of parts)root=await root.getDirectoryHandle(part,{create:true});return root;}
+async function existingFile(root,path){const parts=path.split('/');for(const part of parts.slice(0,-1))root=await root.getDirectoryHandle(part);return(await root.getFileHandle(parts.at(-1))).getFile();}
+async function* files(dir,prefix='',depth=0){
+  if(depth>12)throw Error('Fixture nesting exceeds limit.');
+  for await(const[name,handle]of dir.entries()){
+    if(handle.kind==='directory')yield*files(handle,prefix+name+'/',depth+1);
+    else yield {path:prefix+name,file:await handle.getFile()};
+  }
+}
+async function originalCampaign(name){return new Promise((resolve,reject)=>{
+  const r=indexedDB.open(name);let missing=false;
+  r.onupgradeneeded=()=>{missing=true;r.transaction.abort();};
+  r.onerror=()=>reject(missing?Error('Qualified campaign database missing.'):r.error);
+  r.onblocked=()=>reject(Error('Campaign database busy.'));
+  r.onsuccess=()=>{
+    const db=r.result;
+    if(db.version!==1||db.objectStoreNames.length!==1||!db.objectStoreNames.contains('chapters')){db.close();reject(Error('Unexpected campaign schema.'));return;}
+    const tx=db.transaction('chapters','readonly'),rows=[];
+    const cursor=tx.objectStore('chapters').openCursor();
+    cursor.onsuccess=()=>{const c=cursor.result;if(c){rows.push([c.key,c.value]);c.continue();}};
+    tx.oncomplete=()=>{db.close();resolve(validateDatabase({name,version:1,store:'chapters',rows}));};
+    tx.onabort=()=>{db.close();reject(tx.error||Error('Campaign read aborted.'));};
+  };
+});}
+async function installDatabase(data,storage){return new Promise((resolve,reject)=>{
+  const r=storage.open(data.name,1);let created=false;
+  r.onupgradeneeded=()=>{created=true;r.result.createObjectStore(data.store);};
+  r.onerror=()=>reject(r.error);r.onblocked=()=>reject(Error('Private fixture database busy.'));
+  r.onsuccess=()=>{
+    const db=r.result;if(!created){db.close();reject(Error('Private fixture database already exists. Preserve it.'));return;}
+    const tx=db.transaction(data.store,'readwrite');for(const[key,value]of data.rows)tx.objectStore(data.store).put(value,key);
+    tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>{db.close();reject(tx.error);};
+  };
+});}
+async function sameFiles(root,expected){
+  let count=0,total=0;
+  const actual=new Map();for await(const item of files(await(await root.getDirectoryHandle('majesty')).getDirectoryHandle('profile'))){
+    if(++count>2000)throw Error('Restored file count exceeds budget.');actual.set(item.path,item.file);total+=item.file.size;
+  }
+  if(count!==expected.length)throw Error('Restored native collection count changed.');
+  for(const item of expected){const file=actual.get(item.path);if(!file||file.size!==item.bytes||await hashBlob(file)!==item.sha256)throw Error('Restored native bytes differ.');}
+  return {files:count,bytes:total,allHashesEqual:true};
+}
+document.getElementById('run').onclick=async()=>{
+  const button=document.getElementById('run'),status=document.getElementById('result');button.disabled=true;
+  const proof={format:'majesty-native-backup073-qualification',WASMStarted:false,gameEnginesStarted:0,importedAssetsTouched:false,sourceProfilesPreserved:false,nativeGameplayQualified:false};
+  try{
+    const root=await navigator.storage.getDirectory();
+    try{await root.getDirectoryHandle(fixtureName);throw Error('Isolated fixture already exists. Preserve it.');}catch(e){if(e.name!=='NotFoundError')throw e;}
+    if((await indexedDB.databases()).some(d=>d.name.startsWith(sourcePrefix)||d.name.startsWith(restorePrefix)))throw Error('Isolated fixture databases already exist. Preserve them.');
+    const fixture=await root.getDirectoryHandle(fixtureName,{create:true}),source=await fixture.getDirectoryHandle('source',{create:true}),restored=await fixture.getDirectoryHandle('restored',{create:true});
+    const originalNative=await(await root.getDirectoryHandle('majesty')).getDirectoryHandle('profile');
+    const targetNative=await directory(source,['majesty','profile']),expected=[],databases=[];let total=0;
+    status.textContent='Copying only the two stopped, owned test profiles…';
+    for(const profile of profiles)await navigator.locks.request(nativePrefix+profile,{ifAvailable:true},async lease=>{
+      if(!lease)throw Error('Owned source profile still busy.');
+      const original=await originalNative.getDirectoryHandle(profile),target=await targetNative.getDirectoryHandle(profile,{create:true});
+      for await(const item of files(original)){
+        if(expected.length>=2000||item.file.size>64*1024*1024||(total+=item.file.size)>128*1024*1024)throw Error('Native fixture budget exceeded.');
+        const digest=await hashBlob(item.file),parts=item.path.split('/'),parent=await directory(target,parts.slice(0,-1));
+        const sink=await(await parent.getFileHandle(parts.at(-1),{create:true})).createWritable();
+        try{for(let at=0;at<item.file.size;at+=65536)await sink.write(await item.file.slice(at,at+65536).arrayBuffer());await sink.close();}catch(e){await sink.abort();throw e;}
+        expected.push({path:profile+'/'+item.path,bytes:item.file.size,sha256:digest});
+      }
+      const name='majesty-frontier-campaign-v1-profile-'+profile;
+      await navigator.locks.request(name,{ifAvailable:true},async dbLease=>{
+        if(!dbLease)throw Error('Owned campaign progress still busy.');
+        const data=await originalCampaign(name);
+        if(!data.rows.some(([key,value])=>key===1&&value===true))throw Error('Prior shared Chapter1 completion not persisted.');
+        await installDatabase(data,sourceDB);databases.push(data);
+      });
+    });
+    const atlas=validateDatabase({name:'majesty-native-world-backup073-fixture',version:1,store:'regions',
+      rows:[['camera-v1',{x:512,y:-256}],['2,-1',{version:1,seed:71201,x:2,y:-1,buildings:[{kind:'tower',x:2,y:5}]}]]});
+    await installDatabase(atlas,sourceDB);databases.push(atlas);
+    proof.AtlasMetadataSynthetic=true;proof.source=await sameFiles(source,expected);
+    status.textContent='Exporting the full isolated collection and restoring into its empty destination…';
+    const archive=await exportPlayer({root:source,storage:sourceDB});
+    const checked=await inspectBundle(archive.blob,{retainDatabases:false});
+    proof.archive={bytes:archive.blob.size,sha256:await hashBlob(archive.blob),nativeFiles:checked.nativeCount,databases:checked.databaseCount};
+    await restorePlayer(archive.blob,{root:restored,storage:restoredDB});
+    proof.restored=await sameFiles(restored,expected);
+    const reexport=await exportPlayer({root:restored,storage:restoredDB});
+    const again=await inspectBundle(reexport.blob,{retainDatabases:false});
+    proof.metadata=[];
+    for(const wanted of databases){
+      const item=again.manifest.databases.find(d=>d.name===wanted.name);if(!item)throw Error('Restored metadata database missing.');
+      const actual=await again.readDatabase(item);
+      if(JSON.stringify([...actual.rows].sort(([a],[b])=>String(a).localeCompare(String(b))))!==JSON.stringify([...wanted.rows].sort(([a],[b])=>String(a).localeCompare(String(b)))))throw Error('Restored campaign or Atlas rows differ.');
+      proof.metadata.push({name:wanted.name,rows:actual.rows.length,equal:true});
+    }
+    status.textContent='Checking the restored regional checkpoint and preparing its separate native lobby copy…';
+    const resumed=await prepareResume({root:restored,profile:profiles[0],context:{world:'world-ui071',region:'2_-1',chapter:1}});
+    proof.restoredCheckpoint={label:resumed.label,record:resumed.record};
+    // Recheck every original under its source lease. No original has been written.
+    for(const profile of profiles)await navigator.locks.request(nativePrefix+profile,{ifAvailable:true},async lease=>{
+      if(!lease)throw Error('Original profile became busy before final preservation check.');
+      for(const item of expected.filter(r=>r.path.startsWith(profile+'/'))){const file=await existingFile(originalNative,item.path);if(file.size!==item.bytes||await hashBlob(file)!==item.sha256)throw Error('Original source changed during qualification.');}
+    });
+    await clearBackupDownload({root:source});await clearBackupDownload({root:restored});
+    proof.cachedArchivesCleared=true;proof.sourceProfilesPreserved=true;proof.completeCollectionRestoreQualified=true;
+    proof.retainedCollection='/'+fixtureName+'/restored/majesty/profile';proof.nativeGameplayQualified=false;
+  }catch(error){proof.completeCollectionRestoreQualified=false;proof.error=error.message;}
+  status.textContent=JSON.stringify(proof,null,2);
+};
+</script></html>

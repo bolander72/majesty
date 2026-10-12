@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export isolated restored backup for native verification</title>
+<style>body{font:16px/1.5 system-ui;max-width:900px;margin:30px auto;padding:16px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
+<h1>Export isolated restored backup for native verification</h1>
+<p>Exports only the retained test collection to the one-use loopback receiver. No game engine, WASM or original profile is launched or changed.</p>
+<button id="export">Export restored collection for native verification</button>
+<pre id="result" role="status">Ready.</pre>
+<script type="module">
+import {exportPlayer,clearBackupDownload} from './backups/storage.mjs';
+import {hashBlob,inspectBundle} from './backups/bundle.mjs';
+function check(value,message){if(!value)throw Error(message);}
+document.getElementById('export').onclick=async()=>{
+  document.getElementById('export').disabled=true;
+  const status=document.getElementById('result');
+  try{
+    const root=await navigator.storage.getDirectory();
+    const restored=await(await root.getDirectoryHandle('majesty-native-backup073')).getDirectoryHandle('restored');
+    const prefix='majesty-native-backup073:restored:';
+    const storage={
+      async databases(){return(await indexedDB.databases()).filter(d=>d.name.startsWith(prefix)).map(d=>({...d,name:d.name.slice(prefix.length)}));},
+      open(name,version){return version===undefined?indexedDB.open(prefix+name):indexedDB.open(prefix+name,version);}
+    };
+    const exported=await exportPlayer({root:restored,storage});
+    const bundle=await inspectBundle(exported.blob,{retainDatabases:false});
+    check(bundle.nativeCount===19&&bundle.databaseCount===3,'Restored test collection differs from verified fixture.');
+    const digest=await hashBlob(exported.blob);
+    const response=await fetch('http://127.0.0.1:8013/restored-backup073',{method:'POST',headers:{'Content-Type':'application/zip','X-Backup-SHA256':digest},body:exported.blob});
+    const receipt=await response.json();
+    check(response.ok&&receipt.sha256===digest&&receipt.bytes===exported.blob.size,'Native qualification upload failed. Cached backup preserved.');
+    await clearBackupDownload({root:restored});
+    status.textContent=JSON.stringify({...receipt,nativeFiles:bundle.nativeCount,databases:bundle.databaseCount,cachedArchiveCleared:true,gameEnginesStarted:0},null,2);
+  }catch(error){status.textContent=JSON.stringify({error:error.message,nativeGameplayQualified:false});}
+};
+</script></html>

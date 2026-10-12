@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""Reload the actual saved receiving family and guard it before the first ordinary update."""
+import argparse,hashlib,json,os,shutil,subprocess,tempfile,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1];GAME=ROOT/'upstream/majesty-recomp'
+def sha(path):
+    h=hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for b in iter(lambda:f.read(4096),b''):h.update(b)
+    return h.hexdigest()
+def idle():
+    rows=subprocess.check_output(['ps','-axo','pid=,comm='],text=True).splitlines()
+    if any(Path(r.split(None,1)[1]).name in ['pop_smoke','clang','clang++','ninja'] for r in rows if len(r.split(None,1))==2):
+        raise RuntimeError('Another native game/build is live')
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('build_report',type=Path);p.add_argument('preparation',type=Path)
+    p.add_argument('--selected-receipt',type=Path,required=True)
+    p.add_argument('--parent-proof',type=Path,required=True)
+    p.add_argument('--parent-archive',type=Path,required=True)
+    p.add_argument('--attempt',type=int,required=True);a=p.parse_args()
+    out=ROOT/f'output/native-outdoor-family-reload-attempt-{a.attempt:03}.json';log=out.with_suffix('.log')
+    if a.attempt<1 or out.exists() or log.exists():p.error('Fresh positive attempt required')
+    idle();prep_path=a.preparation.resolve();prep=json.loads(prep_path.read_text());build_path=a.build_report.resolve();build=json.loads(build_path.read_text())
+    exe=GAME/'build/recomp/pop_smoke'
+    if not build.get('nativeBuildQualified') or build['exitCode']!=0 or sha(exe)!=build['nativeExecutableSha256']:p.error('Current official native build required')
+    for group in ['nativeSourceSha256','nativeHeapRuntimeSourceSha256','nativeOrderRuntimeSourceSha256']:
+        if not build.get(group) or any(sha(ROOT/n)!=d for n,d in build[group].items()):p.error('Compiled source changed: '+group)
+    if sha(GAME/'build/recomp/gen/symbols.json')!=build['nativeSymbolsSha256']:p.error('Build symbols changed')
+    if not prep.get('outdoorFamilyPreparationQualified') or [prep['sourceClockMs'],prep['destinationClockMs']]!=[57650,24250]:p.error('Require actual effect preparation')
+    if not prep.get('homeRoutePreparationQualified') or len(prep['records'])!=13:p.error('Require canonical remote-home preparation')
+    if any(sha(ROOT/n)!=d for n,d in prep['sourceSha256'].items()) or sha(prep['sourceProof'])!=prep['sourceProofSha256']:p.error('Preparation changed')
+    receipt=a.selected_receipt.resolve();exports=[]
+    for side,expected in enumerate([prep['source']['sha256'],prep['destination']['sha256']]):
+        verified=json.loads(subprocess.check_output(['node',str(ROOT/'scripts/export-native-entity-revision.mjs'),
+            '--verify',str(receipt),str(side),expected],cwd=ROOT,text=True))
+        if verified['revision']!=3 or verified['owner']['region']!='0_0' or verified['owner']['unitId']!=504 or verified['owner']['agentId']!=28:p.error('Require selected revision3 outdoor owner')
+        exports.append(verified)
+    parent_proof_path=a.parent_proof.resolve();parent_proof=json.loads(parent_proof_path.read_text());archive_path=a.parent_archive.resolve();archive=json.loads(archive_path.read_text())
+    parent_manifest_path=Path(parent_proof['manifest']);parent=json.loads(parent_manifest_path.read_text())
+    if not parent_proof.get('remoteFullWorldSnapshotsQualified') or not parent.get('nativeSessionTerminal') or parent['nativeExitCode']!=0 or parent.get('stopReason'):p.error('Require successful saved family parent')
+    try:os.kill(parent['nativePid'],0)
+    except ProcessLookupError:pass
+    else:p.error('Parent producer remains live')
+    if not archive.get('artifactPreserved') or not archive.get('remoteFullWorldSnapshotsQualified') or archive['nativeExecutable']['sha256']!=parent_proof['nativeExecutableSha256']:p.error('Require exact frozen parent generation')
+    for path in [parent_proof_path,parent_manifest_path]:
+        frozen=archive['evidence'].get(str(path))
+        if not frozen or sha(path)!=frozen['sha256'] or sha(frozen['filename'])!=frozen['sha256']:p.error('Frozen parent evidence changed')
+    if sha(parent_manifest_path)!=parent_proof['manifestSha256'] or parent['selectedReceiptSha256']!=sha(receipt):p.error('Parent selection changed')
+    source_record=parent_proof['worlds']['Ready'];source=Path(source_record['filename'])
+    if sha(source)!=source_record['sha256'] or source.stat().st_size!=source_record['bytes']:p.error('Original saved family world changed')
+    source_sha=source_record['sha256']
+    run=Path(tempfile.mkdtemp(prefix='actor-arrival-fixture-outdoor-family-snapshot-',dir=GAME/'build'))
+    world=run;profile=world/'frontier_1_0';profile.mkdir(parents=True)
+    for n,d in prep['inputHashes'].items():
+        original=Path(prep['settingsProfile'])/n
+        if sha(original)!=d:p.error('Original settings changed')
+        dest=profile/n;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(original,dest)
+        if sha(dest)!=d:p.error('Copied settings differ')
+    copied=profile/'Documents/My Games/MajestyHD/SaveGame/Frontier_1_0.GMP';copied.parent.mkdir(parents=True);shutil.copy2(source,copied)
+    content='654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542:'+build['nativeExecutableSha256']
+    marker=profile/'Frontier_1_0.checkpoint';marker.write_text('\n'.join(['checkpoint-v1','0',str(copied.stat().st_size),sha(copied),content,'']))
+    proposals=[]
+    for record in prep['records']:
+        original=Path(record['filename']);dest=profile/original.name
+        if sha(original)!=record['sha256'] or original.stat().st_size!=record['bytes']:p.error('Family input changed')
+        shutil.copy2(original,dest)
+        if sha(dest)!=record['sha256']:p.error('Copied family input differs')
+        proposals.append(dict(source=str(original),copied=str(dest),sha256=record['sha256'],bytes=record['bytes']))
+    identity=profile/'Family_Remote_Reload_Identity.bin'
+    import struct
+    identity.write_bytes(struct.pack('<12I',0x314c4d46,1,24250,parent_proof['heroId'],*parent_proof['effectIds'],parent_proof['agentId'],45,0,0,0))
+    for n in ['frames','user-mods']:(run/n).mkdir()
+    script=run/'outdoor-family.script';script.write_text('wait 20000\ndump outdoor_family_completed\n')
+    meta=dict(version=1,nativeOnly=True,browserUsed=False,phase="remote-home-full-reload",homeRouteFixture=True,remoteSnapshots=True,remoteFamilyReload=True,proposals=proposals,fixture=str(run),profile=str(profile),worldRoot=str(world),
+        parentProof=str(parent_proof_path),parentProofSha256=sha(parent_proof_path),parentArchive=str(archive_path),parentArchiveSha256=sha(archive_path),
+        reloadIdentity=dict(filename=str(identity),sha256=sha(identity),bytes=48),
+        selectedReceipt=str(receipt),selectedReceiptSha256=sha(receipt),selectedRevisionExports=exports,
+        preparation=str(prep_path),preparationSha256=sha(prep_path),source=str(source),sourceSha256=sha(source),sourceCopy=str(copied),
+        settingsProfile=prep['settingsProfile'],inputHashes=prep['inputHashes'],buildReport=str(build_path),buildReportSha256=sha(build_path),
+        nativeExecutableSha256=sha(exe),nativeSourceSha256=build['nativeSourceSha256'],nativeHeapRuntimeSourceSha256=build['nativeHeapRuntimeSourceSha256'],
+        nativeOrderRuntimeSourceSha256=build['nativeOrderRuntimeSourceSha256'],nativeSymbolsSha256=build['nativeSymbolsSha256'],
+        runnerSha256=sha(Path(__file__)),script=str(script),scriptSha256=sha(script),log=str(log),resourceSamples=[],
+        rssCeilingBytes=512*1024*1024,stopReason=None,nativeSessionTerminal=False,nativeExitCode=None)
+    flags={'PROFILE_DIR':str(profile),'RULE_FRONTIER_REGION':'1_0','RULE_FRONTIER_RESTORE':'1','CONTENT_IDENTITY':content,
+        'RULE_FRONTIER_SESSION':'v1','RULE_INVENTORY_COMPAT':'1','BROWSER_STREAMING_OUTDOOR_FAMILY_FIXTURE':'v1','BROWSER_STREAMING_OUTDOOR_FAMILY_ROUTE_FIXTURE':'v1','BROWSER_STREAMING_OUTDOOR_FAMILY_SNAPSHOT_FIXTURE':'1','BROWSER_STREAMING_OUTDOOR_FAMILY_SNAPSHOT_RELOAD':'1',
+        'GUEST_ARGS':'-nointro -dochecksums','SMOKE_SECONDS':'30','SMOKE_DRAWABLE':'800x600',
+        'CORE_MODS_DIR':str(GAME/'build/recomp/mods/core'),'MODS_DIR':str(run/'user-mods'),'HOST_DUMP_DIR':str(run/'frames'),'SCRIPT':str(script)}
+    env={k:v for k,v in os.environ.items() if not k.startswith('RECOMP_')};env.update({'RECOMP_'+k:v for k,v in flags.items()});idle()
+    with log.open('x') as output:
+        proc=subprocess.Popen([str(exe)],cwd=GAME/'kit',env=env,stdout=output,stderr=subprocess.STDOUT,start_new_session=True)
+        meta.update(nativePid=proc.pid,startedAtMs=time.time_ns()//1000000);out.write_text(json.dumps(meta,indent=2)+'\n')
+        print(json.dumps({'nativePid':proc.pid,'phase':'remote-home-full-reload'}),flush=True);deadline=time.monotonic()+35;terminated_at=None
+        try:
+            while proc.poll() is None:
+                try:
+                    row=subprocess.check_output(['ps','-p',str(proc.pid),'-o','pid=,rss=,%cpu='],text=True,timeout=2).split()
+                    if len(row)!=3 or int(row[0])!=proc.pid:raise RuntimeError('Exact PID sample missing')
+                    sample=dict(pid=proc.pid,sampledAtMs=time.time_ns()//1000000,rssBytes=int(row[1])*1024,cpuPercent=float(row[2]));meta['resourceSamples'].append(sample)
+                    if sample['rssBytes']>meta['rssCeilingBytes']:meta['stopReason']='rss-ceiling'
+                    if time.monotonic()>deadline:meta['stopReason']='duration-ceiling'
+                except (subprocess.SubprocessError,ValueError,RuntimeError) as e:
+                    if proc.poll() is None:meta['stopReason']=type(e).__name__
+                if meta['stopReason'] and terminated_at is None:proc.terminate();terminated_at=time.monotonic()
+                if terminated_at is not None and time.monotonic()-terminated_at>5:proc.kill()
+                out.write_text(json.dumps(meta,indent=2)+'\n')
+                try:proc.wait(timeout=2)
+                except subprocess.TimeoutExpired:pass
+        finally:
+            if proc.poll() is None:
+                proc.terminate()
+                try:proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:proc.kill();proc.wait()
+        code=proc.wait()
+    rows=[r for r in log.read_text().splitlines() if r.startswith('[streaming] Family route cleanup ')]
+    saves=[dict(filename=str(f),bytes=f.stat().st_size,sha256=sha(f)) for f in sorted(copied.parent.glob('Family_Remote_*.GMP'))]
+    completed=len(rows)==1 and all('result=pass' in r for r in rows) and len(saves)==3
+    meta.update(nativeSessionTerminal=True,nativeExitCode=code,outdoorFamilyTrialCompleted=completed,finishedAtMs=time.time_ns()//1000000,
+        originalSourceUnchanged=sha(source)==source_sha,sourceCopyUnchanged=sha(copied)==source_sha,
+        originalSettingsUnchanged=all(sha(Path(prep['settingsProfile'])/n)==d for n,d in prep['inputHashes'].items()),
+        proposalsUnchanged=all(sha(e['source'])==e['sha256'] and sha(e['copied'])==e['sha256'] for e in proposals),donorUnchanged=sha(prep['source']['filename'])==prep['source']['sha256'],
+        logSha256=sha(log),saves=saves,records=[dict(filename=str(f),bytes=f.stat().st_size,sha256=sha(f)) for f in sorted(profile.glob('Family_*'))])
+    out.write_text(json.dumps(meta,indent=2)+'\n');print(json.dumps({'nativeSessionTerminal':True,'exitCode':code,'completed':completed}),flush=True)
+    raise SystemExit(code or (1 if meta['stopReason'] or not completed else 0))
+if __name__=='__main__':main()

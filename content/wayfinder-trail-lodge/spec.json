@@ -1,0 +1,39 @@
+{
+  "version": 3,
+  "id": "wayfinder-trail-lodge",
+  "status": "authoring-draft",
+  "nativeIntegrationQualified": false,
+  "modUuid": "608A46ED-6800-4BCD-A126-294FEE58D207",
+  "hero": {
+    "id": "AVz1",
+    "name": "Wayfinder",
+    "baseDescription": "AVH1",
+    "basePrototype": "Ranger",
+    "game": {
+      "Cost": 425,
+      "MaxHP": 22,
+      "SightRange": 320,
+      "RecruitDelay": 12000
+    },
+    "prototype": {
+      "PercentageHPRetreat": 60,
+      "Greed": 18,
+      "Loyalty": 12
+    },
+    "decisionTree": "wayfinder_tree"
+  },
+  "building": {
+    "id": "ABs1",
+    "name": "Trail_Lodge",
+    "displayName": "Trail Lodge",
+    "baseDescription": "ABW1",
+    "basePrototype": "Rangers_Guild",
+    "dialogId": "APw1",
+    "game": {
+      "Cost": 900,
+      "MaxHP": 300,
+      "MaxGuildMembers": 4
+    }
+  },
+  "nativeIdentityScheme": "legacy AV hero and AB building families; independent unused subtype IDs"
+}

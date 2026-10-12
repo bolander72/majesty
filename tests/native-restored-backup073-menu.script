@@ -1,0 +1,7 @@
+# Original UI only, with the complete restored profile in an owned copy.
+wait 10000
+dump restored_menu
+peek 0x0071c68c 4
+peek 0x006d7670 4
+wait 5000
+dump restored_menu_later

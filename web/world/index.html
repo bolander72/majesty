@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Majesty · Frontier streaming experiment</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#152323;color:#e9e7d5;font:15px system-ui,sans-serif;overflow:hidden}
+canvas{display:block;width:100vw;height:100dvh;touch-action:none;outline:none}
+.panel{position:fixed;max-width:min(440px,95vw);max-height:calc(100dvh - 32px);overflow:auto;padding:16px;background:#162425ee;border:1px solid #668078;border-radius:8px;left:16px;top:16px}
+h1{font-size:20px;margin:0 0 8px}p{margin:8px 0;line-height:1.4}a{color:#d7d697}button,input,select{font:inherit;color:inherit;background:#30443e;border:1px solid #7c9084;border-radius:4px;padding:10px;min-height:44px}select{max-width:100%;margin:6px 0}
+button{cursor:pointer}button:disabled{opacity:.5}input{width:94px}.controls{display:flex;gap:6px;flex-wrap:wrap}
+output{display:block;font-size:13px;margin-top:8px;font-variant-numeric:tabular-nums}#notice{color:#e2c87b}details p{font-size:13px}
+#kingdom-file{width:100%;margin:6px 0}#kingdom-name{width:180px}#kingdom-status{overflow-wrap:anywhere}
+#kingdom-list{padding-left:0;list-style:none}#kingdom-list li{margin:6px 0}#kingdom-list button{width:100%;text-align:left}
+@media(max-width:600px){.panel{left:8px;top:8px;padding:10px}h1{font-size:16px}.intro{display:none}}
+</style>
+<canvas id="world" tabindex="0" aria-label="Expanding world; drag to explore, or use region travel controls"></canvas>
+<section class="panel"><h1>The Frontier · streaming experiment</h1>
+<p id="map-info" class="intro">Explore an expanding map. Leave a watchtower, travel away, and return to find it preserved.</p>
+<details><summary>About this experiment</summary><p>This tests bounded map storage and rendering using simple generated terrain. In a named world, you can also view saved Majesty terrain as an altitude map with building squares and smaller unit markers colored by kingdom. It shows the last save; units inside buildings are omitted and crowded areas have limited markers. Empty areas have no checkpoint. A region opens a separate native Majesty kingdom and resumes its checkpoint when available. The game's Frontier controls can save and travel north, south, east or west, or return to this map at the current region. Heroes do not yet cross region boundaries. Unloaded regions remain dormant.</p></details>
+<div class="controls"><button id="west" aria-label="Travel west">←</button><button id="north" aria-label="Travel north">↑</button><button id="south" aria-label="Travel south">↓</button><button id="east" aria-label="Travel east">→</button><button id="home">Home</button><button id="build">Place watchtower</button><button id="terrain" disabled>Show saved Majesty terrain</button></div>
+<form id="travel" class="controls"><label>Region X <input id="x" type="number" min="-999999" max="999999" value="0" required></label><label>Y <input id="y" type="number" min="-999999" max="999999" value="0" required></label><button>Travel</button></form>
+<output id="stats" aria-live="polite">Opening world storage…</output><p id="notice" role="status"></p><p><a id="native">Play this region in Majesty</a></p>
+<details><summary>Resume region travel</summary><output id="journey-status" aria-live="polite"></output>
+<p><a id="journey-target" hidden></a></p><p><a id="journey-source" hidden></a></p></details>
+<details><summary>Saved kingdoms</summary><p>Find the last saved kingdoms in this named world. Loading the list reads save metadata; showing a region loads its saved terrain. The list updates when you refresh.</p>
+<div class="controls"><button id="kingdom-list-next" disabled>Load saved kingdoms</button><button id="kingdom-list-refresh" disabled>Refresh list</button></div>
+<ul id="kingdom-list"></ul><output id="kingdom-list-status" aria-live="polite"></output></details>
+<details><summary>Saved hero journey</summary>
+<p>Save the kingdom and close its game first. Register one saved hero for this prototype, or prepare an existing journey with the latest saved kingdom. The game checks its required assets when you resume. Live hero travel between regions is still in development.</p>
+<button id="hero-journey-refresh" disabled>Check saved journey</button>
+<label>Saved hero <select id="hero-journey-heroes" disabled aria-label="Saved hero for this journey"></select></label>
+<div class="controls"><button id="hero-journey-register" disabled>Register and prepare journey</button><button id="hero-journey-prepare" disabled>Prepare saved journey</button></div>
+<output id="hero-journey-status" aria-live="polite"></output><p><a id="hero-journey-resume" hidden>Resume saved journey</a></p></details>
+<details><summary>Saved kingdom backups</summary>
+<p>Stop the game first. Export the last saved Majesty kingdom at the center of this map from a named world. This saves one independent kingdom; it excludes co-op continuation, region transfers, campaign progress and placed watchtowers. Assets and mods must be imported separately.</p>
+<button id="kingdom-export" disabled>Export saved kingdom</button>
+<p>Restore a backup into a fresh world. Existing worlds are preserved.</p>
+<label>Kingdom backup <input id="kingdom-file" type="file" accept=".majesty-region" disabled></label>
+<label>New world name <input id="kingdom-name" type="text" maxlength="40" pattern="[a-z0-9-]{1,40}" placeholder="restored-world" disabled></label>
+<button id="kingdom-restore" disabled>Restore into new world</button>
+<output id="kingdom-status" aria-live="polite"></output><p><a id="kingdom-resume" hidden>Resume saved kingdom</a></p>
+</details><a href="../">Return to Majesty launcher</a>
+</section><script type="module" src="view.mjs"></script><script type="module" src="resources.mjs"></script></html>

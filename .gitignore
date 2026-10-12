@@ -1,0 +1,14 @@
+.tools/
+upstream/
+output/
+analysis/
+.DS_Store
+__pycache__/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.venv*/
+node_modules/
+.pytest_cache/

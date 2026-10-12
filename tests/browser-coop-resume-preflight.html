@@ -1,0 +1,41 @@
+<!doctype html><meta charset="utf-8"><title>Co-op resume preflight</title>
+<style>body{background:#172522;color:#e5e8d4;font:16px/1.5 system-ui;max-width:1100px;margin:30px auto}button{font:inherit;padding:12px}pre{white-space:pre-wrap}a{color:#d5d9ac;display:block;margin:14px}</style>
+<h1>Isolated co-op resume preflight</h1>
+<p>Copies two previously qualified test profiles into new profiles. The source saves and imported game assets are untouched. This inspects public browser storage through this explicit test page.</p>
+<button id="seed">Prepare isolated resume profiles</button><pre id="result" role="status">Ready.</pre><div id="links"></div>
+<script type="module">
+import {hashBlob} from './backups/bundle.mjs';
+const profiles=[['world-ui071-host','resume073-host','host'],['world-ui071-guest','resume073-guest','guest']];
+async function* files(directory,prefix=''){for await(const [name,h]of directory.entries()){if(h.kind==='directory')yield*files(h,prefix+name+'/');else yield {path:prefix+name,file:await h.getFile()};}}
+async function parent(root,parts){for(const p of parts)root=await root.getDirectoryHandle(p,{create:true});return root;}
+document.getElementById('seed').onclick=async()=>{
+  const button=document.getElementById('seed'),result=document.getElementById('result');button.disabled=true;
+  const proof={profiles:[],sourceProfilesPreserved:true};
+  try{
+    const root=await navigator.storage.getDirectory(),game=await root.getDirectoryHandle('majesty'),native=await game.getDirectoryHandle('profile');
+    for(const [source,target,role]of profiles)await navigator.locks.request('majesty-native-profile:majesty:'+source,{ifAvailable:true},async lock=>{
+      if(!lock)throw Error('Source game still running');
+      const sourceDir=await native.getDirectoryHandle(source);
+      try{await native.getDirectoryHandle(target);throw Error('Target profile already exists; preserve it.');}catch(e){if(e.name!=='NotFoundError')throw e;}
+      const destination=await native.getDirectoryHandle(target,{create:true}),record={source,target,role,files:0,bytes:0,checkpoints:[]};
+      for await(const item of files(sourceDir)){
+        if(++record.files>2000)throw Error('Profile file budget exceeded');record.bytes+=item.file.size;
+        const parts=item.path.split('/'),dir=await parent(destination,parts.slice(0,-1)),sink=await(await dir.getFileHandle(parts.at(-1),{create:true})).createWritable();
+        try{for(let at=0;at<item.file.size;at+=65536)await sink.write(await item.file.slice(at,at+65536).arrayBuffer());await sink.close();}catch(e){await sink.abort();throw e;}
+        if(item.path.endsWith('.checkpoint')&&parts.at(-1).startsWith('CoopTransitions_')){
+          const text=await item.file.text(),f=text.split('\n');if(f.length!==13||f[0]!=='majesty-coop-checkpoint-v1')throw Error('Unexpected cooperative checkpoint');
+          const label=parts.at(-1).replace('.checkpoint','')+'_'+f[1],saved=await(await dir.getFileHandle(label+'.GMP')).getFile();
+          const digest=await hashBlob(saved);if(digest!==f[11]||saved.size!==Number(f[10]))throw Error('Invalid original checkpoint');
+          record.checkpoints.push({label,world:f[2],region:f[5]+'_'+f[6],frame:Number(f[7]),clock:Number(f[8]),revision:Number(f[9]),bytes:saved.size,sha256:digest,content:f[3],rules:f[4]});
+        }
+      }
+      proof.profiles.push(record);
+      const url=new URL('/releases/player072/majesty/',location.href);
+      for(const [k,v]of Object.entries({RECOMP_RULE_FRONTIER_CHAPTER:'1',RECOMP_RULE_INVENTORY_COMPAT:'1',RECOMP_RULE_COOP_WORLD:'world-ui071',RECOMP_RULE_COOP_REGION:'2_-1',RECOMP_RULE_COOP_REGION_GENERATION:'v1',RECOMP_RULE_COOP_FRESH_GENERATION:'v1',RECOMP_RULE_COOP_TRANSITION_PAUSE:'v1',RECOMP_RULE_COOP_CHECKPOINT:'v1',RECOMP_RULE_COOP_SHARED_READ:'v1',profile:target,mode:'coop',role,room:'Resume073',relay:'ws://localhost:8002/rooms',RECOMP_NETWORK_DEBUG:'1',RECOMP_BROWSER_RESUME_DEBUG:'1'}))url.searchParams.set(k,v);
+      const link=document.createElement('a');link.href=url.href;link.textContent='Open isolated '+role+' profile';document.getElementById('links').append(link);
+    });
+    proof.prepared=true;
+  }catch(error){proof.prepared=false;proof.error=error.message;}
+  result.textContent=JSON.stringify(proof,null,2);
+};
+</script>

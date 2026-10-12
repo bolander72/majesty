@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Majesty viewport check</title>
+<style>
+body { margin: 0; background: #20252c; color: white; font: 14px system-ui }
+nav { padding: 8px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+#stage { position: relative; margin: 8px; }
+iframe { border: 0; transform-origin: top left; }
+</style>
+<nav>
+<label>Viewport <select id="size">
+<option value="839,853">839 × 853 portrait</option>
+<option value="1280,720">1280 × 720 landscape</option>
+<option value="1371,779">1371 × 779 irregular</option>
+<option value="320,568">320 × 568 small portrait</option>
+<option value="1920,1080">1920 × 1080</option>
+<option value="3840,2160">3840 × 2160</option>
+</select></label><output id="dimensions"></output>
+<button data-size="1280,720">Landscape</button>
+<button data-size="839,853">Portrait</button>
+<button data-size="1371,779">Irregular</button>
+<button data-size="320,568">Small</button>
+<button data-size="1920,1080">1080p</button>
+<button data-size="3840,2160">4K</button>
+</nav>
+<div id="stage"><iframe id="game" src="/majesty/?RECOMP_VIEWPORT_DEBUG=1" allow="autoplay"></iframe></div>
+<script>
+const game = document.getElementById('game');
+const select = document.getElementById('size');
+function resize() {
+  const [w,h] = select.value.split(',').map(Number);
+  const scale = Math.min(1,(innerWidth-16)/w,(innerHeight-60)/h);
+  game.style.width = `${w}px`; game.style.height = `${h}px`;
+  game.style.transform = `scale(${scale})`;
+  document.getElementById('stage').style.height = `${h*scale}px`;
+  document.getElementById('dimensions').textContent = `${w} × ${h}; preview ${Math.round(scale*100)}%`;
+}
+select.addEventListener('change', resize);
+for (const button of document.querySelectorAll('button')) button.addEventListener('click', () => {
+  select.value = button.dataset.size; resize();
+});
+window.addEventListener('resize', resize);
+resize();
+</script>

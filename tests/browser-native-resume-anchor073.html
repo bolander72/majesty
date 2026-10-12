@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Traveled-region resume storage check</title>
+<style>body{background:#172522;color:#e5e8d4;font:16px/1.5 system-ui;max-width:900px;margin:30px auto;padding:16px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
+<h1>Traveled-region resume storage check</h1>
+<p>Checks the retained isolated backup collection. Preserves its primary saves and prepares a separate resume copy for region 3, −1 using the original region 2, −1 campaign settings. No game engine or WASM is launched.</p>
+<button id="run">Verify restored traveled-region resume</button>
+<pre id="result" role="status">Ready.</pre>
+<script type="module">
+import {hashBlob} from './backups/bundle.mjs';
+import {prepareResume,parseResumeToken} from './multiplayer/resume-checkpoint.mjs';
+import {settings,gameURL,invitationURL,selectedInvitation} from './multiplayer/invitation.mjs';
+import {cooperativeWorldSettings} from './multiplayer/cooperative-world.mjs';
+import {multiplayerProfileConfig} from './multiplayer/profile-session.mjs';
+const profiles=['resume073-host','resume073-guest'];
+function check(value,message){if(!value)throw Error(message);}
+async function collect(dir,prefix='',depth=0,out=[]){
+  check(depth<=12,'Collection depth exceeds limit.');
+  for await(const[name,handle]of dir.entries()){
+    if(handle.kind==='directory')await collect(handle,prefix+name+'/',depth+1,out);
+    else if(!name.startsWith('WorldResume_')){
+      check(out.length<2000,'Collection size exceeds limit.');
+      const file=await handle.getFile();check(file.size<=64*1024*1024,'File exceeds budget.');
+      out.push({path:prefix+name,bytes:file.size,sha256:await hashBlob(file)});
+    }
+  }
+  return out.sort((a,b)=>a.path.localeCompare(b.path));
+}
+async function native(root){return(await root.getDirectoryHandle('majesty')).getDirectoryHandle('profile');}
+async function snapshot(dir){const result=[];for(const profile of profiles)await collect(await dir.getDirectoryHandle(profile),profile+'/',0,result);return result.sort((a,b)=>a.path.localeCompare(b.path));}
+document.getElementById('run').onclick=async()=>{
+  document.getElementById('run').disabled=true;
+  const proof={format:'majesty-restored-resume-anchor073',gameEnginesStarted:0,WASMStarted:false,nativeGameplayQualified:false,traveledRegionResumeStorageQualified:false};
+  try{
+    const root=await navigator.storage.getDirectory(),fixture=await root.getDirectoryHandle('majesty-native-backup073');
+    const source=await fixture.getDirectoryHandle('source'),restored=await fixture.getDirectoryHandle('restored');
+    const sourceNative=await native(source),restoredNative=await native(restored);
+    const beforeSource=await snapshot(sourceNative),before=await snapshot(restoredNative);
+    check(before.length===17&&JSON.stringify(before)===JSON.stringify(beforeSource),'Retained restored primary files differ from isolated source.');
+    const context={world:'world-ui071',region:'3_-1',initialRegion:'2_-1',chapter:1,room:'Anchor073',role:'host'};
+    const saved=await prepareResume({root:restored,profile:profiles[0],context});
+    const token=parseResumeToken(saved.token);
+    check(token.initialRegion==='2_-1'&&token.x===3&&token.y===-1,'Resume hint lost initial or saved region.');
+    check(saved.record.sha256==='ca3eaca3b6b7bdff460e5aef905ba152ca46d5c1f8d521c8ed96a8cd7bb752d3','Unexpected retained traveled checkpoint.');
+    const base=new URL('./multiplayer/',location.href);
+    const selected=settings({...context,resume:saved.token},base),play=gameURL(base,selected,profiles[0]);
+    const fresh=gameURL(base,settings({...context,region:context.initialRegion,resume:''},base),profiles[0]);
+    const rules=url=>[...url.searchParams].filter(([key])=>key.startsWith('RECOMP_RULE_')).sort();
+    check(JSON.stringify(rules(play))===JSON.stringify(rules(fresh)),'Original fingerprint rules changed on resume.');
+    const decoded=cooperativeWorldSettings(play.search),invitation=invitationURL(base,selected);
+    check(decoded.region.x===3&&decoded.initialRegion.x===2,'Gameplay and launch regions were confused.');
+    check(multiplayerProfileConfig(play.search).profile===profiles[0],'Profile startup refused valid traveled resume.');
+    check(selectedInvitation(invitation.search).resume===saved.token&&!invitation.searchParams.has('profile'),'Invitation lost hint or exposed host profile.');
+    check(JSON.stringify(await snapshot(restoredNative))===JSON.stringify(before),'Restored primary checkpoints changed.');
+    check(JSON.stringify(await snapshot(sourceNative))===JSON.stringify(beforeSource),'Isolated backup source changed.');
+    proof.primaryFiles=before.length;proof.primaryBytes=before.reduce((n,f)=>n+f.bytes,0);
+    proof.primaryHashesPreserved=true;proof.originalProfilesTouched=false;proof.currentRegion='3_-1';proof.initialRegion='2_-1';
+    proof.tokenVersion=saved.token.split('|')[0];proof.rulesIdentical=true;proof.localProfileNotShared=true;
+    proof.resumeCopy={label:saved.label,bytes:saved.record.bytes,sha256:saved.record.sha256,frame:saved.record.frame,clock:saved.record.clock,revision:saved.record.revision};
+    proof.traveledRegionResumeStorageQualified=true;
+  }catch(error){proof.error=error.message;}
+  document.getElementById('result').textContent=JSON.stringify(proof,null,2);
+};
+</script></html>

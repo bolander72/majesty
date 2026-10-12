@@ -1,0 +1,11 @@
+# Inspect the original Load Game picker with a complete restored working copy.
+wait 15000
+dump restored_menu
+move 88 578
+wait 100
+button left down
+wait 100
+button left up
+wait 5000
+dump restored_load_picker
+wait 3000

@@ -1,0 +1,22 @@
+// Private authoring draft. Native compiler and in-game integration are pending.
+// Reuses the purchased SDK's ordinary hero tasks; exploration has priority
+// over optional fights. Home, health and nearby threats still take precedence.
+function wayfinder_tree (agent thisagent)
+
+declare
+
+begin
+    if ($check_nearby(thisagent) == False)
+    if ($Check_rewards(thisagent, FALSE) == False)
+    if ($Defend_home(thisagent) == False)
+    if ($rest(thisagent) == False)
+    if ($Purchase_equipment(thisagent) == False)
+    if ($explore_map(thisagent, 98) == False)
+    if ($Combat_wandering(thisagent, 45) == False)
+    if ($Go_home(thisagent, 25) == False)
+        begin
+            $SpecifyIntent(thisagent, #intent_wandering);
+            thisagent's "counter" = 0;
+            thisagent's "activescript" = $hero_wander;
+        end
+end

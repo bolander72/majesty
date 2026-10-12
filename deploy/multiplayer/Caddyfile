@@ -1,0 +1,13 @@
+{$MAJESTY_HOST} {
+    handle /rooms {
+        reverse_proxy relay:8002
+    }
+    handle {
+        root * /srv
+        header Cross-Origin-Opener-Policy same-origin
+        header Cross-Origin-Embedder-Policy require-corp
+        header Cross-Origin-Resource-Policy same-origin
+        header Cache-Control "no-cache"
+        file_server
+    }
+}

@@ -1,0 +1,113 @@
+<!doctype html><meta charset="utf-8"><title>Isolated player backup trial</title>
+<style>body{background:#172522;color:#e5e8d4;font:16px/1.6 system-ui;max-width:980px;margin:36px auto}button{font:inherit;padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Isolated player backup trial</h1>
+<p>Uses separate test directories and database prefixes. Existing player profiles and game assets are untouched. Tests storage copying, not native game loading.</p>
+<button id="run">Run isolated backup trial</button><pre id="result" role="status">Ready.</pre>
+<section id="shipped-controls" hidden><h2>Shipped backup preview controls</h2>
+<label><input id="stopped" type="checkbox"> Fixture preview ready</label><button id="export">Export player backup</button><button id="clear" hidden>Clear temporary backup copy</button><button id="choose">Choose player backup…</button><input id="file" type="file" hidden>
+<div id="preview" hidden><p id="summary"></p><button id="restore">Restore into this browser</button></div><p id="status" role="status"></p><button id="recovery" hidden>Discard interrupted restore</button></section>
+<script type="module" src="./backups/launcher.mjs"></script>
+<script type="module">
+import {exportPlayer,restorePlayer,assertNoPlayerRestore,discardInterruptedRestore,clearBackupDownload} from './backups/storage.mjs';
+import {inspectBundle,hashBlob} from './backups/bundle.mjs';
+import {recordJourney,JOURNEY_KEY} from './world/journey.mjs';
+import {nativeRegionURL} from './world/region.mjs';
+const label='majesty-player-backup078-fixture',result=document.getElementById('result');
+function check(value,message){if(!value)throw Error(message);}
+function facade(prefix){return {databases:async()=>(await indexedDB.databases()).filter(d=>d.name.startsWith(prefix)).map(d=>({name:d.name.slice(prefix.length),version:d.version})),open:(name,version)=>version===undefined?indexedDB.open(prefix+name):indexedDB.open(prefix+name,version),deleteDatabase:name=>indexedDB.deleteDatabase(prefix+name)};}
+function withLocks(prefix){return{request:(name,options,consume)=>navigator.locks.request(prefix+name,options,consume)};}
+async function directory(root,path){for(const part of path.split('/'))root=await root.getDirectoryHandle(part,{create:true});return root;}
+async function write(root,path,bytes){const parts=path.split('/'),d=await directory(root,parts.slice(0,-1).join('/'));const sink=await(await d.getFileHandle(parts.at(-1),{create:true})).createWritable();await sink.write(bytes);await sink.close();}
+async function create(storage,name,store,rows){await new Promise((resolve,reject)=>{const r=storage.open(name,1);r.onupgradeneeded=()=>r.result.createObjectStore(store);r.onerror=()=>reject(r.error);r.onsuccess=()=>{const db=r.result,t=db.transaction(store,'readwrite');for(const [key,value]of rows)t.objectStore(store).put(value,key);t.oncomplete=()=>{db.close();resolve();};t.onabort=()=>{db.close();reject(t.error);};};});}
+async function clearDB(prefix){for(const d of await indexedDB.databases())if(d.name.startsWith(prefix))await new Promise((resolve,reject)=>{const r=indexedDB.deleteDatabase(d.name);r.onsuccess=resolve;r.onerror=()=>reject(r.error);r.onblocked=()=>reject(Error('Fixture DB busy'));});}
+async function absent(root,path){try{await root.getDirectoryHandle(path);return false;}catch(e){if(e.name==='NotFoundError')return true;throw e;}}
+document.getElementById('run').onclick=async()=>{
+  const button=document.getElementById('run');button.disabled=true;const proof={scope:'isolated public OPFS/IndexedDB APIs; synthetic save bytes; no WASM launch'};
+  const root=await navigator.storage.getDirectory();let sandbox;
+  try{
+    result.textContent='Running storage roundtrip…';
+    try{await root.removeEntry(label,{recursive:true});}catch(e){if(e.name!=='NotFoundError')throw e;}
+    for(const role of ['source','target','failure','race','recovery'])await clearDB(label+'-'+role+'-');
+    sandbox=await root.getDirectoryHandle(label,{create:true});const source=await sandbox.getDirectoryHandle('source',{create:true}),target=await sandbox.getDirectoryHandle('target',{create:true});
+    const sourceDB=facade(label+'-source-'),targetDB=facade(label+'-target-'),sourceLocks=withLocks(label+'-source-'),targetLocks=withLocks(label+'-target-');
+    const bytes=Uint8Array.from({length:200000},(_,i)=>(i*31)%256);
+    await write(source,'majesty/profile/alice/Documents/My Games/MajestyHD/SaveGame/kingdom.GMP',bytes);
+    await write(source,'majesty/profile/native-world-garden/frontier_1_-1/Frontier_1_-1.checkpoint','checkpoint identity');
+    await write(source,'majesty/game/excluded-game-asset.bin','not in backup');
+    const campaign='majesty-frontier-campaign-v1-profile-alice',atlas='majesty-native-world-garden';
+    await create(sourceDB,campaign,'chapters',[[1,true],[3,true]]);
+    await create(sourceDB,atlas,'regions',[['camera-v1',{x:512,y:-256}],['1,-1',{version:1,seed:71201,x:1,y:-1,buildings:[{kind:'tower',x:2,y:5}]}]]);
+    // Exercise the real native travel writer against an isolated IndexedDB
+    // record. Synthetic native bytes stay separate from every player profile.
+    const journeyBase=nativeRegionURL(1,-1,new URL('./world/?world=garden',location.href).href).href;
+    const journeyTarget=nativeRegionURL(2,-1,journeyBase).href;
+    await recordJourney(journeyTarget,{base:journeyBase,content:'a'.repeat(64)+':'+'b'.repeat(64),open:async(world,options)=>{
+      check(world==='garden'&&options.nativeWorld,'Wrong journey database');
+      const db=await new Promise((resolve,reject)=>{const r=sourceDB.open(atlas);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+      return {write:(key,value)=>new Promise((resolve,reject)=>{const t=db.transaction('regions','readwrite');t.objectStore('regions').put(value,key);t.oncomplete=resolve;t.onabort=()=>reject(t.error);}),close:()=>db.close()};
+    }});
+    const exported=await exportPlayer({root:source,storage:sourceDB,locks:sourceLocks}),checked=await inspectBundle(exported.blob);
+    check(checked.nativeCount===2&&checked.databaseCount===2,'Incomplete collection');check(!checked.manifest.native.some(f=>f.path.includes('game-asset')),'Included assets');
+    await restorePlayer(exported.blob,{root:target,storage:targetDB,locks:targetLocks});
+    const returned=await exportPlayer({root:target,storage:targetDB,locks:targetLocks});
+    check(JSON.stringify(returned.manifest.native)===JSON.stringify(exported.manifest.native),'Native bytes changed');
+    const returnedData=await inspectBundle(returned.blob);check(JSON.stringify(returnedData.databases)===JSON.stringify(checked.databases),'Progress or Atlas changed');
+    const journey=returnedData.databases.find(d=>d.name===atlas).rows.find(([key])=>key===JOURNEY_KEY);
+    check(typeof journey?.[1]==='string'&&JSON.parse(journey[1]).state==='pending','Travel recovery lost');
+    proof.actualJourneyWriterRoundtrip=true;proof.journeyTextPreserved=true;
+    proof.realStorageRoundtrip=true;proof.nativeFiles=2;proof.databases=2;proof.chapterCompletionAndAtlasCameraPreserved=true;proof.assetsExcluded=true;
+    let conflict=false;try{await restorePlayer(exported.blob,{root:target,storage:targetDB,locks:targetLocks});}catch(e){conflict=/already has native/.test(e.message);}check(conflict,'Existing saves overwritten');
+    await clearBackupDownload({root:target,locks:targetLocks});
+    const preserved=await exportPlayer({root:target,storage:targetDB,locks:targetLocks});check(JSON.stringify(preserved.manifest.native)===JSON.stringify(exported.manifest.native),'Conflict changed saves');proof.conflictPreservesExisting=true;
+    const busyName=label+'-source-majesty-native-profile:majesty:alice';
+    await navigator.locks.request(busyName,async()=>{let blocked=false;try{await exportPlayer({root:source,storage:sourceDB,locks:sourceLocks});}catch(e){blocked=/Close Majesty/.test(e.message);}check(blocked,'Game lock ignored');});proof.busyProfileRefused=true;
+    const failure=await sandbox.getDirectoryHandle('failure',{create:true}),failureDB=facade(label+'-failure-');let calls=0;
+    const faulty={...failureDB,open(name,version){if(++calls===2){const request={error:Error('Injected second database failure')};queueMicrotask(()=>request.onerror());return request;}return failureDB.open(name,version);}};
+    let failed=false;try{await restorePlayer(exported.blob,{root:failure,storage:faulty,locks:withLocks(label+'-failure-')});}catch(e){failed=/Injected second/.test(e.message);}check(failed,'Failure not exercised');
+    check((await failureDB.databases()).length===0,'Created database not rolled back');check(await absent(await failure.getDirectoryHandle('majesty'),'profile'),'Partial profile retained');proof.databaseFailureRollback=true;
+    const race=await sandbox.getDirectoryHandle('race',{create:true}),raceDB=facade(label+'-race-');let raceCalls=0;
+    const racing={...raceDB,open(name,version){
+      if(++raceCalls!==2)return raceDB.open(name,version);
+      const request={};queueMicrotask(async()=>{
+        await create(raceDB,name,'regions',[]);
+        const actual=raceDB.open(name,version);actual.onerror=()=>{request.error=actual.error;request.onerror();};actual.onsuccess=()=>{request.result=actual.result;request.onsuccess();};
+      });return request;
+    }};
+    let refused=false;try{await restorePlayer(exported.blob,{root:race,storage:racing,locks:withLocks(label+'-race-')});}catch(e){refused=/appeared during restore/.test(e.message);}check(refused,'Concurrent database collision not refused');
+    const survivors=await raceDB.databases();check(survivors.length===1&&survivors[0].name===atlas,'Unowned database removed');proof.concurrentDatabasePreserved=true;
+    const recovery=await sandbox.getDirectoryHandle('recovery',{create:true}),recoveryDB=facade(label+'-recovery-');
+    await write(recovery,'majesty/profile/alice/partial.GMP','partial');await create(recoveryDB,campaign,'chapters',[[1,true]]);
+    await write(recovery,'majesty/.player-restore-v1.json',JSON.stringify({format:'majesty-player-restore-v1',databases:[campaign],createdDatabases:[campaign],profileCreated:true}));
+    let blocked=false;try{await assertNoPlayerRestore({getDirectory:async()=>recovery});}catch(e){blocked=/interrupted/.test(e.message);}check(blocked,'Interrupted startup not blocked');
+    await discardInterruptedRestore({root:recovery,storage:recoveryDB,locks:withLocks(label+'-recovery-')});await assertNoPlayerRestore({getDirectory:async()=>recovery});check((await recoveryDB.databases()).length===0,'Recovery retained partial DB');proof.interruptedRestoreRecovery=true;
+    proof.archiveBytes=exported.blob.size;proof.archiveSha256=await hashBlob(exported.blob);
+    await write(source,'majesty/profile/alice/Documents/My Games/MajestyHD/SaveGame/kingdom.GMP','changed after completed export');
+    check(await hashBlob(exported.blob)===proof.archiveSha256,'Download still depends on mutable source saves');proof.completedArchiveIndependentOfSource=true;
+    let cached=false;try{await exportPlayer({root:source,storage:sourceDB,locks:sourceLocks});}catch(e){cached=/still cached/.test(e.message);}check(cached,'Cache grew without bound');proof.oneArchiveCacheBound=true;proof.qualified=true;
+    // Inspect through the shipped controller and worker. This is read-only;
+    // export/restore buttons remain hidden so no user collection is touched.
+    const controls=document.getElementById('shipped-controls');controls.hidden=false;
+    document.getElementById('export').hidden=true;document.getElementById('choose').hidden=true;document.getElementById('restore').hidden=true;
+    const stopped=document.getElementById('stopped');stopped.checked=true;stopped.dispatchEvent(new Event('change'));
+    const transfer=new DataTransfer();transfer.items.add(new File([exported.blob],'fixture-player-backup.zip',{type:'application/zip'}));
+    const input=document.getElementById('file');input.files=transfer.files;
+    // The downloadable archive retains OPFS File snapshots. Wait for the
+    // shipped worker to finish before removing their isolated source files.
+    await new Promise((resolve,reject)=>{
+      const status=document.getElementById('status');
+      const timeout=setTimeout(()=>{observer.disconnect();reject(Error('Shipped preview timed out'));},10000);
+      const observer=new MutationObserver(()=>{
+        if(status.textContent.startsWith('Checking'))return;
+        observer.disconnect();clearTimeout(timeout);
+        status.textContent.startsWith('Backup verified.')?resolve():reject(Error(status.textContent));
+      });
+      observer.observe(status,{childList:true,subtree:true,characterData:true});input.dispatchEvent(new Event('change'));
+    });
+    proof.shippedControllerAndWorkerPreview=true;
+  }catch(error){proof.qualified=false;proof.error=error.message;}
+  finally{
+    try{for(const role of ['source','target','failure','race','recovery'])await clearDB(label+'-'+role+'-');await root.removeEntry(label,{recursive:true});proof.fixtureCleaned=true;}catch(error){proof.fixtureCleaned=false;proof.cleanupError=error.message;}
+    result.textContent=JSON.stringify(proof,null,2);button.disabled=false;
+  }
+};
+</script>

@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""Repeat committed hero kingdom travel with original native lifecycle and queue retirement."""
+import argparse, importlib.util, json, os, shutil, subprocess, tempfile, time
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+GAME = ROOT / 'upstream/majesty-recomp'
+spec = importlib.util.spec_from_file_location('hero_reload', ROOT / 'scripts/run-native-hero-return-pair-reload.py')
+helper = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(helper)
+sha, idle, verify = helper.sha, helper.idle, helper.verify
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('build_report', type=Path)
+    p.add_argument('publication', type=Path)
+    p.add_argument('receipt', type=Path)
+    p.add_argument('--attempt', type=int, required=True)
+    p.add_argument('--visits', type=int, default=12, help='Even number of visits, 6 through 12')
+    p.add_argument('--release-idle-tiles', action='store_true', help='Trial original zero-reference TILE release and cache policy after original world disposal')
+    p.add_argument('--capture-heap', action='store_true', help='Capture bounded allocator metadata at the existing original world boundaries')
+    p.add_argument('--capture-page-context', action='store_true', help='Observe queue owners using the existing delegating allocation/free hooks')
+    p.add_argument('--retire-orphan-queues', action='store_true', help='Native-only trial of original destruction for observed replaced recipient queues')
+    a = p.parse_args()
+    if a.capture_page_context and not a.capture_heap: p.error('Page context requires bounded heap capture')
+    if a.retire_orphan_queues and (not a.capture_page_context or a.release_idle_tiles): p.error('Queue retirement requires heap/page context and excludes TILE trials')
+    if a.visits < 6 or a.visits > 12 or a.visits % 2: p.error('Require 6, 8, 10 or 12 visits')
+    if not a.retire_orphan_queues or not a.capture_page_context or a.release_idle_tiles: p.error('Repeated trial requires heap/page context/queue retirement; no TILE release')
+    smoke_seconds = 10 + 17 * a.visits
+    duration_ceiling_ms = (smoke_seconds + 12) * 1000
+    out = ROOT / f'output/native-hero-region-repeated-attempt-{a.attempt:03}.json'
+    log = out.with_suffix('.log')
+    if a.attempt < 1 or out.exists() or log.exists(): p.error('Fresh positive attempt required')
+    idle()
+    publication, receipt, build_path = a.publication.resolve(), a.receipt.resolve(), a.build_report.resolve()
+    pub, r, build = [json.loads(n.read_text()) for n in [publication, receipt, build_path]]
+    if r['revisionReport'] != str(publication) or r['revisionReportSha256'] != sha(publication): p.error('Publication/export mismatch')
+    selected = verify(receipt)
+    if any(s['revision'] != 2 or s['owner']['region'] != '0_0' for s in selected): p.error('Require actual committed return revision2')
+    exe = GAME / 'build/recomp/pop_smoke'
+    if not build.get('nativeBuildQualified') or build['exitCode'] != 0 or sha(exe) != build['nativeExecutableSha256']: p.error('Current build differs')
+    if any(sha(ROOT/n) != d for n,d in build['nativeSourceSha256'].items()): p.error('Build source differs')
+    if sha(GAME/'build/recomp/gen/symbols.json') != build['nativeSymbolsSha256']: p.error('Build symbols differ')
+    if a.capture_heap:
+        expected = ['upstream/majesty-recomp/kit/runtime/memory.cpp', 'upstream/majesty-recomp/kit/runtime/memory.h',
+                    'upstream/majesty-recomp/kit/runtime/tests/runtime_tests.cpp']
+        runtime = build.get('nativeHeapRuntimeSourceSha256', {})
+        if sorted(runtime) != expected or any(sha(ROOT/n) != d for n,d in runtime.items()): p.error('Heap runtime differs from the official build')
+    audit_path = ROOT/'output/native-idle-tile-release-audit-002.json'
+    if a.release_idle_tiles:
+        audit = json.loads(audit_path.read_text())
+        if not audit.get('qualified') or audit['originalExecutableSha256'] != '654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542': p.error('Require pinned idle release audit')
+        if audit['scriptSha256'] != sha(ROOT/'scripts/audit-native-idle-tile-array-release.py'): p.error('Idle release audit source changed')
+    queue_audit_path = ROOT/'output/native-orphan-queue-retirement-layout-001-observed.json'
+    if a.retire_orphan_queues:
+        queue_audit = json.loads(queue_audit_path.read_text())
+        if not queue_audit.get('qualified') or queue_audit['version'] != 4 or queue_audit['originalExecutableSha256'] != '654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542': p.error('Require pinned original queue retirement audit')
+        if queue_audit['scriptSha256'] != sha(ROOT/'scripts/audit-native-orphan-queue-retirement.py'): p.error('Queue retirement audit source changed')
+    previous = [Path(pub['liveManifest']), Path(pub['departureManifest'])]
+    producers = [json.loads(n.read_text()) for n in previous]
+    if producers[0]['inputHashes'] != producers[1]['inputHashes']: p.error('Kingdom settings differ')
+    original = Path(producers[0]['profile'])
+    inputs = producers[0]['inputHashes']
+    run = Path(tempfile.mkdtemp(prefix='actor-arrival-fixture-connected-residency-', dir=GAME/'build'))
+    profile = run/'frontier_0_0'; profile.mkdir()
+    for n,d in inputs.items():
+        target = profile/n
+        if sha(original/n) != d: p.error('Settings source changed')
+        target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(original/n,target)
+        if sha(target) != d: p.error('Copied settings differ')
+    for side,s in enumerate(selected):
+        for kind in ['Initial','Source']:
+            target = profile/f'Residency_{kind}_{side}.GMP'; shutil.copy2(s['filename'],target)
+            if sha(target) != s['sha256']: p.error('Copied committed world differs')
+    menu = profile/'Documents/My Games/MajestyHD/SaveGame/Joint_Reload.GMP'
+    menu.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(profile/'Residency_Source_0.GMP',menu)
+    for n in ['frames','user-mods']: (run/n).mkdir()
+    click = lambda x,y: f'move {x} {y}\nwait 100\nbutton left down\nwait 100\nbutton left up\n'
+    script = run/'hero-region-repeated.script'
+    script.write_text('wait 10000\n'+''.join(click(92,578)+'wait 1000\n'+click(150,565)+'wait 10000\n'+f'dump hero_region_travel_{i}\n' for i in range(a.visits)))
+    meta = dict(version=1,phase='hero-region-repeated',nativeOnly=True,browserUsed=False,nativeSessionTerminal=False,nativeExitCode=None,
+        fixture=str(run),profile=str(profile),publicationManifest=str(publication),publicationManifestSha256=sha(publication),
+        receipt=str(receipt),receiptSha256=sha(receipt),selectedRevisionExports=selected,previousManifests=list(map(str,previous)),previousManifestSha256=list(map(sha,previous)),
+        settingsProfile=str(original),inputHashes=inputs,buildReport=str(build_path),buildReportSha256=sha(build_path),
+        nativeExecutableSha256=sha(exe),nativeSourceSha256=build['nativeSourceSha256'],nativeSymbolsSha256=build['nativeSymbolsSha256'],
+        script=str(script),scriptSha256=sha(script),log=str(log),resourceSamples=[],rssCeilingBytes=512*1024*1024,stopReason=None,
+        loadSequence=[i % 2 for i in range(a.visits)],completedTicksByVisit=[20]*a.visits,smokeSeconds=smoke_seconds,durationCeilingMs=duration_ceiling_ms,
+        idleTileReleaseVersion='v2' if a.release_idle_tiles else None)
+    if a.release_idle_tiles:
+        meta.update(idleTileReleaseAudit=str(audit_path),idleTileReleaseAuditSha256=sha(audit_path),idleTileGateVersion=1)
+    if a.capture_heap:
+        meta.update(worldHeapProbe=True,worldSurvivorProbe=True,worldAllocatorProbe=True,worldPageProbe=True,
+                    nativeHeapRuntimeSourceSha256=runtime,heapMetadataMaximumBytes=40+8192*16)
+    if a.capture_page_context: meta.update(worldPageContextProbe=True,worldPageOwnerVersion=1,worldPageRegistrationVersion=1)
+    if a.retire_orphan_queues: meta.update(orphanQueueReleaseVersion='v1',orphanQueueReleaseAudit=str(queue_audit_path),orphanQueueReleaseAuditSha256=sha(queue_audit_path))
+    if verify(receipt) != selected: p.error('Selected pair changed before launch')
+    env = {k:v for k,v in os.environ.items() if not k.startswith('RECOMP_')}
+    env.update(RECOMP_PROFILE_DIR=str(profile),RECOMP_RULE_FRONTIER_REGION='0_0',RECOMP_RULE_INVENTORY_COMPAT='1',RECOMP_BROWSER_STREAMING_DEBUG='1',
+        RECOMP_BROWSER_STREAMING_WORLD_RESIDENCY_FIXTURE='1',RECOMP_BROWSER_STREAMING_WORLD_PERSISTENCE_FIXTURE='1',
+        RECOMP_BROWSER_STREAMING_CONNECTED_RESIDENCY_FIXTURE='v1',RECOMP_BROWSER_STREAMING_REGISTERED_HERO_RESIDENCY_FIXTURE='v1',
+        RECOMP_BROWSER_STREAMING_WORLD_RESIDENCY_VISITS=str(a.visits),RECOMP_BROWSER_STREAMING_JOINT_DEPARTED_RELOAD_FIXTURE='1',RECOMP_BROWSER_STREAMING_JOINT_EVOLVED_CHECKPOINT_FIXTURE='1',
+        RECOMP_GUEST_ARGS='-nointro -dochecksums',RECOMP_SMOKE_SECONDS=str(smoke_seconds),RECOMP_SMOKE_WINDOW_INPUT='1',RECOMP_SMOKE_DRAWABLE='800x600',
+        RECOMP_CORE_MODS_DIR=str(GAME/'build/recomp/mods/core'),RECOMP_MODS_DIR=str(run/'user-mods'),RECOMP_HOST_DUMP_DIR=str(run/'frames'),RECOMP_SCRIPT=str(script))
+    if a.release_idle_tiles:
+        env.update(RECOMP_BROWSER_STREAMING_IDLE_TILE_RELEASE_FIXTURE='v2',
+            RECOMP_BROWSER_STREAMING_WORLD_ALLOCATION_FIXTURE='1', RECOMP_BROWSER_STREAMING_WORLD_OWNER_FIXTURE='1')
+    if a.capture_heap:
+        env.update(RECOMP_BROWSER_STREAMING_WORLD_SURVIVOR_FIXTURE='1', RECOMP_BROWSER_STREAMING_WORLD_ALLOCATOR_FIXTURE='1',
+            RECOMP_BROWSER_STREAMING_WORLD_HEAP_FIXTURE='1', RECOMP_BROWSER_STREAMING_WORLD_ALLOCATION_FIXTURE='1',
+            RECOMP_BROWSER_STREAMING_WORLD_PAGE_FIXTURE='1')
+    if a.capture_page_context: env['RECOMP_BROWSER_STREAMING_WORLD_PAGE_CONTEXT_FIXTURE'] = '1'
+    if a.retire_orphan_queues: env['RECOMP_BROWSER_STREAMING_ORPHAN_QUEUE_RELEASE_FIXTURE'] = 'v1'
+    idle()
+    with log.open('x') as stream:
+        proc = subprocess.Popen([str(exe)],cwd=GAME/'kit',env=env,stdout=stream,stderr=subprocess.STDOUT)
+        meta.update(nativePid=proc.pid,startedAtMs=time.time_ns()//1000000);out.write_text(json.dumps(meta,indent=2)+'\n')
+        print(json.dumps({'nativePid':proc.pid,'phase':'hero-region-repeated'}),flush=True);deadline=time.monotonic()+duration_ceiling_ms/1000
+        while proc.poll() is None:
+            try:
+                row=subprocess.check_output(['ps','-p',str(proc.pid),'-o','pid=,rss=,%cpu='],text=True,timeout=2).split()
+                if len(row)!=3 or int(row[0])!=proc.pid: raise RuntimeError('Exact PID sample missing')
+                s=dict(pid=proc.pid,sampledAtMs=time.time_ns()//1000000,rssBytes=int(row[1])*1024,cpuPercent=float(row[2]));meta['resourceSamples'].append(s)
+                if s['rssBytes']>meta['rssCeilingBytes']:meta['stopReason']='rss-ceiling'
+                if time.monotonic()>deadline:meta['stopReason']='duration-ceiling'
+            except (subprocess.SubprocessError,ValueError,RuntimeError) as e:
+                if proc.poll() is None:meta['stopReason']=type(e).__name__
+            if meta['stopReason']:proc.terminate()
+            out.write_text(json.dumps(meta,indent=2)+'\n')
+            try:proc.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                if meta['stopReason']:proc.kill()
+        code=proc.wait()
+    meta.update(nativeSessionTerminal=True,nativeExitCode=code,finishedAtMs=time.time_ns()//1000000,logSha256=sha(log),
+        originalSettingsUnchanged=all(sha(original/n)==d for n,d in inputs.items()),
+        originalSelectedWorldsUnchanged=all(sha(s['filename'])==s['sha256'] for s in selected),
+        publicationUnchanged=sha(publication)==meta['publicationManifestSha256'],receiptUnchanged=sha(receipt)==meta['receiptSha256'])
+    out.write_text(json.dumps(meta,indent=2)+'\n');print(json.dumps({'nativeSessionTerminal':True,'nativeExitCode':code}),flush=True)
+    raise SystemExit(code)
+if __name__=='__main__':main()

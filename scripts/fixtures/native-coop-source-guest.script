@@ -1,0 +1,54 @@
+# One original guest joins a recorded original host. This is not live co-op.
+# No generated world flags or acknowledgement bytes are written by the script.
+wait 10000
+move 236 548
+wait 100
+button left down
+wait 100
+button left up
+wait 600
+# Give the owned guest a distinct name through the original name dialog.
+# Holding2 briefly may repeat it; any nonempty distinct name is sufficient.
+key 2 down
+wait 100
+key 2 up
+wait 200
+move 299 428
+wait 100
+button left down
+wait 100
+button left up
+wait 1500
+move 224 252
+wait 100
+button left down
+wait 100
+button left up
+wait 200
+move 180 565
+wait 100
+button left down
+wait 100
+button left up
+wait 4000
+move 180 150
+wait 100
+button left down
+wait 100
+button left up
+wait 300
+move 400 565
+wait 100
+button left down
+wait 100
+button left up
+wait 4500
+move 180 570
+wait 100
+button left down
+wait 100
+button left up
+wait 4000
+wait 8000
+wait 12000
+peek 0x0071c6a8 4

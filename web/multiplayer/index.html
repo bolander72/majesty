@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Majesty · Play together</title>
+<style>
+  [hidden]{display:none!important}
+  body{margin:0;background:#162323;color:#e8e5cf;font:16px system-ui,sans-serif}
+  main{max-width:980px;margin:auto;padding:28px 24px}h1{font:42px Georgia,serif;letter-spacing:-1px;margin:18px 0 8px}p{line-height:1.6}
+  form,section{padding:20px;background:#24362f;border:1px solid #637269;border-radius:8px;margin:20px 0}
+  label{display:block;margin:14px 0}input,select{box-sizing:border-box;width:100%;padding:10px;font:inherit;background:#263a33;border:1px solid #718278;color:inherit}
+  button,.play{display:inline-block;padding:12px 18px;min-height:44px;font:inherit;background:#41563e;color:#e8e5cf;border:1px solid #b1bb88;border-radius:4px;text-decoration:none;box-sizing:border-box;cursor:pointer}
+  button:disabled{opacity:.6;cursor:default}a{color:#d7db9c}output{display:block;margin-top:12px;color:#ced897}
+  .actions{display:flex;gap:12px;flex-wrap:wrap}#invite-url{font-size:14px}
+  body{background-color:#142321;background-image:linear-gradient(#7182780b 1px,transparent 1px),linear-gradient(90deg,#7182780b 1px,transparent 1px);background-size:48px 48px}
+  .layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}.layout>form,.layout>section{margin:12px 0}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pair label{min-width:0}fieldset{border:1px solid #718278;padding:4px 16px 12px;margin:16px 0}legend{font:20px Georgia,serif;padding:0 8px;color:#e2d6ab}
+  h2{font:25px Georgia,serif;margin:2px 0 14px;overflow-wrap:anywhere}.note{font-size:14px;color:#c5ceb8}input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #eddc9d;outline-offset:3px}
+  a[aria-disabled="true"]{opacity:.55;pointer-events:none}.layout>section{position:sticky;top:20px}output{line-height:1.5}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#c6c99f}
+  @media(max-width:720px){main{padding:20px 16px}.layout{grid-template-columns:1fr;gap:0}.layout>section{position:static}.pair{gap:12px}h1{font-size:36px}}
+</style>
+<main>
+  <a href="../">Majesty launcher</a><p class="eyebrow">Two kingdoms · One expedition</p><h1>Play together</h1>
+  <p>Host or join a co-op chapter or a competitive skirmish. No game account is required. Each player imports their own Majesty game files through the launcher.</p>
+  <div class="layout"><form id="setup">
+    <h2>Choose your expedition</h2>
+    <label>Mode<select id="mode"><option value="coop">Co-op campaign · single map</option><option value="world">Expanding co-op world</option><option value="competitive">Competitive skirmish</option></select></label>
+    <label id="chapter-field">Chapter<select id="chapter"><option value="1">1. The Frontier Pact</option><option value="2">2. Provision the Expedition</option><option value="3">3. Foundations of the Frontier</option><option value="4">4. Wardens of the Pact</option></select></label>
+    <fieldset id="world-field" hidden><legend>Your shared world</legend>
+      <label>Shared world name<input id="world" maxlength="40" pattern="[a-z0-9-]{1,40}" autocomplete="off" placeholder="e.g. our-frontier" aria-describedby="world-help"></label>
+      <div class="pair"><label>Starting region X<input id="region-x" type="number" min="-1000000" max="1000000" step="1" value="0" required></label><label>Starting region Y<input id="region-y" type="number" min="-1000000" max="1000000" step="1" value="0" required></label></div>
+      <p class="note" id="world-help">Start at 0, 0, or choose another coordinate. During a match, the host moves both kingdoms together; visited regions are saved for return. A starting coordinate creates new kingdoms, not a restored save.</p>
+      <p class="note" id="world-chapter-note">Use a new world name for each new expedition to keep earlier saved regions. Every campaign chapter starts new kingdoms.</p>
+    </fieldset>
+    <div class="pair"><label>Your role<select id="role"><option value="host">Host the room</option><option value="guest">Join the room</option></select></label>
+    <label>Room name<input id="room" maxlength="24" required autocomplete="off"></label></div>
+    <label>Relay URL<input id="relay" type="url" required spellcheck="false" placeholder="wss://your-relay.example/rooms"></label>
+    <label>Your local save profile<input id="profile" maxlength="40" pattern="[a-zA-Z0-9_\-]{1,40}" placeholder="Leave empty for the default profile"></label>
+    <p>Your profile and saves stay on this browser. Invitations carry your shared game settings, including a world name when selected; your partner chooses their own local profile.</p>
+  </form>
+  <section aria-label="Start multiplayer">
+    <h2 id="selection">Session settings</h2><p id="instructions"></p>
+    <div class="actions"><a id="play" class="play">Open game</a><button id="copy" type="button" disabled>Copy invitation</button></div>
+    <label>Invitation link<input id="invite-url" readonly spellcheck="false"></label>
+    <output id="status" role="status"></output><p id="reachability"></p>
+  </section></div>
+  <section aria-label="Saved regions and absent partners"><h2>Keep the expedition together</h2><p>Both players must be present to start or travel. If a partner disconnects, the room ends; the shared campaign cannot continue with their kingdom offline.</p><p>To continue an expanding world later, the host chooses Save and pause, then Close game and prepare resume. Prepare the resume file, open the game, and choose the named save through Load Game. Send the resume invitation to your partner. Both players must rejoin before continuing; later unsaved moves are not included.</p><p class="note">Your previous campaign setup stays in the links, but each new chapter starts new kingdoms. Choose a new world name before moving to another chapter.</p></section>
+  <p>Co-op chapters share victory and defeat between allied kingdoms. Competitive play uses the original lobby's map and victory settings. After joining, the guest chooses Ready and the host chooses Start Game.</p>
+  <p><a id="campaign-progress" aria-disabled="true">Campaign progress</a> · <a href="../">Import game files</a></p>
+</main>
+<script type="module" src="./launcher.mjs"></script></html>

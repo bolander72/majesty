@@ -1,0 +1,58 @@
+# Preserve menu inputs and first-travel inputs; request actual west travel while the peer input window remains active.
+# One original host with a worldless lobby reference. No GoStatus acknowledgement.
+# Four bounded read-only samples; never treat nonzero roots as playable worlds.
+wait 10000
+move 236 548
+wait 100
+button left down
+wait 100
+button left up
+wait 600
+move 299 428
+wait 100
+button left down
+wait 100
+button left up
+wait 1500
+move 224 252
+wait 100
+button left down
+wait 100
+button left up
+wait 200
+move 180 565
+wait 100
+button left down
+wait 100
+button left up
+wait 2500
+move 153 565
+wait 100
+button left down
+wait 100
+button left up
+wait 3000
+key P down
+wait 100
+key P up
+wait 200
+move 299 430
+wait 100
+button left down
+wait 100
+button left up
+wait 2500
+wait 7500
+move 180 570
+wait 100
+button left down
+wait 100
+button left up
+wait 4000
+wait 5000
+wait 2100
+# Native fixture queues the ordinary west action after the actual1000 save.
+wait 12000
+action coop-travel-east
+wait 12000
+peek 0x0071c6a8 4
