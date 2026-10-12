@@ -67,3 +67,20 @@ all-browser compatibility or host-app crash recovery. It preserves existing
 save formats and keeps startup/loading/checking messages hidden. Publish the
 matching engine/JS/data and updated `games.json` together through
 `scripts/prepare-vercel-site.py`. The prior ui516 prebuilt is retained for rollback.
+
+## Production verification
+
+Release 538 deployed source commit `4540e07` to the existing production project.
+Public HTTP verification 539 confirmed status 200, the matching decoded engine
+SHA, Brotli encoding, WASM MIME type, both edition engine identities and isolation
+headers. The deployed page contains the cache module and no private timing probe.
+A silent owned browser entered the native menu automatically from the site root.
+The first launch after this update took 13.85 seconds to initialize the hash
+cache; the next took 8.14 seconds. These measurements used previously installed
+game data and do not include a fresh asset download. The browser was closed;
+its peak owned RSS was approximately 2,095 MiB.
+
+The working production URL is `https://majesty-tau.vercel.app/`.
+`majesty.boland.co` remains assigned to the deployment but did not resolve in
+this verification. No account, save-schema, backend or environment migration is
+required for this release; the optional hash cache populates automatically.
