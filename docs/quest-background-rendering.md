@@ -43,3 +43,39 @@ This UI defect takes priority over publishing The Lost Trail mission. Keep
 the mission draft and compiler staging; the compiler has not run for that
 draft and its new map has not been authored. The user deferred the older
 Chapter3 co-op completion loop in favor of new content.
+
+## Opt-in repaint candidate423
+
+`patches/quest-background-redraw-candidate.patch` adds a private candidate to
+the existing browser display adapter. `RECOMP_BROWSER_QUEST_REDRAW=1` enables
+it; the default remains disabled. It wraps the original quest marker callback
+and asks the owning AP30 window to invalidate itself after the Background
+widgets change. It preserves the original callback result, does not resize
+the device or alter simulation state, and refuses null/foreign window pointers.
+
+`scripts/audit-native-quest-background.py` verifies the pinned callback's
+message/widget stack offsets, owner-window getter slot, cdecl return and native
+window invalidation slot directly against the purchased executable. Four
+changed-instruction controls are refused. The audit qualifies the ABI only;
+it does not establish successful compilation, lifetime safety or a rendering fix.
+
+Private native comparisons415-417 stalled before the menu. A one-second sample
+identified the display-mode table's iCloud placeholder in the first repaint.
+Supplying the previously verified table in an isolated working directory let
+418-422 reach the menu, below138MiB. Those scripts did not reliably accept the
+first-player name dialog. Their completion counters and files named
+`background` therefore are **not** evidence about Background rendering.
+An owned browser profile was exported through the public OPFS API for the
+comparison; no private Chrome storage files or user profiles were inspected.
+
+Builds489/490 stopped during configuration, before candidate compilation.
+The Python-wheel CMake runtime had an unavailable compiler module; the resident
+Homebrew CMake4.2.1 reached an unavailable version template. Recovered source
+inputs match the compiled hashes, and restored templates reproduce the existing
+generated version header and application plist exactly. Original placeholders
+and the previous native executable are preserved in private output directories.
+
+The next gate is the official guarded build491, followed by a WASM candidate
+and the original browser reproduction at800×600 and a responsive size. Until
+those gates pass, this is an uncompiled/unverified source candidate, absent
+from the public deployment. Do not enable it by default or report the UI fixed.
