@@ -1,4 +1,14 @@
 # Changelog
+
+## In development: Wayfinder browser content edition
+
+- Add reproducible packaging for the gameplay-qualified Wayfinder and Trail Lodge
+  resources, retaining the original game ZIP.
+- Stage a separate launcher entry and import namespace; edition saves use a
+  dedicated Majesty profile included by existing player backups. Changed packs,
+  busy profiles and unrelated existing kingdoms are refused before startup.
+- Browser installation and release publication remain under verification.
+
 ## Local release 139: shared co-op pause and reconnect
 
 - Player 2 observes the game's shared pause and can close its engine through

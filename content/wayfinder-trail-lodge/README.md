@@ -22,6 +22,45 @@ prepared pack is installed only in isolated owned tests; existing campaigns and
 user profiles are preserved. The sections below retain the preparation commands
 and historical qualification stages. Choose new output directories for new runs.
 
+## Browser content edition (in preparation)
+
+The new browser import keeps the stock game and its campaigns in their current
+storage collection. The Wayfinder edition uses `majesty-wayfinder/game` for its
+immutable data and a separate `wayfinder` (or `wayfinder-*`) profile under
+`majesty/profile`, so complete player backups include its saves. The launcher
+refuses an unrelated existing profile and validates all four content resources
+before starting an engine. Managed campaign/world navigation is not enabled for
+this edition yet; it must retain its edition selection before that can be offered.
+
+Prepare the exact resource pack already exercised by browser trial254:
+
+```sh
+python3 scripts/prepare-wayfinder-browser-import.py \
+  --base output/majesty-game.zip \
+  --native-pack output/wayfinder238-native-resources \
+  --menu output/wayfinder239-native-menu \
+  --output output/wayfinder392-browser-import
+
+python3 scripts/prepare-wayfinder-browser-site.py \
+  --source upstream/majesty-recomp/build/web-site/trials/campaign309/site \
+  --output upstream/majesty-recomp/build/frontend-wayfinder393/site
+```
+
+Browser import394 and startup395 verify the ordinary import controller, both
+launcher entries, the separate native executable path and the actual main menu.
+All1,047 original game/profile files stayed byte-identical during import. The
+subsequent complete backup includes the edition binding and preserves all878
+previous native files and all36 databases. These trials do not establish a new
+mission or fresh paid gameplay through the edition entry. The newer396 candidate
+adds tested rejection of legacy managed-world/resume parameters; it retains the
+same engine and valid-edition startup path.
+
+These preparation commands create private candidates. They do not change default
+routes or mark installation/gameplay as verified. Choose new output directories
+for subsequent runs. Import the generated `majesty-wayfinder-game.zip` into the
+candidate launcher's **Majesty: Wayfinder & Trail Lodge** card. The ordinary
+Majesty card continues using its original imported game and profiles.
+
 From the workspace root, prepare local SDK-derived files with:
 
 ```sh

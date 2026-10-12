@@ -18,6 +18,21 @@ drafts and patches for the pinned upstream game/runtime. Purchased game assets,
 executables, generated translations, compiled WASM, personal saves and local
 trial output are excluded. See [the source publication notes](docs/source-publication.md).
 
+## Current content milestone
+
+The current priority is playable new content: make the verified Wayfinder hero
+and Trail Lodge available through ordinary browser content installation, then
+add a new mission that uses them. The authored sources are in
+`content/wayfinder-trail-lodge/`. Native and browser paid recruitment and saves
+have been exercised privately. A separate browser import and launch to the actual
+main menu now pass; release publication and a new mission remain unfinished.
+
+Co-op joining, shared saves and resume have already been exercised. Completing
+the restored Chapter 3 mission is deferred and is not a prerequisite for this
+content milestone. Full-match and separate-network verification remain open
+work, to be revisited when a content or network change requires it. Preserve
+existing campaign progress and checkpoints while developing new content.
+
 ## Play locally
 
 ```sh
