@@ -1,0 +1,75 @@
+// Original mission logic. Requires the separate Wayfinder resource pack.
+// This is a single-player quest; matching-content co-op is not qualified.
+Function TheLostTrail ()
+declare
+    agent AIRootAgent, palace;
+    list palaces;
+begin
+    palaces = $ListPalaces ();
+    if ($ListSize (palaces) != 1)
+        return;
+    palace = $ListMember (palaces, 1);
+    AIRootAgent = $RetrieveAgent ("GplAIRoot");
+    AIRootAgent's "Quest_Number" = 0;
+    AIRootAgent's "Quest_Flag_9" = FALSE;
+    AIRootAgent's "end_coord" = $LocationOf (palace);
+    AIRootAgent's "VictoryCondition" = $LostTrailVictory;
+    $Setup_Quest_Music (AIRootAgent);
+    $NewThread (AIRootAgent's "VictoryCondition", 4000);
+end
+
+// Count live objects, so ruins and dead heroes cannot satisfy the objectives.
+Function LostTrailLiving (list candidates) is list
+declare
+    agent candidate;
+    list living;
+begin
+    foreach candidate in candidates do
+        begin
+            if ($IsValidGamePiece (candidate))
+                if ($IsDead (candidate) == FALSE)
+                    living << candidate;
+        end
+    return living;
+end
+
+Function LostTrailVictory ()
+declare
+    agent AIRootAgent, palace;
+    list palaces, buildings, lodges, heroes, scouts, lairs;
+begin
+    AIRootAgent = $RetrieveAgent ("GplAIRoot");
+    if (AIRootAgent's "Quest_Flag_9" == TRUE)
+        return;
+    palaces = $ListPalaces ();
+    if ($ListSize (palaces) != 1)
+        return;
+    palace = $ListMember (palaces, 1);
+    if ($IsValidGamePiece (palace) == FALSE)
+        return;
+    if ($IsDead (palace))
+        return;
+
+    $ListObjects (palace, "building", -1, buildings, #MyPlayer);
+    lodges = $ListTitles (buildings, "Trail_Lodge");
+    lodges = $LostTrailLiving (lodges);
+    lodges = $ListCompleted (lodges);
+    if ($ListSize (lodges) < 2)
+        return;
+
+    $ListObjects (palace, "hero", -1, heroes, #MyPlayer);
+    scouts = $ListTitles (heroes, "Wayfinder");
+    scouts = $LostTrailLiving (scouts);
+    if ($ListSize (scouts) < 4)
+        return;
+
+    // NoHiddenMap includes unexplored lairs; fog does not grant victory.
+    $ListObjects (palace, "lair", -1, lairs, #NotMyPlayer, #NoHiddenMap);
+    lairs = $LostTrailLiving (lairs);
+    if ($ListSize (lairs) > 0)
+        return;
+
+    AIRootAgent's "Quest_Flag_9" = TRUE;
+    $KillThread (AIRootAgent's "VictoryCondition");
+    $DeclareVictory (palace, AIRootAgent's "end_coord");
+end
