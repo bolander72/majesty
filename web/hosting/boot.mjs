@@ -17,14 +17,14 @@ if (new URLSearchParams(location.search).get('setup') !== '1') {
         importZip: (id, file) => window.recompLauncher.importZip(id, file),
         importFiles: (id, files) => window.recompLauncher.importFiles(id, files),
         signal: controller.signal,
-        progress: (bytes, total) => { bar.hidden = false; bar.max = total; bar.value = bytes; },
+        progress: () => {}, // Keep asset preparation behind the native menu.
       });
-      status.textContent = 'Loading Majesty…';
       await launch.check();
     }
   } catch (error) {
     if (!controller.signal.aborted) {
       status.textContent = error.message;
+      status.hidden = false;
       bar.hidden = true;
       const retry = document.querySelector('#boot-retry');
       retry.hidden = false; retry.onclick = () => location.reload();

@@ -9,7 +9,7 @@ a=p.parse_args()
 if a.attempt<=0:p.error('Attempt must be positive')
 root=Path(__file__).resolve().parents[1];game=root/'upstream/majesty-recomp'
 sources=[game/name for name in ['browser_frontier.cpp','browser_streaming.cpp','browser_campaign.cpp','campaign_objective.h','coop_pause.h', 'coop_checkpoint.h', 'coop_transition.h', 'coop_restore.h', 'coop_connected.h', 'coop_source_abort.h','game.toml','globals.toml',
-    'kit/dx/com.cpp','kit/dx/com.h','kit/dx/ddraw.cpp','kit/dx/ddraw.h',
+    'kit/dx/com.cpp','kit/dx/com.h','kit/dx/ddraw.cpp','kit/dx/ddraw.h','kit/dx/bink.cpp','kit/cmake/Dependencies.cmake',
     'browser_network.cpp','browser_overrides.h','browser_viewport.cpp',
     'native_received_checkpoint.cpp','native_received_checkpoint.h',
     'native_received_transfer.cpp','native_received_transfer.h',

@@ -1,81 +1,64 @@
-# Quest Background overlap
+# Quest briefing rendering and quiet startup
 
-Open defect reported October 12, 2026. The published browser engine can leave
-the quest-map bitmap over a quest's Background text and controls. Reproduced
-on **Quest for the Holy Chalice**, independently of the user's screenshot of
-**The Bell, the Book, and the Candle**.
+The browser build previously compiled with `RECOMP_VIDEO=OFF`. The Bink fallback
+reported a successful 640×480 movie but did not copy decoded pixels into the
+screen buffer. The quest briefing uses a real 260×260 advisor movie. Old quest
+map pixels consequently appeared over the advisor, text and controls.
 
-Engine: `e47728d4ca0655abfb340c935ca322a527660bb6f5bac3c5332375ff4a7c5cdf`.
-Public deployment: `dpl_D49YypGxeBn3eCDfGtJbfdLSG4pv`.
+`patches/recomp-kit-wasm-video.patch` enables FFmpeg static libraries for
+Emscripten, preserving native shared-library behavior. The dependency is the
+existing pinned FFmpeg 7.1.1 archive. Pthreads stay enabled for the threaded
+runtime; Bink decoding uses the existing game worker with `thread_count=1`.
+Build with `RECOMP_VIDEO=ON`; select the one-job dependency wrapper through
+`RECOMP_FFMPEG_MAKE`, using an absolute path to
+`scripts/make-native-video-one-job.py`. Use the official `tools/build.py` app
+build with the existing web preset. Generated translations are unchanged.
+Apply this focused patch after the existing `recomp-kit-browser.patch` using
+`git apply --unidiff-zero`; apply the menu-ready patch in the game checkout with
+the same option. Copy `patches/browser-button-latch.h` to `kit/host/button_latch.h`
+if the existing browser patch checkout lacks this input helper. The restored
+helper passed the existing two-frame/250 ms release checks.
 
-Reproduction uses a muted owned Chrome, cached original assets and a fresh
-isolated save profile. Enter Play Game, accept a player name, dismiss the
-Select A Quest help, and select the Holy Chalice marker. The map remains over
-the Background panel. It reproduces both at 1280×633 (trial412) and on a clean
-800×600 launch (trial413). No restored co-op campaign is involved.
+`patches/majesty-menu-ready.patch` emits one public readiness message after the
+native input loop observes a stable menu window in phase 1. Startup artwork
+has no registered menu window. The hosted player keeps
+its canvas invisible until this message, then reveals it after two animation
+frames. File import, compatibility hashing and engine progress remain active
+without displaying setup/loading/checking screens. Fatal errors retain recovery
+controls. `?setup=1` remains an explicit maintenance route.
 
-Changing the viewport after the overlap forces a native surface rebuild and
-removes the stray map. This narrows the investigation to transition drawing,
-surface contents or presentation. It does not prove which component caused
-the defect, establish correct text wrapping, or qualify a permanent fix.
-Keeping the original menu size is insufficient: the clean800×600 control
-still overlaps. Avoid publishing a resolution-only workaround as a fix.
+## Validation
 
-Private evidence is `output/ui412-reproduction.json`. Screenshots:
+- Official native compilation 511 qualified the clean decoder source with video
+  disabled; 516 qualified the menu readiness change. These are compilation gates,
+  not native video gameplay tests.
+- Official WASM builds 494, 497 and 513 qualified with real video enabled and bounded
+  resources. Temporary tracing and rejected redraw candidates were removed in 497.
+- Silent isolated browser trial 495 decoded the advisor at 260×260, displayed a
+  readable briefing at 800×600, opened Goals on Continue, and reached Holy Chalice
+  gameplay after Start Quest.
+- Trial498 started at 1280×633 and displayed a clean centered briefing and movie.
+  No old quest map pixels covered the text or buttons.
+- The 14 existing automatic-launch, streamed-asset and derived-content checks pass.
 
-- `output/ui411-user.png`: converted user screenshot.
-- `output/ui412-info.png`: independent1280×633 reproduction.
-- `output/ui413-info.png`: clean800×600 reproduction.
-- `output/ui412-info-800-final.png`: redraw following a native surface rebuild.
+Exit Game followed by the original confirmation returned to `https://www.boland.co/`
+in trial 502. Nonzero guest exits still display an error.
 
-The native adapter and resident game/runtime source inputs match the published
-WASM298 receipt. `globals.toml` and `runtime/imports.h` are cloud placeholders
-and were not re-read or claimed verified in that comparison. Generated
-translations were inspected as evidence only; none were edited.
+Trial 514 verified the native readiness message and captured the first visible
+frame as the normal home menu. Startup progress and original loading artwork
+remained hidden. All owned browser tests were silent and closed afterward.
 
-Next gate: identify the incorrect bitmap/region across this transition,
-implement a focused fix, then verify readable Background text and working
-Continue/Back controls at both original and responsive sizes. Verify entry
-into gameplay separately. Current evidence does **not** establish that fix,
-mission completion, or a host-app crash repair. All owned trials are closed.
+## Remaining limits
 
-This UI defect takes priority over publishing The Lost Trail mission. Keep
-the mission draft and compiler staging; the compiler has not run for that
-draft and its new map has not been authored. The user deferred the older
-Chapter3 co-op completion loop in favor of new content.
+Changing the viewport while the advisor movie is already playing produced a
+black strip in trial 495. It cleared on Continue; starting at the wide size in 498
+was clean. That separate live-resize behavior is not yet fixed. This change does
+not establish co-op, internet-play or host-app crash recovery. Owned browsers are
+muted, resource guarded and closed after each trial; player saves are preserved.
 
-## Opt-in repaint candidate423
+## Rollout
 
-`patches/quest-background-redraw-candidate.patch` adds a private candidate to
-the existing browser display adapter. `RECOMP_BROWSER_QUEST_REDRAW=1` enables
-it; the default remains disabled. It wraps the original quest marker callback
-and asks the owning AP30 window to invalidate itself after the Background
-widgets change. It preserves the original callback result, does not resize
-the device or alter simulation state, and refuses null/foreign window pointers.
-
-`scripts/audit-native-quest-background.py` verifies the pinned callback's
-message/widget stack offsets, owner-window getter slot, cdecl return and native
-window invalidation slot directly against the purchased executable. Four
-changed-instruction controls are refused. The audit qualifies the ABI only;
-it does not establish successful compilation, lifetime safety or a rendering fix.
-
-Private native comparisons415-417 stalled before the menu. A one-second sample
-identified the display-mode table's iCloud placeholder in the first repaint.
-Supplying the previously verified table in an isolated working directory let
-418-422 reach the menu, below138MiB. Those scripts did not reliably accept the
-first-player name dialog. Their completion counters and files named
-`background` therefore are **not** evidence about Background rendering.
-An owned browser profile was exported through the public OPFS API for the
-comparison; no private Chrome storage files or user profiles were inspected.
-
-Builds489/490 stopped during configuration, before candidate compilation.
-The Python-wheel CMake runtime had an unavailable compiler module; the resident
-Homebrew CMake4.2.1 reached an unavailable version template. Recovered source
-inputs match the compiled hashes, and restored templates reproduce the existing
-generated version header and application plist exactly. Original placeholders
-and the previous native executable are preserved in private output directories.
-
-The next gate is the official guarded build491, followed by a WASM candidate
-and the original browser reproduction at800×600 and a responsive size. Until
-those gates pass, this is an uncompiled/unverified source candidate, absent
-from the public deployment. Do not enable it by default or report the UI fixed.
+Deploy the qualified engine and matching JS/data together, update `games.json`
+with its hash, and publish the quiet hosted page. No profile schema, saved game,
+asset import or content-edition migration is required. The prior prebuilt 407
+release is retained for rollback.

@@ -1,0 +1,47 @@
+--- a/browser_viewport.cpp
++++ b/browser_viewport.cpp
+@@ -775,0 +776 @@
++
+@@ -782,0 +784 @@
++
+@@ -788,0 +791,40 @@
++  // Startup artwork is drawn without a CYWindow. Wait for a stable native
++  // menu window in the input loop before revealing the browser canvas.
++  static uint32_t ready_window = 0;
++  static unsigned ready_polls = 0;
++  static bool menu_ready = false;
++  if (menu_ready || !state || !gm_valid(state, 4) || rd32(state) != 1)
++    return;
++  const uint32_t manager = rd32(0x006d8bc0);
++  if (!manager || !gm_valid(manager, 8))
++    return;
++  const uint32_t list = rd32(manager + 4);
++  if (!list || !gm_valid(list, 12))
++    return;
++  const uint32_t head = rd32(list + 4);
++  if (!head || !gm_valid(head, 12))
++    return;
++  uint32_t window = 0;
++  unsigned visited = 0;
++  for (uint32_t node = rd32(head); node != head && visited++ < 128;
++       node = rd32(node)) {
++    if (!node || !gm_valid(node, 12))
++      break;
++    const uint32_t candidate = rd32(node + 8);
++    if (candidate && gm_valid(candidate, 0x48) &&
++        (rd32(candidate + 0x2c) & 0xffffu) == 0x5041u) {
++      window = candidate;
++      break;
++    }
++  }
++  if (!window) {
++    ready_window = 0;
++    ready_polls = 0;
++    return;
++  }
++  ready_polls = window == ready_window ? ready_polls + 1 : 1;
++  ready_window = window;
++  if (ready_polls >= 2) {
++    menu_ready = true;
++    fprintf(stderr, "[player] menu ready\n");
++  }

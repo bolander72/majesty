@@ -69,7 +69,30 @@ def prepare(receipt, output, automatic_assets=None):
     html = player.read_text()
     if html.count('a.href = "../";') != 1:
         raise ValueError('Review the player recovery link before deployment')
-    player.write_text(html.replace('a.href = "../";', 'a.href = "../?setup=1";'))
+    html = html.replace('a.href = "../";', 'a.href = "../?setup=1";')
+    old_exit = 'if (exit && Number(exit[1]) !== 0) showFailure(`guest exited with code ${exit[1]}`);'
+    if html.count(old_exit) != 1:
+        raise ValueError('Review native Exit Game handling before deployment')
+    html = html.replace(old_exit,
+        'if (exit) {\n'
+        '        if (Number(exit[1]) === 0) location.replace("https://boland.co");\n'
+        '        else showFailure(`guest exited with code ${exit[1]}`);\n'
+        '      }', 1)
+    # Keep startup progress quiet; retain fatal and multiplayer error recovery.
+    expected = {'<div id="status">Loading…</div>': '<div id="status" hidden></div>',
+                'status("Checking game files for multiplayer compatibility…");': 'status("");',
+                'setStatus: (t) => status(t ? t : ""),': 'setStatus: () => {},'}
+    for old, new in expected.items():
+        if html.count(old) != 1:
+            raise ValueError('Review the player startup template before deployment')
+        html = html.replace(old, new, 1)
+    html = html.replace('  #status {', '  #canvas { visibility: hidden; }\n'
+                        '  body[data-game-ready] #canvas { visibility: visible; }\n'
+                        '  [hidden] { display: none !important; }\n  #status {', 1)
+    html = html.replace('function rememberLog(t) {', 'function rememberLog(t) {\n'
+                        '  if (t === "[player] menu ready") requestAnimationFrame(() =>\n'
+                        '    requestAnimationFrame(() => { document.body.dataset.gameReady = "true"; }));', 1)
+    player.write_text(html)
     compressed = static / (WASM + '.br')
     script = '''const fs=require('fs'),z=require('zlib'),c=require('crypto');
 const input=fs.readFileSync(process.argv[1]);
