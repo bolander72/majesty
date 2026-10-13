@@ -22,8 +22,8 @@ def stationary_lodge_interface(original_records, other_ids=()):
     raw = raw[:2180] + b'AVz1' + raw[2184:]
     records[b'SMNU', INTERFACE_ID] = raw[:134 * 4] + raw[179 * 4:738 * 4] + raw[778 * 4:]
     word, entries = string_entries(records[b'STRT', INTERFACE_ID])
-    entries[2] = (b'Recruit a lantern-bearing melee Wayfinder. Lantern Survey reveals beyond normal sight every 8 seconds. '
-                  b'From level 2, Field Aid heals a nearby wounded companion every 16 seconds.')
+    entries[2] = (b'Recruit a melee scout. Lantern Survey improves exploration. From level 2, Field Aid heals nearby companions. '
+                  b'Completed Trail Lodges supply nearby outdoor heroes with healing.')
     entries[4] = b'Field Supply: completed Trail Lodges restore 2 HP to nearby outdoor heroes every 8 seconds. Overlapping Lodges do not stack.'
     cursor = 4 + len(entries) * 4
     offsets, payload = [], bytearray()

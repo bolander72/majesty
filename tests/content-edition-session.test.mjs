@@ -6,6 +6,14 @@ test('ordinary games retain their original import and profile selection', () => 
   assert.equal(editionFor('?profile=my-campaign'), null);
 });
 
+test('v2 has independent game data while the legacy edition remains selectable', () => {
+  assert.equal(editionFor('?edition=lost-trail-v2&profile=lost-trail-v2').storageId,
+    'majesty-lost-trail-v2');
+  assert.equal(editionFor('?edition=lost-trail-v1&profile=lost-trail').storageId,
+    'majesty-lost-trail');
+  assert.throws(() => editionFor('?edition=lost-trail-v2&profile=lost-trail-v2&room=existing'));
+});
+
 test('Wayfinder requires a distinct named save profile', () => {
   const plan = editionFor('?edition=wayfinder-v1&profile=wayfinder-scouts');
   assert.equal(plan.storageId, 'majesty-wayfinder');

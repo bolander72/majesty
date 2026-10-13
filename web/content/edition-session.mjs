@@ -1,5 +1,6 @@
 import {hashBlob} from '../world/content-hash.mjs';
 import {LOST_TRAIL_FILES} from './lost-trail-files.mjs';
+import {LOST_TRAIL_V2_FILES} from './lost-trail-v2-files.mjs';
 
 export const WAYFINDER_FILES = Object.freeze({
   'DataMX/Wayfinder.bcd': '61a51da7b5a069a9839dc63ee97e50e77e47cf7d0243611f19db66faeeb19037',
@@ -11,9 +12,9 @@ export const WAYFINDER_FILES = Object.freeze({
 export function editionFor(search) {
   const query = new URLSearchParams(search), editions = query.getAll('edition');
   if (!editions.length) return null;
-  if (editions.length !== 1 || !['wayfinder-v1', 'lost-trail-v1'].includes(editions[0]))
+  if (editions.length !== 1 || !['wayfinder-v1', 'lost-trail-v1', 'lost-trail-v2'].includes(editions[0]))
     throw Error('Choose a supported content edition.');
-  const lostTrail = editions[0] === 'lost-trail-v1';
+  const lostTrail = editions[0].startsWith('lost-trail-');
   const profiles = query.getAll('profile');
   const profilePattern = lostTrail ? /^lost-trail(?:-[a-zA-Z0-9_-]{1,29})?$/ : /^wayfinder(?:-[a-zA-Z0-9_-]{1,30})?$/;
   if (profiles.length !== 1 || !profilePattern.test(profiles[0]))
@@ -25,7 +26,7 @@ export function editionFor(search) {
       || key.startsWith('RECOMP_RULE_COOP_') || key.startsWith('RECOMP_RULE_FRONTIER_')
       || key.startsWith('RECOMP_COOP_') || key.startsWith('RECOMP_FRONTIER_')))
     throw Error('Start this content edition as a separate single-player kingdom.');
-  return Object.freeze({id: editions[0], storageId: lostTrail ? 'majesty-lost-trail' : 'majesty-wayfinder', profile: profiles[0]});
+  return Object.freeze({id: editions[0], storageId: editions[0] === 'lost-trail-v2' ? 'majesty-lost-trail-v2' : lostTrail ? 'majesty-lost-trail' : 'majesty-wayfinder', profile: profiles[0]});
 }
 
 async function directory(parent, path, create = false) {
@@ -36,12 +37,13 @@ async function directory(parent, path, create = false) {
 export async function prepareEditionProfile(root, edition) {
   const game = await directory(root, [edition.storageId, 'game']);
   await game.getFileHandle('.manifest.json');
-  const required = edition.id === 'lost-trail-v1' ? LOST_TRAIL_FILES : WAYFINDER_FILES;
+  const required = edition.id === 'lost-trail-v2' ? LOST_TRAIL_V2_FILES :
+    edition.id === 'lost-trail-v1' ? LOST_TRAIL_FILES : WAYFINDER_FILES;
   for (const [path, expected] of Object.entries(required)) {
     const parts = path.split('/'), dir = await directory(game, parts.slice(0, -1));
     const file = await (await dir.getFileHandle(parts.at(-1))).getFile();
     if (file.size > 16 * 1024 * 1024 || await hashBlob(file) !== expected)
-      throw Error(`Import the verified ${edition.id === 'lost-trail-v1' ? 'Lost Trail' : 'Wayfinder'} game ZIP before playing this edition.`);
+      throw Error(`Import the verified ${edition.id.startsWith('lost-trail-') ? 'Lost Trail' : 'Wayfinder'} game ZIP before playing this edition.`);
   }
   // Keep new saves under Majesty's existing backup root; only game data has
   // its own import namespace. Refuse reuse of a pre-existing unrelated profile.

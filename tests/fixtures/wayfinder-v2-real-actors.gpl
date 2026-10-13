@@ -1,0 +1,79 @@
+// Private effect controls using existing paid heroes; no spawning or destruction.
+function wayfinder_real_controls (agent actor)
+declare
+    agent test, palace, guide, buddy, novice, hero, lodge;
+    list heroes, buildings;
+    integer i;
+begin
+    test = $RetrieveAgent("WayfinderRealControls");
+    if (test == $NullAgent())
+        test = $CreateAgent("WayfinderRealControls", "WayfinderRealControls");
+    test = $RetrieveAgent("WayfinderRealControls");
+    if (test == $NullAgent())
+        return;
+    if (test's "Done_setup" != 0)
+        return;
+    palace = $GetPalace(actor);
+    $ListObjects(palace, "hero", -1, heroes, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
+    heroes = $ListTitles(heroes, "Wayfinder");
+    if ($ListSize(heroes) < 3)
+        return;
+    guide = $NullAgent();
+    buddy = $NullAgent();
+    novice = $NullAgent();
+    i = 1;
+    while (i <= $ListSize(heroes)) do
+        begin
+            hero = $ListMember(heroes, i);
+            if ($GetAttribute(hero, #ATTRIB_ExperienceLevel) >= 2)
+                begin
+                    if (guide == $NullAgent())
+                        guide = hero;
+                    else
+                        buddy = hero;
+                end
+            else
+                novice = hero;
+            i = i + 1;
+        end
+    if (guide == $NullAgent())
+        return;
+    if (buddy == $NullAgent())
+        return;
+    if (novice == $NullAgent())
+        return;
+    $ListObjects(palace, "building", -1, buildings, #MyPlayer, #NoHiddenMap);
+    buildings = $ListTitles(buildings, "Trail_Lodge");
+    lodge = $ListMember(buildings, 1);
+    test's "Done_setup" = 1;
+    i = 1;
+    while (i <= $ListSize(heroes)) do
+        begin
+            hero = $ListMember(heroes, i);
+            if ($InsideBuilding(hero))
+                $Exit_Building(hero, lodge);
+            i = i + 1;
+        end
+    test's "Quest_Flag_1" = ($InsideBuilding(guide) == FALSE);
+    test's "Quest_Flag_2" = ($InsideBuilding(buddy) == FALSE);
+    test's "Quest_Flag_3" = ($DistanceBetweenAgents(guide, buddy) <= #WayfinderAidRadius);
+    $AdjustAttribute(guide, #ATTRIB_HP, 1 - $GetAttribute(guide, #ATTRIB_HP));
+    $AdjustAttribute(buddy, #ATTRIB_HP, 10 - $GetAttribute(buddy, #ATTRIB_HP));
+    $wayfinder_field_aid(novice);
+    test's "Quest_Flag_4" = ($GetAttribute(buddy, #ATTRIB_HP) == 10);
+    $wayfinder_field_aid(guide);
+    test's "Quest_Flag_5" = ($GetAttribute(buddy, #ATTRIB_HP) == 14);
+    test's "Quest_Flag_6" = ($GetAttribute(guide, #ATTRIB_HP) == 1);
+    $AdjustAttribute(buddy, #ATTRIB_HP, $GetAttribute(buddy, #ATTRIB_MaxHP) - 1 - $GetAttribute(buddy, #ATTRIB_HP));
+    $wayfinder_field_aid(guide);
+    test's "Quest_Flag_7" = ($GetAttribute(buddy, #ATTRIB_HP) == $GetAttribute(buddy, #ATTRIB_MaxHP));
+    $AdjustAttribute(guide, #ATTRIB_HP, 20 - $GetAttribute(guide, #ATTRIB_HP));
+    $AdjustAttribute(buddy, #ATTRIB_HP, 20 - $GetAttribute(buddy, #ATTRIB_HP));
+    hero = $RetrieveAgent("WayfinderSupportV2");
+    hero's "Done_setup" = 0;
+    $wayfinder_support_tick();
+    test's "Message_Check_1" = ($DistanceBetweenAgents(buddy, lodge) <= #TrailLodgeSupplyRadius);
+    test's "Message_Check_2" = ($GetAttribute(buddy, #ATTRIB_HP) == 22);
+    test's "Message_Check_3" = ($GetAttribute(guide, #ATTRIB_HP) == 22);
+    test's "Quest_Flag_9" = TRUE;
+end

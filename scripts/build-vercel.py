@@ -105,6 +105,55 @@ def install_content_release(static):
     games_file.write_text(json.dumps(games, indent=2) + '\n')
 
 
+def install_content_v2_release(static):
+    """Add qualified v2 data without replacing the original or v1 collections."""
+    descriptor = ROOT / 'deploy/content-v2-release.json'
+    if not descriptor.exists():
+        return
+    content = json.loads(descriptor.read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    required = ['nativeAbilitiesQualified', 'browserSaveReloadQualified',
+                'browserPaidRecruitmentQualified', 'rootDefaultIntegrationQualified']
+    if (content.get('format') != 'majesty-lost-trail-content-release-v2'
+            or content.get('engineSha256') != engine
+            or content.get('storageId') != 'majesty-lost-trail-v2'
+            or content.get('baseId') != 'majesty'
+            or content.get('canonicalGuid') != '{8BC7C549-E5A2-4D0F-A726-83B16BF19E42}'
+            or content.get('requiredRuntimeEnvironment') != {'RECOMP_RULE_INVENTORY_COMPAT': '1'}
+            or any(content.get(key) is not True for key in required)):
+        raise ValueError('Require the gameplay-qualified v2 release')
+    source = ROOT / 'content/wayfinder-trail-lodge/v2'
+    if set(content.get('sourceSha256', {})) != {'Wayfinder.gpl', 'Wayfinder_Support.dat', 'spec.json'}:
+        raise ValueError('Require complete v2 compiler source bindings')
+    for name, expected in content['sourceSha256'].items():
+        if hashlib.sha256((source / name).read_bytes()).hexdigest() != expected:
+            raise ValueError('Published v2 source differs from qualified inputs')
+    bindings = dict(re.findall(r'''["']([^"']+)["']\s*:\s*["']([a-f0-9]{64})["']''',
+        (ROOT / 'web/content/lost-trail-v2-files.mjs').read_text()))
+    patches = content.get('patches', [])
+    if (len(bindings) != 13 or len(patches) != len(bindings)
+            or {p.get('path') for p in patches} != set(bindings)):
+        raise ValueError('Require the complete v2 resource set')
+    for patch in patches:
+        if (patch.get('sha256') != bindings[patch['path']]
+                or type(patch.get('bytes')) is not int or not 0 < patch['bytes'] <= 1024 * 1024
+                or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Changed or unpinned v2 resource')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-lost-trail-v2'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    if any(game['id'] == 'majesty-lost-trail-v2' for game in games):
+        raise ValueError('Review existing v2 collection before replacement')
+    games.append({**original, 'id': 'majesty-lost-trail-v2', 'title': 'Majesty: The Lost Trail',
+        'playURL': '?edition=lost-trail-v2&profile=lost-trail-v2&RECOMP_RULE_INVENTORY_COMPAT=1'})
+    original['defaultContentStorageId'] = 'majesty-lost-trail-v2'
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+
+
 def unpack_release(data, release, destination):
     if len(data) != release['bytes'] or hashlib.sha256(data).hexdigest() != release['sha256']:
         raise ValueError('Hosted release download failed integrity verification')
@@ -234,6 +283,7 @@ def build(destination=None):
     # Keep the engine archive unchanged; override its old download locations
     # with the authored, integrity-pinned GitHub distribution manifest.
     install_automatic_assets(static)
+    install_content_v2_release(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:

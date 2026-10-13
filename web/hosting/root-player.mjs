@@ -14,12 +14,15 @@ export async function prepareRootPlayer({search = location.search,
     const managed = [...query.keys()].some(key => ['room', 'role', 'mode', 'world'].includes(key)
       || key.startsWith('RECOMP_RULE_COOP_') || key.startsWith('RECOMP_RULE_FRONTIER_')
       || key.startsWith('RECOMP_COOP_') || key.startsWith('RECOMP_FRONTIER_'));
+    const defaultId = client.games?.find(game => game.id === 'majesty')?.defaultContentStorageId;
     const useDefault = !selected && !managed &&
-      client.games?.find(game => game.id === 'majesty')?.defaultContentStorageId === 'majesty-lost-trail';
+      ['majesty-lost-trail', 'majesty-lost-trail-v2'].includes(defaultId);
     const inventory = query.getAll('RECOMP_RULE_INVENTORY_COMPAT');
     if (useDefault && inventory.length && (inventory.length !== 1 || inventory[0] !== '1'))
       throw Error('Lost Trail requires inventory compatibility.');
-    const id = selected === 'lost-trail-v1' || useDefault ? 'majesty-lost-trail' :
+    const id = useDefault ? defaultId :
+      selected === 'lost-trail-v2' ? 'majesty-lost-trail-v2' :
+      selected === 'lost-trail-v1' ? 'majesty-lost-trail' :
       selected === 'wayfinder-v1' ? 'majesty-wayfinder' : 'majesty';
     if ((await client.status(id))?.status?.state !== 'ready') {
       await ensureAssets(id, {

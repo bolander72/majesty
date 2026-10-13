@@ -21,7 +21,8 @@
       "Loyalty": 12,
       "birthScript": "hero_birth",
       "attacktype": 1,
-      "attack_action": "basic_attack"
+      "attack_action": "basic_attack",
+      "special_attack_action": "basic_attack"
     },
     "decisionTree": "wayfinder_tree",
     "engine": {

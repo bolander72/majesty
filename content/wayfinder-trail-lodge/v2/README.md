@@ -54,3 +54,22 @@ content. Corrected root867 uses the fully validated release and current catalog.
 Healing effects, full hero interface checks and versioned publication remain
 pending. Production serves v1. Player profiles, original saves and prior
 releases have not been changed.
+
+
+Native effect qualification893 uses two saved paid heroes and a new paid recruit.
+It proves the level-one gate, four-HP companion aid, self exclusion, the maximum
+HP cap and two-HP completed Lodge supply. Its test agent must be retrieved by
+name after CreateAgent, which returns an empty reference in this pinned engine.
+No spawning, actor destruction or level mutation is used by this fixture.
+
+Final production candidate898 is compiled by original SDK895 (19231 bytes,
+SHA256709b003843a29a40c0b6c9c6101ac176c4590668f4213c38bcbbaba321e7eec5).
+Native899 recruited and saved normally. Restored heroes adopt melee attack
+actions without deleting equipment. Recruit help now explains Lodge supply.
+
+A separate majesty-lost-trail-v2 collection preserves cached v1 data and shares
+the normal Majesty profile identity. Publication remains gated: the deploy
+descriptor does not exist. Private root900 has the final pack and new loader.
+Trial901 reached the game menu after adding v2 to the derived-content loader,
+but its guarded lifetime expired before final gameplay/recruitment/save checks.
+Do not inspect or relaunch that stopped trial. Start a fresh bounded trial.

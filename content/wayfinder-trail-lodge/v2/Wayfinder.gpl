@@ -128,6 +128,11 @@ end
 function wayfinder_tree (agent thisagent)
 declare
 begin
+    // Adopt the melee role in restored v1 worlds without deleting equipment.
+    thisagent's "attacktype" = 1;
+    thisagent's "attack_action" = "basic_attack";
+    if ($HasAttribute("special_attack_action", thisagent))
+        thisagent's "special_attack_action" = "basic_attack";
     $wayfinder_start_support(thisagent);
     if ($check_nearby(thisagent) == False)
     if ($Check_rewards(thisagent, FALSE) == False)

@@ -70,3 +70,17 @@ test('the default content root cannot disable its required inventory bridge', as
     })}), /requires inventory compatibility/);
   assert.equal(closed, true);
 });
+
+test('v2 prepares a separate collection even when v1 is already ready', async () => {
+  const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail-v2'},
+    {id: 'majesty-lost-trail'}, {id: 'majesty-lost-trail-v2'}];
+  let imported;
+  const prepared = await prepareRootPlayer({search: '', openClient: async () => ({games,
+    status: async id => ({status: {state: id === 'majesty-lost-trail' ? 'ready' : 'notFound'}}),
+    close() {},
+  }), ensureAssets: async id => {imported = id;}});
+  assert.equal(imported, 'majesty-lost-trail-v2');
+  assert.equal(prepared[0].contentStorageId, 'majesty-lost-trail-v2');
+  assert.equal(prepared[0].id, 'majesty');
+  assert.equal(games[0].contentStorageId, undefined);
+});
