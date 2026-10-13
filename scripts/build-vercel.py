@@ -36,6 +36,8 @@ def unpack_release(data, release, destination):
 
 
 def root_player(html, versions=None, artwork=None):
+    # Deep links also receive the favicon during packaging; emit it once at root.
+    html = html.replace('<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">', '')
     replacements = {
         '<head>': ('<head>\n<base href="/majesty/">\n'
                   '<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">\n'
@@ -98,7 +100,7 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
             f'<img src="{url}" width="800" height="600" alt="Majesty original loading artwork" fetchpriority="high">'
             '</div>', 1)
         html = html.replace('</style>', '''  #startup-art { position: fixed; inset: 0; z-index: 1;
-    display: grid; place-items: center; background: #201a17; pointer-events: none; }
+    display: grid; place-items: center; background: #000; pointer-events: none; }
   #startup-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   body[data-game-ready] #startup-art,
   body:has(#status:not([hidden])) #startup-art { display: none; }
