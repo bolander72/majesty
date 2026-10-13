@@ -1,6 +1,11 @@
 # Wayfinder v2 rollout
 
-Rollout state: required until the production root is verified.
+Rollout state: completed. Immutable GitHub assets are published at commit
+`be50ee84ba92bed2f8f07e1a848d6f35fa17a84e`; the production root at
+https://majesty.boland.co serves the qualified engine and thirteen v2 resources.
+Source release `a92e958` deployed successfully. Live HTTP qualification is
+`output/regression930-production-http-qualified.json`: normal game root, v2
+default collection, matching engine bytes and no Blob asset references.
 
 Publish the immutable engine archive and thirteen content resources on
 `codex/assets`, then bind their commit URLs in the release descriptors and
