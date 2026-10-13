@@ -44,7 +44,7 @@ export async function launcherClient({signal, WorkerClass = Worker, fetchFile = 
     if (r?.result !== 'done') throw Error(r?.error || 'Game preparation did not finish.');
     return r;
   };
-  return {status: id => call('status', id),
+  return {games, status: id => call('status', id, {brief: true}),
     importZip: (id, file) => importGame(id, {kind: 'zip', file}),
     importFiles: (id, files) => importGame(id, {kind: 'files', files}), close};
 }

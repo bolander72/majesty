@@ -20,6 +20,32 @@ reuses the completed import. Native scripts keep `/majesty/` as their base so
 existing asset paths and saved profiles remain compatible. Existing deep links
 remain available. `/?setup=1` opens the optional management interface.
 
+Engine JavaScript, data and WASM URLs include their content hashes. Only URLs
+matching the pinned hashes receive a year of immutable browser caching; the
+unversioned paths and changing frontend code retain revalidation. Module
+preloads shorten the startup dependency chain, and the root reuses the game
+configuration already fetched during preparation. Brief import-status checks
+skip the setup dashboard's storage estimates.
+
+`deploy/loading-art.json` pins the original 800×600 PICT/SPLH loading picture
+from the locally owned `Data/cinedata3.dat`. The image is hosted separately
+from Git and verified during builds. The startup page preserves its aspect
+ratio and removes it when the native menu is ready, or hides it on an error.
+It presents no clickable substitute for the game's menu.
+
+The menu text adapter creates presentation resource shadows through the
+existing profile overlay. It blanks only the nine `Version #` characters in
+the two recognized original text archives, preserving byte counts and all
+other strings. It never edits imported game files, changes their save/content
+identities, or replaces an existing profile resource override. These generated
+presentation resources may travel with an ordinary player-profile backup.
+
+Audio startup attempts to resume the engine's existing SDL3 context as soon
+as it is created, without altering native volume or mute settings. Trusted
+clicks, taps and keys retry a suspended context. Browser autoplay policy may
+still require the visitor's first interaction; the site cannot override that
+policy. Owned tests remain muted.
+
 The build retains cross-origin isolation and Brotli WASM delivery. A build
 with an unavailable or changed release fails instead of publishing an empty
 site. The qualified source release is `native-startup568`, with the previously

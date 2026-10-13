@@ -13,6 +13,8 @@ test('automatic launcher asks only for the selected edition and releases its wor
     {id: 'majesty'}, {id: 'majesty-wayfinder'},
   ]))});
   await c.status('majesty'); assert.equal(calls.length, 1); assert.equal(calls[0].game.id, 'majesty');
+  assert.equal(calls[0].brief, true);
+  assert.equal(c.games[0].id, 'majesty');
   c.close(); assert.equal(worker.closed, true); await assert.rejects(c.status('majesty'), /cancelled/);
 });
 

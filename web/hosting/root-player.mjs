@@ -19,6 +19,7 @@ export async function prepareRootPlayer({search = location.search,
       });
     }
     signal?.throwIfAborted();
+    return client.games;
   } finally {
     client.close();
   }
