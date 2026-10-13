@@ -1,4 +1,4 @@
-// Source-bound v2 content, release pending live qualification.
+// Source-bound v2 content, qualified by native effects and original browser saves.
 export const LOST_TRAIL_V2_FILES = Object.freeze({
   "Data/mx_gpltext.cam": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
   "Data/mx_textdata.cam": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",

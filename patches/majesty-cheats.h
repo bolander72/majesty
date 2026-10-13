@@ -99,6 +99,34 @@ void input(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *
   mods_hook_return(api, cpu, 1, 4);
 }
 
+// The original build-anything flag skips NotBuildable and prerequisite
+// checks. Exclude two internal resources at the construction-list insertion
+// site, without changing their quest definitions, existing actors or saves.
+// 00468c08 passes (out iterator, insertion node, row); the row's TString is
+// followed by its four-byte resource ID at +0c. 00469eb0 returns the iterator
+// and pops twelve bytes. Both layouts are verified in the pinned listings.
+void construction_row(const PopModApi *api, pop_cpu_v1 *cpu,
+                      PopHookInvocation *inv, void *) {
+  if (!gm_valid(cpu->esp, 16) || rd32(cpu->esp) != 0x00468c0du) {
+    mods_call_next(api, inv, cpu); return;
+  }
+  const uint32_t row = rd32(cpu->esp + 12);
+  if (!row || !gm_valid(row, 16)) {
+    mods_call_next(api, inv, cpu); return;
+  }
+  const uint32_t type = rd32(row + 12);
+  // ABA0: placeholder_building (no GPL agent); ABJ4: EvilPalace.
+  if (type != 0x30414241u && type != 0x344a4241u) {
+    mods_call_next(api, inv, cpu); return;
+  }
+  const uint32_t result = rd32(cpu->esp + 4), position = rd32(cpu->esp + 8);
+  if (!result || !position || !gm_valid(result, 4) || !gm_valid(position, 8)) {
+    mods_call_next(api, inv, cpu); return;
+  }
+  wr32(result, position); // A skipped insert leaves the original list intact.
+  mods_hook_return(api, cpu, result, 12);
+}
+
 void install() {
   static bool attempted = false;
   if (attempted) return;
@@ -108,6 +136,11 @@ void install() {
        POP_HOOK_WRAP, POP_HOOK_NO_GAME_VIEW, nullptr, &hook) != POP_OK)
     std::fprintf(stderr, "[cheats] Native cheat input unavailable\n");
   else std::fprintf(stderr, "[cheats] Native cheat input installed\n");
+  uint32_t construction_hook = 0;
+  if (mods_hook_install_ex(MODS_OWNER_RUNTIME, 0x00469eb0u, 0, construction_row,
+       POP_HOOK_WRAP, POP_HOOK_NO_GAME_VIEW, nullptr, &construction_hook) != POP_OK)
+    std::fprintf(stderr, "[cheats] Construction safety filter unavailable\n");
+  else std::fprintf(stderr, "[cheats] Construction safety filter installed\n");
   const char *debug = recomp_env("CHEAT_DEBUG");
   if (debug && !std::strcmp(debug,"1")) { uint32_t id=0; mods_hook_install_ex(MODS_OWNER_RUNTIME,0x004f4a10u,0,characters,POP_HOOK_WRAP,POP_HOOK_NO_GAME_VIEW,nullptr,&id); }
 }

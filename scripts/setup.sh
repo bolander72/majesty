@@ -23,6 +23,8 @@ apply_browser_patch() {
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-browser.patch"
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-startup-import-copy.patch"
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-call-return-cache.patch"
+apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-audio-channel-lifetime.patch"
+apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-audio-channel-lifetime-tests.patch"
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-browser-defaults.patch"
 # Authored adapters are absent from the pinned upstream; preserve existing edits.
 for native_source in "$MAJESTY_WORKSPACE/native/browser/"*; do

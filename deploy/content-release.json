@@ -3,7 +3,7 @@
   "contentSet": "lost-trail-v1",
   "storageId": "majesty-lost-trail",
   "baseId": "majesty",
-  "engineSha256": "4f36119bda15e259a49cb3fc8d8032e94613b808030e30af476d10a5e27eba5a",
+  "engineSha256": "51b2c998905eefbc8b0ffb03446aa64a9a1e87e60b8be62fe289bc27c5ba8e33",
   "candidateSha256": "d4c6afbf4a0d97b67a1edbc8b670bfdf05f84207b791d7d6d71db8477bbfe469",
   "canonicalGuid": "{8BC7C549-E5A2-4D0F-A726-83B16BF19E42}",
   "requiredRuntimeEnvironment": {
@@ -93,5 +93,6 @@
   ],
   "patchBytes": 964619,
   "newTerrainAuthored": false,
-  "menuArtworkInherited": true
+  "menuArtworkInherited": true,
+  "engineCompatibilityEvidence": "output/regression925-browser-content-qualified.json"
 }

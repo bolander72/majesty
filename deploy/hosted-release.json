@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "native-cheats598",
-  "bytes": 6894003,
-  "sha256": "89afaacbbc900938b116ab730a9c4d5b06aa8eed21f494442ba77a25a9230ab0",
-  "engineSha256": "4f36119bda15e259a49cb3fc8d8032e94613b808030e30af476d10a5e27eba5a",
+  "release": "native-regressions918",
+  "bytes": 7530607,
+  "sha256": "48af1acae861b923fc956b37078da52947ed328d671e2754b9caeebdfb89bac5",
+  "engineSha256": "51b2c998905eefbc8b0ffb03446aa64a9a1e87e60b8be62fe289bc27c5ba8e33",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -103,11 +103,11 @@
     },
     "static/majesty/MajestyRecomp.js": {
       "bytes": 471708,
-      "sha256": "1ea82c5f3f054fee8151e99a049395e5bbdb30a14b2eed8dc71703f9d6cc9df6"
+      "sha256": "fbbe0f6d651d9474b4f2d90959b97bed0a171e5a64f776d6d999387464c82dcf"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 6274472,
-      "sha256": "d7c578bfaaebc343297a5ea442de233f97011d35bc209b8a83978e7d0ac1c33d"
+      "bytes": 6867044,
+      "sha256": "e0fa7188fc58ccbc55a0255cb680297a5b0ce5685e34476ccde72a1dd1255b7b"
     },
     "static/majesty/index.html": {
       "bytes": 19657,
@@ -598,5 +598,5 @@
       "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
     }
   },
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/releases/native-cheats598.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/be50ee84ba92bed2f8f07e1a848d6f35fa17a84e/assets/releases/native-regressions918.tar.gz"
 }

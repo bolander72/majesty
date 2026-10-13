@@ -1,0 +1,13 @@
+--- a/dx/dx.cpp
++++ b/dx/dx.cpp
+@@ -542,6 +542,10 @@
+     for (size_t i = 0; i < used.size(); ++i)
+         if (!used[i]) {
+             used[i] = true;
++            // Host channels retain frequency overrides after Stop. Reusing a
++            // number for a different buffer must restore that buffer's rate,
++            // otherwise a 44.1 kHz voice can inherit an old 22.05 kHz pitch.
++            host_audio_set_frequency((int32_t)i, 0);
+             return (int32_t)i;
+         }
+     if (used.size() >= MAX_AUDIO_CHANNELS) {

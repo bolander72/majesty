@@ -1,0 +1,30 @@
+--- a/dx/tests/dx_tests.cpp
++++ b/dx/tests/dx_tests.cpp
+@@ -11704,6 +11704,19 @@
+ // with `cmp eax,3 / ja` and a four-entry jump table, so 2 is one of four modes
+ // and, given the game then uses channels 0 upwards, it is a count.
+ // ---------------------------------------------------------------------------
++// A freed voice belongs to a new buffer on reuse. Its previous pitch must
++// not override the new buffer's WAVEFORMATEX sample rate.
++static void test_audio_channel_rate_lifetime() {
++    int32_t channel = dx_alloc_audio_channel();
++    CHECK(channel >= 0);
++    host_audio_set_frequency(channel, 11025);
++    dx_free_audio_channel(channel);
++    int32_t reused = dx_alloc_audio_channel();
++    CHECK_EQ(reused, channel);
++    CHECK_EQ(g_audio_rates[reused], 0u);
++    dx_free_audio_channel(reused);
++}
++
+ static void test_qmixer_channels() {
+     cpu_reset();
+     qmixer_reset();
+@@ -14407,6 +14420,7 @@
+         {"DirectSound streaming", test_dsound_stream},
+         {"FMV refill gate", test_dsound_stream_pacing},
+         {"QMixer streaming", test_qmixer_streaming},
++        {"audio channel rate lifetime", test_audio_channel_rate_lifetime},
+         {"QMixer channels", test_qmixer_channels},
+         {"QMixer frame pump", test_qmixer_frame_pump},
+         {"QMixer volume scale", test_qmixer_volume_scale},
