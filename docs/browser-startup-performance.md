@@ -1,5 +1,44 @@
 # Faster browser home menu
 
+The latest hosted frontend shows a lightweight capture of the original home
+menu immediately. The native engine still initializes in the background;
+this is an improvement to visible startup and accepting a menu choice, not a
+claim that original initialization now completes in a fraction of a second.
+
+`web/hosting/home-menu.html` has accessible controls aligned to the captured
+1280x633 menu. The image keeps its proportions at other viewport sizes. Only
+one pending choice is forwarded when the native menu announces readiness.
+`home-menu.mjs` sends SDL3 Pointer Events, derives native click anchors from the
+actual viewport messages (including saved quality settings), and leaves fatal
+errors visible. Root and child messages must match both origin and window.
+The root uses one same-origin engine frame, keeping the art on screen throughout
+asset preparation and the handoff. Page navigation releases that engine normally.
+
+The normal entry no longer imports `app.js` or refreshes every setup card.
+`launcher-client.mjs` uses a temporary import worker for the selected edition
+and releases it before native startup. `/?setup=1` retains the original setup
+dashboard. Engine JS/data/WASM are preloaded in parallel with preparation.
+Early Exit Game leaves immediately; native Exit Game reports to the root so
+its successful exit can navigate the top-level page to boland.co.
+
+Pass `--home-menu-art` to the hosting builder with a private 1280x633 WebP capture
+of the verified original menu. Capture 551 is 223,068 bytes. The builder limits
+it to 2 MiB, verifies its header and records its SHA. Game artwork remains outside
+Git, alongside the existing private engine and original assets.
+
+Silent staged trials 554/556 measured the first home paint at 0.27/0.50 seconds
+on fresh origins and 0.15 seconds on a repeat visit. Trial 556 clicked Play Game
+before preparation completed and automatically reached the native name prompt;
+a repeat early Adjust Settings choice reached the native settings menu. Engine
+readiness still took 8.43 seconds on the repeat visit and 37.22 seconds on a fresh
+origin including the 570 MB asset archive's download, verification and import.
+Peak owned browser RSS was 2,317 MiB, below the 3,072 MiB ceiling; the test browser
+was closed. The focused frontend/hash/import tests pass all 26 checks. No native
+engine, co-op protocol, save schema or content bytes were changed by this frontend
+work. The content authoring goal is paused at its saved SDK checkpoint.
+
+## Earlier engine and hash-cache improvement
+
 The October 12 startup investigation measured the previous published engine at
 15.9–16.7 seconds from the player page to its native menu in an isolated Chrome
 profile with game data already installed. Approximately five seconds reread

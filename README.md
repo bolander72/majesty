@@ -38,9 +38,11 @@ existing campaign progress and checkpoints while developing new content.
 The static browser engine is deployed at <https://majesty-tau.vercel.app>.
 `majesty.boland.co` is attached to the Vercel project and awaits its Cloudflare
 DNS record: CNAME `majesty` → `7f0010370b549dbf.vercel-dns-017.com`, DNS only.
-The root loads Majesty’s native menu automatically. A new browser downloads
+The root immediately displays Majesty's original home-menu artwork and accepts
+menu choices while the native engine initializes behind it. A new browser downloads
 and verifies the hosted asset bundle, caches it locally, then starts the engine.
-There is no file picker or welcome screen. Use `/?setup=1` only for optional
+There is no file picker or welcome screen. The engine still needs several seconds
+to initialize, and first visits also download the game data. Use `/?setup=1` only for optional
 file/save management outside the normal game entry.
 
 Imports and saves belong to their website origin. A localhost collection is
@@ -58,6 +60,7 @@ Prepare a static deployment from a pinned local frontend receipt:
 python3 scripts/prepare-vercel-site.py \
   --source-package upstream/majesty-recomp/build/frontend-wayfinder396/site-edition.json \
   --automatic-assets output/hosting403-automatic-assets.json \
+  --home-menu-art output/home-menu-capture.webp \
   --output output/hosting403
 ```
 

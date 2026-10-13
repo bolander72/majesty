@@ -1,5 +1,15 @@
 # Changelog
 
+## Immediate hosted home screen
+
+- Display the original home-menu artwork while the engine initializes, instead
+  of leaving the page black. Early menu choices pass to the native menu once it
+  is ready; Exit Game links to boland.co.
+- Preload engine resources and prepare only the selected edition, without
+  constructing or refreshing the hidden setup dashboard.
+- Keep the engine in one same-origin frame so entering it does not introduce
+  a second blank page. Release the import worker before launching the engine.
+
 ## Private SDK mission authoring
 
 - Verify The Lost Trail GPL compilation with the original compiler.
