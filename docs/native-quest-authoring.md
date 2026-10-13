@@ -147,10 +147,61 @@ owned RSS below 159 MiB. This older native test executable is distinct from
 production WASM598. Trial617's overly verbose file-read trace hit the log guard
 and was closed; later trials used the bounded file-open trace.
 
-The selector still showed the stock markers. The central question mark was
+At checkpoint 637 the selector still showed the stock markers. The central question mark was
 verified as the stock Secret Quest, not Lost Trail. The next task is to connect
 the reserved XQD2 entry's native menu widget/title resources, then select it and
 verify original world creation, paid Lodge/Wayfinder recruitment, objectives,
 save/reload and victory. Avoid repeating map-editor confirmation or generic
 hover scans without new evidence. Private checkpoint:
 `output/mission637-continuation-checkpoint.json`.
+
+### Reserved native menu entry and first world, October 13
+
+The purchased expansion `SMNU/AP30` already contains XQD2's marker 4032 and
+trigger 4132. The marker rectangle starts at 1201,369 on its large scrolling map;
+it is outside the initial southern view. Native `0044eda0` makes both controls
+visible when `004d1710` finds the registered template. Native `004d2e00`,
+`004d30b0` and `004d31b0` request separate IXD2/IXR2/IXS2 image resources.
+The trigger uses DX32. These images are absent from the stock installation.
+
+`scripts/lib/lost_trail_menu.py` prepares a private clone of purchased XQD1 art
+under those four unused image IDs. Only directory identities change; all image
+and numeric TILE entries/payloads remain intact. Section mode 1 is not evidence
+of compression: this archive's TILE directory has numeric keys. This inherited
+art is a prototype, not newly authored mission artwork. All stock widgets and
+the original XQD1 archive remain unchanged. Earlier resolution/base-menu
+override experiments 643/645 were unnecessary and removed from the test mirror.
+
+AP30's string 2 names its reserved control, but the visible quest heading comes
+from `STRT/QUES`, keyed by native quest IDs. Original `004d1390` requests
+QUES/XQD2. The private candidate changes only that name to The Lost Trail and
+preserves all other quest identities/names. It stages the installation's Data
+and DataMX aliases together. Canonical SDK GUID and compiled initializer stay
+unchanged. The staging helper still requires independently verified official
+GPL output and never installs or publishes its candidates.
+
+Native trial 654 selected the reserved entry, displayed the authored background
+and goals under the correct heading, and entered an original Palace world.
+Trial 655 used the ordinary Options/Save Game interface to create a 318,590-byte
+GMP (SHA256 `4e172882d626b57a51da6d34d63cee0af4b5ea594077870cfe3b228a8af949ab`).
+Its serialized state includes LostTrailVictory. Trials 656/658 restored it in
+fresh owned profiles, retaining the title, Palace world and 40,000 gold. These
+checks do not establish paid Lodge/Wayfinder persistence, objective completion
+or victory. Terrain still uses the unchanged Fertile Plain baseline.
+
+Candidate `output/mission653-native-candidate` and qualification receipt
+`output/mission657-selection-world-qualified.json` remain private. Eight focused
+tests cover preserved template bytes/load ordering, safe descriptions, distinct
+quest availability, unrelated menu strings, numeric artwork entries/payloads,
+and other campaigns' heading identities. Production WASM598 is unchanged.
+
+Trial 658 restored the initial world and selected its Palace through ordinary
+input. Trials 660/661/664 located Trail Lodge in the construction menu at
+900 gold. Trial 660 selected the wrong list row; later trials selected Lodge
+but their previews stayed red and the placement clicks did not deduct its
+price. These runs do not qualify construction. Saves containing a pending
+placement ghost are not completed-building checkpoints. Resume the original
+trial 655 world save for the next placement/construction test, preserving it.
+Then verify paid Wayfinder recruitment, building/hero save persistence,
+negative objective cases and actual victory. Current private continuation:
+`output/mission666-continuation-checkpoint.json`.

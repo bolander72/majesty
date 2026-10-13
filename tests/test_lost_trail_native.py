@@ -1,6 +1,9 @@
 import importlib.util
+import hashlib
 from pathlib import Path
+import struct
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -8,6 +11,8 @@ SPEC = importlib.util.spec_from_file_location(
     'lost_trail_native', ROOT / 'scripts/prepare-lost-trail-native.py')
 MISSION = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MISSION)
+from lib import lost_trail_menu as QUEST_MENU
+from lib.wayfinder_interface import string_entries
 
 
 class NativeMissionTests(unittest.TestCase):
@@ -48,7 +53,8 @@ class NativeMissionTests(unittest.TestCase):
             before = old.find('.//LoadData/' + n)
             after = new.find('.//LoadData/' + n)
             self.assertEqual([x.text for x in after],
-                             [x.text for x in before] + ['TheLostTrail.bcd'])
+                             [x.text for x in before] + ['TheLostTrail.bcd'] +
+                             ([QUEST_MENU.MENU_FILENAME] if n == 'MajXCommonData' else []))
         for path in ('.//LoadData/Rel1', './/UnloadData'):
             self.assertEqual(ET.tostring(old.find(path)), ET.tostring(new.find(path)))
         with self.assertRaises(ValueError):
@@ -70,6 +76,63 @@ class NativeMissionTests(unittest.TestCase):
         self.assertIn(b'XQD2 : MEDM NONE\r\n', added)
         with self.assertRaises(ValueError):
             MISSION.quest_dependencies(added)
+
+    def test_title_changes_only_reserved_slot_and_preserves_all_other_strings(self):
+        values = [b'Original entry ' + str(i).encode() for i in range(85)]
+        values[2] = b'Bonus Quest 2'
+        values[84] = b'Bonus Downloadable Quest 2 Trigger'
+        offsets, data = [], bytearray()
+        for i, value in enumerate(values):
+            offsets.append(4 + len(values) * 4 + len(data))
+            data.extend(struct.pack('<I', i) + value + b'\0')
+        source = struct.pack('<I', 0x02000000 + len(values)) + struct.pack('<85I', *offsets) + data
+        updated = string_entries(QUEST_MENU.reserved_title(source))[1]
+        self.assertEqual(updated[2], b'The Lost Trail')
+        self.assertEqual(updated[:2] + updated[3:], values[:2] + values[3:])
+        with self.assertRaises(ValueError):
+            QUEST_MENU.reserved_title(QUEST_MENU.reserved_title(source))
+
+    def test_art_clone_preserves_numeric_tile_directory_and_every_payload_byte(self):
+        directory_bytes = 16 + 9 * 28
+        start = 36 + directory_bytes
+        source = bytearray(b'CYLBPC  \x01\0\x01\0' + struct.pack('<II', 2, directory_bytes))
+        source.extend(struct.pack('<4sI4sI', b'IMAG', 36, b'TILE', 36 + 8 + 4 * 28))
+        payload = bytearray()
+        changed = set()
+        for kind, ids, mode in ((b'IMAG', list(QUEST_MENU.IMAGE_IDS), 0),
+                                (b'TILE', [struct.pack('<I', i) for i in range(5)], 1)):
+            source.extend(struct.pack('<II', len(ids), mode))
+            for key in ids:
+                if kind == b'IMAG':
+                    changed.update(range(len(source), len(source) + 4))
+                source.extend(struct.pack('<20sII', key, start + len(payload), 4))
+                payload.extend(b'opaque'[:4])
+        source.extend(payload)
+        raw = bytes(source)
+        with patch.object(QUEST_MENU, 'ART_SHA256', hashlib.sha256(raw).hexdigest()):
+            updated = QUEST_MENU.reserved_art(raw)
+            self.assertEqual(len(updated), len(raw))
+            self.assertTrue(all(a == b for i, (a, b) in enumerate(zip(raw, updated))
+                                if i not in changed))
+            self.assertEqual(updated[start:], raw[start:])
+            with self.assertRaises(ValueError):
+                QUEST_MENU.reserved_art(raw[:-1] + b'!')
+
+    def test_quest_heading_preserves_other_campaign_identities_and_names(self):
+        entries = [b'XQD1Balance of Twilight\0', b'XQD2Bonus Quest 2\0',
+                   b'XQD3Bonus Quest 3\0']
+        offsets, payload = [], bytearray()
+        for entry in entries:
+            offsets.append(16 + len(payload))
+            payload.extend(entry)
+        raw = struct.pack('<I3I', 0x02000003, *offsets) + payload
+        updated = QUEST_MENU.quest_title(raw)
+        new_offsets = struct.unpack_from('<3I', updated, 4)
+        actual = [updated[a:b] for a, b in zip(new_offsets, new_offsets[1:] + (len(updated),))]
+        self.assertEqual(actual, [entries[0], b'XQD2The Lost Trail\0', entries[2]])
+        for bad in (updated, raw[:-1], raw.replace(b'XQD2', b'XQD1'), raw[:7]):
+            with self.assertRaises(ValueError):
+                QUEST_MENU.quest_title(bad)
 
 
 if __name__ == '__main__':

@@ -1,8 +1,8 @@
 {
-  "objective": "Continue playable Majesty content from recoveryr12/player139: published native paired resume, original Chapter3 shared victory/persistence, officialSDK/native integration path for Wayfinder and Trail Lodge. Preserve Wardens, older branches and quiet bounded resource limits.",
+  "objective": "Qualify playable Lost Trail with Wayfinder heroes and Trail Lodge buildings through native selection, world creation, paid construction/recruitment, original save-reload and victory before release. Keep old co-op investigation deferred.",
   "status": "active",
   "builtInGoalStatus": "paused",
-  "updatedAtUnix": 1791871671,
+  "updatedAtUnix": 1791874440,
   "previousGoalEvidence": "output/campaign079-qualified.json",
   "browserTestingSuspendedUnderLatestSuppliedInstructions": false,
   "browserTestingAuthorization": "User authorizes bounded browser co-op trials in latest AGENTS.md.",
@@ -273,7 +273,13 @@
   "latestCheatRelease": "output/cheats600-qualified.json",
   "latestNativeMissionCheckpoint": "output/mission549-quest-force-checkpoint/export.json",
   "latestEditorTrial": "output/mission610-result.json",
-  "latestNativeContentCheckpoint": "output/mission637-continuation-checkpoint.json",
+  "latestNativeContentCheckpoint": "output/mission666-continuation-checkpoint.json",
   "latestCanonicalCompilation": "output/mission634-compiled-verification.json",
-  "latestNativeMissionCandidate": "output/mission635-native-candidate/candidate.json"
+  "latestNativeMissionCandidate": "output/mission653-native-candidate/candidate.json",
+  "latestNativeMissionQualification": "output/mission657-selection-world-qualified.json",
+  "nativeLostTrailSelectorQualified": true,
+  "nativeLostTrailWorldLoadQualified": true,
+  "nativeLostTrailInitialSaveReloadQualified": true,
+  "nativeLostTrailPaidLodgeConstructionQualified": false,
+  "nativeLostTrailVictoryQualified": false
 }
