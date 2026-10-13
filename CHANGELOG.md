@@ -1,5 +1,11 @@
 # Changelog
 
+## Original Lost Trail campaign landmark — October 13, 2026
+
+- Replace the duplicated rectangular peninsula with original transparent lodge, pine-tree and trail art placed on the existing eastern peninsula. The coastline, sea texture and map grid remain continuous.
+- Upgrade the one cached map artwork resource before launch, without reimporting the game or changing profiles, saves, mission controls or gameplay. Preserve customized artwork and verify downloads before atomic replacement.
+- Qualified in a muted, bounded browser: native selector, Lost Trail briefing/objectives and original world entry. The playable terrain and other briefing illustrations remain inherited prototypes.
+
 ## GitHub asset distribution
 
 - Move live game, engine, loading artwork and content resources into the public

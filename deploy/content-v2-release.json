@@ -27,9 +27,9 @@
     },
     {
       "path": "DataMX/LostTrail-menu-art.cam",
-      "bytes": 376280,
-      "sha256": "d507fdb71c25ac323584f6d832ec0252be7aedf534ffe30b22b2fed985eac0c9",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/be50ee84ba92bed2f8f07e1a848d6f35fa17a84e/assets/content/majesty-lost-trail-v2/DataMX/LostTrail-menu-art.cam"
+      "bytes": 335244,
+      "sha256": "b75ac61a93f7586d880f6708b6915fc273ad7bd4c2d9bca3bbacd5a318a9e8c4",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/3b3c6e21680a9d6737b8b947c67bbc61b14880c1/assets/content/lost-trail-map-art-v3/DataMX/LostTrail-menu-art.cam"
     },
     {
       "path": "DataMX/TheLostTrail.bcd",
@@ -92,7 +92,7 @@
       "url": "https://raw.githubusercontent.com/bolander72/majesty/be50ee84ba92bed2f8f07e1a848d6f35fa17a84e/assets/content/majesty-lost-trail-v2/DataMX/Wayfinder-art.cam"
     }
   ],
-  "patchBytes": 1283818,
+  "patchBytes": 1242782,
   "qualificationEvidence": "output/regression925-browser-content-qualified.json",
   "newTerrainAuthored": false,
   "menuArtworkIsPrototype": true,
@@ -100,5 +100,9 @@
   "nativeAbilitiesQualified": true,
   "browserSaveReloadQualified": true,
   "browserPaidRecruitmentQualified": true,
-  "rootDefaultIntegrationQualified": true
+  "rootDefaultIntegrationQualified": true,
+  "mapArtworkIsOriginal": true,
+  "briefingArtworkIsPrototype": true,
+  "mapArtworkSourceSha256": "11612f4e1bea6b063e384fa9641b5f638170acfca86f6d842a67e5ee3e85dddb",
+  "mapArtworkQualificationEvidence": "output/map954-browser-qualified.json"
 }
