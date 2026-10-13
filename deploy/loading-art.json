@@ -1,9 +1,11 @@
 {
   "format": "majesty-loading-art-v1",
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/presentation/original-loading.jpg",
-  "bytes": 248393,
-  "sha256": "8a1d7291d3de6aa31ebf907ff7d7688b4960c33b5f5b2d5dbf8c9c5cb65d2a2e",
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/eec251e8d733526fafde2e7cf99dced6104fe0f7/assets/presentation/original-loading.jpg",
+  "bytes": 253477,
+  "sha256": "b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6",
   "width": 800,
   "height": 600,
-  "source": "Original game Data/cinedata3.dat PICT/SPLH loading artwork"
+  "source": "Original game Data/cinedata3.dat PICT/SPLH loading artwork",
+  "sourceRecordSha256": "a66c0e3e9a093b0e331891d3dee046ab5ed5dbe5d3d074d70720f8fe4136f5f0",
+  "sourcePixelOffset": 20
 }

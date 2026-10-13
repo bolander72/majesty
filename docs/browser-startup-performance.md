@@ -161,3 +161,10 @@ Native layout cleanup removes the embedded development `Version #` placeholder.
 The engine canvas receives focus after becoming visible, giving keyboard input
 the correct target. Music resumes immediately when browser autoplay policy
 permits it; fresh-browser restrictions can still require interaction.
+
+The SPLH extraction now starts at its actual 20-byte raster header. The earlier
+48-byte offset shifted each scanline fourteen pixels, wrapping the left edge
+onto the right and cutting the footer logo. `scripts/extract-loading-art.py`
+verifies the original record hash, decodes bottom-up BGR555 pixels and exports
+a PNG; the published JPEG is encoded from that complete raster. Full-screen
+black framing and proportional fitting remain unchanged.

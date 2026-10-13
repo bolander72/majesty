@@ -2580,3 +2580,6 @@ On 2026-10-08, after explicit user authorization lifted the browser suspension, 
 - Center the multiplayer invitation tab above the game so its collapsed control leaves the upper-left minimap accessible. Private277 candidate; browser confirmation pending.
 
 - Bound unacknowledged co-op pause/travel requests and offer recovery without claiming a new save. Distinguish an original result being settled from final shared completion. Private288 normal paired saving verified; original end-dialog recovery verification pending.
+
+- Fix the original loading artwork extraction so its right edge no longer wraps
+  and the bottom logo is fully visible.
