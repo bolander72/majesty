@@ -1,25 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {blankVersionLabel, prepareMenuText} from '../web/hosting/menu-text.mjs';
+import {removeMenuTextShadows} from '../web/hosting/menu-text.mjs';
 
-test('only the nine placeholder characters change, with all offsets preserved', () => {
-  const original = new TextEncoder().encode('menu prefix\x00\x0a\x00\x00\x00Version #\x00\x0b\x00\x00\x00ADJUST SETTINGS\x00');
-  const saved = original.slice(), output = blankVersionLabel(original);
-  assert.deepEqual(original, saved);
-  assert.equal(output.length, original.length);
-  const at = new TextDecoder().decode(original).indexOf('Version #');
-  assert.deepEqual(output.slice(0, at), original.slice(0, at));
-  assert.equal(new TextDecoder().decode(output.slice(at, at + 9)), '         ');
-  assert.deepEqual(output.slice(at + 9), original.slice(at + 9));
+const missing = () => {throw new DOMException('Absent', 'NotFoundError');};
+class Directory {
+  constructor(entries = {}) {this.entries = entries;}
+  async getDirectoryHandle(name) {return this.entries[name] || missing();}
+  async getFileHandle(name) {return this.entries[name] ? {getFile: async () => this.entries[name]} : missing();}
+  async removeEntry(name) {delete this.entries[name];}
+}
+
+test('cleanup removes only known generated resources and preserves custom text and layout', async () => {
+  const data = new Directory({
+    'textdata.cam': {size: 363864, hash: 'f5cbb50e01c78042366e287dac3db4af66db5bfcffe4a21935f91f6effda0898'},
+    'mx_textdata.cam': {size: 139119, hash: 'customized'},
+    'UIData_1280_633.dat': {size: 100, hash: 'layout'},
+  });
+  const root = new Directory({majesty: new Directory({profile: new Directory({Data: data})})});
+  const removed = await removeMenuTextShadows({profilePath: 'majesty/profile',
+    storage: {getDirectory: async () => root}, digest: async file => file.hash});
+  assert.equal(removed, 1);
+  assert.equal(data.entries['textdata.cam'], undefined);
+  assert.equal(data.entries['mx_textdata.cam'].hash, 'customized');
+  assert.equal(data.entries['UIData_1280_633.dat'].hash, 'layout');
 });
 
-test('missing and duplicated labels are refused', () => {
-  assert.throws(() => blankVersionLabel(new Uint8Array(30)), /not found/);
-  const one = '\x00\x0a\x00\x00\x00Version #\x00\x0b\x00\x00\x00';
-  assert.throws(() => blankVersionLabel(new TextEncoder().encode(one + one)), /Ambiguous/);
+test('fresh profiles need no cleanup or writes', async () => {
+  assert.equal(await removeMenuTextShadows({profilePath: 'majesty/profile',
+    storage: {getDirectory: async () => new Directory()}}), 0);
 });
 
 test('invalid profiles are refused before touching storage', async () => {
-  await assert.rejects(prepareMenuText({dataId: 'majesty', profilePath: 'majesty/profile/../game',
+  await assert.rejects(removeMenuTextShadows({profilePath: 'majesty/profile/../game',
     storage: {getDirectory: () => assert.fail()}}), /Invalid menu/);
 });

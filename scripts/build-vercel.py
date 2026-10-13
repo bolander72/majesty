@@ -74,8 +74,8 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
   if (displayProfile && !/^[a-zA-Z0-9_-]{1,40}$/.test(displayProfile)) throw Error("Invalid player profile name");
   const displayProfilePath = `${id}/profile` + (frontierProfilePath ? `/${frontierProfilePath}` :
     (displayProfile ? `/${displayProfile}` : ""));
-  const {prepareMenuText} = await import("../hosting/menu-text.mjs");
-  await prepareMenuText({dataId, profilePath: displayProfilePath, signal});
+  const {removeMenuTextShadows} = await import("../hosting/menu-text.mjs");
+  await removeMenuTextShadows({profilePath: displayProfilePath, signal});
   const heroRestoreReceipt = prepareHeroRestore ?''',
     }
     for old, new in replacements.items():
@@ -108,6 +108,7 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
         html = html.replace('document.body.dataset.gameReady = "true";',
             'document.body.dataset.gameReady = "true";\n'
             '      document.getElementById("startup-art")?.remove();\n'
+            '      canvas.focus({preventScroll: true});\n'
             '      performance.mark("majesty-menu-ready");', 1)
     return html
 

@@ -1,0 +1,16 @@
+--- a/browser_viewport.cpp
++++ b/browser_viewport.cpp
+@@ -267,6 +267,13 @@
+   if (panel_start > main_start)
+     panel_start = uint32_t(int(panel_start) + delta);
+   main_size = uint32_t(main.size());
++  // The SHA-pinned layout embeds a development placeholder in its menu.
++  // Blank its glyphs without changing record sizes, bindings or source assets.
++  constexpr char version_label[] = "Version #";
++  const auto version = std::search(bytes.begin(), bytes.end(), version_label,
++                                   version_label + sizeof(version_label) - 1);
++  if (version != bytes.end())
++    std::fill_n(version, sizeof(version_label) - 1, uint8_t(' '));
+   source = std::move(bytes);
+   return true;
+ }

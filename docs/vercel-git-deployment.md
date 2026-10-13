@@ -33,12 +33,11 @@ from Git and verified during builds. The startup page preserves its aspect
 ratio and removes it when the native menu is ready, or hides it on an error.
 It presents no clickable substitute for the game's menu.
 
-The menu text adapter creates presentation resource shadows through the
-existing profile overlay. It blanks only the nine `Version #` characters in
-the two recognized original text archives, preserving byte counts and all
-other strings. It never edits imported game files, changes their save/content
-identities, or replaces an existing profile resource override. These generated
-presentation resources may travel with an ordinary player-profile backup.
+The native viewport adapter blanks the nine `Version #` characters embedded
+in its SHA-pinned menu layout. It preserves record sizes and all control
+bindings, and leaves the original game data intact. Web startup removes only
+exact, hash-recognized text-resource shadows from the earlier attempted fix,
+preserving customized profile resources and imported game files.
 
 Audio startup attempts to resume the engine's existing SDL3 context as soon
 as it is created, without altering native volume or mute settings. Trusted
@@ -48,8 +47,13 @@ policy. Owned tests remain muted.
 
 The build retains cross-origin isolation and Brotli WASM delivery. A build
 with an unavailable or changed release fails instead of publishing an empty
-site. The qualified source release is `native-startup568`, with the previously
-verified call-return cache optimization and no home-menu facade.
+site. The qualified source release is `native-menu-layout580`, retaining the
+previously verified call-return cache optimization and cleaning the menu label
+inside the native layout adapter. A protected preview reached the original menu
+with the placeholder absent. With autoplay permitted in the muted test browser,
+audio was running before any interaction and its output contained nonzero PCM.
+The full-screen loading layer uses black around proportionally fitted original
+artwork. The gold M favicon is authored SVG.
 
 Local verification:
 

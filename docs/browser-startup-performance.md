@@ -135,3 +135,29 @@ The working production URL is `https://majesty-tau.vercel.app/`.
 `majesty.boland.co` remains assigned to the deployment but did not resolve in
 this verification. No account, save-schema, backend or environment migration is
 required for this release; the optional hash cache populates automatically.
+
+## Root startup and immutable engine caching, October 12
+
+The custom domain now resolves and serves the actual native player at `/`.
+Engine/data/script requests carry pinned content hashes and receive immutable
+caching only for matching versions. Returning browser runs confirmed zero
+network transfer for these assets. Module preloads, a reused game descriptor
+and brief import-status requests reduce repeated startup work. No game-file
+byte validation required by multiplayer or managed-world startup was removed.
+
+Two baseline root menu times were 7.30 and 6.80 seconds; two warmed candidate
+times were 7.00 and 6.52 seconds. These small samples suggest a modest startup
+gain and do not establish a precise percentage or improvement on every machine.
+The earlier call-return-cache optimization remains in the engine. Most remaining
+time is native initialization: one phase measurement spent about 0.9 seconds
+preparing the browser/runtime, followed by 6.6 seconds in the original game.
+
+The user requested the authentic loading picture after rejecting an earlier
+interactive menu facade. The original PICT/SPLH warrior artwork now appears
+while initialization proceeds, fitted proportionally over a full-screen black
+background and removed when the native menu is ready. This improves startup
+presentation; the picture's display time is not counted as game readiness.
+Native layout cleanup removes the embedded development `Version #` placeholder.
+The engine canvas receives focus after becoming visible, giving keyboard input
+the correct target. Music resumes immediately when browser autoplay policy
+permits it; fresh-browser restrictions can still require interaction.
