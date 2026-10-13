@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import zipfile
 import xml.etree.ElementTree as ET
@@ -71,7 +72,63 @@ def sha(path):
         return hashlib.file_digest(source, 'sha256').hexdigest()
 
 
-def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_template=None):
+EDITOR_UNUSED_CAMS = frozenset({
+    'cinedata1.cam', 'mx_cinedata1.cam', 'xqd1_intro.cam',
+    'soundfx.cam', 'mx_soundfx.cam', 'voices.cam', 'mx_voices.cam',
+})
+
+
+def editor_dataset(data, map_assets_only=False):
+    """Change only the isolated editor's loader, never the purchased files."""
+    if not map_assets_only:
+        return data, []
+    tree = ET.fromstring(data)
+    omitted = []
+    for load in tree.findall('.//Load'):
+        for node in list(load):
+            name = (node.text or '').strip().replace('\\', '/').split('/')[-1]
+            if node.tag == 'CAM' and name.casefold() in EDITOR_UNUSED_CAMS:
+                omitted.append((node.text or '').strip())
+                load.remove(node)
+    return ET.tostring(tree, encoding='utf-8'), omitted
+
+
+def dataset_inputs(game, map_assets_only=False):
+    """Resolve the original dataset's load closure; opening a quest activates it."""
+    variables = {'MajestyDataPath': 'Data', 'MajestyBytecodeDataPath': 'Data',
+                 'MajestyExpansionBytecodeDataPath': 'DataMX', 'MajestySDKPath': 'SDK'}
+    required = []
+    for folder, filename in [('Data', 'MajestyDatasetDefinitions.xml'),
+                             ('DataMX', 'MajestyExpansionDatasetDefinitions.xml')]:
+        definition, _ = editor_dataset((game / folder / filename).read_bytes(),
+                                       map_assets_only)
+        for node in ET.fromstring(definition).findall('.//Load/*'):
+            if node.tag not in {'CAM', 'GPL', 'GPLSource', 'Constants', 'Strings'}:
+                continue
+            value = (node.text or '').strip().replace('\\', '/')
+            if not value:
+                continue
+            absolute = value.startswith('$(')
+            for key, replacement in variables.items():
+                value = value.replace('$(' + key + ')', replacement)
+            if '$(' in value:
+                raise ValueError('Unknown SDK dataset path variable')
+            name = Path(value if absolute else folder + '/' + value)
+            if name.is_absolute() or '..' in name.parts:
+                raise ValueError('Unsafe SDK dataset dependency')
+            if node.tag == 'GPLSource':
+                directory = game / name
+                if not directory.is_dir():
+                    raise ValueError('Original SDK GPL source directory is missing')
+                required.extend(p.relative_to(game).as_posix()
+                                for p in sorted(directory.rglob('*')) if p.is_file())
+            else:
+                required.append(name.as_posix())
+    return list(dict.fromkeys(required))
+
+
+def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_template=None,
+            map_assets_only=False):
     if output.exists():
         raise ValueError('Preserve previous editor trials; choose a new output')
     receipt = json.loads((ROOT / 'output/sdk145-stage.json').read_text())
@@ -83,8 +140,8 @@ def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_templ
         raise ValueError('Original SDK editor differs')
     if sha(game / 'SDK/Gplbcc.exe') != COMPILER_SHA:
         raise ValueError('Original SDK compiler differs')
-    # Bootstrap authoring dependencies only. Audio and cinematic archives are
-    # deliberately absent; this is not a claim that a map can yet be generated.
+    # Opening a saved project activates the complete original dataset. Preserve
+    # its references and bytes, including archives unused by the creation dialog.
     paths = ['SDK/RGSeditor.exe', 'SDK/Gplbcc.exe', 'SDK/steam_api.dll', 'SDK/steam_appid.txt',
              'Data/DataSets.xml', 'Data/MajestyDatasetDefinitions.xml',
              'Data/InterfaceStrings.xml', 'Data/miscdata.cam', 'Data/unittype.cam',
@@ -98,6 +155,7 @@ def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_templ
              'DataMX/mx_constants.rgs', 'DataMX/MX_Compatibility.bcd',
              'DataMX/MX_Build.bcd', 'DataMX/MX_Data.bcd',
              'DataMX/MX_Decision.bcd', 'DataMX/MX_Task.bcd']
+    paths = list(dict.fromkeys(paths + dataset_inputs(game, map_assets_only)))
     # Installed resource names vary in case; retain their exact bytes while
     # placing them at the SDK's expected, case-insensitive Windows paths.
     entries = {}
@@ -148,12 +206,34 @@ def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_templ
     batch = ('@echo off\r\ncd game\r\n'
              'SDK\\RGSeditor.exe\r\n'
              'echo EDITOR_EXIT=%ERRORLEVEL%\r\n').encode('ascii')
+    staged_definitions = {}
     with zipfile.ZipFile(output / 'editor.zip', 'x', zipfile.ZIP_DEFLATED) as archive:
         archive.writestr('editor/start-editor.bat', batch)
         for name, (source, _) in entries.items():
-            archive.write(source, 'editor/game/' + name)
+            if name in ('Data/MajestyDatasetDefinitions.xml',
+                        'DataMX/MajestyExpansionDatasetDefinitions.xml'):
+                data, omitted = editor_dataset(source.read_bytes(), map_assets_only)
+                archive.writestr('editor/game/' + name, data)
+                staged_definitions[name] = dict(
+                    sourceSha256=entries[name][1],
+                    stagedSha256=hashlib.sha256(data).hexdigest(),
+                    omittedCAMs=omitted)
+            else:
+                archive.write(source, 'editor/game/' + name)
         for name, source in resume_files.items():
             archive.write(source, 'editor/game/SDK/' + name)
+        resume_query = None
+        if resume_files:
+            project_name = next(n for n in resume_files if n.endswith('.mqxml'))
+            if re.fullmatch(r'[A-Za-z0-9_.-]+', project_name):
+                # The official MFC editor accepts a document filename. Starting
+                # with it avoids repeated legacy file-dialog input during trials.
+                command = ('@echo off\r\nRGSeditor.exe "' + project_name +
+                           '"\r\necho EDITOR_EXIT=%ERRORLEVEL%\r\n')
+                archive.writestr('editor/game/SDK/resume-editor.bat',
+                                 command.encode('ascii'))
+                resume_query = ('?app=editor.zip&work=editor/game/SDK&'
+                                'p=resume-editor.bat&auto=false&sound=false')
         for name, source in mfc_files.items():
             archive.write(source, 'editor/game/SDK/' + name)
         if mfc_files:
@@ -177,10 +257,16 @@ def prepare(runtime, output, mfc_payload=None, resume_project=None, resume_templ
                   applicationSha256=sha(output / 'editor.zip'),
                   privateMfcFiles=PRIVATE_MFC_FILES if mfc_files else {},
                   originalEditorUnmodified=True,
+                  originalDatasetDefinitionsUnmodified=not map_assets_only,
+                  originalFilesOnDiskUnmodified=True,
+                  stagedDatasetDefinitions=staged_definitions,
+                  editorMapAssetsOnly=map_assets_only,
+                  completeDatasetLoadClosureStaged=True,
                   resumeFiles={name: dict(bytes=source.stat().st_size, sha256=sha(source))
                                for name, source in resume_files.items()},
                   memoryFilesystemOnly=True, playerProfilesAccessed=False,
                   launched=False, mapGenerated=False, installed=False, published=False,
+                  resumeLaunchQuery=resume_query,
                   launchQuery='?app=editor.zip&work=editor/game/SDK&p=RGSeditor.exe&auto=false&sound=false')
     (output / 'stage.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
@@ -193,6 +279,9 @@ if __name__ == '__main__':
     parser.add_argument('--mfc-payload', type=Path, help='Extracted official VC2008 x86 security-update payload')
     parser.add_argument('--resume-project', type=Path, help='Previously exported SDK .mqxml project')
     parser.add_argument('--resume-template', type=Path, help='Its unchanged SDK-generated .q template')
+    parser.add_argument('--map-assets-only', action='store_true',
+                        help='Omit audio/cinematic CAMs from the private editor loader')
     args = parser.parse_args()
-    result = prepare(args.runtime, args.output, args.mfc_payload, args.resume_project, args.resume_template)
+    result = prepare(args.runtime, args.output, args.mfc_payload, args.resume_project,
+                     args.resume_template, args.map_assets_only)
     print(json.dumps({key: result[key] for key in ['launched', 'mapGenerated', 'installed']}))

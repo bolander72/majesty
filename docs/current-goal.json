@@ -1,8 +1,8 @@
 {
   "objective": "Continue playable Majesty content from recoveryr12/player139: published native paired resume, original Chapter3 shared victory/persistence, officialSDK/native integration path for Wayfinder and Trail Lodge. Preserve Wardens, older branches and quiet bounded resource limits.",
   "status": "active",
-  "builtInGoalStatus": "active",
-  "updatedAtUnix": 1791793255,
+  "builtInGoalStatus": "paused",
+  "updatedAtUnix": 1791863044,
   "previousGoalEvidence": "output/campaign079-qualified.json",
   "browserTestingSuspendedUnderLatestSuppliedInstructions": false,
   "browserTestingAuthorization": "User authorizes bounded browser co-op trials in latest AGENTS.md.",
@@ -130,7 +130,7 @@
   },
   "resumedAtUserRequest": true,
   "goalResumeControlUnavailable": false,
-  "doNotTreatPausedIndicatorAsUserStopRequest": false,
+  "doNotTreatPausedIndicatorAsUserStopRequest": true,
   "goalResumeControlLimitation": "Goal API cannot resume and Codex computer-use access was rejected; work continues under the user explicit resume instruction.",
   "latestNativePauseChecks": "output/coop113-native-pause-qualified.json",
   "guestPauseObserverNativeChecksPassed": true,
@@ -156,7 +156,7 @@
   "nextHostResumeUrl": "output/coop139-r12-host-resume.txt",
   "latestOfficialCompilerPlan": "output/wayfinder141-compile-plan.json",
   "latestCompilerDependencyAudit": "output/wayfinder140-compiler-imports.json",
-  "nextAction": "Continue short automatic construction intervals towardMarketplace200HP/complete, preserveallbranches. Guestworkeractualtargetmarket proven; prioritizeconstruction overmore1600gold spells. Hostcastle366 needsworkerrepair andhostguild20 remainsfragile. Original3 stillrequires35000gold eachhuman andactualsharedvictory/persistedcompletion.",
+  "nextAction": "Use verified original RGS template baseline with its complete dependencies to progress Lost Trail integration; avoid repeating unresponsive region confirmation; preserve canonical GUID and compile-bound GPL",
   "latestOfficialCompilerTrial": "output/sdk145-local-observed.json",
   "latestPortableCompilerEnvironment": "output/sdk144-stage.json",
   "latestCompiledContentDraft": "output/wayfinder190-compiled/compiled.json",
@@ -267,5 +267,11 @@
   "latestDefenseProfiles": [
     "recovery301-host",
     "recovery301-guest"
-  ]
+  ],
+  "userAuthorizedOvernightContinuation": true,
+  "priority": "New native mission and content; original co-op mission loop deferred by user",
+  "latestCheatRelease": "output/cheats600-qualified.json",
+  "latestNativeMissionCheckpoint": "output/mission549-quest-force-checkpoint/export.json",
+  "latestEditorTrial": "output/mission610-result.json",
+  "latestNativeContentCheckpoint": "output/mission611-continuation-checkpoint.json"
 }

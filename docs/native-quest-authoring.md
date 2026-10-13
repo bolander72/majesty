@@ -17,7 +17,7 @@ manifests from that package and puts them alongside the unmodified editor in
 its private memory filesystem.
 
 `prepare-native-quest-editor.py` validates the qualified SDK runtime and original
-editor, stages the limited original authoring resources and the original GPL
+editor, resolves the dataset loader dependencies and stages the original GPL
 compiler, and optionally stages a previously exported project/template pair.
 Purchased assets, Microsoft DLLs, bytecode and binary templates stay out of Git
 and out of the public website. The actual editor hash is
@@ -74,3 +74,37 @@ mission resource manifest, then bind the compiled GPL and Wayfinder resources.
 Verify the map in the game, objective progression, original saves/reloads and
 victory before publication. Existing missions, player profiles and public release
 538 are unchanged by these authoring steps.
+
+## October 13 continuation
+
+The private mission549 checkpoint now contains the town force pattern, Epic
+Quest type and a single-player 256×256 layout. Its `.q` is 558 bytes, SHA256
+`8286e5eef5d62d5d6faaa19cdc1a2e3a76ed50f64c61ec5099037ee12402fb09`.
+It remains a draft, not a playable map. Original checkpoint544 is preserved.
+
+Use `--map-assets-only` for bounded editor trials. This optional private loader
+removes seven audio/cinematic CAM references and their 322 MiB of inputs, while
+retaining map art, unit types, terrain, constants, scripts and sound descriptions.
+Purchased files on disk are unchanged; the staged XML loader is intentionally
+filtered, with original/staged hashes and omitted references recorded in
+`stage.json`. The default mode preserves the original XML bytes. This option
+affects the editor package only, not native gameplay or production assets.
+
+A resumed package can use `stage.json`'s `resumeLaunchQuery`, which runs the
+unchanged official editor with its saved document filename through a private
+batch file. Wait until the staged SDK files are readable in the emulator FS
+before pressing Start; the harness initialization can reset an earlier click.
+Trial610 directly opened the original project with the filtered dataset and
+peaked at about 2,119 MiB of owned browser RSS, then closed normally. Trial604
+with the full dataset hit the resource guard and was closed; this is not a
+claim that all editor operations have bounded memory use.
+
+Region confirmation remains unresponsive in trials602/610, including the latter
+with a nonzero seed control and Project View selected. No new terrain export
+was verified. Avoid repeating that same sequence without new evidence. The
+next baseline is an existing valid official RGS template with its complete
+dependencies, followed by mission-specific edits and native game validation.
+`output/mission611-template-audit.json` records original template identities:
+many classic quests use `RGM6`, whereas original Freestyle, expansion Freestyle
+and the SDK examples use `RGMa`. Do not infer compatibility from the suffix.
+The canonical mission GUID and compiler-proven GPL remain unchanged.
