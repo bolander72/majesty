@@ -2583,3 +2583,5 @@ On 2026-10-08, after explicit user authorization lifted the browser suspension, 
 
 - Fix the original loading artwork extraction so its right edge no longer wraps
   and the bottom logo is fully visible.
+- Keep the loading artwork at its smaller original size from the start, centered
+  on black and fitted proportionally on smaller screens.

@@ -168,3 +168,8 @@ onto the right and cutting the footer logo. `scripts/extract-loading-art.py`
 verifies the original record hash, decodes bottom-up BGR555 pixels and exports
 a PNG; the published JPEG is encoded from that complete raster. Full-screen
 black framing and proportional fitting remain unchanged.
+
+The startup picture is capped at its original 800×600 display size from the
+first paint, matching the smaller loading presentation instead of enlarging
+it to fill a desktop viewport. Smaller viewports fit it proportionally within
+the available width and height; the surrounding background stays black.

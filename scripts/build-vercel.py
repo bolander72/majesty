@@ -197,7 +197,8 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
             '</div>', 1)
         html = html.replace('</style>', '''  #startup-art { position: fixed; inset: 0; z-index: 1;
     display: grid; place-items: center; background: #000; pointer-events: none; }
-  #startup-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  #startup-art img { display: block; width: min(800px, 100vw);
+    height: min(600px, 100dvh); object-fit: contain; }
   body[data-game-ready] #startup-art,
   body:has(#status:not([hidden])) #startup-art { display: none; }
 </style>''', 1)
