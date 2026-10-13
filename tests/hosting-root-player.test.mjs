@@ -79,7 +79,7 @@ test('v2 prepares a separate collection even when v1 is already ready', async ()
     status: async id => ({status: {state: id === 'majesty-lost-trail' ? 'ready' : 'notFound'}}),
     close() {},
   }), ensureAssets: async id => {imported = id;},
-    updateMapArt: async id => assert.equal(id, 'majesty-lost-trail-v2')});
+    updateArtwork: async id => assert.equal(id, 'majesty-lost-trail-v2')});
   assert.equal(imported, 'majesty-lost-trail-v2');
   assert.equal(prepared[0].contentStorageId, 'majesty-lost-trail-v2');
   assert.equal(prepared[0].id, 'majesty');

@@ -87,12 +87,12 @@
     },
     {
       "path": "DataMX/Wayfinder-art.cam",
-      "bytes": 303497,
-      "sha256": "49bc70478d75d97ee1a76d28daad0f04b6ef73618a27c143f9e5f8bf63ac4647",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/be50ee84ba92bed2f8f07e1a848d6f35fa17a84e/assets/content/majesty-lost-trail-v2/DataMX/Wayfinder-art.cam"
+      "bytes": 303952,
+      "sha256": "f8d5b85b14c819e7269a8f967a6651a1e8e4d45d6df759c11e9c840a115ae00c",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/f94522043b43fd1a7a50a7c070cf9c1ba0c482e8/assets/content/trail-lodge-ui-v3/DataMX/Wayfinder-art.cam"
     }
   ],
-  "patchBytes": 1242782,
+  "patchBytes": 1243237,
   "qualificationEvidence": "output/regression925-browser-content-qualified.json",
   "newTerrainAuthored": false,
   "menuArtworkIsPrototype": true,
@@ -104,5 +104,7 @@
   "mapArtworkIsOriginal": true,
   "briefingArtworkIsPrototype": true,
   "mapArtworkSourceSha256": "11612f4e1bea6b063e384fa9641b5f638170acfca86f6d842a67e5ee3e85dddb",
-  "mapArtworkQualificationEvidence": "output/map954-browser-qualified.json"
+  "mapArtworkQualificationEvidence": "output/map954-browser-qualified.json",
+  "nativeBuildingIconFrameReused": true,
+  "buildingIconQualificationEvidence": "output/icon960-browser-qualified.json"
 }

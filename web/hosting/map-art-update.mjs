@@ -10,6 +10,14 @@ export const MAP_ART_UPDATE = Object.freeze({
   url: 'https://raw.githubusercontent.com/bolander72/majesty/3b3c6e21680a9d6737b8b947c67bbc61b14880c1/assets/content/lost-trail-map-art-v3/DataMX/LostTrail-menu-art.cam',
 });
 
+export const LODGE_ICON_UPDATE = Object.freeze({
+  path: 'DataMX/Wayfinder-art.cam',
+  previousSha256: '49bc70478d75d97ee1a76d28daad0f04b6ef73618a27c143f9e5f8bf63ac4647',
+  sha256: 'f8d5b85b14c819e7269a8f967a6651a1e8e4d45d6df759c11e9c840a115ae00c',
+  bytes: 303952,
+  url: 'https://raw.githubusercontent.com/bolander72/majesty/f94522043b43fd1a7a50a7c070cf9c1ba0c482e8/assets/content/trail-lodge-ui-v3/DataMX/Wayfinder-art.cam',
+});
+
 async function writeAtomic(handle, data) {
   const writer = await handle.createWritable();
   try { await writer.write(data); await writer.close(); }
@@ -29,7 +37,7 @@ export async function updateCachedMapArt(id, {signal, storage = globalThis.navig
     let game = await storage.getDirectory();
     for (const part of [id, 'game']) game = await game.getDirectoryHandle(part);
     const data = await game.getDirectoryHandle('DataMX');
-    const handle = await data.getFileHandle('LostTrail-menu-art.cam');
+    const handle = await data.getFileHandle(update.path.split('/')[1]);
     const old = await handle.getFile();
     if (old.size > 1024 * 1024) return {updated: false, customized: true};
     const digest = await hashFile(old);
@@ -65,4 +73,10 @@ export async function updateCachedMapArt(id, {signal, storage = globalThis.navig
     }
     return {updated: changed};
   });
+}
+
+export async function updateCachedArtwork(id, options = {}) {
+  const map = await updateCachedMapArt(id, options);
+  const icon = await updateCachedMapArt(id, {...options, update: LODGE_ICON_UPDATE});
+  return {map, icon};
 }

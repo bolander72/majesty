@@ -12,5 +12,5 @@ export const LOST_TRAIL_V2_FILES = Object.freeze({
   "DataMX/mx_textdata.cam": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
   "QuestsMX/TheLostTrail.q": "f36b22e8e8fae61c3a84d4c7671cdcdd0c1b75cd419f0533a174c9f43a12ed04",
   "QuestsMX/TheLostTrail.qdd": "92cb042502aa40c984fc1ff0a61cea5b13e80afa9997700f3186f7fa5d9d871f",
-  "DataMX/Wayfinder-art.cam": "49bc70478d75d97ee1a76d28daad0f04b6ef73618a27c143f9e5f8bf63ac4647"
+  "DataMX/Wayfinder-art.cam": "f8d5b85b14c819e7269a8f967a6651a1e8e4d45d6df759c11e9c840a115ae00c"
 });

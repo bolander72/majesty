@@ -1,5 +1,10 @@
 # Changelog
 
+## Trail Lodge native UI icon — October 13, 2026
+
+- Give the Palace building-list Lodge icon the same 25×25 beveled native frame and dark inset as stock building emblems. Preserve world sprites, hero art, animations and gameplay.
+- Upgrade the cached artwork atlas without changing saves or reimporting the game. Record native UI consistency requirements in AGENTS.md for future UI additions.
+
 ## Original Lost Trail campaign landmark — October 13, 2026
 
 - Replace the duplicated rectangular peninsula with original transparent lodge, pine-tree and trail art placed on the existing eastern peninsula. The coastline, sea texture and map grid remain continuous.

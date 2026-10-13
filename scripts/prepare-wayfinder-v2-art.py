@@ -7,6 +7,7 @@ from pathlib import Path
 import struct
 from PIL import Image, ImageOps
 from lib.native_sprite_art import encode_tile, replace_animation_tiles, encode_cam
+from lib.native_ui_icon import framed_building_icon
 
 
 def read_records(raw):
@@ -44,12 +45,17 @@ def prepare(original, source, output):
         images[name] = image
     raw = original.read_bytes()
     templates, headers = {}, {}
+    icon_template, icon_palette = None, None
     for kind, key, body in read_records(raw):
+        if kind == b'TILE' and key == struct.pack('<I', 1750):
+            icon_template = body
+        if kind == b'SPLT' and key == struct.pack('<I', 123):
+            icon_palette = body
         if kind == b'IMAG' and key in [b'AVA1', b'ABW1']:
             templates[key] = body
         if kind == b'TILE' and key in [struct.pack('<I', 3611), struct.pack('<I', 1740)]:
             headers[struct.unpack('<I', key)[0]] = body[:26]
-    if len(templates) != 2 or len(headers) != 2:
+    if len(templates) != 2 or len(headers) != 2 or icon_template is None or icon_palette is None:
         raise ValueError('Required verified animation templates absent')
     tile_images = [Image.new('RGBA', (1, 1))]
     tile_headers = [(headers[3611], (0, 0))]
@@ -90,6 +96,8 @@ def prepare(original, source, output):
             portrait = Image.new('RGBA', size)
             portrait.alpha_composite(fitted, ((size[0] - fitted.width) // 2,
                                               (size[1] - fitted.height) // 2))
+            if sid == 1002 and ids is lodge_portraits:
+                portrait = framed_building_icon(source_image, icon_template, icon_palette)
             ids[sid] = len(tile_images)
             tile_images.append(portrait)
             tile_headers.append((header, (0, 0)))
@@ -138,8 +146,9 @@ def prepare(original, source, output):
     (output / 'Wayfinder-art.cam').write_bytes(data)
     # Debug previews are private and show exactly the pixels sent to encoding.
     tile_images[hero_tiles[0, 2]].save(output / 'wayfinder-native-scale.png')
+    tile_images[lodge_portraits[1002]].save(output / 'trail-lodge-list-icon.png')
     tile_images[lodge_tiles[1]].save(output / 'trail-lodge-native-scale.png')
-    report = dict(nativeIntegrationQualified=False, originalArtwork=True, borrowedDisplayedTiles=0,
+    report = dict(nativeIntegrationQualified=False, originalArtwork=True, borrowedDisplayedTiles=0, nativeUIFrameReused=True,
         sourceMainCAMSha256=hashlib.sha256(raw).hexdigest(), artworkSource=meta,
         templateIMAGSha256={key.decode(): hashlib.sha256(value).hexdigest() for key, value in templates.items()},
         tileCount=len(tiles), reboundHeroReferences=hero_refs, reboundLodgeReferences=lodge_refs,

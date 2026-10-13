@@ -1,12 +1,12 @@
 import {launcherClient} from './launcher-client.mjs';
 import {ensureAutomaticAssets} from './automatic-assets.mjs';
-import {updateCachedMapArt} from './map-art-update.mjs';
+import {updateCachedArtwork} from './map-art-update.mjs';
 
 // Prepare the selected edition before the real player starts in this document.
 // Returning players only check their completed import; no extra navigation.
 export async function prepareRootPlayer({search = location.search,
   openClient = launcherClient, ensureAssets = ensureAutomaticAssets,
-  signal, updateMapArt = updateCachedMapArt} = {}) {
+  signal, updateArtwork = updateCachedArtwork} = {}) {
   const query = new URLSearchParams(search), selected = query.get('edition');
   const client = await openClient({signal});
   try {
@@ -33,7 +33,7 @@ export async function prepareRootPlayer({search = location.search,
         signal, progress: () => {},
       });
     }
-    await updateMapArt(id, {signal});
+    await updateArtwork(id, {signal});
     signal?.throwIfAborted();
     return useDefault ? client.games.map(game => game.id === 'majesty'
       ? {...game, contentStorageId: id} : game) : client.games;

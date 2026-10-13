@@ -39,3 +39,8 @@ continuations.
   the crash has been fixed.
 - Read the upstream AGENTS.md before changing the game or runtime. Native
   builds use the official game tools; generated translations are not edited.
+
+# UI consistency
+
+- All new or changed UI elements must follow Majesty's existing native UI design system: match the surrounding framing, bevels, palette, icon scale, typography, spacing and interaction states. Reuse native UI components and resource templates where available.
+- Palace building-list icons use the native 25-by-25 framed emblem contract, with an opaque inset background and readable artwork inside the frame. Do not substitute an unframed world sprite or transparent thumbnail. Check new elements beside stock UI at native scale before shipping.

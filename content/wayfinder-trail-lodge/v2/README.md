@@ -46,3 +46,7 @@ controls, victory and completion records were qualified in native742.
 
 `RECOMP_RULE_INVENTORY_COMPAT=1` is required. Release source/resource integrity
 and browser/native qualification are gated by `deploy/content-v2-release.json`.
+
+### Native UI icon contract
+
+The Palace's Trail Lodge entry uses the original native building-list frame and opaque dark inset, with the original lodge illustration fitted inside it. The 25×25 icon is distinct from the transparent world sprite. `scripts/lib/native_ui_icon.py` reuses the purchased native frame, and `scripts/prepare-wayfinder-v2-art.py` encodes it in the Lodge's existing 1002 image set. Only positional tile 74 changes; world sprites, hero art, animation controls and abilities remain byte-identical. All future UI additions must follow the workspace AGENTS.md UI consistency rule.
