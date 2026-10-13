@@ -2585,3 +2585,6 @@ On 2026-10-08, after explicit user authorization lifted the browser suspension, 
   and the bottom logo is fully visible.
 - Keep the loading artwork at its smaller original size from the start, centered
   on black and fitted proportionally on smaller screens.
+- Author a private v2 Wayfinder/Trail Lodge candidate with original sprite art,
+  melee/staff equipment and scouting/support scripts. Native art and paid
+  recruitment are exercised; ability scheduling and release remain unqualified.

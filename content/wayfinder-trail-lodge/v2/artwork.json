@@ -1,0 +1,28 @@
+{
+  "format": "majesty-original-art-v1",
+  "generator": "built-in image_gen",
+  "nativeIntegrationQualified": false,
+  "sheets": {
+    "trail-lodge-states.png": {
+      "sha256": "c0750589510a6412d23a6f84d7c540cbb1afd466a18eb95880099636e7b2a474",
+      "bytes": 2200267,
+      "layout": [
+        2,
+        2
+      ]
+    },
+    "wayfinder-actions.png": {
+      "sha256": "7bb02e30386fac85456ea134cbe2e69852302462a3f7ea3b19f8774079e8b45c",
+      "bytes": 1856997,
+      "layout": [
+        8,
+        8
+      ]
+    }
+  },
+  "reviewNotes": [
+    "Lodge states: construction, completed, active, ruin.",
+    "Hero row 7 resembles a falling/dead pose and must not be used as the recoil animation. Use the standing pose for hit recovery until corrected.",
+    "Directional mapping and low-resolution readability require native validation."
+  ]
+}

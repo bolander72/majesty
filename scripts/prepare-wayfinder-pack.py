@@ -27,8 +27,15 @@ def script_dependencies(sdk, script):
     functions = set(re.findall(r'\$([A-Za-z_]\w*)', text))
     expressions = set(re.findall(r'#([A-Za-z_]\w*)', text))
     local = {n.casefold() for n in re.findall(r'\bfunction\s+(\w+)\s*\(', text, re.I)}
-    builtin = {'specifyintent'}
-    result = {'scope': 'direct-decision-tree-symbols-only', 'datasets': {},
+    local_expressions = {n.casefold() for n in re.findall(r'\bexpression\s+#(\w+)\b', text, re.I)}
+    builtin = {'specifyintent', 'getattribute', 'setattribute', 'listobjects',
+               'listmember', 'listsize', 'getplayerdata', 'hasattribute',
+               'addattribute', 'newthread', 'killthread', 'revealarea',
+               'locationof', 'insidebuilding', 'distancebetweenagents',
+               'nullagent', 'listtitles', 'createagent', 'retrieveagent', 'listpalaces'}
+    native_expressions = {'attrib_hp', 'attrib_maxhp', 'attrib_experiencelevel',
+                          'attrib_firststagebuilt'}
+    result = {'scope': 'direct-decision-tree-symbols-only' if len(local) == 1 else 'direct-content-script-symbols-only', 'datasets': {},
               'nativeBuiltins': [], 'inputSha256': {}}
     for dataset in ['GPL', 'GPLMx']:
         definitions = {'function': {}, 'expression': {}}
@@ -47,20 +54,25 @@ def script_dependencies(sdk, script):
                 key = name.casefold()
                 if kind == 'function' and key in local:
                     resolved['$' + name] = ['Wayfinder.gpl']
+                elif kind == 'expression' and key in local_expressions:
+                    resolved['#' + name] = ['Wayfinder.gpl']
                 elif kind == 'function' and key in builtin:
-                    resolved['$' + name] = ['engine-builtin:SpecifyIntent']
+                    resolved['$' + name] = ['engine-builtin:' + name]
+                elif kind == 'expression' and key in native_expressions:
+                    resolved['#' + name] = ['engine-native-unit-attribute:' + name]
                 elif key in definitions[kind]:
                     resolved[('$' if kind == 'function' else '#') + name] = sorted(definitions[kind][key])
                 else:
                     raise ValueError(f'Unresolved {dataset} {kind}: {name}')
         result['datasets'][dataset] = resolved
-    if any(name.casefold() in builtin for name in functions):
+    if any(name.casefold() in builtin for name in functions) or native_expressions & {n.casefold() for n in expressions}:
         reference = sdk.parent / 'Documentation/GPL Reference.pdf'
-        result['nativeBuiltins'] = ['SpecifyIntent']
+        result['nativeBuiltins'] = sorted(name for name in functions if name.casefold() in builtin)
+        result['nativeAttributes'] = sorted(name for name in expressions if name.casefold() in native_expressions)
         result['builtinReference'] = {
             'path': str(reference.relative_to(sdk.parent)),
             'sha256': hashlib.sha256(resident_bytes(reference)).hexdigest(),
-            'section': 'Built-in functions / SpecifyIntent',
+            'section': 'Built-in functions and native unit attribute expressions',
         }
     return result
 
@@ -100,6 +112,23 @@ def description(root, unit, subtype):
         if len(items) != 1:
             raise ValueError(f'Expected one inherited game property {key}')
         items[0].set('value', str(value))
+    for key, value in unit.get('engine', {}).items():
+        items = d.findall(f'Engine/{key}')
+        if key != 'ImageIDBase' or len(items) != 1 or not re.fullmatch(r'[A-Za-z0-9]{4}', value):
+            raise ValueError('Unsupported custom engine artwork binding')
+        items[0].set('value', value)
+    if unit.get('attackRange'):
+        fields = unit['attackRange']
+        node = d.find('Game/AttackRange')
+        if node is None or set(fields) != {'min', 'max'} or not 0 < fields['min'] <= fields['max'] <= 1000:
+            raise ValueError('Invalid custom attack range')
+        for key, value in fields.items():
+            node.set(key, str(value))
+    if unit.get('allowedWeapon'):
+        node = d.find('Game/AllowedWeapon')
+        if node is None or unit['allowedWeapon'] != 'Staff':
+            raise ValueError('Unsupported custom weapon family')
+        node.set('value', unit['allowedWeapon'])
     return d
 
 
@@ -161,9 +190,22 @@ def prepare(sdk=SDK, source=SOURCE):
                        **hero['prototype']}.items():
         hero_data = property_value(hero_data, key, value)
     for key, value in {'title': building['name'], 'member_title': hero['name'],
-                       'member_basicscript': hero['decisionTree']}.items():
+                       'member_basicscript': hero['decisionTree'],
+                       **building.get('prototype', {})}.items():
         lodge_data = property_value(lodge_data, key, value)
+    support_data = b''
+    support_path = source / 'Wayfinder_Support.dat'
+    if support_path.exists():
+        support_data = re.sub(rb'//[^\r\n]*', b'', resident_bytes(support_path))
+        support_names = [name for name in re.findall(r'^\[([^]]+)\]', support_data.decode(), re.M)
+                         if name.casefold() != 'end']
+        if support_names != ['WayfinderSupportV2'] or any(
+                re.search(rf'(?im)^\[{re.escape(name)}\]', text)
+                for name in support_names for text in dats.values()):
+            raise ValueError('Support controller prototype collides with SDK data')
     gpl = resident_bytes(source / 'Wayfinder.gpl')
+    if support_data and not re.search(rb'prototype\s+WayfinderSupportPrototype\s*\(\s*\)\s+declare\s+integer\s+counter\s*;', gpl):
+        raise ValueError('Support controller requires its explicitly typed prototype')
     if not re.search(rf'\bfunction\s+{re.escape(hero["decisionTree"])}\s*\(', gpl.decode()):
         raise ValueError('Draft decision tree is missing')
     dependencies = script_dependencies(sdk, gpl)
@@ -186,7 +228,7 @@ def prepare(sdk=SDK, source=SOURCE):
         ET.SubElement(bytecode, 'Source').text = 'GPL\\' + file
     files = {'Data/Wayfinder_Characters.xml': xml_bytes(char),
              'Data/Wayfinder_Buildings.xml': xml_bytes(lodge),
-             'GPL/Wayfinder_Data.dat': (hero_data + '\n\n' + lodge_data + '\n').encode(),
+             'GPL/Wayfinder_Data.dat': (hero_data + '\n\n' + lodge_data + '\n').encode() + support_data,
              'GPL/Wayfinder.gpl': gpl,
              'GPL/Wayfinder.gplproj': b'data="Wayfinder_Data.dat"\nsource="Wayfinder.gpl"\n',
              'Wayfinder.mmxml': xml_bytes(mod)}

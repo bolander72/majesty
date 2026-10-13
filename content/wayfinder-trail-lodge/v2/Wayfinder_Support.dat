@@ -1,0 +1,7 @@
+// Persistent, named script-only agent with an explicitly declared counter;
+// it has no world object, rendering, collision or independent per-hero thread.
+[WayfinderSupportV2]
+    {WayfinderSupportPrototype
+        (counter 0)
+    }
+[end]

@@ -120,7 +120,9 @@ def legacy_descriptor(raw, base, draft, hero=False):
     chunk(prim, b'PRIM')
     _, sv, sc, game = chunk(secd, b'SECD')
     expected_kind = 3 if hero else 2
-    if (hv, hc, sv, sc, len(game)) != (0, 0, 8 if hero else 5, 0, 156 if hero else 76):
+    hero_sizes = {'AVH1': 156, 'AVA1': 164}
+    expected_size = hero_sizes.get(base.get('ID')) if hero else 76
+    if (hv, hc, sv, sc, len(game)) != (0, 0, 8 if hero else 5, 0, expected_size):
         raise ValueError('Unsupported native descriptor version')
     if len(hp) < 10 or hp[:4] != base.get('ID').encode('ascii') or struct.unpack_from('<I', hp, 4)[0] != expected_kind:
         raise ValueError('Native description identity differs from SDK')
@@ -138,6 +140,22 @@ def legacy_descriptor(raw, base, draft, hero=False):
         if struct.unpack_from('<I', game, offset)[0] != original or not 0 < value < 1000000:
             raise ValueError(f'Native {name} differs from expected SDK baseline')
         struct.pack_into('<I', game, offset, value)
+    if hero:
+        for name, offset in [('min', 24), ('max', 28)]:
+            original = int(base.find('Game/AttackRange').get(name))
+            value = int(draft.find('Game/AttackRange').get(name))
+            if struct.unpack_from('<I', game, offset)[0] != original or not 0 < value <= 1000:
+                raise ValueError('Native attack range differs from SDK baseline')
+            struct.pack_into('<I', game, offset, value)
+        # SDK/native cross-check: Ranger=Longbow(5), Adept=Staff(8),
+        # Warrior=Longsword(6). Keep the same-sized Ranger descriptor and its
+        # no-innate-spell tail while selecting the staff equipment family.
+        weapons = {'Longbow': 5, 'Staff': 8, 'Longsword': 6}
+        old_weapon = base.find('Game/AllowedWeapon').get('value')
+        new_weapon = draft.find('Game/AllowedWeapon').get('value')
+        if old_weapon not in weapons or new_weapon not in weapons or struct.unpack_from('<I', game, 128)[0] != weapons[old_weapon]:
+            raise ValueError('Native weapon family differs from SDK baseline')
+        struct.pack_into('<I', game, 128, weapons[new_weapon])
     if not hero:
         original_dialog = base.find('Game/DialogID').get('value').encode('ascii')
         new_dialog = draft.find('Game/DialogID').get('value').encode('ascii')
@@ -157,6 +175,13 @@ def legacy_descriptor(raw, base, draft, hero=False):
         raise ValueError('Invalid native identity or labels')
     head = encode_chunk(b'HEAD', hv, hc, key + struct.pack('<I', expected_kind) + b'\0'.join(names) + b'\0')
     secd = encode_chunk(b'SECD', sv, sc, game)
+    old_image = base.find('Engine/ImageIDBase').get('value').encode('ascii')
+    new_image = draft.find('Engine/ImageIDBase').get('value').encode('ascii')
+    if new_image != old_image:
+        _, pv, pc, payload = chunk(prim, b'PRIM')
+        if len(new_image) != 4 or payload.count(old_image) != 1:
+            raise ValueError('Native artwork binding differs from its unique baseline')
+        prim = encode_chunk(b'PRIM', pv, pc, payload.replace(old_image, new_image, 1))
     data = encode_chunk(b'DATA', data_version, data_count, head + prim + secd)
     return encode_chunk(b'DUNT', root_version, root_count, data)
 
