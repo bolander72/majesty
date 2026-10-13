@@ -40,9 +40,10 @@ class WayfinderV2(unittest.TestCase):
         self.assertNotIn(b'AVH1', native.chunk(prim)[3])
         source = files['GPL/Wayfinder.gpl'].decode()
         data_text = files['GPL/Wayfinder_Data.dat'].decode()
-        self.assertIn('prototype WayfinderSupportPrototype', source)
-        self.assertIn('integer counter;', source)
-        self.assertIn('{WayfinderSupportPrototype', data_text)
+        self.assertIn('{AIRoot', data_text)
+        self.assertIn('(Done_setup 0)', data_text)
+        self.assertIn('(VictoryCondition wayfinder_support_tick)', data_text)
+        self.assertIn('controller\'s \"VictoryCondition\"', source)
         self.assertNotIn('$AddAttribute', source)
         for dataset in ['GPL', 'GPLMx']:
             self.assertIn('$CreateAgent', report['scriptDependencies']['datasets'][dataset])

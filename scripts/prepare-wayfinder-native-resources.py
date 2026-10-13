@@ -209,7 +209,7 @@ def encode_cam(records, names=None):
     return raw
 
 
-def prepare(pack):
+def prepare(pack, stationary_interface=False):
     receipt = json.loads(resident(pack / 'compiled.json'))
     if receipt.get('bytecodeCompiled') is not True or receipt.get('installed') is not False:
         raise ValueError('Verified private compiled pack required')
@@ -240,7 +240,12 @@ def prepare(pack):
     files['Data/Wayfinder-units.cam'] = encode_cam(additions, names)
     interface_raw = resident(INTERFACE_CAM)
     expansion_interface_raw = resident(EXPANSION_INTERFACE_CAM)
-    interface_records = clone_interface(cam_records(interface_raw),
+    if stationary_interface:
+        from lib.wayfinder_v2_interface import stationary_lodge_interface
+        interface_builder = stationary_lodge_interface
+    else:
+        interface_builder = clone_interface
+    interface_records = interface_builder(cam_records(interface_raw),
                                         {key[1] for key in cam_records(expansion_interface_raw)})
     interface_cam = encode_interface_cam(interface_records)
     if cam_records(interface_cam) != interface_records:
@@ -253,7 +258,8 @@ def prepare(pack):
                   installed=False, published=False, resourceIds=['AVz1', 'ABs1'], originalNativeIdsChecked=sum(k[0] == b'DUNT' for k in native_ids),
                   compiledPackReceiptSha256=sha(resident(pack / 'compiled.json')), sourceSha256=sources,
                   originalCAMUnmodified=True, originalArtAndAttachmentsPreserved=True,
-                  bytecodeUnmodified=True, interfaceId=INTERFACE_ID.decode(), originalRangerInterfaceUnmodified=True,
+                  bytecodeUnmodified=True, interfaceId=INTERFACE_ID.decode(),
+                  stationaryInterface=stationary_interface, originalRangerInterfaceUnmodified=True,
                   loadGroupInstalled=False, menuIntegrationQualified=False,
                   files={n: dict(bytes=len(b), sha256=sha(b)) for n, b in files.items()})
     return files, report
@@ -263,10 +269,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--compiled-pack', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--stationary-interface', action='store_true',
+                        help='Use the distinct v2 Lodge panel; preserve v1 defaults')
     args = parser.parse_args()
     if args.output.exists():
         raise ValueError('Existing output must be preserved')
-    files, report = prepare(args.compiled_pack)
+    files, report = prepare(args.compiled_pack, stationary_interface=args.stationary_interface)
     args.output.mkdir()
     for name, raw in files.items():
         target = args.output / name

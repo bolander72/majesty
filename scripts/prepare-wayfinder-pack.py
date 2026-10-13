@@ -32,7 +32,8 @@ def script_dependencies(sdk, script):
                'listmember', 'listsize', 'getplayerdata', 'hasattribute',
                'addattribute', 'newthread', 'killthread', 'revealarea',
                'locationof', 'insidebuilding', 'distancebetweenagents',
-               'nullagent', 'listtitles', 'createagent', 'retrieveagent', 'listpalaces'}
+               'nullagent', 'listtitles', 'createagent', 'retrieveagent', 'listpalaces',
+               'lookupfunction', 'validfunction'}
     native_expressions = {'attrib_hp', 'attrib_maxhp', 'attrib_experiencelevel',
                           'attrib_firststagebuilt'}
     result = {'scope': 'direct-decision-tree-symbols-only' if len(local) == 1 else 'direct-content-script-symbols-only', 'datasets': {},
@@ -204,8 +205,11 @@ def prepare(sdk=SDK, source=SOURCE):
                 for name in support_names for text in dats.values()):
             raise ValueError('Support controller prototype collides with SDK data')
     gpl = resident_bytes(source / 'Wayfinder.gpl')
-    if support_data and not re.search(rb'prototype\s+WayfinderSupportPrototype\s*\(\s*\)\s+declare\s+integer\s+counter\s*;', gpl):
-        raise ValueError('Support controller requires its explicitly typed prototype')
+    if support_data:
+        custom = re.search(rb'prototype\s+WayfinderSupportPrototype\s*\(\s*\)\s+declare\s+integer\s+counter\s*;', gpl)
+        stock = re.fullmatch(rb'\s*\[WayfinderSupportV2\]\s*\{AIRoot\s*\(Done_setup 0\)\s*\(Quest_Number 0\)\s*\(VictoryCondition wayfinder_support_tick\)\s*\}\s*\[end\]\s*', support_data)
+        if not custom and not stock:
+            raise ValueError('Support controller requires explicit typed or stock timer fields')
     if not re.search(rf'\bfunction\s+{re.escape(hero["decisionTree"])}\s*\(', gpl.decode()):
         raise ValueError('Draft decision tree is missing')
     dependencies = script_dependencies(sdk, gpl)

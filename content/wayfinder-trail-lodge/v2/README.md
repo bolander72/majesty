@@ -24,16 +24,33 @@ v1 worlds remains a required qualification. Costs and four-member capacity
 remain unchanged so Lost Trail's existing mission economy remains recognizable.
 
 Original artwork includes Lodge construction, completed, active and ruined
-states, and directional Wayfinder movement, combat, casting, recoil and death.
+states, and directional Wayfinder movement, combat, casting and death.
 Generated source atlases must be reviewed and encoded into native resources;
 concept/source images alone do not qualify visible in-game integration.
 
-Native progress checkpoint805: the new Lodge artwork renders on the original
-completed 300-HP building, and ordinary 425-gold Wayfinder recruitment creates
-a generated progress save. A preserved Day28 campaign also restores and runs
-normally. The support controller is saved, but its counter remains zero and no
-support callback survives in that save. Survey, Aid and Supply are therefore
-not gameplay-qualified. The latest no-argument callback has the same issue;
-next verify the native callback binding and use a declared function member to
-match the original scheduler pattern. Hero portraits/directional animation,
-help text, the inherited Move Camp action and browser release remain pending.
+Native trials815/840 rendered the new completed 300-HP Lodge and stationary
+recruitment panel. The hard-coded Ranger recruit portrait now uses the original
+Wayfinder art with the native 25-pixel icon contract. Ordinary recruitment still
+costs 425 gold and generated native progress saves.
+
+The support controller now uses the stock AIRoot timer fields, separately from
+the mission's actual quest root. Trial840 saved two pulses and the named callback;
+trial844 restored that exact save in a fresh profile, recruited a second hero,
+and saved eight pulses. This qualifies timer execution and persistence; effect
+controls are still pending. Older custom-prototype/function-field candidates
+are private failed experiments and must not be distributed. Private effect controls remain unqualified. Trials852/858 ended in an attribute
+setter fault; delta variants863/877 reached their guard deadlines. These
+fixtures are not campaign progress. The revised fixture removes actor
+destruction and level downgrades and isolates Supply with an odd pulse; it must
+be freshly compiled and proved. Do not rerun guard-stopped trials.
+
+Browser868 used pinned production WASM598 and the current catalog. It loaded the
+native Day3 save and displayed original Lodge and moving Wayfinder art. Its
+generated original GMP was restored in fresh browser870 and saved again. The
+support counter advanced from eight to ten and retained the callback. Private
+copies864/865 were unqualified because their stale engine/catalog omitted the
+content. Corrected root867 uses the fully validated release and current catalog.
+
+Healing effects, full hero interface checks and versioned publication remain
+pending. Production serves v1. Player profiles, original saves and prior
+releases have not been changed.

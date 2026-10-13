@@ -77,15 +77,22 @@ def prepare(original, source, output):
             tile_headers.append((headers[1740], (132, 63)))
     # Portraits and building previews also use original art. No Adept/Ranger
     # tiles survive in either new IMAG resource, including extra cast streams.
-    hero_portrait = len(tile_images)
     face_width = images['wayfinder-actions.png'].width / 8
     face = images['wayfinder-actions.png'].crop((round(2 * face_width), 0,
         round(3 * face_width), round(images['wayfinder-actions.png'].height / 8)))
-    tile_images.append(face.resize((100, 100), Image.Resampling.LANCZOS))
-    tile_headers.append((headers[3611], (50, 86)))
-    lodge_portrait = len(tile_images)
-    tile_images.append(tile_images[lodge_tiles[1]].resize((100, 77), Image.Resampling.LANCZOS))
-    tile_headers.append((headers[1740], (50, 25)))
+    hero_portraits, lodge_portraits = {}, {}
+    # Native portrait states have different pixel contracts: large help art,
+    # selected-unit portrait and the 25-pixel recruitment/roster icon.
+    for sid, size in [(1000, (100, 100)), (1001, (200, 245)), (1002, (25, 25))]:
+        for source_image, ids, header in [(face, hero_portraits, headers[3611]),
+                (tile_images[lodge_tiles[1]], lodge_portraits, headers[1740])]:
+            fitted = ImageOps.contain(source_image, size, Image.Resampling.LANCZOS)
+            portrait = Image.new('RGBA', size)
+            portrait.alpha_composite(fitted, ((size[0] - fitted.width) // 2,
+                                              (size[1] - fitted.height) // 2))
+            ids[sid] = len(tile_images)
+            tile_images.append(portrait)
+            tile_headers.append((header, (0, 0)))
     minimap = len(tile_images)
     tile_images.append(Image.new('RGBA', (3, 3), (232, 176, 65, 255)))
     tile_headers.append((headers[3611], (2, 1)))
@@ -95,7 +102,7 @@ def prepare(original, source, output):
             return 0
         base = sid & 65535
         if base in [1000, 1001, 1002]:
-            return hero_portrait
+            return hero_portraits[base]
         if base == 300:
             return minimap
         row = {8: 0, 400: 0, 64: 5, 128: 5, 224: 7}.get(base, 0)
@@ -114,7 +121,7 @@ def prepare(original, source, output):
         if sid != base:
             return 0  # Original debris/effect streams must not show Ranger art.
         if base in [1000, 1001, 1002]:
-            return lodge_portrait
+            return lodge_portraits[base]
         if base in [80, 81, 82]:
             return lodge_tiles[0]
         if base in [96, 97, 98, 99, 100, 101, 224, 240]:

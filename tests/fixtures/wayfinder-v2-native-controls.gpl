@@ -1,0 +1,82 @@
+// Private native effect controls. Never distribute this harness in game packs.
+// Called once after the production support controller starts in the Day1 fixture.
+function wayfinder_test_controls (agent palace, agent controller, agent guide)
+declare
+    list buildings;
+    agent lodge, other_lodge, companion, enemy, distant;
+    integer x, y;
+begin
+    $ListObjects(palace, "building", -1, buildings, #MyPlayer, #NoHiddenMap);
+    buildings = $ListTitles(buildings, "Trail_Lodge");
+    if ($ListSize(buildings) != 1)
+        return;
+    lodge = $ListMember(buildings, 1);
+    x = $GetX($LocationOf(lodge));
+    y = $GetY($LocationOf(lodge));
+    companion = $SpawnUnit(palace, "Ranger", $MakeCoord(x + 64, y + 32));
+    enemy = $SpawnUnit(palace, "Ranger", $MakeCoord(x + 56, y + 48));
+    distant = $SpawnUnit(palace, "Ranger", $MakeCoord(x + 900, y + 900));
+    $SetUnitPlayerNumber(enemy, 1);
+    $wayfinder_fixture_attribute(enemy, #ATTRIB_HP, 1);
+    $wayfinder_fixture_attribute(guide, #ATTRIB_HP, 1);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, 10);
+    $wayfinder_fixture_attribute(distant, #ATTRIB_HP, 10);
+    $wayfinder_fixture_attribute(guide, #ATTRIB_ExperienceLevel, 1);
+    $wayfinder_field_aid(guide);
+    controller's "Quest_Flag_1" = ($GetAttribute(companion, #ATTRIB_HP) == 10);
+    $wayfinder_fixture_attribute(guide, #ATTRIB_ExperienceLevel, 2);
+    $wayfinder_field_aid(guide);
+    controller's "Quest_Flag_2" = ($GetAttribute(companion, #ATTRIB_HP) == 14);
+    controller's "Quest_Flag_3" = ($GetAttribute(guide, #ATTRIB_HP) == 1);
+    controller's "Quest_Flag_4" = ($GetAttribute(enemy, #ATTRIB_HP) == 1);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, $GetAttribute(companion, #ATTRIB_MaxHP) - 1);
+    $wayfinder_field_aid(guide);
+    controller's "Quest_Flag_5" = ($GetAttribute(companion, #ATTRIB_HP) == $GetAttribute(companion, #ATTRIB_MaxHP));
+    controller's "Quest_Flag_6" = ($GetAttribute(distant, #ATTRIB_HP) == 10);
+
+    // Disable aid for the supply controls: only the Lodge can change these HP.
+    $wayfinder_fixture_attribute(guide, #ATTRIB_HP, 20);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, 20);
+    $wayfinder_fixture_attribute(distant, #ATTRIB_HP, 20);
+    controller's "Done_setup" = 0; // odd pulse isolates Supply from Aid
+    $wayfinder_support_tick();
+    if ($InsideBuilding(guide))
+        controller's "Message_Check_1" = ($GetAttribute(guide, #ATTRIB_HP) == 20);
+    else
+        controller's "Message_Check_1" = ($GetAttribute(guide, #ATTRIB_HP) == 22);
+    controller's "Message_Check_2" = ($GetAttribute(companion, #ATTRIB_HP) == 22);
+    controller's "Message_Check_3" = ($GetAttribute(enemy, #ATTRIB_HP) == 1);
+    controller's "Message_Check_4" = ($GetAttribute(distant, #ATTRIB_HP) == 20);
+
+    $wayfinder_fixture_attribute(lodge, #ATTRIB_FirstStageBuilt, 0);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, 20);
+    controller's "Done_setup" = 0; // odd pulse isolates Supply from Aid
+    $wayfinder_support_tick();
+    controller's "Message_Check_5" = ($GetAttribute(companion, #ATTRIB_HP) == 20);
+    $wayfinder_fixture_attribute(lodge, #ATTRIB_FirstStageBuilt, 1);
+    other_lodge = $SpawnUnit(palace, "Rangers_Guild", $MakeCoord(x + 96, y + 96), 0, "maxhp");
+    other_lodge's "title" = "Trail_Lodge";
+    $wayfinder_fixture_attribute(other_lodge, #ATTRIB_FirstStageBuilt, 1);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, 20);
+    controller's "Done_setup" = 0; // odd pulse isolates Supply from Aid
+    $wayfinder_support_tick();
+    controller's "Quest_Flag_7" = ($GetAttribute(companion, #ATTRIB_HP) == 22);
+    $wayfinder_fixture_attribute(lodge, #ATTRIB_FirstStageBuilt, 0);
+    $SetUnitPlayerNumber(other_lodge, 1);
+    $wayfinder_fixture_attribute(companion, #ATTRIB_HP, 20);
+    controller's "Done_setup" = 0; // odd pulse isolates Supply from Aid
+    $wayfinder_support_tick();
+    controller's "Quest_Flag_8" = ($GetAttribute(companion, #ATTRIB_HP) == 20);
+    $wayfinder_fixture_attribute(lodge, #ATTRIB_FirstStageBuilt, 1);
+    $SetUnitPlayerNumber(other_lodge, 0);
+    $SetUnitPlayerNumber(enemy, 0);
+    controller's "Quest_Flag_9" = TRUE;
+end
+
+// The pinned native engine's direct SetAttribute virtual dispatch is unavailable
+// on this isolated fixture path. Use the same original delta API as Heal.gpl.
+function wayfinder_fixture_attribute (agent unit, integer id, integer value)
+declare
+begin
+    $AdjustAttribute(unit, id, value - $GetAttribute(unit, id));
+end

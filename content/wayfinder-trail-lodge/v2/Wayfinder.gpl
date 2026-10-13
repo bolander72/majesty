@@ -2,12 +2,6 @@
 // One 8-second native scheduler thread for the single-player kingdom.
 // This private candidate must be compiled and verified before publication.
 
-prototype WayfinderSupportPrototype ()
-declare
-    integer counter;
-begin
-end
-
 expression #WayfinderSupportInterval 8000
 expression #WayfinderSurveyRadius 448
 expression #WayfinderAidRadius 96
@@ -26,7 +20,9 @@ begin
     if (controller == $NullAgent())
         begin
             controller = $CreateAgent("WayfinderSupportV2", "WayfinderSupportV2");
-            $NewThread($wayfinder_support_tick, #WayfinderSupportInterval);
+            controller = $RetrieveAgent("WayfinderSupportV2");
+            if ($ValidFunction(controller's "VictoryCondition"))
+                $NewThread(controller's "VictoryCondition", #WayfinderSupportInterval);
         end
 end
 
@@ -78,19 +74,20 @@ declare
 begin
     // Match the native quest scheduler's verified no-argument callback shape.
     // Resolve live world references on each pulse, including after restoration.
-    palaces = $ListPalaces();
-    if ($ListSize(palaces) != 1)
-        return;
-    palace = $ListMember(palaces, 1);
     controller = $RetrieveAgent("WayfinderSupportV2");
     if (controller == $NullAgent())
         return;
+    controller's "Done_setup" = controller's "Done_setup" + 1;
+    palaces = $ListPalaces();
+    controller's "Quest_Number" = $ListSize(palaces);
+    if ($ListSize(palaces) != 1)
+        return;
+    palace = $ListMember(palaces, 1);
     if ($isdead(palace))
         begin
             $KillThread($wayfinder_support_tick);
             return;
         end
-    controller's "counter" = controller's "counter" + 1;
     $ListObjects(palace, "hero", -1, heroes, #MyPlayer, #NoHiddenMap, #InsideOtherUnits);
     $ListObjects(palace, "building", -1, buildings, #MyPlayer, #NoHiddenMap, #ATTRIB_FirstStageBuilt, 1);
     lodges = $ListTitles(buildings, "Trail_Lodge");
@@ -105,7 +102,7 @@ begin
                         begin
                             $RevealArea(hero, $LocationOf(hero), #WayfinderSurveyRadius);
                             // Field aid happens every other survey: 16 seconds.
-                            if (controller's "counter" % 2 == 0)
+                            if (controller's "Done_setup" % 2 == 0)
                                 $wayfinder_field_aid(hero);
                         end
                     // Each friendly hero gets one supply pulse, even when
