@@ -2,7 +2,7 @@
   "objective": "Continue playable Majesty content from recoveryr12/player139: published native paired resume, original Chapter3 shared victory/persistence, officialSDK/native integration path for Wayfinder and Trail Lodge. Preserve Wardens, older branches and quiet bounded resource limits.",
   "status": "active",
   "builtInGoalStatus": "paused",
-  "updatedAtUnix": 1791863044,
+  "updatedAtUnix": 1791871671,
   "previousGoalEvidence": "output/campaign079-qualified.json",
   "browserTestingSuspendedUnderLatestSuppliedInstructions": false,
   "browserTestingAuthorization": "User authorizes bounded browser co-op trials in latest AGENTS.md.",
@@ -156,7 +156,7 @@
   "nextHostResumeUrl": "output/coop139-r12-host-resume.txt",
   "latestOfficialCompilerPlan": "output/wayfinder141-compile-plan.json",
   "latestCompilerDependencyAudit": "output/wayfinder140-compiler-imports.json",
-  "nextAction": "Use verified original RGS template baseline with its complete dependencies to progress Lost Trail integration; avoid repeating unresponsive region confirmation; preserve canonical GUID and compile-bound GPL",
+  "nextAction": "Connect reserved XQD2 native quest marker/title resources to Lost Trail, then verify actual selection/world/objectives/save-reload/victory; preserve all stock missions and deferred co-op priority",
   "latestOfficialCompilerTrial": "output/sdk145-local-observed.json",
   "latestPortableCompilerEnvironment": "output/sdk144-stage.json",
   "latestCompiledContentDraft": "output/wayfinder190-compiled/compiled.json",
@@ -273,5 +273,7 @@
   "latestCheatRelease": "output/cheats600-qualified.json",
   "latestNativeMissionCheckpoint": "output/mission549-quest-force-checkpoint/export.json",
   "latestEditorTrial": "output/mission610-result.json",
-  "latestNativeContentCheckpoint": "output/mission611-continuation-checkpoint.json"
+  "latestNativeContentCheckpoint": "output/mission637-continuation-checkpoint.json",
+  "latestCanonicalCompilation": "output/mission634-compiled-verification.json",
+  "latestNativeMissionCandidate": "output/mission635-native-candidate/candidate.json"
 }

@@ -108,3 +108,49 @@ dependencies, followed by mission-specific edits and native game validation.
 many classic quests use `RGM6`, whereas original Freestyle, expansion Freestyle
 and the SDK examples use `RGMa`. Do not infer compatibility from the suffix.
 The canonical mission GUID and compiler-proven GPL remain unchanged.
+
+## Native legacy integration candidate637
+
+The unchanged expansion Freestyle template rendered successfully in the official
+editor in trial614 (about 2,140 MiB peak owned RSS). This establishes that map
+rendering works in this runtime; it does not qualify the unsaved force edits or
+the fresh Lost Trail terrain definition.
+
+The pinned DirectDraw executable reads `.q` templates and `.qdd` descriptions.
+Its native quest manager at `004cfb20` registers 34 known names; `004d1be0` maps
+them to native IDs, with unknown names passed to `004e5ed0`'s four-character
+conversion. Reserved `DOWNLOADABLE_QUEST_2` maps to `XQD2` at instruction
+`004cfd0a`, and the third reserved entry maps to `XQD3` at `004cfd14`. The second
+slot is the Lost Trail candidate's legacy bridge; the existing XQD1 mission and
+all stock quest files remain intact. Canonical SDK GUID/name remain unchanged.
+
+The original GPL compiler compiled the added `DOWNLOADABLE_QUEST_2` alias,
+which delegates to `TheLostTrail`. New output is 9,154 bytes, SHA256
+`66b6d4ab64f5e0f6c89ec5366c2ffab4ead81451a5de260231c0a24ff1a357cd`.
+The exported container and four function names were checked independently.
+The compiler can return 0 on a syntax error; require fresh bytecode/container
+verification as well as its exit receipt. Earlier failed alias attempt632
+produced no qualified bytecode and is preserved separately.
+
+`prepare-lost-trail-native.py` stages separate private files, validates their
+compiler/source bindings, preserves the RGS payload after its initialization
+name, adds independent XQD2 availability, and appends mission bytecode after
+Wayfinder in all supported load groups. It uses the original Fertile Plain
+template as a temporary gameplay baseline, not newly authored terrain. New
+terrain, balance, selection, gameplay objectives, saves and victory remain
+unqualified. Candidate `output/mission635-native-candidate` is not published.
+
+Native engine534 (hash `4c42a37ed90648fb8e46969694757994af40d8d82f6b01e7f63d0c90eeb2c0d5`)
+read the candidate scripts, template and descriptions and reached its home and
+quest-selection screens. Trials618/620/623/624/627/636 exited normally with
+owned RSS below 159 MiB. This older native test executable is distinct from
+production WASM598. Trial617's overly verbose file-read trace hit the log guard
+and was closed; later trials used the bounded file-open trace.
+
+The selector still showed the stock markers. The central question mark was
+verified as the stock Secret Quest, not Lost Trail. The next task is to connect
+the reserved XQD2 entry's native menu widget/title resources, then select it and
+verify original world creation, paid Lodge/Wayfinder recruitment, objectives,
+save/reload and victory. Avoid repeating map-editor confirmation or generic
+hover scans without new evidence. Private checkpoint:
+`output/mission637-continuation-checkpoint.json`.

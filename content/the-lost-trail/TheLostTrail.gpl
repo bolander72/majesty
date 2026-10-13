@@ -1,5 +1,14 @@
 // Original mission logic. Requires the separate Wayfinder resource pack.
 // This is a single-player quest; matching-content co-op is not qualified.
+// The DirectDraw selector reserves XQD2 for DOWNLOADABLE_QUEST_2. Keep the
+// canonical initialization and GUID separate from this legacy menu alias.
+Function DOWNLOADABLE_QUEST_2 ()
+declare
+    agent AIRootAgent;
+begin
+    $TheLostTrail ();
+end
+
 Function TheLostTrail ()
 declare
     agent AIRootAgent, palace;
