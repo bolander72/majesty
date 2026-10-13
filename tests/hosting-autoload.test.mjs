@@ -28,9 +28,9 @@ test('setup link prevents a redirect loop and allows managing imported files', a
   assert.equal(await launch.check(), false);
 });
 
-test('edition selection checks the separate content import', async () => {
+test('retired edition deep links check the original content import', async () => {
   const launch = new AutomaticLaunch({href: 'https://majesty.boland.co/?edition=wayfinder-v1&profile=wayfinder',
-    status: async id => { assert.equal(id, 'majesty-wayfinder'); return {status: {state: 'ready'}}; },
+    status: async id => { assert.equal(id, 'majesty'); return {status: {state: 'ready'}}; },
     navigate: href => assert.match(href, /edition=wayfinder-v1&profile=wayfinder/)});
   assert.equal(await launch.check(), true);
 });

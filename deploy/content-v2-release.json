@@ -107,5 +107,8 @@
   "mapArtworkQualificationEvidence": "output/hover965-browser-qualified.json",
   "nativeBuildingIconFrameReused": true,
   "buildingIconQualificationEvidence": "output/icon960-browser-qualified.json",
-  "mapHoverStateDistinct": true
+  "mapHoverStateDistinct": true,
+  "retired": true,
+  "retiredAt": "2026-10-13",
+  "retirementReason": "User requested removal of Lost Trail, Wayfinder and Trail Lodge"
 }

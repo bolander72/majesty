@@ -1,4 +1,6 @@
-# The Lost Trail
+# The Lost Trail — retired
+
+Retired from the live site on October 13, 2026 at the user's request. This archive and existing player saves are preserved. Do not reactivate this mission, Wayfinders or Trail Lodges without a new explicit user request. Narration work is cancelled.
 
 An original single-player mission for the Wayfinder and Trail Lodge edition.
 Complete two Trail Lodges, retain four living Wayfinders, and destroy every

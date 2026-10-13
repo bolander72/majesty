@@ -2,86 +2,47 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {prepareRootPlayer} from '../web/hosting/root-player.mjs';
 
-test('completed local import starts directly and closes the preparation worker', async () => {
-  let closed = 0;
-  const games = [{id: 'majesty'}];
-  const prepared = await prepareRootPlayer({search: '', openClient: async () => ({
-    games,
-    status: async id => {assert.equal(id, 'majesty'); return {status: {state: 'ready'}};},
-    close: () => closed++,
-  }), ensureAssets: () => assert.fail('Should reuse the completed import')});
-  assert.equal(closed, 1);
-  assert.equal(prepared, games);
+const catalog = [{id:'majesty',title:'Majesty',defaultContentStorageId:'majesty-lost-trail-v2',contentStorageId:'majesty-lost-trail'},
+  {id:'majesty-wayfinder'},{id:'majesty-lost-trail'},{id:'majesty-lost-trail-v2'}];
+
+test('returning players mount stock data despite a stale content-default catalog', async () => {
+  let closed=0;
+  const result=await prepareRootPlayer({search:'',openClient:async()=>({games:catalog,
+    status:async id=>{assert.equal(id,'majesty');return {status:{state:'ready'}};},close:()=>closed++}),
+    ensureAssets:()=>assert.fail('No reimport for a cached original game')});
+  assert.deepEqual(result,[{id:'majesty',title:'Majesty'}]);assert.equal(closed,1);
+  assert.equal(catalog[0].defaultContentStorageId,'majesty-lost-trail-v2');
 });
 
-test('fresh visitor prepares the selected edition without navigating', async () => {
-  let closed = 0, imported = 0;
-  await prepareRootPlayer({search: '?edition=wayfinder-v1', openClient: async () => ({
-    status: async () => ({status: {state: 'notFound'}}),
-    importFiles: async (id, files) => {assert.equal(id, 'majesty-wayfinder'); imported++;},
-    close: () => closed++,
-  }), ensureAssets: async (id, options) => {
-    assert.equal(id, 'majesty-wayfinder'); await options.importFiles(id, []);
-  }});
-  assert.equal(imported, 1); assert.equal(closed, 1);
-});
-
-test('failed preparation releases its worker', async () => {
-  let closed = false;
-  await assert.rejects(prepareRootPlayer({search: '', openClient: async () => ({
-    status: async () => {throw Error('Storage unavailable');}, close: () => {closed = true;},
-  })}), /Storage unavailable/);
-  assert.equal(closed, true);
-});
-
-test('Lost Trail root prepares the new collection without importing over stock Majesty', async () => {
-  await prepareRootPlayer({search: '?edition=lost-trail-v1&profile=lost-trail',
-    openClient: async () => ({status: async id => {
-      assert.equal(id, 'majesty-lost-trail'); return {status: {state: 'notFound'}};
-    }, close: () => {}}), ensureAssets: async id => assert.equal(id, 'majesty-lost-trail')});
-});
-
-test('qualified default root switches only game data, retaining the ordinary game/profile identity', async () => {
-  const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}, {id: 'majesty-lost-trail'}];
-  const prepared = await prepareRootPlayer({search: '', openClient: async () => ({games,
-    status: async id => {assert.equal(id, 'majesty-lost-trail'); return {status: {state: 'ready'}};},
-    close: () => {},
-  })});
-  assert.equal(prepared[0].id, 'majesty');
-  assert.equal(prepared[0].contentStorageId, 'majesty-lost-trail');
-  assert.equal(games[0].contentStorageId, undefined);
-});
-
-test('managed worlds retain original data even when the root has a content default', async () => {
-  for (const search of ['?room=existing', '?world=existing', '?RECOMP_RULE_COOP_TEST=1']) {
-    const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}];
-    assert.equal(await prepareRootPlayer({search, openClient: async () => ({games,
-      status: async id => {assert.equal(id, 'majesty'); return {status: {state: 'ready'}};},
-      close: () => {},
-    })}), games);
+test('retired edition links and managed worlds cannot remount Lost Trail', async () => {
+  for(const search of ['?edition=lost-trail-v2&profile=old','?edition=lost-trail-v1',
+    '?edition=wayfinder-v1','?room=old&role=host','?world=old']) {
+    const result=await prepareRootPlayer({search,openClient:async()=>({games:catalog,
+      status:async id=>{assert.equal(id,'majesty');return {status:{state:'ready'}};},close(){}})});
+    assert.deepEqual(result,[{id:'majesty',title:'Majesty'}]);
   }
 });
 
-test('the default content root cannot disable its required inventory bridge', async () => {
-  let closed = false;
-  await assert.rejects(prepareRootPlayer({search: '?RECOMP_RULE_INVENTORY_COMPAT=0',
-    openClient: async () => ({games: [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}],
-      status: () => assert.fail('No content import or engine start'), close: () => {closed = true;},
-    })}), /requires inventory compatibility/);
-  assert.equal(closed, true);
+test('fresh visitors prepare the original game and keep its profile identity', async () => {
+  let imported=false,closed=false;
+  const result=await prepareRootPlayer({search:'?profile=my-campaign',openClient:async()=>({games:catalog,
+    status:async()=>({status:{state:'notFound'}}),importZip:async id=>{assert.equal(id,'majesty');imported=true;},
+    close:()=>{closed=true;}}),ensureAssets:async(id,options)=>{
+      assert.equal(id,'majesty');await options.importZip(id,new File(['original'],'game.zip'));
+    }});
+  assert.equal(imported,true);assert.equal(closed,true);assert.equal(result[0].id,'majesty');
 });
 
-test('v2 prepares a separate collection even when v1 is already ready', async () => {
-  const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail-v2'},
-    {id: 'majesty-lost-trail'}, {id: 'majesty-lost-trail-v2'}];
-  let imported;
-  const prepared = await prepareRootPlayer({search: '', openClient: async () => ({games,
-    status: async id => ({status: {state: id === 'majesty-lost-trail' ? 'ready' : 'notFound'}}),
-    close() {},
-  }), ensureAssets: async id => {imported = id;},
-    updateArtwork: async id => assert.equal(id, 'majesty-lost-trail-v2')});
-  assert.equal(imported, 'majesty-lost-trail-v2');
-  assert.equal(prepared[0].contentStorageId, 'majesty-lost-trail-v2');
-  assert.equal(prepared[0].id, 'majesty');
-  assert.equal(games[0].contentStorageId, undefined);
+test('failed preparation releases its worker without touching content storage', async () => {
+  let closed=false;
+  await assert.rejects(prepareRootPlayer({search:'',openClient:async()=>({games:catalog,
+    status:async()=>{throw Error('Storage unavailable');},close:()=>{closed=true;}})}),/Storage unavailable/);
+  assert.equal(closed,true);
+});
+
+test('missing original configuration fails without importing a retired edition', async () => {
+  let closed=false;
+  await assert.rejects(prepareRootPlayer({search:'',openClient:async()=>({games:[{id:'majesty-lost-trail-v2'}],
+    status:()=>assert.fail(),close:()=>{closed=true;}})}),/original game configuration/);
+  assert.equal(closed,true);
 });

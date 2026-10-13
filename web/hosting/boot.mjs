@@ -6,7 +6,7 @@ if (new URLSearchParams(location.search).get('setup') === '1') {
   await import('../app.js');
 } else {
   const query = new URLSearchParams(location.search);
-  const id = query.get('edition') === 'wayfinder-v1' ? 'majesty-wayfinder' : 'majesty';
+  const id = 'majesty';
   const status = document.querySelector('#boot-status'), bar = document.querySelector('#boot-progress');
   const controller = new AbortController();
   addEventListener('pagehide', () => controller.abort(), {once: true});

@@ -9,24 +9,14 @@ export const WAYFINDER_FILES = Object.freeze({
   'DataMX/mx_miscdata.cam': '2a983bf59b21dd644f02fb11dbacdbe39ad9589eedf5206157d47db86b2046dc',
 });
 
+// Kept for reading/backing up archived collections; these editions are no
+// longer selectable or mounted by the public game, including old deep links.
 export function editionFor(search) {
-  const query = new URLSearchParams(search), editions = query.getAll('edition');
+  const editions = new URLSearchParams(search).getAll('edition');
   if (!editions.length) return null;
-  if (editions.length !== 1 || !['wayfinder-v1', 'lost-trail-v1', 'lost-trail-v2'].includes(editions[0]))
-    throw Error('Choose a supported content edition.');
-  const lostTrail = editions[0].startsWith('lost-trail-');
-  const profiles = query.getAll('profile');
-  const profilePattern = lostTrail ? /^lost-trail(?:-[a-zA-Z0-9_-]{1,29})?$/ : /^wayfinder(?:-[a-zA-Z0-9_-]{1,30})?$/;
-  if (profiles.length !== 1 || !profilePattern.test(profiles[0]))
-    throw Error(`Choose a separate ${lostTrail ? 'Lost Trail' : 'Wayfinder'} save profile.`);
-  const inventory = query.getAll('RECOMP_RULE_INVENTORY_COMPAT');
-  if (lostTrail && inventory.length && (inventory.length !== 1 || inventory[0] !== '1'))
-    throw Error('Lost Trail requires inventory compatibility.');
-  if ([...query.keys()].some(key => ['room', 'role', 'mode', 'world', 'RECOMP_PROFILE_DIR'].includes(key)
-      || key.startsWith('RECOMP_RULE_COOP_') || key.startsWith('RECOMP_RULE_FRONTIER_')
-      || key.startsWith('RECOMP_COOP_') || key.startsWith('RECOMP_FRONTIER_')))
-    throw Error('Start this content edition as a separate single-player kingdom.');
-  return Object.freeze({id: editions[0], storageId: editions[0] === 'lost-trail-v2' ? 'majesty-lost-trail-v2' : lostTrail ? 'majesty-lost-trail' : 'majesty-wayfinder', profile: profiles[0]});
+  if (editions.length === 1 && ['wayfinder-v1','lost-trail-v1','lost-trail-v2'].includes(editions[0]))
+    return null;
+  throw Error('Choose a supported content edition.');
 }
 
 async function directory(parent, path, create = false) {

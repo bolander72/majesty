@@ -9,9 +9,7 @@ export class AutomaticLaunch {
   check() {
     if (this.url.searchParams.get('setup') === '1' || this.#launched) return Promise.resolve(false);
     if (this.#pending) return this.#pending;
-    const edition = this.url.searchParams.get('edition');
-    if (edition && edition !== 'wayfinder-v1') return Promise.resolve(false);
-    const id = edition ? 'majesty-wayfinder' : 'majesty';
+    const id = 'majesty';
     this.#pending = (async () => {
       const result = await this.status(id);
       if (result?.status?.state !== 'ready') return false;

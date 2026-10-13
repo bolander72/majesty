@@ -63,6 +63,8 @@ def install_content_release(static):
     if not descriptor.exists():
         return
     content = json.loads(descriptor.read_text())
+    if content.get('retired') is True:
+        return
     engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
     if (content.get('format') != 'majesty-lost-trail-content-release-v1'
             or content.get('engineSha256') != engine
@@ -111,6 +113,8 @@ def install_content_v2_release(static):
     if not descriptor.exists():
         return
     content = json.loads(descriptor.read_text())
+    if content.get('retired') is True:
+        return
     engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
     required = ['nativeAbilitiesQualified', 'browserSaveReloadQualified',
                 'browserPaidRecruitmentQualified', 'rootDefaultIntegrationQualified']
@@ -152,6 +156,25 @@ def install_content_v2_release(static):
         'playURL': '?edition=lost-trail-v2&profile=lost-trail-v2&RECOMP_RULE_INVENTORY_COMPAT=1'})
     original['defaultContentStorageId'] = 'majesty-lost-trail-v2'
     games_file.write_text(json.dumps(games, indent=2) + '\n')
+
+
+def retire_custom_content(static):
+    """Remove retired content from live catalogs, preserving archived sources."""
+    retired = {'majesty-wayfinder', 'majesty-lost-trail', 'majesty-lost-trail-v2'}
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    active = []
+    for game in games:
+        if game['id'] in retired: continue
+        if game['id'] == 'majesty':
+            game.pop('defaultContentStorageId', None)
+            game.pop('contentStorageId', None)
+        active.append(game)
+    games_file.write_text(json.dumps(active, indent=2) + '\n')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    for key in retired: assets['games'].pop(key, None)
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
 
 
 def unpack_release(data, release, destination):
@@ -284,6 +307,7 @@ def build(destination=None):
     # with the authored, integrity-pinned GitHub distribution manifest.
     install_automatic_assets(static)
     install_content_v2_release(static)
+    retire_custom_content(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:

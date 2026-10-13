@@ -45,3 +45,7 @@ continuations.
 - All new or changed UI elements must follow Majesty's existing native UI design system: match the surrounding framing, bevels, palette, icon scale, typography, spacing and interaction states. Reuse native UI components and resource templates where available.
 - Palace building-list icons use the native 25-by-25 framed emblem contract, with an opaque inset background and readable artwork inside the frame. Do not substitute an unframed world sprite or transparent thumbnail. Check new elements beside stock UI at native scale before shipping.
 - Campaign-map landmarks must retain the native interaction feedback, including the warm background glow on hover. Verify both idle and hover states against stock markers, keep their placement stable, and preserve seamless terrain/coast edges.
+
+# Retired content
+
+- Lost Trail, Wayfinder and Trail Lodge were removed at the user's request on October 13, 2026. Preserve their archived sources and existing player saves, but do not reactivate them or resume their narration/content work unless explicitly requested. Live game launches use the original Majesty collection. Prioritize substantive, compatible community content over renamed stock classes.

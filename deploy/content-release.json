@@ -94,5 +94,8 @@
   "patchBytes": 964619,
   "newTerrainAuthored": false,
   "menuArtworkInherited": true,
-  "engineCompatibilityEvidence": "output/regression925-browser-content-qualified.json"
+  "engineCompatibilityEvidence": "output/regression925-browser-content-qualified.json",
+  "retired": true,
+  "retiredAt": "2026-10-13",
+  "retirementReason": "User requested removal of Lost Trail, Wayfinder and Trail Lodge"
 }

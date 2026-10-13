@@ -1,5 +1,11 @@
 # Changelog
 
+## Retire Lost Trail — October 13, 2026
+
+- Remove Lost Trail, Wayfinders and Trail Lodges from the live root game and setup catalog. Retired edition links mount original game data; cached custom packs are no longer selected or updated.
+- Preserve player profiles, saves, the original game collection and archived content/source releases. Cancel Lost Trail narration work.
+- Record a pinned community-content review of Alchemist Lab, Phantoms Haunt and Bards Hall, including their runtime and asset requirements. No unqualified community content is published.
+
 ## Lost Trail native map hover — October 13, 2026
 
 - Restore warm gold background lighting when the native map marker is hovered. Keep the normal landmark unchanged and preserve map texture, coastline, transparent borders and native selection controls.
