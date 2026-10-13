@@ -10,22 +10,45 @@ completion predicate, periodic quest thread and native victory function.
 The quest has its own stable GUID; keep that identity when revising it so
 native saves can identify their content. It does not override stock functions.
 
-Status: official GPL compilation and initial SDK template export verified;
-complete map and native quest integration pending.
+Status: private native candidate. Menu selection, briefing, world creation,
+paid Lodge construction/recruitment, ordinary saves/reloads and objective
+controls are verified. Ordinary campaign victory and persisted native completion
+are also verified. Browser content integration remains pending; it is not on
+the public site.
+
 The current GPL source compiled successfully with the original SDK compiler
-on October 12, 2026: 8,583 bytes, SHA256
-`5c7df3fbad3afc5ad37c96b3e5df5c1d36530b16e4eca299f7f5f458462061de`.
-All three mission functions are present in the exported bytecode. The compiler
+on October 13, 2026: 9,327 bytes, SHA256
+`a4f20b05ce9a09324f5dbc16be485cea3b6f630443a2e12e2c373a8892ec4df7`.
+All four functions, including the reserved DOWNLOADABLE_QUEST_2 menu alias,
+are present in the exported bytecode. The compiler
 exit receipt is zero; Wine could not reopen its diagnostic log, so no complete
 compiler-log claim is made. The private artifact and source-bound evidence are
 retained locally; bytecode is not committed.
 
-The `.mqxml` is an SDK definition, not evidence that the pinned DirectDraw
-executable can list or load it. `Quests/TheLostTrail.q`
-must be generated with the official RGS Editor. The GPL output was generated
-with the official `Gplbcc.exe`. Both resources remain private outputs, outside Git.
-Map generation, native menu integration, complete gameplay, save/reload and
-victory remain unqualified. This draft is not installed on the public site.
+The `.mqxml` is the canonical SDK definition. The private candidate uses the
+original Fertile Plain template with a changed initializer and native XQD2
+catalog/menu bindings. Geometry and borrowed menu art remain prototypes;
+fresh terrain authoring is unfinished. The GPL output comes from the original
+`Gplbcc.exe`. All binary resources remain private outputs, outside Git.
+
+Both completed Lodges have 300 HP and four recruitment slots. The first Lodge
+costs 900 gold, the second 1800; each Wayfinder costs 425. The ordinary Day18
+save has eight living Wayfinders and records clearance of two Dark Castles and
+the Animal Den. Four hostile castles still remain. Isolated predicate tests
+showed native victory from four indoor heroes/two completed Lodges/no lairs,
+and refused victory with three heroes, one completed Lodge or a surviving lair.
+These controlled inputs are separate from ordinary campaign progress. The
+ordinary campaign later cleared all seven lairs and won on Day29. Native end
+statistics recorded 16 recruited heroes, eight survivors at average level9,
+2700 gold spent on the two Lodges and 6800 on heroes. A fresh owned profile
+restored the saved completion records and displayed The Lost Trail with one
+victory and a best time of 29 days. Won-world GMP saving was not established;
+the preserved ordinary progress saves and native completion records are
+separate artifacts.
+
+SDK content requires `RECOMP_RULE_INVENTORY_COMPAT=1` for the existing real
+legacy inventory bridge. Current source-bound evidence and continuation details
+are in [the authoring guide](../../docs/native-quest-authoring.md).
 
 The intended map is a medium northern forest with one Palace, a viable starter
 economy and several hostile lairs separated from the starting settlement.

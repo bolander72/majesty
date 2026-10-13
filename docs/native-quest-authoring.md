@@ -296,3 +296,59 @@ progress, not clearance or victory. Resume the exact save bound by
 `output/mission710-attack-generated-save.json`, with trial709's owned settings
 and inventory compatibility enabled. Preserve the earlier Day6/Day8 inputs.
 Current continuation: `output/mission713-continuation-checkpoint.json`.
+
+### Native objective controls and ordinary lair clearance
+
+Private controls718 copy the exact generated Day6 input, retaining its native
+chunk/agent structure. Only original typed HP/death/completion fields change;
+the source save remains untouched. They are marked controlled inputs and must
+never replace ordinary campaign checkpoints. Trial720 reached the original
+“You are victorious” dialog from four living indoor Wayfinders, two completed
+Lodges and no living hostile lairs. Trials721/722/723 refused victory with,
+respectively, three heroes, one completed Lodge, and one living hostile lair.
+Their ordinary saved outputs preserve the other required counts and false
+Quest_Flag_9. This proves the threshold branches through native execution;
+it is not an exact scalar query-return trace or ordinary full-match completion.
+Evidence: `output/mission725-objective-controls-qualified.json`.
+
+The separate ordinary campaign resumed Day8, paid for replacement recruits and
+continued its 1000-gold attack bounty. Trial715 destroyed lair524; trial717
+destroyed lair522. Trial724 destroyed Animal Den518 and placed a northwest
+exploration bounty (600 gold observed). Trial727 cleared northeastern lair520,
+and trial729 cleared northwestern lair525. The original generated Day24 save
+retains eight living Wayfinders, both completed 300-HP Lodges and the two
+remaining 800-HP castles519/526. No fixtures or victory cheats generated this
+campaign progress. Exact current receipt:
+`output/mission730-campaign-generated-save.json`.
+
+The northern map edge needs a different screen target: after minimap23,4,
+castle519 is near world560,170; world520,300 targets the lower castle or empty
+ground. Northeastern castle526 is selected from minimap150,60 at world520,300.
+Once a castle is revealed, place its attack flag directly. Trial727's combined
+attack/explore attempts did not leave a bounty on castle526. Trial731 resumes the exact
+Day24 input with just those two attack bounties. Source README now describes
+the current private qualification rather than the obsolete compilation-only
+status. Production WASM598 and all public game assets remain unchanged.
+
+Trial731 cleared castle519, leaving only526. Repeated pointer resets at the top
+left pan the camera. Trial733 used relative moves through the Palace/Rewards
+interface and placed the final bounty at world440,360 after minimap150,60.
+It cleared the last castle and reached the original “You are victorious”
+dialog on Day29. The complete ordinary progress chain is bound by
+`output/mission735-ordinary-victory-qualified.json`. No controlled inputs,
+fixture spawns or victory cheats were used in that chain.
+
+Trials734/738 replayed the exact Day28 input and original final assault, then
+acknowledged victory. End Game Statistics showed 16 recruits, eight killed,
+eight alive, average hero level9, building spend2700 and hero spend6800.
+The owned profile wrote native `questdata_majx.sav` and `hiscores.sav`.
+Trial741 copied those owned records to a fresh owned profile; the ordinary
+quest selector displayed The Lost Trail, Victories1, Best Time29 Days. This
+qualifies persisted native completion. Difficulty is displayed as Advanced;
+the dependency rule's MEDM token is not evidence of a Medium difficulty label.
+
+The end-game acknowledgement advances to statistics after a delay. Continue
+Playing returned to the town, but the attempted later Save Game did not produce
+a changed GMP. Do not bind an unchanged copied Day28 input as a won-world save.
+Original progress save/reload and native profile completion are proved
+separately. Browser mission integration and publication remain unfinished.
