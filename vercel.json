@@ -1,0 +1,5 @@
+{
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "python3 scripts/build-vercel.py"
+}
