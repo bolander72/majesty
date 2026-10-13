@@ -21,6 +21,8 @@ apply_browser_patch() {
   fi
 }
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-browser.patch"
+apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-startup-import-copy.patch"
+apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-call-return-cache.patch"
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-browser-defaults.patch"
 if [ ! -x "$MAJESTY_PROJECT/.venv/bin/python" ]; then
   "$MAJESTY_PYTHON" -m venv "$MAJESTY_PROJECT/.venv"

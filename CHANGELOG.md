@@ -4,6 +4,9 @@
 
 - Remove the experimental menu capture, click queue and embedded player.
 - Keep early engine preloads and preparation of only the selected edition.
+- Cache immutable return-address lookups in the engine. Alternating browser
+  trials reached the actual native menu in 7.0 seconds versus 8.5 seconds,
+  an approximately 18% improvement with cached game data.
 
 ## Private SDK mission authoring
 

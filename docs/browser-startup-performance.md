@@ -4,6 +4,46 @@ The experimental menu capture and click queue were withdrawn at the user's
 request. Only actual native-menu readiness counts as startup performance.
 The selected-edition import worker and early resource preloads are retained.
 
+## Actual engine startup improvement
+
+`patches/recomp-kit-call-return-cache.patch` adds an optional cache for the main
+image's immutable CALL-continuation lookup. This avoids repeatedly searching
+the large generated return-address table. Each thread has a fixed 32 KiB cache;
+collisions replace entries and misses use the original function. Module lookup,
+hook dispatch, the guest register state and return handling remain unchanged.
+The `RECOMP_CACHE_CALL_RETURNS=ON` CMake option enables the wrapper and matching
+link flag. Generated translations are never edited or regenerated for this change.
+
+Official native `runtime_tests` passed, including six new cache checks and
+131,072 collision/revisit comparisons. Official one-job WASM build 562 passed
+under its resource guard (1,355 MiB peak). Its engine SHA is
+`7eefc25ba55ad3cca4686f5656666363a697292b990845641248236a26929c7d`.
+The existing WASM exception mode, assertions, video decoder, lean worker policy
+and compatibility checks are retained.
+
+Silent trial 567 compared both engines at the same origin, viewport, private
+profile and cached game installation, with alternating launches and a baseline
+warmup excluded. Native-menu timings were:
+
+| Engine | Run 1 | Run 2 | Run 3 | Mean |
+| --- | ---: | ---: | ---: | ---: |
+| Prior engine | 8.12 s | 8.66 s | 8.67 s | 8.48 s |
+| Cached lookup | 6.80 s | 7.12 s | 6.98 s | 6.97 s |
+
+This is a measured 17.9% reduction in actual native-menu initialization, with
+no artwork preview or queued clicks. The candidate also entered original
+Beginner Random freestyle gameplay without a startup error. Peak owned RSS
+was 2,776 MiB, below the 3,072 MiB ceiling. The owned browser was closed.
+Evidence: `output/startup567-qualified.json`. This comparison measures returning
+players with cached game data; first visits still download and verify that data.
+
+Apply the import-copy and return-cache patches after the main browser patch.
+Build through the official tools using the settings below, plus
+`RECOMP_CACHE_CALL_RETURNS=ON`. Native tests need `pefile` available to the Python
+interpreter selected by CTest; trial 564 used an isolated dependency directory.
+
+## Earlier startup improvements
+
 The October 12 startup investigation measured the previous published engine at
 15.9–16.7 seconds from the player page to its native menu in an isolated Chrome
 profile with game data already installed. Approximately five seconds reread

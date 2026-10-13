@@ -1,0 +1,144 @@
+--- a/runtime/cpu.cpp
++++ b/runtime/cpu.cpp
+@@ -13,6 +13,7 @@
+ #include "thunks.h"
+ #include "loader.h"
+ #include "seh.h"
++#include "call_return_cache.h"
+ #include "../platform/os.h"
+ 
+ #include <setjmp.h>
+@@ -86,6 +87,16 @@
+ } // namespace
+ 
+ extern "C" {
++
++// Opted in with a --wrap-capable linker. The original generated table remains
++// immutable, and no translated source or guest return semantics are changed.
++#ifdef RECOMP_CACHE_CALL_RETURNS
++int __real_recomp_is_call_return(uint32_t);
++int __wrap_recomp_is_call_return(uint32_t target) {
++    static thread_local CallReturnCache cache;
++    return cache.lookup(target, __real_recomp_is_call_return);
++}
++#endif
+ 
+ const int recomp_resumable_stacks = RECOMP_RESUMABLE_STACKS;
+ 
+--- a/runtime/tests/runtime_tests.cpp
++++ b/runtime/tests/runtime_tests.cpp
+@@ -3,6 +3,7 @@
+ // Run from the repository root:
+ //   .venv/bin/python tools/test.py --compile-only && build/recomp/runtime_tests
+ #include "../imports.h"
++#include "../call_return_cache.h"
+ #include "../../dx/dx.h"
+ #include "../../dx/ddraw.h"
+ #include "../resources.h"
+@@ -6899,7 +6900,42 @@
+     check(loader_hash_file_bounded(os_temp_dir(), 64 * 1024 * 1024, &read).empty() && read == 0,
+           "directory cannot become a checkpoint input");
+ }
++static void test_call_return_cache() {
++    section("immutable CALL-return cache");
++    CallReturnCache cache;
++    unsigned calls = 0;
++    auto original = [&calls](uint32_t value) {
++        ++calls;
++        return int(value == 0 || value == 0xffffffffu || (value % 7) == 3);
++    };
++    check(cache.lookup(0, original) == 1 && cache.lookup(0, original) == 1 && calls == 1,
++          "zero is a real cache key, not an empty marker");
++    check(cache.lookup(1, original) == 0 && cache.lookup(1, original) == 0 && calls == 2,
++          "negative membership results are reused exactly");
++    check(cache.lookup(0xffffffffu, original) == 1, "maximum guest address is preserved");
++    bool correct = true;
++    // Much larger than the fixed table: force replacement and false/true
++    // collisions, then revisit the same addresses in reverse order.
++    for (uint32_t i = 0; i < 65536; ++i) {
++        const uint32_t value = i * 65537u;
++        correct &= cache.lookup(value, original) ==
++                   int(value == 0 || value == 0xffffffffu || (value % 7) == 3);
++    }
++    for (uint32_t i = 65536; i-- > 0;) {
++        const uint32_t value = i * 65537u;
++        correct &= cache.lookup(value, original) ==
++                   int(value == 0 || value == 0xffffffffu || (value % 7) == 3);
++    }
++    check(correct, "collisions never return a different address's result");
++    check(cache.lookup(123, [](uint32_t) { return -1; }) == -1,
++          "future nonboolean results are preserved without cache encoding");
++    CallReturnCache independent;
++    check(independent.lookup(123, [](uint32_t) { return 1; }) == 1,
++          "separate thread caches do not share answer state");
++}
++
+ int main(int argc, char **argv) {
++    test_call_return_cache();
+     if (argc == 2 && strcmp(argv[1], "--checkpoint-hash-only") == 0) {
+         test_bounded_checkpoint_hash();
+         printf("\n%d checkpoint hash checks, %d failures\n", g_checks, g_failures);
+--- a/runtime/CMakeLists.txt
++++ b/runtime/CMakeLists.txt
+@@ -1,5 +1,9 @@
+ # The guest runtime. Object libraries, so every source is linked into every
+ # consumer exactly as the shell scripts linked every object.
++option(RECOMP_CACHE_CALL_RETURNS "Cache immutable return lookup with a --wrap-capable linker" OFF)
++if(RECOMP_CACHE_CALL_RETURNS)
++  set_source_files_properties(cpu.cpp PROPERTIES COMPILE_DEFINITIONS RECOMP_CACHE_CALL_RETURNS=1)
++endif()
+ set(POP_RUNTIME_SOURCES
+   memory.cpp loader.cpp imports.cpp cpu.cpp thunks.cpp seh.cpp profile.cpp kernel32.cpp kernel32_wide.cpp
+   resources.cpp oleaut32.cpp mods_seam.cpp user32.cpp user32_wide.cpp user32_vcl.cpp user32_static.cpp
+@@ -27,6 +31,9 @@
+ target_link_libraries(recomp_runtime PUBLIC recomp_platform)
+ target_compile_options(recomp_runtime PRIVATE ${POP_WARN_HOST})
+ pop_optimize(recomp_runtime 2)
++if(RECOMP_CACHE_CALL_RETURNS)
++  target_link_options(recomp_runtime INTERFACE "LINKER:--wrap=recomp_is_call_return")
++endif()
+ 
+ # POPM_TESTING compiles the test-only entry points (loader reset, owner
+ # counter seam, scheduler latch reset). None exists in a real build.
+@@ -37,6 +44,9 @@
+ target_compile_definitions(recomp_runtime_testing PUBLIC POPM_TESTING=1)
+ target_compile_options(recomp_runtime_testing PRIVATE ${POP_WARN_HOST})
+ pop_optimize(recomp_runtime_testing 1)
++if(RECOMP_CACHE_CALL_RETURNS)
++  target_link_options(recomp_runtime_testing INTERFACE "LINKER:--wrap=recomp_is_call_return")
++endif()
+ endif()
+ 
+ # The interpreter for heap code, on its own: it needs guest memory and
+--- /dev/null
++++ b/runtime/call_return_cache.h
+@@ -0,0 +1,29 @@
++#ifndef RECOMP_CALL_RETURN_CACHE_H
++#define RECOMP_CALL_RETURN_CACHE_H
++
++#include <stdint.h>
++
++// Only for the main image's immutable CALL-continuation table. Auxiliary
++// module registration and hooks still use their original dispatch paths.
++// The caller owns one cache per thread; a collision replaces a slot, never
++// changes the answer. No allocation or locking belongs in this RET path.
++struct CallReturnCache {
++    struct Entry {
++        uint32_t address = 0, value = 0;
++    };
++    Entry slots[4096]{};
++
++    template <class Lookup> int lookup(uint32_t target, Lookup original) {
++        Entry &entry = slots[(target * 0x9e3779b1u) >> 20];
++        if (entry.value && entry.address == target)
++            return int(entry.value - 1);
++        const int result = original(target);
++        // Generated tables return 0/1. Preserve any future nonboolean answer
++        // exactly rather than encoding it into a possibly wrapping marker.
++        if (result == 0 || result == 1)
++            entry = {target, uint32_t(result + 1)};
++        return result;
++    }
++};
++
++#endif
