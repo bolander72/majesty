@@ -61,7 +61,7 @@
   "nextIntegrationWork": [
     "Audit Alchemist/Manager source against the pinned DirectDraw guest executable and required functions",
     "Implement required capability registries/controllers in the supported runtime rather than substitute a stock guild",
-    "Obtain distributable full artwork/audio package, or produce original assets for licensed gameplay source",
+    "Obtain the community's complete actual artwork/audio package; substitutions and renamed stock classes are not allowed",
     "Qualify normal paid construction/recruitment, special mechanics, native saves/reloads and browser resource limits before publishing"
   ],
   "contactedAuthors": false,

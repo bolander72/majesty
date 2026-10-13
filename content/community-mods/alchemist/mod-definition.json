@@ -1,0 +1,139 @@
+{
+  "schema_version": 3,
+  "mod_id": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
+  "internal_name": "CustomGuildAlchemist",
+  "display_name": "Custom Guild: Alchemist Lab",
+  "custom_buildings": [
+    {
+      "local_name": "AlchemistsLaboratory",
+      "controller_base": "AP10",
+      "panel_resource_template": "AP10"
+    }
+  ],
+  "runtime_features": [
+    {
+      "type": "stock.name-generator.v1",
+      "generator_id": "NM18",
+      "name_tables": ["HN69", "HN70", "HN71", "HN72"]
+    },
+    {
+      "type": "stock.ap78-enchantment-row.v1",
+      "overlay_id": "ALo1",
+      "display_text": "Paralytic Oil - brief stun on weapon hit"
+    },
+    {
+      "type": "stock.ap78-enchantment-row.v1",
+      "overlay_id": "ALo2",
+      "display_text": "Transmutation Oil - +5 gold on weapon hit"
+    },
+    {
+      "type": "stock.ap10-ap69-secondary-panel.v1",
+      "panel_key": "brewing",
+      "parent_building": "AlchemistsLaboratory",
+      "source_dialog_id": "CGBR",
+      "building_family_id": "ALB",
+      "open_command_id": 8009
+    },
+    {
+      "type": "stock.ap22-resource-meter.v1",
+      "panel_key": "brewing",
+      "resource_key": "reagents",
+      "attribute_id": "APV0",
+      "label_control_id": 10787,
+      "count_control_id": 10788,
+      "binding_control_id": 10789
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "brewing",
+      "recipe_key": "phoenix-phial",
+      "action_control_id": 10774,
+      "descriptor_template_control_id": 5020,
+      "completion_template_control_id": 5043,
+      "required_level": 2,
+      "price": 750,
+      "price_control_id": 11774,
+      "progress_control_id": 10775,
+      "active_display_control_id": 10776,
+      "icon_control_id": 11274,
+      "completion_text": "Phoenix Phial"
+    },
+    {
+      "type": "stock.ap99-research-row.v1",
+      "panel_key": "brewing",
+      "recipe_key": "weapon-oil",
+      "action_control_id": 10771,
+      "descriptor_template_control_id": 5020,
+      "completion_template_control_id": 5020,
+      "required_level": 1,
+      "price": 250,
+      "price_control_id": 11771,
+      "progress_control_id": 10769,
+      "active_display_control_id": 10770,
+      "icon_control_id": 0,
+      "completion_text": "Weapon Oil"
+    },
+    {
+      "type": "stock.ap17-upgrade-research-gate.v1",
+      "panel_key": "brewing",
+      "parent_building": "AlchemistsLaboratory",
+      "upgrade_control_id": 8007,
+      "upgrade_price_control_id": 8015,
+      "requirements": [
+        {"building_level": 1, "recipe_key": "weapon-oil"},
+        {"building_level": 2, "recipe_key": "phoenix-phial"}
+      ]
+    },
+    {
+      "type": "stock.ap24-timed-rage-action.v1",
+      "panel_key": "brewing",
+      "action_key": "vigor-elixir",
+      "action_control_id": 10768,
+      "descriptor_template_control_id": 4416,
+      "level_price_template_control_id": 4414,
+      "required_level": 3,
+      "gold_cost": 1500,
+      "resource_key": "reagents",
+      "resource_cost": 1,
+      "callback_symbol": "Alchemist_DoInvigoratingElixer",
+      "duration_ms": 30000,
+      "icon_control_id": 11768,
+      "price_control_id": 9768,
+      "progress_control_id": 8201,
+      "active_display_control_id": 8826
+    },
+    {
+      "type": "stock.ap24-rage-command-action.v1",
+      "panel_key": "brewing",
+      "action_key": "arcane-infusion",
+      "action_control_id": 4402,
+      "visual_template_control_id": 4402,
+      "completion_template_research_control_id": 5020,
+      "required_level": 3,
+      "resource_key": "reagents",
+      "resource_cost": 10,
+      "callback_symbol": "Alchemist_Arcane_Infusion",
+      "icon_control_id": 5402,
+      "price_control_id": 3402
+    },
+    {
+      "type": "stock.ap69-sovereign-target-action.v1",
+      "panel_key": "brewing",
+      "action_key": "philosophers-stone",
+      "visual_control_id": 4403,
+      "private_control_id": 10785,
+      "visual_template_control_id": 4403,
+      "target_template_control_id": 4402,
+      "stock_target_mode": "Sp23",
+      "stock_executor_mode": "Sp14",
+      "private_mode": "AlS1",
+      "private_unit_id": "ALS1",
+      "cursor_ordinal": 39,
+      "required_level": 3,
+      "resource_key": "reagents",
+      "resource_cost": 10,
+      "icon_control_id": 5403,
+      "price_control_id": 3403
+    }
+  ]
+}

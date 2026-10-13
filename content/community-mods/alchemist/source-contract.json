@@ -1,0 +1,48 @@
+{
+  "format": "majesty-community-source-contract-v1",
+  "id": "alchemist-lab",
+  "workshopItem": "3793509198",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3793509198",
+  "source": {
+    "repository": "majesty-gold-hd-custom-guild-alchemist",
+    "commit": "bb32bea97cf0a3bde4a02d9a6442a5ef11b56c29",
+    "archiveSha256": "adf2c7cd852aee1a1a645931c5e7ead2aac8f39330b02d1c410be7c202184913",
+    "bytes": 231345
+  },
+  "managerSource": {
+    "repository": "majesty-gold-hd-mod-manager",
+    "commit": "63a81840e0f9264067d7984ad0d2b39859fa1896",
+    "archiveSha256": "ab0a82dd2469400d3d81cbc3cd6b02e64ddb600a571b300149977e996c705a76",
+    "bytes": 21095907
+  },
+  "definitionSha256": "167dd8b00b3d9872a16c15fa8b393570414166223b9075f5e03d75be23e43367",
+  "guestExecutableSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "authoredIdentities": {
+    "hero": "ALC1",
+    "buildings": [
+      "ALB1",
+      "ALB2",
+      "ALB3"
+    ],
+    "heroTitle": "Alchemist",
+    "buildingTitle": "AlchemistsLaboratory",
+    "secondaryPanel": "CGBR",
+    "resurrectionItem": "PXF1"
+  },
+  "requiredRuntimeFeatureTypes": [
+    "stock.ap10-ap69-secondary-panel.v1",
+    "stock.ap17-upgrade-research-gate.v1",
+    "stock.ap22-resource-meter.v1",
+    "stock.ap24-rage-command-action.v1",
+    "stock.ap24-timed-rage-action.v1",
+    "stock.ap69-sovereign-target-action.v1",
+    "stock.ap78-enchantment-row.v1",
+    "stock.ap99-research-row.v1",
+    "stock.name-generator.v1"
+  ],
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "mediaRedistribution": "Unresolved; public GitHub source license does not supply the omitted original media",
+  "fullPackageAcquired": false,
+  "substituteStockContentAllowed": false
+}
