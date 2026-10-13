@@ -1,5 +1,10 @@
 # Changelog
 
+## Lost Trail native map hover — October 13, 2026
+
+- Restore warm gold background lighting when the native map marker is hovered. Keep the normal landmark unchanged and preserve map texture, coastline, transparent borders and native selection controls.
+- Upgrade both earlier map-art versions in the cache without changing player profiles or saves.
+
 ## Trail Lodge native UI icon — October 13, 2026
 
 - Give the Palace building-list Lodge icon the same 25×25 beveled native frame and dark inset as stock building emblems. Preserve world sprites, hero art, animations and gameplay.

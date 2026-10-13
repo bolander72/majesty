@@ -44,3 +44,4 @@ continuations.
 
 - All new or changed UI elements must follow Majesty's existing native UI design system: match the surrounding framing, bevels, palette, icon scale, typography, spacing and interaction states. Reuse native UI components and resource templates where available.
 - Palace building-list icons use the native 25-by-25 framed emblem contract, with an opaque inset background and readable artwork inside the frame. Do not substitute an unframed world sprite or transparent thumbnail. Check new elements beside stock UI at native scale before shipping.
+- Campaign-map landmarks must retain the native interaction feedback, including the warm background glow on hover. Verify both idle and hover states against stock markers, keep their placement stable, and preserve seamless terrain/coast edges.

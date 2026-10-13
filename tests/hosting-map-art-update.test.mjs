@@ -84,3 +84,11 @@ test("the cached Lodge atlas gets the framed icon without reimporting game files
   assert.equal(state.manifest.files[LODGE_ICON_UPDATE.path].size,LODGE_ICON_UPDATE.bytes);
   assert.equal(state.downloads,1);
 });
+
+test('the original prototype cache can upgrade directly to the hover-enabled artwork', async () => {
+  for (const previous of MAP_ART_UPDATE.previousSha256s) {
+    const {state, options} = fixture(previous);
+    assert.deepEqual(await updateCachedMapArt('majesty-lost-trail-v2',options),{updated:true});
+    assert.equal(state.downloads,1);
+  }
+});

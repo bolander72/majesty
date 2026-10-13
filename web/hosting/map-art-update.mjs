@@ -4,10 +4,11 @@ import {assetUrl} from './asset-url.mjs';
 
 export const MAP_ART_UPDATE = Object.freeze({
   path: 'DataMX/LostTrail-menu-art.cam',
-  previousSha256: 'd507fdb71c25ac323584f6d832ec0252be7aedf534ffe30b22b2fed985eac0c9',
-  sha256: 'b75ac61a93f7586d880f6708b6915fc273ad7bd4c2d9bca3bbacd5a318a9e8c4',
-  bytes: 335244,
-  url: 'https://raw.githubusercontent.com/bolander72/majesty/3b3c6e21680a9d6737b8b947c67bbc61b14880c1/assets/content/lost-trail-map-art-v3/DataMX/LostTrail-menu-art.cam',
+  previousSha256: 'b75ac61a93f7586d880f6708b6915fc273ad7bd4c2d9bca3bbacd5a318a9e8c4',
+  previousSha256s: ['0da4389a4b50b89ad400b277680fd1020c173d7d603c0998479472db0a9d9ff3', 'd507fdb71c25ac323584f6d832ec0252be7aedf534ffe30b22b2fed985eac0c9'],
+  sha256: 'e413324867b6fa4c1dbdcf040385caabeca8cad047a7b3411763eabb83088468',
+  bytes: 338568,
+  url: 'https://raw.githubusercontent.com/bolander72/majesty/6ecbef1d13ece4599822975be0b371a84895a034/assets/content/lost-trail-hover-v5/DataMX/LostTrail-menu-art.cam',
 });
 
 export const LODGE_ICON_UPDATE = Object.freeze({
@@ -41,7 +42,7 @@ export async function updateCachedMapArt(id, {signal, storage = globalThis.navig
     const old = await handle.getFile();
     if (old.size > 1024 * 1024) return {updated: false, customized: true};
     const digest = await hashFile(old);
-    if (![update.sha256, update.previousSha256].includes(digest)) return {updated: false, customized: true};
+    if (![update.sha256, update.previousSha256, ...(update.previousSha256s || [])].includes(digest)) return {updated: false, customized: true};
     const manifestHandle = await game.getFileHandle('.manifest.json');
     const manifest = JSON.parse(await (await manifestHandle.getFile()).text());
     if (!manifest.files?.[update.path]) throw Error('Map artwork import is incomplete.');

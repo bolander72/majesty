@@ -2,7 +2,7 @@
 export const LOST_TRAIL_V2_FILES = Object.freeze({
   "Data/mx_gpltext.cam": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
   "Data/mx_textdata.cam": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
-  "DataMX/LostTrail-menu-art.cam": "b75ac61a93f7586d880f6708b6915fc273ad7bd4c2d9bca3bbacd5a318a9e8c4",
+  "DataMX/LostTrail-menu-art.cam": "e413324867b6fa4c1dbdcf040385caabeca8cad047a7b3411763eabb83088468",
   "DataMX/TheLostTrail.bcd": "a4f20b05ce9a09324f5dbc16be485cea3b6f630443a2e12e2c373a8892ec4df7",
   "DataMX/Wayfinder-interface.cam": "ec9a2686c2553b7d7b8d804f695ef6a61ad93b91f0b8de2be2cd2471919c6d27",
   "DataMX/Wayfinder-units.cam": "165565cd98ef92682feb3e6c78c62caebbb072b6fa6a3443328397d51330299b",
