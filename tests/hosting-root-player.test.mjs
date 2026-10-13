@@ -61,3 +61,12 @@ test('managed worlds retain original data even when the root has a content defau
     })}), games);
   }
 });
+
+test('the default content root cannot disable its required inventory bridge', async () => {
+  let closed = false;
+  await assert.rejects(prepareRootPlayer({search: '?RECOMP_RULE_INVENTORY_COMPAT=0',
+    openClient: async () => ({games: [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}],
+      status: () => assert.fail('No content import or engine start'), close: () => {closed = true;},
+    })}), /requires inventory compatibility/);
+  assert.equal(closed, true);
+});
