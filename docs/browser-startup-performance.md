@@ -37,6 +37,13 @@ was 2,776 MiB, below the 3,072 MiB ceiling. The owned browser was closed.
 Evidence: `output/startup567-qualified.json`. This comparison measures returning
 players with cached game data; first visits still download and verify that data.
 
+Production release 568 deployed the matching engine and frontend without the
+menu capture or click queue. Silent public trial 571 reached the real native
+menu in 7.47 seconds on its first launch after the engine update and 6.92 seconds
+on a repeat launch. Seven public asset/hash/isolation checks passed, and the owned
+browser was closed at a 2,084 MiB peak. Evidence:
+`output/startup571-public-verification.json`.
+
 Apply the import-copy and return-cache patches after the main browser patch.
 Build through the official tools using the settings below, plus
 `RECOMP_CACHE_CALL_RETURNS=ON`. Native tests need `pefile` available to the Python
