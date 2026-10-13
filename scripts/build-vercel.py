@@ -38,6 +38,7 @@ def unpack_release(data, release, destination):
 def root_player(html, versions=None, artwork=None):
     replacements = {
         '<head>': ('<head>\n<base href="/majesty/">\n'
+                  '<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">\n'
                   '<link rel="preload" href="/majesty/MajestyRecomp.wasm" as="fetch" crossorigin>\n'
                   '<link rel="preload" href="/majesty/MajestyRecomp.data" as="fetch" crossorigin>\n'
                   '<link rel="preload" href="/majesty/MajestyRecomp.js" as="script">\n'
@@ -98,7 +99,7 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
             '</div>', 1)
         html = html.replace('</style>', '''  #startup-art { position: fixed; inset: 0; z-index: 1;
     display: grid; place-items: center; background: #201a17; pointer-events: none; }
-  #startup-art img { width: 100%; height: 100%; object-fit: contain; }
+  #startup-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   body[data-game-ready] #startup-art,
   body:has(#status:not([hidden])) #startup-art { display: none; }
 </style>''', 1)
@@ -129,6 +130,10 @@ def build(destination=None):
             target = static / source.relative_to(ROOT / 'web')
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+    for page in static.rglob('index.html'):
+        text = page.read_text()
+        if '<head>' in text and 'rel="icon"' not in text:
+            page.write_text(text.replace('<head>', '<head>\n<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">', 1))
     shutil.copyfile(static / 'index.html', static / 'setup.html')
     versions = {name: release['files']['static/majesty/' + name]['sha256']
                 for name in ['MajestyRecomp.js', 'MajestyRecomp.data']}

@@ -2,7 +2,7 @@
 // Original game data, save identities and user-created resource overrides stay intact.
 const sources = [
   ['Data/textdata.cam', '616ebc6880b50324134d7d3f9c20229bf5e1c159e738da0702be9f07a1a66642'],
-  ['Data/mx_textdata.cam', '60ab851f56c563025ad8db0814436c50c34594ee396e27ab77c057e4b47e0b1f'],
+  ['DataMX/mx_textdata.cam', '60ab851f56c563025ad8db0814436c50c34594ee396e27ab77c057e4b47e0b1f'],
 ];
 const marker = new TextEncoder().encode('\x00\x0a\x00\x00\x00Version #\x00\x0b\x00\x00\x00');
 
@@ -29,15 +29,15 @@ export async function prepareMenuText({dataId, profilePath, storage = navigator.
   game = await game.getDirectoryHandle('game');
   let profile = root;
   for (const part of profilePath.split('/')) profile = await profile.getDirectoryHandle(part, {create: true});
-  const target = await profile.getDirectoryHandle('Data', {create: true});
   for (const [path, expected] of sources) {
     signal?.throwIfAborted();
-    const name = path.split('/')[1];
+    const [directory, name] = path.split('/');
+    const target = await profile.getDirectoryHandle(directory, {create: true});
     try { await target.getFileHandle(name); continue; } catch (error) {
       if (error.name !== 'NotFoundError') throw error;
     }
     let source;
-    try { source = await (await (await game.getDirectoryHandle('Data')).getFileHandle(name)).getFile(); }
+    try { source = await (await (await game.getDirectoryHandle(directory)).getFileHandle(name)).getFile(); }
     catch (error) { if (error.name === 'NotFoundError') continue; throw error; }
     if (source.size > 1024 * 1024) continue;
     const bytes = new Uint8Array(await source.arrayBuffer());
