@@ -24,7 +24,14 @@ apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-ki
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-startup-import-copy.patch"
 apply_browser_patch "$MAJESTY_PROJECT/kit" "$MAJESTY_WORKSPACE/patches/recomp-kit-call-return-cache.patch"
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-browser-defaults.patch"
+# Authored adapters are absent from the pinned upstream; preserve existing edits.
+for native_source in "$MAJESTY_WORKSPACE/native/browser/"*; do
+  native_target="$MAJESTY_PROJECT/$(basename "$native_source")"
+  if [ ! -e "$native_target" ]; then cp "$native_source" "$native_target"; fi
+done
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-menu-version-label.patch"
+cp "$MAJESTY_WORKSPACE/patches/majesty-cheats.h" "$MAJESTY_PROJECT/majesty-cheats.h"
+apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-cheats.patch"
 if [ ! -x "$MAJESTY_PROJECT/.venv/bin/python" ]; then
   "$MAJESTY_PYTHON" -m venv "$MAJESTY_PROJECT/.venv"
 fi

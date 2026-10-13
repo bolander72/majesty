@@ -1,0 +1,26 @@
+--- a/browser_viewport.cpp
++++ b/browser_viewport.cpp
+@@ -2,6 +2,7 @@
+ // Only this guest thread rebuilds surfaces or writes game state; the browser
+ // main thread publishes a paired CSS viewport through native_seam.h.
+ #include "mods/mods_internal.h"
++#include "majesty-cheats.h"
+ #include "native_received_transfer.h"
+ #include "platform/os.h"
+ #include "runtime/guest.h"
+@@ -752,6 +753,7 @@
+   }
+ }
+ extern "C" void majesty_browser_frame(X86 *c) {
++  majesty_cheats::tick(c);
+   majesty_received_transfer_poll();
+   majesty_browser_campaign_input(c);
+   resize_at_boundary(c);
+@@ -792,6 +794,7 @@
+ }
+ extern "C" void majesty_browser_input_boundary(X86 *c) {
+   const uint32_t state = rd32(0x006d7670);
++  majesty_cheats::observe_phase(state);
+   if (state && rd32(state) == 1)
+     resize_at_boundary(c);
+   fn_004f49d0(c);

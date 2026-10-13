@@ -1,5 +1,13 @@
 # Changelog
 
+## Single-player cheat codes
+
+- Add `infinite gold` and `level 1000` to Majesty's original Enter-key cheat input.
+  Re-enter a code to disable its automatic effect. Hero levels use the original
+  progression script in bounded batches and include future recruits.
+- Keep original cheats intact; automatic effects reset when leaving the quest
+  and refuse joined multiplayer sessions.
+
 ## Native home-screen startup
 
 - Remove the experimental menu capture, click queue and embedded player.
