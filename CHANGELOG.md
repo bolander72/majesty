@@ -1,5 +1,13 @@
 # Changelog
 
+## GitHub asset distribution
+
+- Move live game, engine, loading artwork and content resources into the public
+  Majesty repository's asset branch. Pin downloads to immutable Git commits.
+- Stream seventeen small parts into the unchanged original ZIP, verifying
+  each part and the full archive before import. Keep cached games and saves.
+- Download the large game payload directly from GitHub instead of Vercel Blob.
+
 ## Lost Trail browser content
 
 - Add The Lost Trail to the normal native quest selector, with Wayfinder heroes

@@ -1,0 +1,125 @@
+{
+  "format": "majesty-automatic-assets-v1",
+  "games": {
+    "majesty": {
+      "bytes": 569806043,
+      "sha256": "bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1",
+      "parts": [
+        {
+          "bytes": 33554432,
+          "sha256": "60973076fd53890fda72161dd271d784a515139d4c10adfc3ff73d00b010e069",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-000.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "af80868786e4c1993a62ab292ff06b25d733e87fb7255f9fd6c274ca50f671bf",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-001.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "efda32a1f8b71a23466ae34b333fd73c53f7b85f4af90c36403164c7992bb395",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-002.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "dc2f4d1a67d77b9072b7ce9661965a0ab416d0d815e9b83ecdd6bc63d302160d",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-003.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "4a4caee5df9a21349ce5051dfbfe0226cbc582e27f261fd1306676a35c2aff9d",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-004.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "09a185a1cbb7fa5844a882896a91ba834e0e23a98e4c1b4926476ae5fabaf782",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-005.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "dacfe29fde0f35159576a32f8739642d086e54797ddf281455b58b1f4fccf5d1",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-006.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "99330df7dc86670f02838e835f7caaa2fc486432a98eb844ca4fb7e8b2c4ae48",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-007.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "4c371b1d8a91598174ac63b2bf51e849417b8ab5c28ac2a51673a2f96c466093",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-008.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "5ca61392aff8171481a32682a0038c05f7855af96636142e125859c6ff4d67ac",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-009.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "52147aea344ee10a928098103f309b38cdef9e2bea40125306286989346a824c",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-010.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "c66b6451f08af07dfbbeb588149d1db1453b1c2e481762f8b53febca25fc2335",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-011.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "d93623128ad3e402d2f41f5b20c8ea658e365bdf69a063d552b289f4af3a7b70",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-012.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "fb100a940ca51d32a44fcaff8a074e22fb8932cb6d1945a86c327d81436a877a",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-013.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "50e62902a18c7026e9a1592e2bc0062c361fa663c7e0ec4731a0122f3f9f8675",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-014.bin"
+        },
+        {
+          "bytes": 33554432,
+          "sha256": "3cc707a3e05f06af21918e0edd4289a58a576559d5525b324fc20e4f6d6ddb53",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-015.bin"
+        },
+        {
+          "bytes": 32935131,
+          "sha256": "a15d71fbd4004e09e366868f21cc20231ebec398221c59fdbf14187650c9119d",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/game/bc9ac512a0c0da0ab4143f56df43404ebe50dbb89879ae3a9f0ce94e1b231dd1/part-016.bin"
+        }
+      ]
+    },
+    "majesty-wayfinder": {
+      "baseId": "majesty",
+      "patches": [
+        {
+          "path": "DataMX/Wayfinder.bcd",
+          "bytes": 3462,
+          "sha256": "61a51da7b5a069a9839dc63ee97e50e77e47cf7d0243611f19db66faeeb19037",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-wayfinder/DataMX/Wayfinder.bcd"
+        },
+        {
+          "path": "DataMX/Wayfinder-units.cam",
+          "bytes": 1002,
+          "sha256": "f79c8de2e7eaa844f0afb8594cdea69638a2d5cdcfa0573b00c8aa90fdad3c38",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-wayfinder/DataMX/Wayfinder-units.cam"
+        },
+        {
+          "path": "DataMX/Wayfinder-interface.cam",
+          "bytes": 4114,
+          "sha256": "84892eb8d8b8999be2f65718ad1912f9d0a8ff9c5dc4500536c14054b27b9595",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-wayfinder/DataMX/Wayfinder-interface.cam"
+        },
+        {
+          "path": "DataMX/mx_miscdata.cam",
+          "bytes": 15541,
+          "sha256": "2a983bf59b21dd644f02fb11dbacdbe39ad9589eedf5206157d47db86b2046dc",
+          "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-wayfinder/DataMX/mx_miscdata.cam"
+        }
+      ]
+    }
+  }
+}

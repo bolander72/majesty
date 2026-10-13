@@ -22,73 +22,73 @@
       "path": "Data/mx_gpltext.cam",
       "bytes": 136574,
       "sha256": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/Data/mx_gpltext.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/Data/mx_gpltext.cam"
     },
     {
       "path": "Data/mx_textdata.cam",
       "bytes": 139120,
       "sha256": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/Data/mx_textdata.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/Data/mx_textdata.cam"
     },
     {
       "path": "DataMX/LostTrail-menu-art.cam",
       "bytes": 376280,
       "sha256": "d507fdb71c25ac323584f6d832ec0252be7aedf534ffe30b22b2fed985eac0c9",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/LostTrail-menu-art.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/LostTrail-menu-art.cam"
     },
     {
       "path": "DataMX/TheLostTrail.bcd",
       "bytes": 9327,
       "sha256": "a4f20b05ce9a09324f5dbc16be485cea3b6f630443a2e12e2c373a8892ec4df7",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/TheLostTrail.bcd"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/TheLostTrail.bcd"
     },
     {
       "path": "DataMX/Wayfinder-interface.cam",
       "bytes": 4114,
       "sha256": "84892eb8d8b8999be2f65718ad1912f9d0a8ff9c5dc4500536c14054b27b9595",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder-interface.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/Wayfinder-interface.cam"
     },
     {
       "path": "DataMX/Wayfinder-units.cam",
       "bytes": 1002,
       "sha256": "f79c8de2e7eaa844f0afb8594cdea69638a2d5cdcfa0573b00c8aa90fdad3c38",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder-units.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/Wayfinder-units.cam"
     },
     {
       "path": "DataMX/Wayfinder.bcd",
       "bytes": 3462,
       "sha256": "61a51da7b5a069a9839dc63ee97e50e77e47cf7d0243611f19db66faeeb19037",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder.bcd"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/Wayfinder.bcd"
     },
     {
       "path": "DataMX/mx_gpltext.cam",
       "bytes": 136574,
       "sha256": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_gpltext.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/mx_gpltext.cam"
     },
     {
       "path": "DataMX/mx_miscdata.cam",
       "bytes": 15822,
       "sha256": "81bb17937c4124a67081750c244cf8f78d04f8b26ab2a619e0c7ee2beb311781",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_miscdata.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/mx_miscdata.cam"
     },
     {
       "path": "DataMX/mx_textdata.cam",
       "bytes": 139120,
       "sha256": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_textdata.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/DataMX/mx_textdata.cam"
     },
     {
       "path": "QuestsMX/TheLostTrail.q",
       "bytes": 2572,
       "sha256": "f36b22e8e8fae61c3a84d4c7671cdcdd0c1b75cd419f0533a174c9f43a12ed04",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/QuestsMX/TheLostTrail.q"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/QuestsMX/TheLostTrail.q"
     },
     {
       "path": "QuestsMX/TheLostTrail.qdd",
       "bytes": 652,
       "sha256": "92cb042502aa40c984fc1ff0a61cea5b13e80afa9997700f3186f7fa5d9d871f",
-      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/QuestsMX/TheLostTrail.qdd"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/c083d99aa47974c46d4f87411de529fb820eb747/assets/content/majesty-lost-trail/QuestsMX/TheLostTrail.qdd"
     }
   ],
   "patchBytes": 964619,

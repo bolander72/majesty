@@ -26,6 +26,15 @@ test('duplicate patches cannot replace a missing resource', () => {
   assert.throws(() => derivedDescriptor(bad, 'majesty-wayfinder'));
 });
 
+test('small content patches also accept only commit-pinned URLs in the public Majesty repo', () => {
+  const plan = structuredClone(descriptor);
+  for (const p of plan.games['majesty-wayfinder'].patches)
+    p.url = 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + p.path;
+  assert.equal(derivedDescriptor(plan, 'majesty-wayfinder').patches.length, 4);
+  plan.games['majesty-wayfinder'].patches[0].url = plan.games['majesty-wayfinder'].patches[0].url.replace('a'.repeat(40), 'main');
+  assert.throws(() => derivedDescriptor(plan, 'majesty-wayfinder'));
+});
+
 test('Lost Trail requires all twelve bound mission, menu and hero resources', () => {
   const lost = {format: descriptor.format, games: {'majesty-lost-trail': {baseId: 'majesty',
     patches: Object.entries(LOST_TRAIL_FILES).map(([path, sha256]) => ({path, sha256, bytes: 10,

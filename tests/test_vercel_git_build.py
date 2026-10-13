@@ -14,6 +14,13 @@ spec.loader.exec_module(build)
 
 
 class ReleaseIntegrity(unittest.TestCase):
+    def test_github_asset_locations_are_pinned_to_our_repository_commit(self):
+        base = 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a' * 40 + '/assets/'
+        self.assertTrue(build.trusted_asset_url(base + 'releases/engine.tar.gz', 'https://legacy.example/assets/'))
+        for bad in [base.replace('a' * 40, 'main'), base.replace('bolander72', 'unrelated'),
+                    base + '?token=secret', base.replace('https:', 'http:')]:
+            self.assertFalse(build.trusted_asset_url(bad, 'https://legacy.example/assets/'))
+
     def archive(self, name='static/index.html', symlink=False):
         content = b'<html>game</html>'
         stream = io.BytesIO()
@@ -99,6 +106,50 @@ class ContentReleaseIntegrity(unittest.TestCase):
                     build.install_content_release(root / 'static')
                 self.assertEqual(json.loads((root / 'static/games.json').read_text()),
                     [{'id': 'majesty', 'title': 'Majesty'}])
+
+
+class ArchivePartsIntegrity(unittest.TestCase):
+    def fixture(self, directory):
+        root = Path(directory); (root / 'deploy').mkdir(); (root / 'static/hosting').mkdir(parents=True)
+        url = 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a' * 40 + '/assets/'
+        base = {'bytes': 14, 'sha256': 'a' * 64}
+        wayfinder = {'baseId': 'majesty', 'patches': [{'path': 'DataMX/test.cam', 'bytes': 10,
+            'sha256': 'b' * 64, 'url': url + 'test.cam'}]}
+        existing = {'format': 'majesty-automatic-assets-v1', 'games': {
+            'majesty': {**base, 'url': 'https://legacy.example/game.zip'},
+            'majesty-wayfinder': wayfinder, 'majesty-lost-trail': {'preserved': True}}}
+        migrated = {'format': existing['format'], 'games': {'majesty': {**base,
+            'parts': [{'bytes': n, 'sha256': 'c' * 64, 'url': url + str(i) + '.bin'}
+                      for i, n in enumerate([5, 9])]}, 'majesty-wayfinder': wayfinder}}
+        (root / 'static/hosting/automatic-assets.json').write_text(json.dumps(existing))
+        (root / 'deploy/automatic-assets.json').write_text(json.dumps(migrated))
+        return root, migrated, existing
+
+    def test_verified_manifest_replaces_transport_without_replacing_mission_or_archive_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, _, _ = self.fixture(temp)
+            with patch.object(build, 'ROOT', root): build.install_automatic_assets(root / 'static')
+            result = json.loads((root / 'static/hosting/automatic-assets.json').read_text())
+            self.assertEqual(result['games']['majesty-lost-trail'], {'preserved': True})
+            self.assertEqual(result['games']['majesty']['sha256'], 'a' * 64)
+            self.assertNotIn('url', result['games']['majesty'])
+
+    def test_missing_duplicate_wrong_size_or_changed_identity_parts_do_not_modify_output(self):
+        for problem in ['missing', 'duplicate', 'size', 'hash', 'ref', 'wayfinder']:
+            with self.subTest(problem=problem), tempfile.TemporaryDirectory() as temp:
+                root, migrated, existing = self.fixture(temp)
+                base = migrated['games']['majesty']
+                if problem == 'missing': base['parts'].pop()
+                elif problem == 'duplicate': base['parts'][1] = base['parts'][0]
+                elif problem == 'size': base['parts'][0]['bytes'] = 60 * 1024 * 1024
+                elif problem == 'hash': base['sha256'] = 'f' * 64
+                elif problem == 'ref': base['parts'][0]['url'] = base['parts'][0]['url'].replace('a' * 40, 'main')
+                else: migrated['games']['majesty-wayfinder']['patches'][0]['sha256'] = 'f' * 64
+                (root / 'deploy/automatic-assets.json').write_text(json.dumps(migrated))
+                with patch.object(build, 'ROOT', root), self.assertRaises(ValueError):
+                    build.install_automatic_assets(root / 'static')
+                # Compare unchanged serialized output; mutable fixture dictionaries may share members.
+                self.assertNotIn('parts', json.loads((root / 'static/hosting/automatic-assets.json').read_text())['games']['majesty'])
 
 
 if __name__ == '__main__':

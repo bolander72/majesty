@@ -12,6 +12,52 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def trusted_asset_url(value, legacy_prefix):
+    return (value.startswith(legacy_prefix) or re.fullmatch(
+        r'https://raw\.githubusercontent\.com/bolander72/majesty/[a-f0-9]{40}/assets/[A-Za-z0-9_./-]+', value)) and not any(
+        c in value for c in ['?', '#', '@'])
+
+
+def install_automatic_assets(static):
+    descriptor = ROOT / 'deploy/automatic-assets.json'
+    if not descriptor.exists():
+        return
+    assets = json.loads(descriptor.read_text())
+    target = static / 'hosting/automatic-assets.json'
+    existing = json.loads(target.read_text())
+    if (assets.get('format') != existing.get('format') or
+            set(assets.get('games', {})) != {'majesty', 'majesty-wayfinder'}):
+        raise ValueError('Invalid automatic asset manifest')
+    base = assets['games']['majesty']
+    original = existing['games']['majesty']
+    parts = base.get('parts', [])
+    if (base.get('bytes') != original['bytes'] or base.get('sha256') != original['sha256']
+            or 'url' in base or not isinstance(parts, list) or not 1 <= len(parts) <= 64):
+        raise ValueError('Require the unchanged original game archive')
+    seen, total = set(), 0
+    for part in parts:
+        if (type(part.get('bytes')) is not int or not 0 < part['bytes'] <= 50 * 1024 * 1024
+                or not isinstance(part.get('sha256'), str) or not re.fullmatch('[a-f0-9]{64}', part['sha256'])
+                or not trusted_asset_url(part.get('url', ''), 'https://unused.invalid/')
+                or part['url'] in seen):
+            raise ValueError('Invalid GitHub game archive part')
+        seen.add(part['url']); total += part['bytes']
+    if total != base['bytes']:
+        raise ValueError('Incomplete GitHub game archive')
+    wayfinder = assets['games']['majesty-wayfinder']
+    expected = {p['path']: (p['sha256'], p['bytes']) for p in existing['games']['majesty-wayfinder']['patches']}
+    patches = wayfinder.get('patches', [])
+    if (wayfinder.get('baseId') != 'majesty' or len(patches) != len(expected)
+            or len({p['path'] for p in patches}) != len(expected)):
+        raise ValueError('Missing Wayfinder resources')
+    for patch in patches:
+        if (expected.get(patch['path']) != (patch.get('sha256'), patch.get('bytes'))
+                or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Changed Wayfinder resources')
+    existing['games'].update(assets['games'])
+    target.write_text(json.dumps(existing, indent=2) + '\n')
+
+
 def install_content_release(static):
     descriptor = ROOT / 'deploy/content-release.json'
     if not descriptor.exists():
@@ -41,9 +87,8 @@ def install_content_release(static):
     for patch in patches:
         if (patch['path'] not in bindings or patch.get('sha256') != bindings[patch['path']]
                 or not isinstance(patch.get('bytes'), int) or not 0 < patch['bytes'] <= 1024 * 1024
-                or not patch.get('url', '').startswith(
-                    'https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/')
-                or any(c in patch['url'] for c in ['?', '#', '@'])):
+                or not trusted_asset_url(patch.get('url', ''),
+                    'https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/')):
             raise ValueError('Published resource differs from the qualified browser bindings')
     assets_file = static / 'hosting/automatic-assets.json'
     assets = json.loads(assets_file.read_text())
@@ -95,7 +140,7 @@ def root_player(html, versions=None, artwork=None):
                   '<link rel="preload" href="/majesty/MajestyRecomp.js" as="script">\n'
                   + '\n'.join(f'<link rel="modulepreload" href="/{name}">' for name in [
                       'hosting/root-player.mjs', 'hosting/launcher-client.mjs',
-                      'hosting/automatic-assets.mjs', 'hosting/derived-assets.mjs',
+                      'hosting/automatic-assets.mjs', 'hosting/derived-assets.mjs', 'hosting/asset-url.mjs',
                       'hosting/content-cache.mjs', 'hosting/audio-start.mjs',
                       'hosting/menu-text.mjs',
                       'world/sha256.mjs', 'world/content-hash.mjs',
@@ -167,7 +212,7 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
 def build(destination=None):
     release = json.loads((ROOT / 'deploy/hosted-release.json').read_text())
     url = release['url']
-    if not url.startswith('https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/releases/'):
+    if not trusted_asset_url(url, 'https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/releases/'):
         raise ValueError('Unrecognized release origin')
     if not 0 < release['bytes'] <= 32 * 1024 * 1024:
         raise ValueError('Oversized hosted release')
@@ -185,6 +230,9 @@ def build(destination=None):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
     install_content_release(static)
+    # Keep the engine archive unchanged; override its old download locations
+    # with the authored, integrity-pinned GitHub distribution manifest.
+    install_automatic_assets(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:
@@ -194,7 +242,7 @@ def build(destination=None):
                 for name in ['MajestyRecomp.js', 'MajestyRecomp.data']}
     versions['MajestyRecomp.wasm'] = release['engineSha256']
     artwork = json.loads((ROOT / 'deploy/loading-art.json').read_text())
-    if (not artwork['url'].startswith('https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/presentation/')
+    if (not trusted_asset_url(artwork['url'], 'https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/presentation/')
             or not 0 < artwork['bytes'] <= 1024 * 1024):
         raise ValueError('Invalid original loading artwork')
     with urllib.request.urlopen(artwork['url'], timeout=30) as response:

@@ -13,19 +13,20 @@ unfinished. The restored Chapter 3 co-op mission has not yet reached victory.
 Separate-network full matches and the historical host-app crash cause remain
 unverified. Later sections retain individual qualification limits.
 
-The repository contains the authored browser source, tooling, tests, content
-drafts and patches for the pinned upstream game/runtime. Purchased game assets,
-executables, generated translations, compiled WASM, personal saves and local
-trial output are excluded. See [the source publication notes](docs/source-publication.md).
+The public repository contains the authored browser source, tooling, tests,
+content and patches on `main`. Distribution assets are on
+[`codex/assets`](https://github.com/bolander72/majesty/tree/codex/assets), with
+immutable download manifests on `main`. Personal saves, credentials, generated
+translations and local trial output are excluded. See
+[GitHub asset distribution](docs/github-assets.md).
 
 ## Current content milestone
 
-The current priority is playable new content: make the verified Wayfinder hero
-and Trail Lodge available through ordinary browser content installation, then
-add a new mission that uses them. The authored sources are in
-`content/wayfinder-trail-lodge/`. Native and browser paid recruitment and saves
-have been exercised privately. A separate browser import and launch to the actual
-main menu now pass; release publication and a new mission remain unfinished.
+The Lost Trail is published with Wayfinder heroes and Trail Lodge buildings.
+Native ordinary victory and persisted completion passed; browser selection,
+world entry and original save/reload passed, including the deployed root.
+The mission uses existing Fertile Plain geometry and borrowed artwork.
+See `content/the-lost-trail/` and `content/wayfinder-trail-lodge/`.
 
 Co-op joining, shared saves and resume have already been exercised. Completing
 the restored Chapter 3 mission is deferred and is not a prerequisite for this
@@ -35,9 +36,7 @@ existing campaign progress and checkpoints while developing new content.
 
 ## Hosted game
 
-The static browser engine is deployed at <https://majesty-tau.vercel.app>.
-`majesty.boland.co` is attached to the Vercel project and awaits its Cloudflare
-DNS record: CNAME `majesty` → `7f0010370b549dbf.vercel-dns-017.com`, DNS only.
+The game is deployed at <https://majesty.boland.co/>.
 The root loads Majesty's native menu automatically. A new browser downloads
 and verifies the hosted asset bundle, caches it locally, then starts the engine.
 There is no file picker or welcome screen. The engine still needs several seconds
@@ -47,9 +46,9 @@ file/save management outside the normal game entry.
 Imports and saves belong to their website origin. A localhost collection is
 separate from the hosted domain; use the player backup page to carry existing
 saves across. No login is required. The static deployment contains the engine and frontend;
-the classic asset bundle is delivered separately through Vercel Blob. Player
-saves stay local. Original assets and personal saves remain excluded from Git.
-The Wayfinder entry requires its separately prepared content import for now.
+the classic asset bundle and content are delivered directly from the public
+GitHub asset branch. Seventeen small files stream into the unchanged original
+ZIP, with per-part and whole-archive SHA256 verification. Player saves stay local.
 The multiplayer relay still requires its own production hosting/configuration;
 this static deployment does not establish public co-op readiness.
 

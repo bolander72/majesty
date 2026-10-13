@@ -1,6 +1,7 @@
 import {WAYFINDER_FILES} from '../content/edition-session.mjs';
 import {LOST_TRAIL_FILES, LOST_TRAIL_REPLACEMENTS} from '../content/lost-trail-files.mjs';
 import {hashBlob} from '../world/content-hash.mjs';
+import {assetUrl} from './asset-url.mjs';
 
 export function derivedDescriptor(value, id) {
   const record = value?.games?.[id];
@@ -14,10 +15,7 @@ export function derivedDescriptor(value, id) {
     if (!Object.hasOwn(expected, file.path) || seen.has(file.path) || expected[file.path] !== file.sha256
         || !Number.isSafeInteger(file.bytes) || file.bytes < 1 || file.bytes > 1024 * 1024)
       throw Error('Content patch differs from the verified pack.');
-    const url = new URL(file.url);
-    if (url.protocol !== 'https:' || !url.hostname.endsWith('.public.blob.vercel-storage.com')
-        || url.username || url.password || url.search || url.hash)
-      throw Error('Invalid content patch location.');
+    assetUrl(file.url);
     seen.add(file.path);
   }
   return {...record, contentSet: id === 'majesty-lost-trail' ? 'lost-trail-v1' : 'wayfinder-v1'};

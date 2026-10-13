@@ -1,16 +1,30 @@
 import {Sha256} from '../world/sha256.mjs';
 import {derivedDescriptor, collectGameFiles, buildDerivedFiles} from './derived-assets.mjs';
+import {assetUrl} from './asset-url.mjs';
 
 export function assetDescriptor(value, id) {
   const record = value?.games?.[id];
   if (value?.format !== 'majesty-automatic-assets-v1' || !record
       || !Number.isSafeInteger(record.bytes) || record.bytes <= 0 || record.bytes > 1024 ** 3
       || !/^[a-f0-9]{64}$/.test(record.sha256)) throw Error('Automatic game assets are unavailable.');
-  const url = new URL(record.url);
-  if (url.protocol !== 'https:' || !url.hostname.endsWith('.public.blob.vercel-storage.com')
-      || url.username || url.password || url.search || url.hash)
-    throw Error('Invalid automatic game asset location.');
-  return {...record, url: url.href};
+  if (record.parts !== undefined) {
+    if (record.url !== undefined || !Array.isArray(record.parts) ||
+        record.parts.length < 1 || record.parts.length > 64)
+      throw Error('Invalid game asset parts.');
+    const seen = new Set();
+    let bytes = 0;
+    const parts = record.parts.map(part => {
+      const url = assetUrl(part.url);
+      if (!Number.isSafeInteger(part.bytes) || part.bytes < 1 || part.bytes > 50 * 1024 * 1024 ||
+          !/^[a-f0-9]{64}$/.test(part.sha256) || seen.has(url))
+        throw Error('Invalid game asset part.');
+      seen.add(url); bytes += part.bytes;
+      return {...part, url};
+    });
+    if (bytes !== record.bytes) throw Error('Game asset parts size differs.');
+    return {...record, parts};
+  }
+  return {...record, url: assetUrl(record.url)};
 }
 
 export async function downloadAssets(record, folder, {fetchFile = fetch, signal, progress = () => {}} = {}) {
@@ -19,20 +33,28 @@ export async function downloadAssets(record, folder, {fetchFile = fetch, signal,
   const writer = await handle.createWritable();
   let reader;
   try {
-    const response = await fetchFile(record.url, {signal, credentials: 'omit'});
-    if (!response.ok || !response.body) throw Error('Game assets could not be downloaded.');
-    reader = response.body.getReader();
     let bytes = 0;
     const hash = new Sha256();
-    for (;;) {
-      signal?.throwIfAborted();
-      const {done, value} = await reader.read();
-      if (done) break;
-      bytes += value.length;
-      if (bytes > record.bytes) throw Error('Game asset size differs.');
-      hash.update(value);
-      await writer.write(value);
-      progress(bytes, record.bytes);
+    // Concatenate sequential response streams directly into one OPFS file.
+    // Neither a full part nor the 570 MB archive is buffered in JS memory.
+    for (const part of record.parts || [record]) {
+      const response = await fetchFile(part.url, {signal, credentials: 'omit'});
+      if (!response.ok || !response.body) throw Error('Game assets could not be downloaded.');
+      reader = response.body.getReader();
+      let partBytes = 0;
+      const partHash = new Sha256();
+      for (;;) {
+        signal?.throwIfAborted();
+        const {done, value} = await reader.read();
+        if (done) break;
+        bytes += value.length; partBytes += value.length;
+        if (bytes > record.bytes || partBytes > part.bytes) throw Error('Game asset size differs.');
+        hash.update(value); partHash.update(value);
+        await writer.write(value);
+        progress(bytes, record.bytes);
+      }
+      if (partBytes !== part.bytes || partHash.hex() !== part.sha256)
+        throw Error('Game asset verification failed.');
     }
     if (bytes !== record.bytes || hash.hex() !== record.sha256)
       throw Error('Game asset verification failed.');
