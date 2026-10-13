@@ -1,14 +1,9 @@
 # Changelog
 
-## Immediate hosted home screen
+## Native home-screen startup
 
-- Display the original home-menu artwork while the engine initializes, instead
-  of leaving the page black. Early menu choices pass to the native menu once it
-  is ready; Exit Game links to boland.co.
-- Preload engine resources and prepare only the selected edition, without
-  constructing or refreshing the hidden setup dashboard.
-- Keep the engine in one same-origin frame so entering it does not introduce
-  a second blank page. Release the import worker before launching the engine.
+- Remove the experimental menu capture, click queue and embedded player.
+- Keep early engine preloads and preparation of only the selected edition.
 
 ## Private SDK mission authoring
 

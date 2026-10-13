@@ -47,7 +47,7 @@ def fast_content_hashing(html):
     return html.replace(old, 'const contentIdentity = await networkManifest(dir, game, signal, dataId);', 1)
 
 
-def prepare(receipt, output, automatic_assets=None, home_menu_art=None):
+def prepare(receipt, output, automatic_assets=None):
     if output.exists():
         raise ValueError('Preserve existing deployments; choose a new output directory')
     package = json.loads(receipt.read_text())
@@ -74,13 +74,10 @@ def prepare(receipt, output, automatic_assets=None, home_menu_art=None):
     html = root.read_text().replace('<h1>Recomp games</h1>', '<h1>Majesty</h1>')
     html = html.replace('<script type="module" src="app.js"></script>',
                         '<script type="module" src="hosting/boot.mjs"></script>')
-    home = (ROOT / 'web/hosting/home-menu.html').read_text() if home_menu_art else ''
-    html = html.replace('<body>', '<body>\n' + (ROOT / 'web/hosting/boot.html').read_text() + home, 1)
+    html = html.replace('<body>', '<body>\n' + (ROOT / 'web/hosting/boot.html').read_text(), 1)
     preloads = ('<link rel="preload" href="/majesty/MajestyRecomp.wasm" as="fetch" crossorigin>\n'
                 '<link rel="preload" href="/majesty/MajestyRecomp.data" as="fetch" crossorigin>\n'
                 '<link rel="preload" href="/majesty/MajestyRecomp.js" as="script">\n')
-    if home_menu_art:
-        preloads += '<link rel="preload" href="/hosting/home-menu.webp" as="image" fetchpriority="high">\n'
     html = html.replace('</head>', preloads + '</head>', 1)
     html = html.replace('</head>', '<script>if(new URLSearchParams(location.search).get("setup")==="1")'
                         'document.documentElement.dataset.setup="true";</script>\n</head>', 1)
@@ -91,16 +88,9 @@ def prepare(receipt, output, automatic_assets=None, home_menu_art=None):
     shutil.copyfile(ROOT / 'web/hosting/automatic-assets.mjs', static / 'hosting/automatic-assets.mjs')
     shutil.copyfile(ROOT / 'web/hosting/derived-assets.mjs', static / 'hosting/derived-assets.mjs')
     shutil.copyfile(ROOT / 'web/hosting/content-cache.mjs', static / 'hosting/content-cache.mjs')
-    for name in ['launcher-client.mjs', 'home-menu.mjs']:
-        shutil.copyfile(ROOT / 'web/hosting' / name, static / 'hosting' / name)
-    if home_menu_art:
-        sha(home_menu_art)  # Refuse a cloud placeholder before reading it.
-        if home_menu_art.stat().st_size > 2 * 1024 * 1024:
-            raise ValueError('Home menu artwork must be a small WebP')
-        header = home_menu_art.read_bytes()[:12]
-        if header[:4] != b'RIFF' or header[8:12] != b'WEBP':
-            raise ValueError('Home menu artwork must be WebP')
-        shutil.copyfile(home_menu_art, static / 'hosting/home-menu.webp')
+    shutil.copyfile(ROOT / 'web/hosting/launcher-client.mjs', static / 'hosting/launcher-client.mjs')
+    for obsolete in ['home-menu.mjs', 'home-menu.webp']:
+        (static / 'hosting' / obsolete).unlink(missing_ok=True)
     if automatic_assets:
         assets = json.loads(automatic_assets.read_text())
         if assets.get('format') != 'majesty-automatic-assets-v1':
@@ -116,10 +106,7 @@ def prepare(receipt, output, automatic_assets=None, home_menu_art=None):
         raise ValueError('Review native Exit Game handling before deployment')
     html = html.replace(old_exit,
         'if (exit) {\n'
-        '        if (Number(exit[1]) === 0) {\n'
-        '          if (parent !== window) parent.postMessage({type:"majesty-home-exit"}, location.origin);\n'
-        '          else location.replace("https://boland.co");\n'
-        '        }\n'
+        '        if (Number(exit[1]) === 0) location.replace("https://boland.co");\n'
         '        else showFailure(`guest exited with code ${exit[1]}`);\n'
         '      }', 1)
     # Keep startup progress quiet; retain fatal and multiplayer error recovery.
@@ -136,12 +123,6 @@ def prepare(receipt, output, automatic_assets=None, home_menu_art=None):
     html = html.replace('function rememberLog(t) {', 'function rememberLog(t) {\n'
                         '  if (t === "[player] menu ready") requestAnimationFrame(() =>\n'
                         '    requestAnimationFrame(() => { document.body.dataset.gameReady = "true"; }));', 1)
-    html = html.replace('async function start() {', 'async function start() {\n'
-                        '  const {startNativeHome} = await import("../hosting/home-menu.mjs");\n'
-                        '  startNativeHome({canvas});', 1)
-    if home_menu_art:
-        html = html.replace('<body>', '<body>\n' + home, 1)
-        html = html.replace('</head>', preloads + '</head>', 1)
     player.write_text(fast_content_hashing(html))
     compressed = static / (WASM + '.br')
     script = '''const fs=require('fs'),z=require('zlib'),c=require('crypto');
@@ -174,11 +155,8 @@ console.log(JSON.stringify({wasmBytes:input.length,compressedBytes:compressed.le
                   uploadBytes=sum(record['bytes'] for record in files.values()),
                   autoload=True, gameAssetsIncluded=False, playerSavesIncluded=False,
                   remoteGameAssetsConfigured=bool(automatic_assets),
-                  instantHomeMenu=bool(home_menu_art),
-                  homeMenuArtSha256=sha(home_menu_art) if home_menu_art else None,
                   isolationHeaders=ISOLATION, deployed=False,
-                  scope='Static engine/frontend, optionally including a small original home-menu capture '
-                        'and automatic CDN asset loading. No relay backend, personal saves or original '
+                  scope='Static engine/frontend and automatic CDN asset loading. No relay backend, personal saves or original '
                         'installation archives are in the static package.')
     (output / 'hosting-package.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
@@ -189,10 +167,8 @@ def main():
     parser.add_argument('--source-package', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--automatic-assets', type=Path)
-    parser.add_argument('--home-menu-art', type=Path,
-                        help='Private WebP capture of the original home menu; never commit game artwork')
     args = parser.parse_args()
-    report = prepare(args.source_package, args.output, args.automatic_assets, args.home_menu_art)
+    report = prepare(args.source_package, args.output, args.automatic_assets)
     print(json.dumps({key: report[key] for key in ['filesCount', 'uploadBytes', 'compression', 'autoload']}))
 
 
