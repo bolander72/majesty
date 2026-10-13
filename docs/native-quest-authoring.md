@@ -248,3 +248,51 @@ modifiers before declaring that the objective counts every living Wayfinder.
 Neither inherited terrain/artwork nor these partial checks establish a new
 published playable mission. Production WASM598 remains unchanged. Current
 continuation: `output/mission693-continuation-checkpoint.json`.
+
+### Whole-kingdom objectives and existing save compatibility
+
+The exact generated Day6 save contained two completed 300-HP Lodges and five
+living Wayfinders; four heroes were inside their Lodges. The official GPL
+reference's ListObjects entry specifies `#NoHiddenMap` for all objects and
+`#InsideOtherUnits` for heroes inside buildings. The previous hero query could
+therefore exclude resting heroes. Both owned building/hero queries now search
+the entire kingdom, and the hero query includes building occupants. Ownership,
+living checks, completed construction and the hostile-lair requirement remain.
+
+Original SDK trial696 compiled the revised canonical source to 9,327 bytes,
+SHA256 `a4f20b05ce9a09324f5dbc16be485cea3b6f630443a2e12e2c373a8892ec4df7`.
+The four function identities, XQD2 alias and mission GUID are unchanged.
+Private candidate698 validates the fresh source/compiler bindings. Trial700
+loaded that bytecode and resumed the unchanged Day6 input normally, then saved
+through the original interface. The generated output had five living heroes
+inside buildings, both completed Lodges, seven hostile lairs and a false
+Quest_Flag_9. Trial702 restored that output normally and saved again. These
+checks establish continuation compatibility and a still-pending quest; they
+do not independently witness every GPL query result or qualify final victory.
+
+`scripts/inspect-lost-trail-save.mjs` reads an owned stopped GMP using the
+existing bounded native parsers. It binds exact size/hash, requires the original
+quest root and LostTrailVictory context, and checks original unit HP, death
+flags, ownership, completion and parent relationships. It includes indoor
+actors and reports the persisted victory flag. Incorrect input hashes are
+refused without writing a report. This is a state audit, not a replacement for
+native execution or ordinary gameplay qualification.
+
+Combat controls: click the minimap at 123,122 to center the nearby Dark Castle,
+then world 520,300 selects it. The purple button at 193,155 selects the Palace;
+Palace Rewards is 150,385. Its attack-reward plus button is 173,281, increments
+100 gold, and ten discrete clicks set 1000. Click ATTACK flag at 100,242, then
+world 520,300 to place the paid bounty. The yellow button at 166,414 in a lair
+interface only tracks the lair; right-clicking it clears selection. Trials
+704/705/707 were control exploration forks and did not create progress saves.
+
+Trial709 deducted 1000 gold and placed the ordinary attack flag on lair524.
+After 60 seconds of ordinary play its HP decreased from 800 to 731. The
+generated Day8 save retained reward unit1445, owned by player0 and parented to
+that exact lair. Four Wayfinders remained alive, two resting inside Lodges;
+both Lodges remained completed and all seven lairs still lived. The victory
+flag remained false. This qualifies paid flag placement and partial combat
+progress, not clearance or victory. Resume the exact save bound by
+`output/mission710-attack-generated-save.json`, with trial709's owned settings
+and inventory compatibility enabled. Preserve the earlier Day6/Day8 inputs.
+Current continuation: `output/mission713-continuation-checkpoint.json`.

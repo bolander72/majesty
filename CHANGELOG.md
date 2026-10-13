@@ -1,5 +1,14 @@
 # Changelog
 
+## Private Lost Trail mission qualification
+
+- Count the kingdom's completed Lodges and living Wayfinders across the whole
+  map, including heroes resting inside buildings. Recompile through the
+  original SDK and preserve the mission identity and existing saved world.
+- Add a bounded read-only save inspector for original HP, completion, ownership,
+  hidden/inside actors and the Lost Trail victory flag. The mission remains a
+  private candidate pending combat, victory and completion persistence checks.
+
 ## Single-player cheat codes
 
 - Add `infinite gold` and `level 1000` to Majesty's original Enter-key cheat input.

@@ -59,14 +59,15 @@ begin
     if ($IsDead (palace))
         return;
 
-    $ListObjects (palace, "building", -1, buildings, #MyPlayer);
+    $ListObjects (palace, "building", -1, buildings, #MyPlayer, #NoHiddenMap);
     lodges = $ListTitles (buildings, "Trail_Lodge");
     lodges = $LostTrailLiving (lodges);
     lodges = $ListCompleted (lodges);
     if ($ListSize (lodges) < 2)
         return;
 
-    $ListObjects (palace, "hero", -1, heroes, #MyPlayer);
+    $ListObjects (palace, "hero", -1, heroes, #MyPlayer, #NoHiddenMap,
+                  #InsideOtherUnits);
     scouts = $ListTitles (heroes, "Wayfinder");
     scouts = $LostTrailLiving (scouts);
     if ($ListSize (scouts) < 4)
