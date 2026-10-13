@@ -25,6 +25,13 @@ public raw file responses, and update source manifests to that commit. Never
 put player saves, credentials or test browser profiles on the public branch.
 Keep hashes and original SDK/compiler qualification bindings intact.
 
-Legacy Blob URL validation remains for older edition manifests and rollback.
-Active deployment manifests use GitHub. Old Blob copies must not be removed
-before the replacement files and browser import are verified.
+Five earlier engine releases are preserved in `assets/historical/`, indexed
+by `historical-assets.json` on the asset branch. All migrated Blob objects are
+retired after replacement hash checks and a fresh complete browser import.
+Older fixed deployment snapshots can contain retired Blob URLs; rebuild them
+with the current distribution manifests when using an archived engine.
+
+Legacy Blob URL validation remains for older edition manifests, but active
+deployment manifests use GitHub. Moving files does not erase bandwidth usage
+already recorded for the current billing period. Vercel still serves the small
+built player/frontend; large game downloads bypass Vercel Blob.
