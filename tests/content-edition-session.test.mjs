@@ -17,6 +17,17 @@ test('Wayfinder requires a distinct named save profile', () => {
   }
 });
 
+test('Lost Trail uses an independent backed-up profile and cannot disable inventory support', () => {
+  const plan = editionFor('?edition=lost-trail-v1&profile=lost-trail-browser745');
+  assert.equal(plan.storageId, 'majesty-lost-trail');
+  assert.equal(plan.id, 'lost-trail-v1');
+  for (const query of ['?edition=lost-trail-v1&profile=wayfinder',
+    '?edition=lost-trail-v1&profile=original', '?edition=lost-trail-v1',
+    '?edition=lost-trail-v1&profile=lost-trail&RECOMP_RULE_INVENTORY_COMPAT=0',
+    '?edition=lost-trail-v1&profile=lost-trail&RECOMP_RULE_INVENTORY_COMPAT=1&RECOMP_RULE_INVENTORY_COMPAT=1'])
+    assert.throws(() => editionFor(query));
+});
+
 test('managed worlds cannot silently lose their content selection during travel', () => {
   for (const field of ['world=old', 'room=old', 'mode=coop', 'RECOMP_RULE_FRONTIER_CHAPTER=3',
     'RECOMP_RULE_COOP_WORLD=old', 'RECOMP_PROFILE_DIR=original',

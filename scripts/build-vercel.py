@@ -4,11 +4,60 @@ import hashlib
 import io
 import json
 from pathlib import Path, PurePosixPath
+import re
 import shutil
 import tarfile
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def install_content_release(static):
+    descriptor = ROOT / 'deploy/content-release.json'
+    if not descriptor.exists():
+        return
+    content = json.loads(descriptor.read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    if (content.get('format') != 'majesty-lost-trail-content-release-v1'
+            or content.get('engineSha256') != engine
+            or content.get('storageId') != 'majesty-lost-trail'
+            or content.get('baseId') != 'majesty'
+            or content.get('canonicalGuid') != '{8BC7C549-E5A2-4D0F-A726-83B16BF19E42}'
+            or content.get('requiredRuntimeEnvironment') != {'RECOMP_RULE_INVENTORY_COMPAT': '1'}
+            or any(content.get(key) is not True for key in [
+                'browserSelectionWorldSaveReloadQualified', 'rootDefaultIntegrationQualified',
+                'nativeOrdinaryVictoryQualified'])):
+        raise ValueError('Require the browser-qualified Lost Trail content release')
+    if set(content.get('sourceSha256', {})) != {'TheLostTrail.gpl', 'TheLostTrail.gplproj'}:
+        raise ValueError('Require the original compiler source bindings')
+    for name, expected in content['sourceSha256'].items():
+        if hashlib.sha256((ROOT / 'content/the-lost-trail' / name).read_bytes()).hexdigest() != expected:
+            raise ValueError('Published content differs from the authored mission source')
+    bindings = dict(re.findall(r"'([^']+)': '([a-f0-9]{64})'",
+        (ROOT / 'web/content/lost-trail-files.mjs').read_text().split('export const LOST_TRAIL_REPLACEMENTS')[0]))
+    patches = content.get('patches', [])
+    if len(patches) != len(bindings) or len({p['path'] for p in patches}) != len(bindings):
+        raise ValueError('Missing or duplicate published content resources')
+    for patch in patches:
+        if (patch['path'] not in bindings or patch.get('sha256') != bindings[patch['path']]
+                or not isinstance(patch.get('bytes'), int) or not 0 < patch['bytes'] <= 1024 * 1024
+                or not patch.get('url', '').startswith(
+                    'https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/')
+                or any(c in patch['url'] for c in ['?', '#', '@'])):
+            raise ValueError('Published resource differs from the qualified browser bindings')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-lost-trail'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    if any(game['id'] == 'majesty-lost-trail' for game in games):
+        raise ValueError('Review the existing content collection before replacing it')
+    games.append({**original, 'id': 'majesty-lost-trail', 'title': 'Majesty: The Lost Trail',
+        'playURL': '?edition=lost-trail-v1&profile=lost-trail&RECOMP_RULE_INVENTORY_COMPAT=1'})
+    original['defaultContentStorageId'] = 'majesty-lost-trail'
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
 
 
 def unpack_release(data, release, destination):
@@ -50,7 +99,7 @@ def root_player(html, versions=None, artwork=None):
                       'hosting/content-cache.mjs', 'hosting/audio-start.mjs',
                       'hosting/menu-text.mjs',
                       'world/sha256.mjs', 'world/content-hash.mjs',
-                      'content/edition-session.mjs', 'backups/storage.mjs',
+                      'content/edition-session.mjs', 'content/lost-trail-files.mjs', 'backups/storage.mjs',
                   ]) + '\n<link rel="preload" href="/games.json" as="fetch" crossorigin>'),
         'parts[parts.length - 1] || ""': 'parts[parts.length - 1] || "majesty"',
         '([...new URLSearchParams(location.search)].some(([key]) =>':
@@ -65,6 +114,8 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
         'startEditionPlayer(start))).catch((e)': 'startEditionPlayer(start))); }).catch((e)',
         'const games = await fetch("../games.json", {signal}).then((r) => r.json());':
             'const games = preparedRootGames || await fetch("../games.json", {signal}).then((r) => r.json());',
+        'const dataId = edition ? edition.storageId : id;':
+            'const dataId = edition ? edition.storageId : (preparedRootGames?.find(g => g.id === id)?.contentStorageId || id);',
         '  window.Module = Module;':
             '  const {installGameAudio} = await import("../hosting/audio-start.mjs");\n'
             '  installGameAudio(Module);\n  window.Module = Module;',
@@ -133,6 +184,7 @@ def build(destination=None):
             target = static / source.relative_to(ROOT / 'web')
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+    install_content_release(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:

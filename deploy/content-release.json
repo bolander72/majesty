@@ -1,0 +1,97 @@
+{
+  "format": "majesty-lost-trail-content-release-v1",
+  "contentSet": "lost-trail-v1",
+  "storageId": "majesty-lost-trail",
+  "baseId": "majesty",
+  "engineSha256": "4f36119bda15e259a49cb3fc8d8032e94613b808030e30af476d10a5e27eba5a",
+  "candidateSha256": "d4c6afbf4a0d97b67a1edbc8b670bfdf05f84207b791d7d6d71db8477bbfe469",
+  "canonicalGuid": "{8BC7C549-E5A2-4D0F-A726-83B16BF19E42}",
+  "requiredRuntimeEnvironment": {
+    "RECOMP_RULE_INVENTORY_COMPAT": "1"
+  },
+  "browserSelectionWorldSaveReloadQualified": true,
+  "rootDefaultIntegrationQualified": true,
+  "nativeOrdinaryVictoryQualified": true,
+  "nativeVictoryDay": 29,
+  "sourceSha256": {
+    "TheLostTrail.gpl": "520f153b790d51ace821931bf8dbcc82b3c03d8a34f82bff1a96e9c20fdd57f4",
+    "TheLostTrail.gplproj": "817a50f57e0535fd91a773304754d029606185a67503c051ef0b6260229ac478"
+  },
+  "patches": [
+    {
+      "path": "Data/mx_gpltext.cam",
+      "bytes": 136574,
+      "sha256": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/Data/mx_gpltext.cam"
+    },
+    {
+      "path": "Data/mx_textdata.cam",
+      "bytes": 139120,
+      "sha256": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/Data/mx_textdata.cam"
+    },
+    {
+      "path": "DataMX/LostTrail-menu-art.cam",
+      "bytes": 376280,
+      "sha256": "d507fdb71c25ac323584f6d832ec0252be7aedf534ffe30b22b2fed985eac0c9",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/LostTrail-menu-art.cam"
+    },
+    {
+      "path": "DataMX/TheLostTrail.bcd",
+      "bytes": 9327,
+      "sha256": "a4f20b05ce9a09324f5dbc16be485cea3b6f630443a2e12e2c373a8892ec4df7",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/TheLostTrail.bcd"
+    },
+    {
+      "path": "DataMX/Wayfinder-interface.cam",
+      "bytes": 4114,
+      "sha256": "84892eb8d8b8999be2f65718ad1912f9d0a8ff9c5dc4500536c14054b27b9595",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder-interface.cam"
+    },
+    {
+      "path": "DataMX/Wayfinder-units.cam",
+      "bytes": 1002,
+      "sha256": "f79c8de2e7eaa844f0afb8594cdea69638a2d5cdcfa0573b00c8aa90fdad3c38",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder-units.cam"
+    },
+    {
+      "path": "DataMX/Wayfinder.bcd",
+      "bytes": 3462,
+      "sha256": "61a51da7b5a069a9839dc63ee97e50e77e47cf7d0243611f19db66faeeb19037",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/Wayfinder.bcd"
+    },
+    {
+      "path": "DataMX/mx_gpltext.cam",
+      "bytes": 136574,
+      "sha256": "7a639f91b28e56fc86c823646e1cdb145b02a685f4f5c4c55a190d96774d733f",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_gpltext.cam"
+    },
+    {
+      "path": "DataMX/mx_miscdata.cam",
+      "bytes": 15822,
+      "sha256": "81bb17937c4124a67081750c244cf8f78d04f8b26ab2a619e0c7ee2beb311781",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_miscdata.cam"
+    },
+    {
+      "path": "DataMX/mx_textdata.cam",
+      "bytes": 139120,
+      "sha256": "e9d45bf2183caad7096828d0432373c5f0196cb1b8c762e8883f6f32ad3393b1",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/DataMX/mx_textdata.cam"
+    },
+    {
+      "path": "QuestsMX/TheLostTrail.q",
+      "bytes": 2572,
+      "sha256": "f36b22e8e8fae61c3a84d4c7671cdcdd0c1b75cd419f0533a174c9f43a12ed04",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/QuestsMX/TheLostTrail.q"
+    },
+    {
+      "path": "QuestsMX/TheLostTrail.qdd",
+      "bytes": 652,
+      "sha256": "92cb042502aa40c984fc1ff0a61cea5b13e80afa9997700f3186f7fa5d9d871f",
+      "url": "https://gzyxvhfrxfzxgeae.public.blob.vercel-storage.com/majesty/content/lost-trail-v1/c73bcadfaf589a9a/QuestsMX/TheLostTrail.qdd"
+    }
+  ],
+  "patchBytes": 964619,
+  "newTerrainAuthored": false,
+  "menuArtworkInherited": true
+}

@@ -52,7 +52,7 @@ export async function ensureAutomaticAssets(id, {
 }) {
   if ((await status(id))?.status?.state === 'ready') return;
   if (!locks?.request) throw Error('This browser cannot prepare the game files.');
-  if (id === 'majesty-wayfinder') {
+  if (['majesty-wayfinder', 'majesty-lost-trail'].includes(id)) {
     const response = await fetchFile(new URL('./automatic-assets.json', import.meta.url), {signal});
     if (!response.ok) throw Error('Automatic content is unavailable.');
     const recipe = derivedDescriptor(await response.json(), id);

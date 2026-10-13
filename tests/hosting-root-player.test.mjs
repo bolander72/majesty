@@ -33,3 +33,31 @@ test('failed preparation releases its worker', async () => {
   })}), /Storage unavailable/);
   assert.equal(closed, true);
 });
+
+test('Lost Trail root prepares the new collection without importing over stock Majesty', async () => {
+  await prepareRootPlayer({search: '?edition=lost-trail-v1&profile=lost-trail',
+    openClient: async () => ({status: async id => {
+      assert.equal(id, 'majesty-lost-trail'); return {status: {state: 'notFound'}};
+    }, close: () => {}}), ensureAssets: async id => assert.equal(id, 'majesty-lost-trail')});
+});
+
+test('qualified default root switches only game data, retaining the ordinary game/profile identity', async () => {
+  const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}, {id: 'majesty-lost-trail'}];
+  const prepared = await prepareRootPlayer({search: '', openClient: async () => ({games,
+    status: async id => {assert.equal(id, 'majesty-lost-trail'); return {status: {state: 'ready'}};},
+    close: () => {},
+  })});
+  assert.equal(prepared[0].id, 'majesty');
+  assert.equal(prepared[0].contentStorageId, 'majesty-lost-trail');
+  assert.equal(games[0].contentStorageId, undefined);
+});
+
+test('managed worlds retain original data even when the root has a content default', async () => {
+  for (const search of ['?room=existing', '?world=existing', '?RECOMP_RULE_COOP_TEST=1']) {
+    const games = [{id: 'majesty', defaultContentStorageId: 'majesty-lost-trail'}];
+    assert.equal(await prepareRootPlayer({search, openClient: async () => ({games,
+      status: async id => {assert.equal(id, 'majesty'); return {status: {state: 'ready'}};},
+      close: () => {},
+    })}), games);
+  }
+});

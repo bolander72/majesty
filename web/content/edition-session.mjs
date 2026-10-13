@@ -1,4 +1,5 @@
 import {hashBlob} from '../world/content-hash.mjs';
+import {LOST_TRAIL_FILES} from './lost-trail-files.mjs';
 
 export const WAYFINDER_FILES = Object.freeze({
   'DataMX/Wayfinder.bcd': '61a51da7b5a069a9839dc63ee97e50e77e47cf7d0243611f19db66faeeb19037',
@@ -10,16 +11,21 @@ export const WAYFINDER_FILES = Object.freeze({
 export function editionFor(search) {
   const query = new URLSearchParams(search), editions = query.getAll('edition');
   if (!editions.length) return null;
-  if (editions.length !== 1 || editions[0] !== 'wayfinder-v1')
+  if (editions.length !== 1 || !['wayfinder-v1', 'lost-trail-v1'].includes(editions[0]))
     throw Error('Choose a supported content edition.');
+  const lostTrail = editions[0] === 'lost-trail-v1';
   const profiles = query.getAll('profile');
-  if (profiles.length !== 1 || !/^wayfinder(?:-[a-zA-Z0-9_-]{1,30})?$/.test(profiles[0]))
-    throw Error('Choose a separate Wayfinder save profile, such as wayfinder or wayfinder-scouts.');
+  const profilePattern = lostTrail ? /^lost-trail(?:-[a-zA-Z0-9_-]{1,29})?$/ : /^wayfinder(?:-[a-zA-Z0-9_-]{1,30})?$/;
+  if (profiles.length !== 1 || !profilePattern.test(profiles[0]))
+    throw Error(`Choose a separate ${lostTrail ? 'Lost Trail' : 'Wayfinder'} save profile.`);
+  const inventory = query.getAll('RECOMP_RULE_INVENTORY_COMPAT');
+  if (lostTrail && inventory.length && (inventory.length !== 1 || inventory[0] !== '1'))
+    throw Error('Lost Trail requires inventory compatibility.');
   if ([...query.keys()].some(key => ['room', 'role', 'mode', 'world', 'RECOMP_PROFILE_DIR'].includes(key)
       || key.startsWith('RECOMP_RULE_COOP_') || key.startsWith('RECOMP_RULE_FRONTIER_')
       || key.startsWith('RECOMP_COOP_') || key.startsWith('RECOMP_FRONTIER_')))
     throw Error('Start this content edition as a separate single-player kingdom.');
-  return Object.freeze({id: 'wayfinder-v1', storageId: 'majesty-wayfinder', profile: profiles[0]});
+  return Object.freeze({id: editions[0], storageId: lostTrail ? 'majesty-lost-trail' : 'majesty-wayfinder', profile: profiles[0]});
 }
 
 async function directory(parent, path, create = false) {
@@ -30,11 +36,12 @@ async function directory(parent, path, create = false) {
 export async function prepareEditionProfile(root, edition) {
   const game = await directory(root, [edition.storageId, 'game']);
   await game.getFileHandle('.manifest.json');
-  for (const [path, expected] of Object.entries(WAYFINDER_FILES)) {
+  const required = edition.id === 'lost-trail-v1' ? LOST_TRAIL_FILES : WAYFINDER_FILES;
+  for (const [path, expected] of Object.entries(required)) {
     const parts = path.split('/'), dir = await directory(game, parts.slice(0, -1));
     const file = await (await dir.getFileHandle(parts.at(-1))).getFile();
     if (file.size > 16 * 1024 * 1024 || await hashBlob(file) !== expected)
-      throw Error('Import the verified Wayfinder game ZIP before playing this edition.');
+      throw Error(`Import the verified ${edition.id === 'lost-trail-v1' ? 'Lost Trail' : 'Wayfinder'} game ZIP before playing this edition.`);
   }
   // Keep new saves under Majesty's existing backup root; only game data has
   // its own import namespace. Refuse reuse of a pre-existing unrelated profile.
@@ -52,7 +59,7 @@ export async function prepareEditionProfile(root, edition) {
       throw Error('This save profile belongs to another content edition.');
   } else {
     for await (const _ of profile.entries())
-      throw Error('This save profile already contains another kingdom. Choose a new Wayfinder profile.');
+      throw Error('This save profile already contains another kingdom. Choose a new content profile.');
     handle = await profile.getFileHandle(marker, {create: true});
     const writer = await handle.createWritable();
     try { await writer.write(JSON.stringify(binding) + '\n'); await writer.close(); }
@@ -74,7 +81,7 @@ export async function startEditionPlayer(start, {
   try {
     return await locks.request(`majesty-native-profile:majesty:${edition.profile}`,
       {mode: 'exclusive', ifAvailable: true}, async lock => {
-        if (!lock) throw Error('This Wayfinder kingdom is already open. Close its other game tab.');
+        if (!lock) throw Error('This content kingdom is already open. Close its other game tab.');
         await prepareEditionProfile(await storage.getDirectory(), edition);
         await start();
         // Native startup injects the engine script and returns. Retain ownership

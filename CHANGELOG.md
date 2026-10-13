@@ -1,5 +1,17 @@
 # Changelog
 
+## Lost Trail browser content
+
+- Add The Lost Trail to the normal native quest selector, with Wayfinder heroes
+  and Trail Lodge buildings. Native ordinary victory and completion persistence
+  passed; browser selection, world entry and original save/reload passed on the
+  unchanged WASM598 engine.
+- Prepare twelve source-bound patches under 1 MiB from the qualified native
+  resources. Keep the original game collection, stock quests and existing
+  profile paths; managed co-op/frontier worlds keep their original data.
+- Root startup continues directly into the game. New terrain and mission art
+  remain unfinished: this mission uses Fertile Plain geometry and borrowed art.
+
 ## Private Lost Trail mission qualification
 
 - Count the kingdom's completed Lodges and living Wayfinders across the whole

@@ -352,3 +352,35 @@ Playing returned to the town, but the attempted later Save Game did not produce
 a changed GMP. Do not bind an unchanged copied Day28 input as a won-world save.
 Original progress save/reload and native profile completion are proved
 separately. Browser mission integration and publication remain unfinished.
+
+Browser integration743-752 uses production WASM598 without rebuilding it.
+`scripts/prepare-lost-trail-browser.py` binds all twelve private candidate698 /
+Wayfinder238 resources, the original SDK source hashes, native qualification742
+and original text/configuration hashes. It produces a 964619-byte overlay,
+without copying the large original ZIP or editing original game/profile files.
+`web/content/lost-trail-files.mjs` pins those resources. Recipes and profile
+validation reject missing/changed resources, mixed editions and disabled
+inventory compatibility. New edition profiles remain in the existing backup
+root; the default root changes only its game-data collection, retaining the
+ordinary save path. Managed co-op/frontier starts keep the original collection.
+
+Trial746 proved the normal Lost Trail selector, authored briefing/goals,
+40000-gold Palace world and Trail Lodge menu, then its resource guard closed
+Chrome at3103.3MiB before save/reload. The host app stayed alive. No inspection
+reopened that stopped trial. Shorter fresh trial747 made a native0-Day GMP:
+317301bytes, SHA25664538d1a96e7b00fb6c0dda3e2823e0e7a648e91acfd5613d5a12a21be26cf38.
+Trial748 restored those unchanged bytes in a fresh engine, with the mission
+name, Palace and normal tax collection. Trial750 restored it using the new
+root default and the same original profile path, without an edition parameter.
+Those successful trials stayed below2466MiB. All owned tests closed. Browser
+proof is `output/mission749-browser-content-qualified.json`; it does not claim
+sustained browser victory, browser paid recruitment or a resolved crash cause.
+
+The Blob store allows the project's production OIDC identity, rather than the
+local development identity. Asset publication751 used a staged production
+build with no custom-domain promotion to upload the verified resources.
+Each public resource was downloaded and matched against its native hash.
+The normal Git build reads `deploy/content-release.json`, validates compiler
+source/resource/engine bindings, adds the derived game collection and mounts it
+in the normal root player. No binary game resources, tokens or saves enter Git.
+The root still uses the real original loading art and WASM598 startup behavior.

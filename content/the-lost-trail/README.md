@@ -10,11 +10,14 @@ completion predicate, periodic quest thread and native victory function.
 The quest has its own stable GUID; keep that identity when revising it so
 native saves can identify their content. It does not override stock functions.
 
-Status: private native candidate. Menu selection, briefing, world creation,
+Status: qualified native mission and browser content release. Menu selection, briefing, world creation,
 paid Lodge construction/recruitment, ordinary saves/reloads and objective
 controls are verified. Ordinary campaign victory and persisted native completion
-are also verified. Browser content integration remains pending; it is not on
-the public site.
+are also verified. Production WASM598 selected the mission, created its world,
+wrote an ordinary GMP and restored that exact save in a fresh owned browser.
+The root player also restored it through the ordinary profile path, with no
+edition selector. `deploy/content-release.json` binds the CDN resources used
+by the root deployment. Sustained browser campaign completion is not qualified.
 
 The current GPL source compiled successfully with the original SDK compiler
 on October 13, 2026: 9,327 bytes, SHA256
@@ -29,7 +32,7 @@ The `.mqxml` is the canonical SDK definition. The private candidate uses the
 original Fertile Plain template with a changed initializer and native XQD2
 catalog/menu bindings. Geometry and borrowed menu art remain prototypes;
 fresh terrain authoring is unfinished. The GPL output comes from the original
-`Gplbcc.exe`. All binary resources remain private outputs, outside Git.
+`Gplbcc.exe`. Binary resources are hosted separately; none are committed to Git.
 
 Both completed Lodges have 300 HP and four recruitment slots. The first Lodge
 costs 900 gold, the second 1800; each Wayfinder costs 425. The ordinary Day18
