@@ -37,6 +37,16 @@ was closed. The focused frontend/hash/import tests pass all 26 checks. No native
 engine, co-op protocol, save schema or content bytes were changed by this frontend
 work. The content authoring goal is paused at its saved SDK checkpoint.
 
+Production release 557 deployed frontend commit `f915910` to the existing
+Majesty project. Public trial 558 measured the home paint at 0.293 seconds and
+native readiness at 9.04 seconds. Exit Game, followed by Yes, navigated the
+top-level browser to `https://www.boland.co/`. Nine public file/hash/isolation
+checks passed, including the unchanged Brotli engine. The owned browser was
+closed at a 2,152 MiB peak. Evidence is preserved in
+`output/startup558-public-verification.json`. Production is available at
+`https://majesty-tau.vercel.app/`; the assigned custom domain still does not
+resolve. Older release 538 remains available for rollback.
+
 ## Earlier engine and hash-cache improvement
 
 The October 12 startup investigation measured the previous published engine at
