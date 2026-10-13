@@ -205,3 +205,46 @@ trial 655 world save for the next placement/construction test, preserving it.
 Then verify paid Wayfinder recruitment, building/hero save persistence,
 negative objective cases and actual victory. Current private continuation:
 `output/mission666-continuation-checkpoint.json`.
+
+### Paid construction, recruitment and preserved progress
+
+Trial 671 produced the original “Can't build on top of other units or
+buildings” message. No construction-rule patch was needed. Twelve discrete
+DOWN key presses moved the view to clear southern ground; trial 672 placed
+Trail Lodge at screen 530,350 for 900 gold. Peasants built it normally, and
+trial 674 showed its completed tents. Trial 676 selected its own interface
+at 300/300 HP and recruited a Wayfinder for 425 gold. Trials 678/680 filled the
+first Lodge's four hero slots through paid recruitment and preserved the
+original save/reload path. Trial 682 placed the second Lodge for 1800 gold;
+trials 688/691 continued construction and selected its completed 300/300 HP
+interface, recruiting two more Wayfinders there. These are ordinary gameplay
+actions; no fixtures spawned the buildings or heroes.
+
+A save-selection mistake initially bound receipt 677 to an unchanged copied
+Day1 input. It was corrected to the actual generated Day2 output. The saved
+inputs remain intact. `scripts/lib/native_trial_saves.py` now selects exactly
+one changed/generated GMP by excluding input hashes, refusing ambiguous
+outputs, unowned directories and linked saves. Three regression tests cover
+copied inputs sorting first, updated same-name saves, ambiguity and ownership.
+Together with the eight mission-resource checks, eleven focused tests pass.
+
+The Day4 second-Lodge save failed on the older native engine without inventory
+compatibility. Bounded trace 687 identified the stock hero-death chain:
+gravestone -> Hero_Drop_Immediate_Items -> Drop_Immediate_Items -> missing
+GetInventoryItems/NullFunction -> GplNull converted to list&. This was not the
+mission's victory function. Existing `RECOMP_RULE_INVENTORY_COMPAT=1` registered
+the real legacy inventory bridge; trial 688 resumed that same saved world for
+70 seconds, exited normally and created a new Day5 save. No mission GPL or
+native implementation was changed for this failure. The private candidate
+receipt now declares the required runtime environment explicitly.
+
+Current private candidate: `output/mission689-native-candidate`. Gameplay
+evidence: `output/mission694-gameplay-qualified.json`. Resume only the exact
+generated save in `output/mission692-latest-generated-save.json`, with inventory
+compatibility enabled. Live hero/building counts, isolated negative objective
+cases, hostile-lair clearance and actual victory remain unfinished. Review
+global visibility and heroes inside buildings against the SDK's ListObjects
+modifiers before declaring that the objective counts every living Wayfinder.
+Neither inherited terrain/artwork nor these partial checks establish a new
+published playable mission. Production WASM598 remains unchanged. Current
+continuation: `output/mission693-continuation-checkpoint.json`.

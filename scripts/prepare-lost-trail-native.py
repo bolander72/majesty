@@ -192,6 +192,7 @@ def prepare(compiler_stage, compiler_evidence, wayfinder_menu, output):
                   menuSlotWidgetId=4032, menuSlotTriggerWidgetId=4132,
                   menuArtworkInherited=True, originalMissionArtworkAuthored=False,
                   requiresQualifiedWayfinderResources=True,
+                  requiredRuntimeEnvironment={'RECOMP_RULE_INVENTORY_COMPAT': '1'},
                   scriptLoadGroups=list(LOAD_GROUPS),
                   compilerEvidence=str(compiler_evidence.resolve().relative_to(ROOT)),
                   nativeMapLoadQualified=False, nativeCatalogQualified=False,
