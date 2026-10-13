@@ -1,5 +1,13 @@
 # Changelog
 
+## Private SDK mission authoring
+
+- Verify The Lost Trail GPL compilation with the original compiler.
+- Stage the original RGS editor with pinned private MFC runtime dependencies and
+  export an initial Northern Expansion template with a starter-town unit pattern.
+- Preserve and repackage the matching SDK project/template for authoring resume.
+  Terrain, enemy placement and playable mission integration remain unfinished.
+
 ## Faster home menu
 
 - Cache unchanged solo game-file hashes to avoid rereading the whole installation

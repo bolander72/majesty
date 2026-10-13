@@ -1,0 +1,60 @@
+{
+  "status": "SDK authoring checkpoint; not playable",
+  "initializationFunction": "TheLostTrail",
+  "baseDataset": "MajestyExpansion",
+  "size": [
+    256,
+    256
+  ],
+  "seed": 54321,
+  "unitPatterns": [
+    {
+      "name": "town",
+      "grid": [
+        5,
+        5
+      ],
+      "resolutionTiles": 5,
+      "units": [
+        {
+          "type": "ABJ1",
+          "name": "Palace",
+          "cell": [
+            2,
+            2
+          ]
+        },
+        {
+          "type": "ABH1",
+          "name": "Marketplace",
+          "cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "type": "ABC1",
+          "name": "Blacksmith",
+          "cell": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "checkpoint": {
+    "editorSha256": "ab8cafe411372d9ff86b6a95e2a2087836b7e01891818af90c1e605fb7d121ef",
+    "templateSha256": "4d8b0b213310f0f378df4959f71b8991be527e064d05585dfc4011b6767598c6",
+    "templateBytes": 465,
+    "privateEvidence": "output/mission544-result.json",
+    "privateResumeStage": "output/mission545-editor"
+  },
+  "pending": [
+    "Force-pattern placement and player ownership",
+    "Terrain region and landscape assignment",
+    "Enemy lairs and encounter balance",
+    "Bind canonical quest GUID and compiled GPL resources",
+    "Native game load, save/reload and victory checks"
+  ]
+}
