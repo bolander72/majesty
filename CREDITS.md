@@ -14,11 +14,6 @@ is pinned at `63a81840e0f9264067d7984ad0d2b39859fa1896`. Original MIT source
 notices are preserved in `content/community-mods/alchemist/LICENSE.source`
 and `third_party/majesty-mod-manager/LICENSE`.
 
-Mike confirmed permission for the original mod media's redistribution in this
-project's public browser build and GitHub asset repository on October 13, 2026,
-with creator acknowledgment. This does not relicense the media under MIT.
-The Alchemist browser adaptation is still under development and has not shipped.
-
 ## Browser engine foundations
 
 The browser port builds on [veritr1x/majesty-recomp](https://github.com/veritr1x/majesty-recomp)
