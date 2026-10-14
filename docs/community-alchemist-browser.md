@@ -16,17 +16,25 @@ Trail Lodge remain retired. Production still runs the original game.
   `5352500588909678435` on Workshop depot `73230`.
 
 The source repository explicitly omits original media and compiled packages.
-There is no GitHub release containing them. Do not replace the missing sprites,
-audio or mechanics with stock content. The repository MIT notice is preserved
-alongside the unchanged mod definition; the complete package's media distribution
-terms still need review.
+There is no GitHub release containing them. The full Workshop package has now
+been downloaded through Mike's authenticated Steam client and copied into
+private immutable staging: 42 files, 13,010,996 bytes. Its actual media must be
+preserved. The original repository declaration remains in
+`upstream-mod-definition.json`; `mod-definition.json` is the acquired Workshop
+declaration, with exact package hashes in `source-contract.json`.
 
 Valve's macOS SteamCMD bootstrap cannot run on this machine (Bad CPU type).
 An isolated Node Steam client reached Valve anonymously and obtained item/depot
 metadata, but Valve refused the manifest with **AccessDenied**. No user Steam
-credentials were read or used. A Steam account entitled to download this item,
-or a direct full-package handoff from its creator, is needed. Do not retry the
-same anonymous request or work around the refusal.
+credentials were read or used. Mike installed Steam, signed in and executed
+`workshop_download_item 73230 3793509198` in Steam's Console. Steam's Workshop
+log and installed item manifest report successful download of the exact pinned
+manifest. The original Steam directory is preserved. Do not repeat the rejected
+anonymous request.
+
+The package has no license file for its original media. Mike chose to contact
+the creator himself about public redistribution. No message was sent by the
+agent. Private integration can proceed; public media release remains pending.
 
 Inspect an extracted package without installing it:
 
@@ -35,11 +43,19 @@ python3 scripts/inspect-alchemist-package.py /path/to/CustomGuildAlchemist \
   --receipt output/alchemist-package-inspected.json
 ```
 
-This verifies the pinned declaration, referenced files, private actor/art
+This verifies the acquired declaration, all 42 acquired file hashes, referenced files, private actor/art
 identities, native CAM bounds, audio presence, costs and declared combat actions.
 It hashes the actual package files. Passing preflight does **not** qualify media
 provenance, native runtime support, or gameplay. A different declaration needs a
-source/version review before accepting it.
+source/version review before accepting it. The real package passed this
+inspection; all seven CAMs contain valid bounded resources, including the
+private hero/building IMAG records, 15 WAVE audio records and six DSND records.
+
+The Workshop declaration adds typed boolean capability dispatch, the shared
+Bazaar potion policy (including the authored Giant Spider form), and the v2
+Philosopher's Stone callback compared with the repository declaration. These
+were validated with the actual community parsers; they must not be dropped to
+fit the older declaration.
 
 ## Compatibility work completed
 
@@ -53,6 +69,25 @@ Tests use bytes produced by the pinned upstream Python encoder, rather than a
 second invented implementation of the format. Separate checks refuse required
 capabilities absent from the runtime and reject capability/feature disagreement.
 These modules are preparatory code, currently outside the live launch path.
+
+The source-pinned original community data/composition modules are vendored
+unmodified under `third_party/majesty-mod-manager`, with their MIT notice.
+`scripts/stage-alchemist-runtime-registries.py` uses the original community
+encoder/decoder to stage all seven controller recipe families and the name/oil
+registry. The acquired version emits **MMCR v20**, including the explicit
+`Philosophers_Stone_Hit` source callback. Its two source-composition policies
+are validated and retained in the staging receipt, but not yet applied to GPL.
+
+```sh
+python3 scripts/stage-alchemist-runtime-registries.py \
+  --parent-dialog CG01 --child-dialog CG02 --out output/alchemist-runtime-stage
+```
+
+These are explicit private staging assignments. CAMs still need corresponding
+identity remapping, and the browser must implement every selected capability.
+Staging does not install or launch content. Four tests verify authored research
+prices, upgrade prerequisites, reagent costs, timed effects, callbacks, source
+policies and refusal of modified community encoders.
 
 The existing Mod Manager DLL cannot run directly in WASM. Its supported GOG
 executable is different from our pinned `MajestyHD - Old.exe`, SHA-256
@@ -69,8 +104,9 @@ it does not qualify complete vtables, callbacks, ownership or hooks.
 
 ## Next implementation and qualification
 
-1. Obtain and inspect the full package. Preserve its authored media and original
-   GPL/source/compiled bytecode as immutable inputs.
+1. The full package is obtained and structurally inspected. Preserve its authored
+   media and original GPL/source/compiled bytecode as immutable inputs. Apply
+   the two authored source-composition policies through the community composer.
 2. Audit the pinned guest's controller construction, vtables and destruction;
    name-generator registry and AP78 oil presenter; and resource/description
    loading. Adapt the real package to the legacy CAM/description format as needed.
@@ -92,4 +128,5 @@ Focused checks:
 ```sh
 node --test tests/community-runtime-registry.test.mjs
 python3 -m unittest discover -s tests -p test_alchemist_package_inspection.py
+python3 -m unittest discover -s tests -p test_alchemist_runtime_staging.py
 ```

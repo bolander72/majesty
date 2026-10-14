@@ -91,6 +91,12 @@ def inspect(package):
     expected = json.loads(expected_bytes)
     if json.loads(definition_bytes) != expected:
         raise ValueError('Community definition differs from the pinned source; review this version first')
+    # Once the official Workshop package is acquired, bind the entire handoff.
+    # Resource namespaces alone cannot distinguish originals from substituted media.
+    for name, record in contract.get('workshopPackageFiles', {}).items():
+        data = read(package, name)
+        if len(data) != record['bytes'] or hashlib.sha256(data).hexdigest() != record['sha256']:
+            raise ValueError(f'Resource differs from the acquired Workshop package: {name}')
     manifest = xml(read(package, 'CustomGuildAlchemist.mmxml'))
     mod = manifest.find('Mod')
     if mod is None or mod.get('id') != expected['mod_id'] or mod.findtext('Name') != expected['internal_name']:
@@ -131,11 +137,13 @@ def inspect(package):
     spells = [(s.get('ID'), s.get('Value')) for s in hero.findall('./Game/AllowedSpells/Spell')]
     if spells != [('0', 'stun_serum'), ('1', 'flash_flask'), ('2', 'miasma_mist')]:
         raise ValueError('Actual Alchemist combat abilities are missing')
+    inspected_files = dict(contract.get('workshopPackageFiles', {}))
+    inspected_files.update({name: dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+                            for name, raw in payloads.items()})
     return dict(format='majesty-alchemist-package-inspection-v1',
-                sourceCommit=contract['source']['commit'],
-                files={name: dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
-                       for name, raw in payloads.items()},
-                definitionMatchesPinnedSource=True, nativeHooksQualified=False,
+                publicSourceCommit=contract['source']['commit'],
+                workshopManifest=contract.get('workshopManifest'), files=inspected_files,
+                definitionMatchesAcquiredPackage=True, nativeHooksQualified=False,
                 mediaRedistributionQualified=False, browserPlayable=False, published=False,
                 scope='Structural preflight only; does not authenticate media origin or establish playability')
 

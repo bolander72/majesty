@@ -17,6 +17,45 @@
       "name_tables": ["HN69", "HN70", "HN71", "HN72"]
     },
     {
+      "type": "stock.typed-boolean-dispatch.v1",
+      "feature_key": "weapon_oil_capability_dispatch",
+      "attribute": "HeroCapability",
+      "parameter_types": ["agent", "string"],
+      "dispatch_symbol": "Alchemist_Dispatch_Hero_Capability"
+    },
+    {
+      "type": "stock.bazaar-potion-policy.v1",
+      "feature_key": "alchemist_bazaar_potions",
+      "hero_title": "Alchemist",
+      "potions": {
+        "speed": true,
+        "fire-balm": false,
+        "strength": true,
+        "regeneration": true,
+        "invisibility": true,
+        "shapeshift": true
+      },
+      "shapeshift": {
+        "preset": "custom",
+        "unit_name": "Giant_Spider",
+        "adjustments": [
+          {"attribute": "ATTRIB_Armor_Basic_Damage", "amount": 5, "mode": "raw"},
+          {"attribute": "ATTRIB_HtoH", "amount": 10, "mode": "magical"},
+          {"attribute": "ATTRIB_Strength", "amount": 18, "mode": "magical"},
+          {"attribute": "ATTRIB_Vitality", "amount": 15, "mode": "magical"},
+          {"attribute": "ATTRIB_ActionRateModifier", "amount": -50, "mode": "raw"},
+          {"attribute": "ATTRIB_MaxHP", "amount": 30, "mode": "raw"}
+        ],
+        "heal": 30
+      },
+      "private_actions": {
+        "strength": "alchemist_strength_potion",
+        "shapeshift": "alchemist_shapeshift_potion",
+        "fire-balm": "alchemist_fire_balm",
+        "regeneration": "alchemist_regeneration_elixer"
+      }
+    },
+    {
       "type": "stock.ap78-enchantment-row.v1",
       "overlay_id": "ALo1",
       "display_text": "Paralytic Oil - brief stun on weapon hit"
@@ -117,7 +156,7 @@
       "price_control_id": 3402
     },
     {
-      "type": "stock.ap69-sovereign-target-action.v1",
+      "type": "stock.ap69-sovereign-target-action.v2",
       "panel_key": "brewing",
       "action_key": "philosophers-stone",
       "visual_control_id": 4403,
@@ -132,6 +171,7 @@
       "required_level": 3,
       "resource_key": "reagents",
       "resource_cost": 10,
+      "callback_symbol": "Philosophers_Stone_Hit",
       "icon_control_id": 5403,
       "price_control_id": 3403
     }

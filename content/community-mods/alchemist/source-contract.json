@@ -15,7 +15,7 @@
     "archiveSha256": "ab0a82dd2469400d3d81cbc3cd6b02e64ddb600a571b300149977e996c705a76",
     "bytes": 21095907
   },
-  "definitionSha256": "167dd8b00b3d9872a16c15fa8b393570414166223b9075f5e03d75be23e43367",
+  "definitionSha256": "9c4d11951270ba745124a41bbe7462a878caac25ee076d20376de53ec307350c",
   "guestExecutableSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
   "authoredIdentities": {
     "hero": "ALC1",
@@ -35,14 +35,211 @@
     "stock.ap22-resource-meter.v1",
     "stock.ap24-rage-command-action.v1",
     "stock.ap24-timed-rage-action.v1",
-    "stock.ap69-sovereign-target-action.v1",
+    "stock.ap69-sovereign-target-action.v2",
     "stock.ap78-enchantment-row.v1",
     "stock.ap99-research-row.v1",
-    "stock.name-generator.v1"
+    "stock.bazaar-potion-policy.v1",
+    "stock.name-generator.v1",
+    "stock.typed-boolean-dispatch.v1"
   ],
   "nativeHooksQualified": false,
   "browserPlayable": false,
   "mediaRedistribution": "Unresolved; public GitHub source license does not supply the omitted original media",
-  "fullPackageAcquired": false,
-  "substituteStockContentAllowed": false
+  "fullPackageAcquired": true,
+  "substituteStockContentAllowed": false,
+  "managerDataModuleSha256": {
+    "src/majesty_cam/__init__.py": "dd620e254c5d5db82824a1987ea61f7e499d91d8636baea5e437ba511d85f620",
+    "src/majesty_cam/action_callback_bridge.py": "8f0a8086eab9e1e41072af7e0b85368d44d5c91d44c7bbf77e14a269dc1d4e40",
+    "src/majesty_cam/cam.py": "f24dbf40c9c4fa2c97a18739656a3d6fcbf9a50716b9f14ba0550d1b73501d36",
+    "src/majesty_cam/equipment.py": "81cad9b462b63fab29646da38ccda8fa9d814cb9293ac55d2708cd6859b8dd6a",
+    "src/majesty_cam/event_boundaries.py": "d3fcc3caf0ab7bd02aae7e01b8ce41abda0273d70098c03ee604098a2a7ce511",
+    "src/majesty_cam/gameplay_events.py": "8f52c50568c613233ae60a76ac59a65336184371d85a5fc7d54cc15930a74225",
+    "src/majesty_cam/gpl.py": "d5add66f4d9d1fdf5266f139d335b6a7e1ba4fe084c0dde0f28425c1687be8da",
+    "src/majesty_cam/gpl_function_merge.py": "ae16311ee4d136c38232b0f1f021e8ff9fa030722debcbef8341f9ccd1630bd2",
+    "src/majesty_cam/hero_info.py": "a8ce419cedbffe5bfd0d150b81cd78a75379b0b0b4706c1b9aae3337424c2f9d",
+    "src/majesty_cam/inventory_spell_display.py": "74230801420fb29bb9743f93d2c4051798d07bc8247749c438aaa69aaaa1a29c",
+    "src/majesty_cam/kingdom_research.py": "764cb51e12a599fdc096d2869758b163386be291c175659b5a7a15ce76c6e6bd",
+    "src/majesty_cam/movement_scale.py": "e81a4fb1b50a15b997a959633552965671fbf4759fb4a0f8eeec6c9490d15c8d",
+    "src/majesty_cam/potion_policy.py": "cc39dc2020b39313b79d0b08fb72b77381c1a18b1912832b7aecaa7e8eb9d88d",
+    "src/majesty_cam/runtime_capabilities.py": "13a9c2fe9afe556dc70ab787aab001a4efcdce254f942044badf00879275458f",
+    "src/majesty_cam/runtime_features.py": "c4e9dcbab93173c925bd4a4bc90fb7e9ab7bf0c4d2d078022f776c7a005918dd",
+    "src/majesty_cam/shared_features.py": "06aaca2649c46d9347f18cf2de6ffba940a2915c02bb9439b67fbdc62f89375d",
+    "src/majesty_cam/stock_building_controllers.py": "4715c2894c034b8c11faa37f591a1d2643907aa35f52381e8e0429811b8a001e",
+    "src/majesty_cam/stock_controller_features.py": "4d869e04c463a8a09d86d95d6e3121adae55fc777f4ddd3636ac301c81cf7227",
+    "src/majesty_cam/stock_controller_registry.py": "29c618bd2a515663a100f19e488d770d1781df4c304111302f03f03b8f577624",
+    "src/majesty_cam/typed_providers.py": "be1bec1fed9ea6162a769b2b86f4d2cf9ed19f461c8471b15c847ca7d07fa5cd"
+  },
+  "repositoryDefinitionSha256": "167dd8b00b3d9872a16c15fa8b393570414166223b9075f5e03d75be23e43367",
+  "definitionOrigin": "Actual Steam Workshop package; preserved repository declaration remains upstream-mod-definition.json",
+  "workshopManifest": "5352500588909678435",
+  "workshopPackageFiles": {
+    "CustomGuildAlchemist.mmxml": {
+      "bytes": 2592,
+      "sha256": "9c97d57b0125c1af4330664f0048a5235d8e6e0343b60e1f99efa2c6d47fa199"
+    },
+    "Data/Alchemist.bcd": {
+      "bytes": 254274,
+      "sha256": "e43fd20d7903d516ffbd2ae3b5221626beef2f7adc5285b0c7a863c138854725"
+    },
+    "Data/alchemist_audio.cam": {
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2"
+    },
+    "Data/alchemist_brewing_overlays.xml": {
+      "bytes": 4333,
+      "sha256": "379fd418cea2ebf3783e93d10ecf28cd753c9a9526a53e3ba57a682787638471"
+    },
+    "Data/alchemist_brewing_sounds.xml": {
+      "bytes": 3946,
+      "sha256": "3a0dca0470babfd7937f82ca7d4c9485851856e4a967158fc5a549575c7820b1"
+    },
+    "Data/alchemist_combat_potions.xml": {
+      "bytes": 2201,
+      "sha256": "855195b53c78c7673fe0204484fe15569bb2b5f87ee72f378b7199913f36ecb4"
+    },
+    "Data/alchemist_flash_flask.xml": {
+      "bytes": 1517,
+      "sha256": "23137b27bb1648d0c7571f649015bd44dfbf6446a10bf9f7c9e4d2e0252249fc"
+    },
+    "Data/alchemist_gpltext.cam": {
+      "bytes": 100049,
+      "sha256": "c1bd93696486cbf2c64b266be06f68df605f1722153e8da2484d3a40c9d312e3"
+    },
+    "Data/alchemist_interfacedata.cam": {
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf"
+    },
+    "Data/alchemist_maindata.cam": {
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1"
+    },
+    "Data/alchemist_miasma_mist.xml": {
+      "bytes": 4214,
+      "sha256": "fa522328f074c897509575ecae5258146b5ce6c1f7d1edfacac7197786398932"
+    },
+    "Data/alchemist_miscdata.cam": {
+      "bytes": 5895,
+      "sha256": "09788248839f8bacd75581931a0f551af389d1db1f07421d1b2a4347c77d4d64"
+    },
+    "Data/alchemist_sounddesc.cam": {
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15"
+    },
+    "Data/alchemist_stun_serum.xml": {
+      "bytes": 2814,
+      "sha256": "c85b9e6047f904ad83e4b8b1cf2cf9a4f56996e6e3c940cde7ff899fb231bcb5"
+    },
+    "Data/alchemist_textdata.cam": {
+      "bytes": 17605,
+      "sha256": "5894347d3a2ce1399f7ec1451ef286de0830d634e3db9d2015f78cbd95107529"
+    },
+    "Data/alchemist_units.xml": {
+      "bytes": 5347,
+      "sha256": "64111ea1fcbfa32ee9f95531879c19342da8cab5a3ad6a925754e475238b1817"
+    },
+    "GPL/Alchemist.gplproj": {
+      "bytes": 805,
+      "sha256": "437c8622f3e9bd355c548ae70f5947742315b90fb9dc92d06b71c576df6846f2"
+    },
+    "GPL/Alchemist_Adopt.gpl": {
+      "bytes": 1072,
+      "sha256": "df04d82190175b37174d7e26449017a657b2811467c975dace1cea747c618a90"
+    },
+    "GPL/Alchemist_Brewing.gpl": {
+      "bytes": 2992,
+      "sha256": "54367d05e7ef4c286522302fb8fe817121553edea6287d4233b31bc8e14aeaff"
+    },
+    "GPL/Alchemist_Building_Data.dat": {
+      "bytes": 1437,
+      "sha256": "3742d3c95796b081f0f95e163af599557bd245ae0ebf9390ab680dfcc84d3e33"
+    },
+    "GPL/Alchemist_Combat_Oils.gpl": {
+      "bytes": 1967,
+      "sha256": "a33f8fa80f6100de6f7c508f0f2aac81a6e4867aa02726ad1370ac2c7818bcf3"
+    },
+    "GPL/Alchemist_Consumable_Threat.gpl": {
+      "bytes": 8832,
+      "sha256": "4b23ee48f6e9822bb15b43b40167efbbea2c789640b993b7e384039be9bb2835"
+    },
+    "GPL/Alchemist_Damage.gpl": {
+      "bytes": 6136,
+      "sha256": "30dd05af810d7a6c5f67abe8a4c19fe60151ac2773c51cb88c410b0ea38ccb12"
+    },
+    "GPL/Alchemist_Economy.gpl": {
+      "bytes": 4031,
+      "sha256": "e3df27cacd2ab94eefafefc54f1d0f0d14c84c9cd4c2d9099c44d9f0a1a274b3"
+    },
+    "GPL/Alchemist_Embassy.gpl": {
+      "bytes": 884,
+      "sha256": "734b0f87e733d8bdfde2bcb89323c06ff2bb490cb384ac27c0711264258809b3"
+    },
+    "GPL/Alchemist_Flash_Flask.gpl": {
+      "bytes": 1152,
+      "sha256": "c72ca827da51946f6e177bbeaf29b06889267d273c106fe6622d87882051cc4d"
+    },
+    "GPL/Alchemist_Guild_Title.gpl": {
+      "bytes": 1693,
+      "sha256": "179baaacb49253929372d36fafe327eb06bfd88f76e11077ddbd43282028518e"
+    },
+    "GPL/Alchemist_Hero_Data.dat": {
+      "bytes": 1120,
+      "sha256": "f4c53fe8d533e76fbf50abf8bd69f5924e2bcfe04dc2a27ad4ea0f47d9f299f4"
+    },
+    "GPL/Alchemist_Inventory.gpl": {
+      "bytes": 7072,
+      "sha256": "cd743e7f938a9529410b99a4486682569e54e39bb7089eb70e4d740a0ccd20eb"
+    },
+    "GPL/Alchemist_Magic_Bazaar.gpl": {
+      "bytes": 3199,
+      "sha256": "71667dccf98f5c36a34c7c0ba1f172c32908a819205407f60ef0da55ae0a9599"
+    },
+    "GPL/Alchemist_Miasma_Mist.gpl": {
+      "bytes": 5082,
+      "sha256": "c321648b84a766a72ee60bfb53b409d429ed53f3a87bf10b7d72c1e29a966060"
+    },
+    "GPL/Alchemist_Nearby_Equipment.gpl": {
+      "bytes": 9842,
+      "sha256": "b17a97a136b58e5aa1a583ded9642f8a371ac02e267bb390453b2b1d3c991a34"
+    },
+    "GPL/Alchemist_Phoenix_Phial.dat": {
+      "bytes": 84,
+      "sha256": "be5ea5977eb9fad614404c7023bc504403b0d443ab6e704e2b93b31d8312f843"
+    },
+    "GPL/Alchemist_Phoenix_Phial.gpl": {
+      "bytes": 5677,
+      "sha256": "154b9c368aaf2f7a0f6246f7e8406e65147ce1b986554e795f858a9b882e2847"
+    },
+    "GPL/Alchemist_Reagents.gpl": {
+      "bytes": 15963,
+      "sha256": "75a1ecc32fbd9d2a53feee8819d67237d19668827a3d71d08482f2d059a38f1e"
+    },
+    "GPL/Alchemist_Rogue.gpl": {
+      "bytes": 9727,
+      "sha256": "2c3e5022b8d3705382a3a3e241c60b17af1244053afbb13a6f917361f9172dd7"
+    },
+    "GPL/Alchemist_Shapeshift.gpl": {
+      "bytes": 2600,
+      "sha256": "4f346d6d176fafe3f3e5fa3eda4d724e2894f7f2faf9763d7c0aef3f3d772511"
+    },
+    "GPL/Alchemist_Strength_Potion.gpl": {
+      "bytes": 888,
+      "sha256": "f79bcbc797ade655ba396a6e473418fa261e3d12b4ed6077538896cb5e64abcf"
+    },
+    "GPL/Alchemist_Stun_Serum.gpl": {
+      "bytes": 1899,
+      "sha256": "1a5bb6853883573d8e55d89d9eb75a2b3b36d47163b3b54382fdfb0f40130301"
+    },
+    "GPL/Alchemist_Weapon_Oil.gpl": {
+      "bytes": 7928,
+      "sha256": "09e5343acb97f32f60e834877180f0a713371054be6c13ecf5ce2c035c2b56c7"
+    },
+    "START HERE.txt": {
+      "bytes": 778,
+      "sha256": "d1ebf6bdeeb6967db0b3660069839f41c32b64cda2b8f995e42421eeaaab25d3"
+    },
+    "mod-definition.json": {
+      "bytes": 5784,
+      "sha256": "9c4d11951270ba745124a41bbe7462a878caac25ee076d20376de53ec307350c"
+    }
+  }
 }
