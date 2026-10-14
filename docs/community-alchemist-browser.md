@@ -140,6 +140,44 @@ action parts and the remaining inventory actor still require conversion and
 integration. These isolated `.secd` files are not installed or discoverable by
 the live game; they do not establish complete native descriptions.
 
+The following step, `scripts/stage-alchemist-native-descriptions.py`, now
+combines the supported game parts with independently serialized full HEAD/PRIM
+parts. Private `output/alchemist987-native-descriptions` contains **24 complete
+DUNT unit resources** in a 7,623-byte native CAM, SHA-256
+`e3f368c74ead1ad3cb7412bc8023d74cf4f6bd0a845cd206b607a0fcff7cfbdb`.
+This includes the authored Alchemist, three Laboratory stages, both scripted
+spell actors, all 17 overlays and the Miasma missile. The hero's image remains
+`ALC1`, its movement is the actual declared `Class 1`/`CL01`, its sound is
+`AXH1`; each building retains its own `ALB1`/`ALB2`/`ALB3` image and `AXL1`
+sound. Spell callbacks and overlay attachment points remain authored values.
+Full prototype names are preserved in HEAD; the CAM's original 20-byte
+directory filename field has its separate native length bound.
+
+Common engine serialization matches **526 original PRIM blocks exactly**:
+113 Buildings, 96 Characters, 202 Overlays, 37 Projectiles and 78 General
+units. All **534 original HEAD blocks** compare exactly. Eight other stock
+engine records remain explicit exceptions: five records with ambiguous sound names,
+one absent sound reference, and two unqualified non-GPL script routes. These
+are not silently resolved or called a whole-corpus pass. Named movement and
+sound IDs are read from bounded actual native HEADs, with separate namespaces.
+Private voice/XML bindings are verified; complete sound-body/runtime audio
+compatibility is still pending.
+
+The native archive remains private and is not installed. Phoenix Phial,
+the Miasma particle system, action descriptors and all native controller/name/
+oil capabilities remain necessary before full browser qualification. Action
+format inspection found an important boundary: stock DACT stores script bytes
+outside the nominal PRIM chunk, so a generic DUNT child-chunk parser cannot
+convert actions. The exact sample is retained in
+`output/alchemist988-action-layout-observation.json` for the next conversion.
+
+```sh
+python3 scripts/stage-alchemist-native-descriptions.py \
+  --composition output/alchemist-source-composition \
+  --game-source /path/to/Majesty --package /path/to/CustomGuildAlchemist \
+  --out output/alchemist-native-descriptions
+```
+
 The original corpus comparison matches **404 complete game parts byte for
 byte**: 85 Characters, 114 Buildings and 205 Overlays. Thirteen other stock
 Characters differ only at `RecruitDelay`/`NameGenType` words containing
@@ -205,14 +243,19 @@ python3 -m unittest discover -s tests -p test_alchemist_runtime_staging.py
 python3 -m unittest discover -s tests -p test_alchemist_gameplay_composition.py
 python3 -m unittest discover -s tests -p test_alchemist_compiler_staging.py
 python3 -m unittest discover -s tests -p test_alchemist_legacy_game_parts.py
+python3 -m unittest discover -s tests -p test_alchemist_legacy_engine_parts.py
 ```
 
 The authentic composition test requires `MAJESTY_ALCHEMIST_PACKAGE` and
 `MAJESTY_GAME_SOURCE` pointing to private Workshop and installed game inputs.
-With those set, all 23 focused Python checks and six JavaScript checks pass.
+With those set, all 29 focused Python checks and six JavaScript checks pass.
 This includes unchanged unrelated authored functions, both sides of the
 temporary stat lifecycle, denied Fire Balm/allowed Strength purchase policy,
 and all generated action validator bindings.
 The original-file integration check also verifies stock byte comparisons,
 explicit discrepancies, actual hero equipment/spell IDs and all three Lab
 prices/production bindings. It does not launch the game.
+The full native-description check additionally verifies actual artwork IDs,
+voice IDs, movement attachments, complete building names, spell callbacks,
+overlay attachment points and CAM round trips. Unsupported content remains
+explicitly unconverted; it is not replaced with stock actors.

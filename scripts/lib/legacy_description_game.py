@@ -107,6 +107,9 @@ def resolve(value, names):
     if value == '0':
         return 0
     if value.casefold() not in names:
+        if value in names.values():
+            # A literal ID is valid only when it belongs to this namespace.
+            return fourcc(value)
         raise ValueError('Unresolved authored description: ' + value)
     if names[value.casefold()] is None:
         raise ValueError('Ambiguous typed description name: ' + value)

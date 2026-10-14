@@ -76,3 +76,60 @@ def cam_payloads(raw):
     if cursor != len(raw):
         raise ValueError('Unaccounted native CAM payload')
     return records
+
+
+def resource_name(raw, expected):
+    """Read only a bounded native HEAD name, without claiming to decode its PRIM.
+
+DSND DATA bodies have additional phase data beyond their nominal child count;
+this reader deliberately bounds the first HEAD independently.
+"""
+    tag, version, count, payload = unpack_chunk(raw, expected)
+    if (version, count) != (0, 1):
+        raise ValueError('Unsupported named native resource root')
+    tag, version, count, payload = unpack_chunk(children(payload, 1)[0], b'DATA')
+    if version != 0 or count < 1 or len(payload) < 16:
+        raise ValueError('Unsupported named native resource data')
+    end = 16 + struct.unpack_from('<I', payload, 4)[0]
+    if end > len(payload):
+        raise ValueError('Named native resource HEAD exceeds bounds')
+    tag, version, count, head = unpack_chunk(payload[:end], b'HEAD')
+    if version or count or len(head) < 9:
+        raise ValueError('Unsupported named native resource HEAD')
+    terminator = head.find(b'\0', 8)
+    if terminator < 0:
+        raise ValueError('Unterminated named native resource')
+    return head[:4].decode('ascii'), head[8:terminator].decode('cp1252')
+
+
+def encode_unit_cam(descriptions):
+    """Pack DUNT resources using the original 20-byte prototype filename field."""
+    if not descriptions or len(descriptions) > 1024:
+        raise ValueError('Invalid native description archive count')
+    directory_bytes = 8 + len(descriptions) * 28
+    offset = 28 + directory_bytes
+    directory = struct.pack('<Q', len(descriptions))
+    payloads, expected = [], {}
+    for key in sorted(descriptions):
+        if not isinstance(key, str) or len(key) != 4:
+            raise ValueError('Four-character native description identity required')
+        key_bytes = key.encode('ascii')
+        raw = descriptions[key]
+        head = unpack_chunk(unit_parts(raw)[0], b'HEAD')[3]
+        if head[:4] != key_bytes:
+            raise ValueError('Description header/archive identity disagreement')
+        end = head.find(b'\0', 8)
+        if end < 0:
+            raise ValueError('Unterminated native prototype name')
+        # Only the bounded directory filename is shortened. HEAD preserves the
+        # complete authored name and is what the native description registry reads.
+        label = key_bytes + head[8:end][:16]
+        directory += struct.pack('<20sII', label, offset, len(raw))
+        offset += len(raw)
+        payloads.append(raw)
+        expected[b'DUNT', key_bytes] = raw
+    result = (b'CYLBPC  \x01\x00\x01\x00' + struct.pack('<II4sI', 1, directory_bytes, b'DUNT', 28) +
+              directory + b''.join(payloads))
+    if cam_payloads(result) != expected:
+        raise ValueError('Native descriptor CAM round trip differs')
+    return result
