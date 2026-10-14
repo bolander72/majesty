@@ -503,7 +503,7 @@ second byte with `ff00`, requires `4200` and then requires first byte `41`.
 Only `AB` building IDs pass; the acquired `ALB1` does not. This is verified
 original code, not an inferred restriction from an unsuccessful literal scan.
 
-`scripts/alias-alchemist-native-buildings.py` assigns unused `ABs1..ABs3`
+`scripts/alias-alchemist-native-buildings.py` assigns unused `ABx1..ABx3`
 identities to the actual Laboratory tiers. It adapts only the HEAD identity,
 upgrade references, directory/title/dependency keys and native controller family.
 Names, PRIM artwork/audio/geometry, prices, HP, income, hero slots, the produced
@@ -552,3 +552,77 @@ native534; a complete curated runtime build remains necessary for activation.
 Construction is still unqualified. The controlled stock Blacksmith placement
 at the same investigated location also reports occupied units/buildings and
 spends no gold; this does not establish an Alchemist-specific collision defect.
+
+## Ordinary Lab placement causes
+
+The opt-in, read-only `RECOMP_BROWSER_BUILD_DEBUG=1` observer in the qualified
+native534 engine identifies two separate placement constraints without changing
+any query result. In owned trial1077, site54,190 is blocked by the existing
+Temple to Krypta (`ABT1`, unit532). In trial1079, site60,192 passes the actual
+15-by-12 footprint query (`1800`) but fails the wider31-by-22 spacing query
+(`1100`) against that same temple. The authentic Lab descriptor and spacing
+art remain unchanged. The eastern site tested in1078 instead returns native
+reason2 (unexplored ground), so moving farther east requires normal exploration.
+
+These trials restore the exact paid-Palace2 Day1 input bound by receipt1051,
+copy only that GMP into owned profiles, and exit normally under silent resource
+guards. No Laboratory has yet been purchased, constructed or recruited from;
+failed previews and stopped actor audits are not construction qualification.
+
+Trial1081 places an ordinary1000-gold exploration reward east of the temple
+through Palace Rewards (explore-plus173,370; flag100,332; ground620,200).
+Gold drops15646->14646, stock heroes respond and the previously black eastern
+ground is revealed. The generated Day2 GMP is419481bytes, SHA256
+`3b9b38e99777b4119cfba8985df7a525e70e2356080ae37dc0ab58f4bfc5ea03`;
+receipt1082 excludes the copied Day1 hash. All four prerequisite heroes remain
+alive. This is ordinary preparation for construction, not Laboratory gameplay
+qualification. The purple HUD shortcut193,155 selects the Palace without
+relying on a saved camera position.
+
+Trial1083 then passes both original placement masks at72,192 (world1152,3072)
+and purchases the Lab for1400 gold. After25seconds the generated world retains
+its destroyed building record (unit822, state528), so construction completion
+is not qualified. A separate immediate-save fork1085 captures the live native
+agent88, title`AlchemistsLaboratory`, type`building`, HP1 and state512. Its
+424681-byte generated GMP has SHA256
+`63d8a5c056cd159eff17fecb43c95f48d1bb3dd19298bd01b2d11790303c7ccb`.
+This establishes ordinary paid creation and script initialization, not completed
+construction, recruitment or browser play. The later world has multiple nearby
+hostile Skeleton/Zombie actors; the exact killing event was not traced. Keep
+this immediate-save fork separate from the destroyed-world receipt1084.
+
+The stopped original actor title identifies the spacing blocker532 as
+`Temple_Krypta`; earlier scratch notes calling ABT1 Fervus were incorrect.
+Construction testing moves to an ordinary New Settlement freestyle world with
+Rat Scouts and no wandering monsters or special events. This is the stock setup
+UI, using only the authentic Alchemist candidate; retired content remains off.
+
+The initial private alias candidate1052 used ABs1..ABs3. Those IDs occur in
+archived Trail Lodge saves and must remain reserved after that pack's retirement.
+The authoring helper now assigns ABx1..ABx3, which are unoccupied in both editions
+of the original/native merged catalogs and absent from tracked prior content.
+Its controller owner follows ABx. Existing private ABs Lab worlds remain archived
+with their exact candidate; do not resume them under the replacement candidate.
+The clean stock New Settlement save has no Lab and can safely start the new
+qualification branch. Original art/audio/geometry, actor names and statistics,
+ALC1 hero identity, canonical GUID and compiled GPL remain unchanged.
+
+The New Settlement branch also lost its first stock Rogues Guild to ratmen
+before construction completed; do not resume its destroyed Day4 world as
+progress. Trial1098 instead selects the stock Fortified Palace preset (force
+row309), with30000 gold, Rat Scouts, no wandering monsters/events and seed
+150700822. It starts a completed700HP Warriors Guild,200HP Guardhouse and550HP
+level-one Palace. These are unchanged original classes. Generated receipt1099
+binds the314666-byte starting GMP, SHA256
+`8a695441297a2eff601f91e8376320a3c228d8967a26acd68c0435acc526d2d6`.
+Minimap140,26 then world500,300 selects the existing Warriors Guild normally;
+its recruitment price is450. New private candidate1093 uses ABx identities.
+
+Rollout/manual-data audit for this source helper change: none required. The
+surfaces inspected are native description/controller mappings, archived player
+identities, original stock catalogs, private stage boundaries and production
+asset inclusion. ABs Lab prototypes remain private and bound to candidate1052;
+no public Alchemist records or assets exist to migrate. Public game assets,
+player schemas and runtime launch configuration are unchanged. Do not release
+candidate1093 until ordinary Lab construction/recruitment and the remaining
+mechanics/browser gates pass.

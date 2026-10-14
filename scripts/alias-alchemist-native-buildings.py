@@ -17,7 +17,9 @@ from majesty_cam.strt import parse_strt, StrtTable
 from majesty_cam.stock_controller_registry import decode_stock_controller_registry, encode_stock_controller_registry
 from lib.legacy_description_wire import unit_parts
 
-ALIASES = {b'ALB1': b'ABs1', b'ALB2': b'ABs2', b'ALB3': b'ABs3'}
+# ABs1..ABs3 belong to the retired Trail Lodge. Keep their identities reserved
+# even though the currently active stock catalogs no longer contain that pack.
+ALIASES = {b'ALB1': b'ABx1', b'ALB2': b'ABx2', b'ALB3': b'ABx3'}
 
 
 def sha(raw):
@@ -73,7 +75,7 @@ def archive(original):
                 lines = raw.splitlines(keepends=True)
                 for i, line in enumerate(lines):
                     if line.startswith(b'ALB1 : '):
-                        lines[i] = b'ABs1' + line[4:]
+                        lines[i] = b'ABx1' + line[4:]
                 raw = b''.join(lines)
             entries.append(replace(entry, name=name, data=raw))
         sections.append(replace(section, entries=tuple(entries)))
@@ -85,11 +87,11 @@ def archive(original):
 def registry(raw):
     original = decode_stock_controller_registry(raw)
     if (sum(p.building_family_id == 'ALB' for p in original.panels) != 1
-            or any(p.building_family_id == 'ABs' for p in original.panels)):
+            or any(p.building_family_id == 'ABx' for p in original.panels)):
         raise ValueError('Require an unoccupied native alias and one authored Laboratory owner')
-    panels = tuple(replace(p, building_family_id='ABs') if p.building_family_id == 'ALB' else p
+    panels = tuple(replace(p, building_family_id='ABx') if p.building_family_id == 'ALB' else p
                    for p in original.panels)
-    if sum(p.building_family_id == 'ABs' for p in panels) != 1:
+    if sum(p.building_family_id == 'ABx' for p in panels) != 1:
         raise ValueError('Exactly one authentic Laboratory panel owner required')
     adapted = replace(original, panels=panels)
     encoded = encode_stock_controller_registry(adapted)
