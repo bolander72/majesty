@@ -188,6 +188,31 @@ research as the only disabled-upgrade condition, prove a paid tier upgrade,
 or qualify positive research completion. Those ordinary-play gates remain
 pending the rebuilt engine and actual paid research.
 
+The iCloud dependency is now resolved without user action. Official Ghidra12.1.3
+regenerated all14953 original function listings in a separate local analysis
+directory, with zero decompilation failures. Official engine build1217 then
+completed successfully, using source-curated real entries for00474C10 and
+004ABF70; generated hookability metadata was not edited. The separate engine's
+SHA256 is `16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031`.
+This supersedes the earlier1195 missing-file limitation.
+
+Native1220 enables the private research bridge, restores the exact original
+completed-Lab save, opens/returns/reopens Brewing and saves normally. All
+required native hooks install; both private descriptor values are read back.
+It exits normally with muted audio at150.8MiB peak RSS. Receipt1224 binds its
+generated Day6 GMP,367209bytes, SHA256
+`4566cb61b0c2de7ae216d05a0dbd2d239af16f4933041944548b396fd783cb6e`.
+This qualifies route initialization and world/navigation/save continuity only.
+Paid research, timed completion and research-state persistence remain pending.
+
+The Laboratory is under ordinary hostile attack and remains below full health.
+Native1222's repair tooltip says “Remove this building from the repair route,”
+confirming repair is already enabled. Preserve the native health guard; ordinary
+defense and repair must precede the positive paid-research trial. Trial1226
+places a hostile reward but accidentally adds another to the friendly Lab when
+selection is attempted without cancelling flag placement. Preserve that fork
+for diagnosis only; it is not the next research checkpoint.
+
 ## Recovering offloaded analysis inputs
 
 The offloaded original listings can be regenerated from the exact pinned
