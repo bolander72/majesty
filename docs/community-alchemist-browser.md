@@ -188,6 +188,55 @@ research as the only disabled-upgrade condition, prove a paid tier upgrade,
 or qualify positive research completion. Those ordinary-play gates remain
 pending the rebuilt engine and actual paid research.
 
+## Recovering offloaded analysis inputs
+
+The offloaded original listings can be regenerated from the exact pinned
+executable with the unchanged [upstream analyzer](https://github.com/veritr1x/majesty-recomp/blob/main/tools/analyze.py).
+Recovery pins that script's Git blob to
+`bd067f15b7f33e199d750e71b1e331605cb596de`. The official
+[Ghidra12.1.3 release](https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.1.3_build)
+archive is569445154bytes, SHA256
+`93a5d11a9ad510622acaaf908c556a7b9b764d338e78a7567f3689bf5081fd54`.
+Its bundled Gradle wrapper builds the required Mac native tools through the
+vendor's `buildNatives` target, with one worker and a768MiB JVM heap. Recovery
+trial1210 succeeds below852MiB owned RSS. Zip extraction must preserve the
+archive's executable mode bits; this does not modify script contents.
+
+`scripts/prepare-alchemist-analysis-recovery.py` copies a separate source-bound
+game view and unchanged analyzer/exporter/config loader. It rejects a changed
+executable or analyzer and any existing output. Ghidra rejects hidden elements
+in a project path, so use a visible local directory outside Documents/iCloud,
+such as `~/majesty-analysis-work/<fresh-name>`. The helper checks that restriction
+including resolved parent symlinks. The original analysis, game and player
+files stay untouched. Four focused tests cover those preparation guards.
+
+Run the staged original `tools/analyze.py` with Ghidra12.1.3, the installed JDK,
+`--max-memory 1G` and an isolated `application.settingsdir`. A guarded process
+group owns the analysis/export; no other intensive engine/build runs alongside
+it. Trial1214 passes Ghidra's original executable analysis and begins exporting
+real function listings. Export completion, required entry validation, full
+engine regeneration/build and research gameplay qualification remain separate
+gates. Do not treat a growing functions index as a complete input set, point
+the engine at it early, edit generated metadata, or silently accept a truncated
+analysis after a resource stop.
+
+Recovery1214 is now complete:14953 discovered/decompiled functions, zero
+export failures, and every indexed assembly file is present locally. The
+unchanged upstream script records the exact pinned executable SHA and
+Ghidra12.1.3 in `inputs.json`; qualification1215 verifies that binding and the
+complete file set. Owned analysis peak RSS was1547.7MiB and exit was0.
+Fresh engine view1216 points only its analysis input at this completed local
+export and retains the1194 source curation/patches/native-source snapshot.
+Original iCloud files remain untouched. Official regeneration/build1217 is
+the next gate; restored inputs alone do not qualify native research or browser
+play. No player-data migration or public asset change is needed for recovery.
+Official translation1217 succeeds with the recovered inputs. Its unmodified
+generated metadata independently identifies474C10 and4ABF70 as real hookable
+entries with config provenance, and5D9680/628E60 as real hookable entries too.
+Proof1218 records those exact four entries. Native engine compilation is still
+a separate gate; this resolves the missing completion-entry metadata without
+changing generated flags by hand.
+
 Rollout/manual-data audit: none required for this private source checkpoint.
 The audited surfaces are native function/attribute registries, original GMP
 ownership, build flags and production asset inclusion. Existing public players
