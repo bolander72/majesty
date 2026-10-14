@@ -450,5 +450,57 @@ New resident working files now live outside Library/Caches and outside iCloud,
 under `/Users/mike/.local/share/majesty-work`. The original 42-file package was
 reverified against its pinned hashes. Original game files and source links were
 not changed. One native trial hit the old harness's resolution-change assertion;
-no game or host-app crash fix is claimed. Subsequent trials exited normally,
-but selector navigation/construction still needs qualification.
+no game or host-app crash fix is claimed. Construction/recruitment and complete
+runtime support still need qualification.
+
+## Native world entry and collection preparation
+
+The private probe now reaches the ordinary quest selector and generates a
+stock Beginner Freestyle kingdom. Live NM18 registration reports successful
+installation through the original name-generator lifecycle. An ordinary native
+world save was generated and restored in fresh owned profiles. This proves
+world entry, registration and the initial stock-world save path; it does not
+prove Alchemist recruitment, generated hero names or content save compatibility.
+
+Native menu automation must wait for the actual menu to finish loading. Use
+absolute `move` followed by explicit `button left down` / `button left up`
+steps separated by a short wait. Two stock/mod controls stalled during a modal
+transition with the frame-count-based click helper; explicit releases passed.
+Avoid relative input mixed with window cursor synchronization, and avoid an
+early dump that establishes the old harness's fixed pointer-space assertion
+before a resolution transition. No runtime/input code was changed for these
+private trials.
+
+`scripts/merge-alchemist-native-dependencies.py` prepares a separate private
+collection from the existing verified candidate. It:
+
+- Adds the acquired Laboratory's Palace-level-2 BDEP expression to the actual
+  original and expansion tables, preserving all existing prerequisite bytes
+  and the required final blank line.
+- Attaches the real resource archives to original and expansion classification
+  groups while retaining existing load order. The original edition has three
+  groups; the expansion has six applicable groups.
+- Materializes 26 authored native unit descriptions and 13 actions in the
+  native catalogs. Existing unit identities are never replaced. The six
+  acquired Bazaar potion actions are deliberate authored overrides and require
+  the exact original action identity/name; unrelated action payloads remain
+  unchanged.
+- Adds missing semantic text keys to native unit/help/activity/item tables
+  while preserving every existing stock row. Linked purchased files become
+  owned copies before writes; earlier candidates and originals stay intact.
+
+Ten focused tests pass, covering destination isolation, stock preservation, prerequisite collisions,
+classification coverage, native catalog collisions, potion override identity
+and semantic text merging. The script is private staging, not release activation.
+
+The Laboratory has not yet been exposed in a qualified building list. A prior
+level-2 Palace save still lacked it after preparation; newly generated worlds
+with the merged catalogs had a level-1 Palace. Its normal upgrade tooltip
+requires four heroes, and those worlds started with zero. Next establish that
+ordinary prerequisite and inspect actual native build eligibility before
+assuming a prototype-ID or descriptor problem. Do not repeat home-menu scans
+or infer gameplay support merely from opened resource files.
+
+Rollout/manual-data audit: none for this source checkpoint. The new script only
+creates private candidate files. Production assets, launcher configuration,
+profile schemas and runtime remain unchanged; no Alchemist content is public.
