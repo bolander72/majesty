@@ -68,7 +68,8 @@
     "src/majesty_cam/stock_controller_features.py": "4d869e04c463a8a09d86d95d6e3121adae55fc777f4ddd3636ac301c81cf7227",
     "src/majesty_cam/stock_controller_registry.py": "29c618bd2a515663a100f19e488d770d1781df4c304111302f03f03b8f577624",
     "src/majesty_cam/typed_providers.py": "be1bec1fed9ea6162a769b2b86f4d2cf9ed19f461c8471b15c847ca7d07fa5cd",
-    "src/majesty_cam/descriptions.py": "edc9eec0663d8f9e7dbf6b3ff0fe941917e0ace58aad2f2aa9a5cf2a381788e5"
+    "src/majesty_cam/descriptions.py": "edc9eec0663d8f9e7dbf6b3ff0fe941917e0ace58aad2f2aa9a5cf2a381788e5",
+    "src/majesty_cam/strt.py": "ec2aa01e15562f5232e38c2c9fb89e4a8e0448e4eb0ad51647731906bf732b84"
   },
   "repositoryDefinitionSha256": "167dd8b00b3d9872a16c15fa8b393570414166223b9075f5e03d75be23e43367",
   "definitionOrigin": "Actual Steam Workshop package; preserved repository declaration remains upstream-mod-definition.json",

@@ -426,3 +426,29 @@ This passes as an isolated fixture. Native world rendering, clicking Brewing,
 real reagent changes, research, upgrades, Vigor, Arcane Infusion, Philosopher's
 Stone, AP78 oil rows and original save/reload are still unqualified. Both
 community override headers remain uninstalled and the public game stays stock.
+
+## First native live-probe integration
+
+The real Workshop media, original community panels and freshly SDK-compiled
+composed GPL now load in an isolated native collection and reach the normal
+Majesty menu. The private native probe module loads through the official
+mod API in the qualified native534 engine; its six supported hooks preserve
+the original factory, name lifecycle, ownership and initial reagent presenter.
+The other two UI methods (0047a790 and 0047aae0) are currently classified as
+non-hookable recovered data blocks in generated symbol metadata. They remain
+unhooked: proper function discovery through the official translator is required
+before full Back/event handling, rather than changing generated eligibility
+flags. Paid construction/recruitment and name generation remain unverified.
+
+`native/community/native_probe_plugin.cpp` is a private qualification probe,
+not a release plugin or a claim of complete runtime support. All research,
+upgrade, sovereign, oil-row, inventory and browser qualification requirements
+remain. Native trials are muted and owned; no player saves are loaded.
+
+Private staging was recovered from Steam after its cache directories disappeared.
+New resident working files now live outside Library/Caches and outside iCloud,
+under `/Users/mike/.local/share/majesty-work`. The original 42-file package was
+reverified against its pinned hashes. Original game files and source links were
+not changed. One native trial hit the old harness's resolution-change assertion;
+no game or host-app crash fix is claimed. Subsequent trials exited normally,
+but selector navigation/construction still needs qualification.
