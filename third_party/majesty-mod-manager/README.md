@@ -1,6 +1,7 @@
 # Original Mod Manager modules
 
-These unmodified Python data/GPL composition modules and C++ runtime registry parser come from Phantomstar721's
+These unmodified Python data/GPL composition modules and portable C++
+MMFR/MMCR parsers come from Phantomstar721's
 [Majesty Mod Manager](https://github.com/Phantomstar721/majesty-gold-hd-mod-manager)
 at commit `63a81840e0f9264067d7984ad0d2b39859fa1896`.
 

@@ -386,3 +386,43 @@ credits, private staging/test code and an uninstalled adapter; deployed
 collection selection, player saves, profile schemas, asset manifests and
 runtime environment settings remain unchanged. Alchemist release still
 requires the remaining controls and full playable verification.
+
+## Native Laboratory panel lifecycle and reagent display
+
+`native/community/community_panels.cpp` now adapts the acquired MMCRv20
+parent/child recipe through the Old engine's original factory. CG01 keeps its
+private window and uses the authored AP10 controller base; CG02 keeps its
+private Brewing window and uses the authored AP69 base. Opening Brewing uses
+the original panel opener and existing building context, including native
+parent retention/removal. Unrelated stock dialogs pass through unchanged.
+
+Original controller destruction remains authoritative. Transient ownership
+records use an instance generation so an older teardown cannot erase a new
+panel at a reused guest address. The Old AP69 class has eleven vtable entries
+and a 36-byte allocation; no newer native structure or vtable is copied.
+
+The reagent presenter reads the actual `APV0` attribute through the original
+packed-attribute getter and binds its integer to authored control 10789 using
+the original AP22 quantity virtual. It shows authored label/count controls
+10787/10788, clamps negative display counts without changing the resource,
+and skips an absent building/window. Refresh follows original Brewing setup
+and events only while the captured child instance survives.
+
+The original community MMCR parser and its validation dependencies are
+vendored unchanged with source-contract hashes. The focused native fixture
+compiles the adapter and verifies all seven acquired recipe families, private
+selectors, ordinary stock pass-through, wrong-command/building refusal,
+parent/child ownership, address reuse, deleted-panel refusal, actual reagent
+binding, missing-context handling, and every truncated registry boundary.
+Prepare it using the previous command plus:
+
+```sh
+--controllers /path/to/majesty_mod_manager_controllers.bin
+```
+
+Then run the official tool with
+`--native-test community_controller_lifecycle_tests --jobs 1`.
+This passes as an isolated fixture. Native world rendering, clicking Brewing,
+real reagent changes, research, upgrades, Vigor, Arcane Infusion, Philosopher's
+Stone, AP78 oil rows and original save/reload are still unqualified. Both
+community override headers remain uninstalled and the public game stays stock.

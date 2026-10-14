@@ -245,7 +245,11 @@
   },
   "managerNativeModuleSha256": {
     "runtime/RuntimeFeatureRegistry.h": "4d5aab7e68cff7c838b35ab80ffcb31e3480f060e8a309a71bbe22c4d433569f",
-    "runtime/RuntimeFeatureRegistry.cpp": "a22c081eb4d92bb08479e85e19f086c38fd0080acf34a5f2b8cde95137fb4f10"
+    "runtime/RuntimeFeatureRegistry.cpp": "a22c081eb4d92bb08479e85e19f086c38fd0080acf34a5f2b8cde95137fb4f10",
+    "runtime/StockControllerRegistry.h": "2954d2a1fe93a1d7f1eac79084094bb32d3158ac182dea115ac12900c64e5f7c",
+    "runtime/StockControllerRegistry.cpp": "8dc74823c9cded981623bb51f733c0a5ff3bba446ee4595e72aa6ca046657071",
+    "runtime/StockBuildingControllerCatalog.h": "696469968ac53c6b96ae305be0d117698335df0f7df3c4d713af7026c110aab8",
+    "runtime/MajestyBuildId.h": "e6f10e78a3b56de669a8c6e0e65a8145ec27ed38f488f8b3c1220ed81847a0ab"
   },
   "mediaPermission": {
     "status": "confirmed-by-user",

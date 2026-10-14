@@ -4,7 +4,8 @@
 
 - Credit Phantomstar721 for Alchemist Lab and Majesty Mod Manager; record Mike's confirmation of creator permission for original mod media distribution.
 - Preserve the authentic community source, package bindings and original mechanics while preparing legacy descriptions and native name registration.
-- The adapter passes a focused native fixture but remains uninstalled. Alchemist Lab is not yet playable or released; production remains the original game.
+- Add native Laboratory/Brewing ownership and authored reagent-display adapters, with original MMCR parsing and focused lifecycle/quantity tests. Research and sovereign controls remain unfinished.
+- The adapters pass focused native fixtures but remain uninstalled. Alchemist Lab is not yet playable or released; production remains the original game.
 
 ## Retire Lost Trail — October 13, 2026
 
