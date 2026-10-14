@@ -12,3 +12,7 @@ bound by `content/community-mods/alchemist/source-contract.json`.
 The upstream MIT license is preserved in `LICENSE`. This subset includes no
 retail assets, mod media, native DLL, launcher, account integration or GUI.
 It does not make the browser runtime support the capabilities it encodes.
+
+The original description codec and potion/typed-provider composers are also
+used to apply the acquired Alchemist package's declared source policies.
+Generated stock/mod source remains private; it is not vendored here.
