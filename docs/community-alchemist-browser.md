@@ -524,3 +524,31 @@ preventing an older listed file from being mistaken for the intended world.
 Rollout/manual-data audit: none for this source checkpoint. The new script only
 creates private candidate files. Production assets, launcher configuration,
 profile schemas and runtime remain unchanged; no Alchemist content is public.
+
+## AP69 partial translation and native module
+
+The Old control method `0047a790` and event method `0047aae0` are independently
+audited vtable entries with RET4/RET16 respectively. Declaring their real starts
+in a private `game.toml` produces hookable function-entry metadata through the
+official translator; no generated eligibility flags are edited.
+
+Partial-module translation previously failed on three unrelated routines that
+whole-image discovery inspected but the module did not carry. The scoped kit
+fix in `patches/recomp-kit-partial-module-failure-scope.patch` retains those
+diagnostics as `module_omitted_failures`, keeps selected-function errors fatal,
+and explicitly rejects a requested export that was not emitted. The full-image
+path is unchanged. All 166 driver tests pass in an isolated kit checkout based
+on `fd660e2c03c482785853f82b7906aaf55d3f39a7`.
+
+Private trial1072 translates both selected methods successfully. Trial1073
+builds their generated C module through the official `tools/test.py` fixture;
+the original controller-lifecycle test also passes. Native1075 loads and
+registers the two translated functions, then restores the original test world
+and reaches the normal building list. These are module preparation/load checks,
+not live Back/event or research qualification. The base image is consulted
+first, so a supplementary module does not replace entries already carried by
+native534; a complete curated runtime build remains necessary for activation.
+
+Construction is still unqualified. The controlled stock Blacksmith placement
+at the same investigated location also reports occupied units/buildings and
+spends no gold; this does not establish an Alchemist-specific collision defect.
