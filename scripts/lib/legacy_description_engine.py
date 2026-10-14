@@ -14,7 +14,7 @@ INFO = {'Static': 0x1, 'Directionless': 0x4, 'DontBlock': 0x8,
         'NotVisibleInISOView': 0x1000, 'NotVisibleInOverheadView': 0x2000,
         'NotVisibleToOpponent': 0x8000, 'NoGPLAgent': 0x10000,
         'RevealTerrainIfExposed': 0x20000, 'NoRandomTargetOnDestination': 0x40000}
-KINDS = {'General': 0, 'Projectile': 1, 'Building': 2, 'Character': 3, 'Overlay': 4}
+KINDS = {'General': 0, 'Projectile': 1, 'Building': 2, 'Character': 3, 'Overlay': 4, 'ParticleSystem': 5}
 MOVEMENT_TYPES = {'Walk': 1, 'Fly': 4}
 
 
@@ -63,6 +63,9 @@ def attachments(elements, subtype, movements):
 
 def encode_engine(element, resources):
     subtype = element.get('subType')
+    if subtype == 'ParticleSystem':
+        from .legacy_description_particle import encode_particle_engine
+        return encode_particle_engine(element, resources)
     if element.get('type') != 'Unit' or subtype not in KINDS:
         raise ValueError('Unsupported common engine unit kind')
     engine = element.find('Engine')
@@ -134,9 +137,9 @@ def descriptor(element, resources, game_part=None):
     subtype = element.get('subType')
     if subtype in ('Building', 'Character', 'Overlay') and game_part is None:
         raise ValueError('Complete authored game part required')
-    if subtype in ('General', 'Projectile') and game_part is not None:
+    if subtype in ('General', 'Projectile', 'ParticleSystem') and game_part is not None:
         raise ValueError('Unexpected game part for native engine-only kind')
-    if subtype in ('General', 'Projectile') and element.find('Game') is not None:
+    if subtype in ('General', 'Projectile', 'ParticleSystem') and element.find('Game') is not None:
         raise ValueError('Unsupported authored Game for native engine-only kind')
     parts = [header(element), encode_engine(element, resources)]
     if game_part is not None:

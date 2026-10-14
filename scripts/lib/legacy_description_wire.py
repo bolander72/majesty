@@ -103,7 +103,13 @@ this reader deliberately bounds the first HEAD independently.
 
 
 def encode_unit_cam(descriptions):
+    return encode_description_cam(descriptions, b'DUNT')
+
+
+def encode_description_cam(descriptions, kind):
     """Pack DUNT resources using the original 20-byte prototype filename field."""
+    if kind not in (b'DUNT', b'DACT'):
+        raise ValueError('Unsupported native description archive kind')
     if not descriptions or len(descriptions) > 1024:
         raise ValueError('Invalid native description archive count')
     directory_bytes = 8 + len(descriptions) * 28
@@ -115,7 +121,12 @@ def encode_unit_cam(descriptions):
             raise ValueError('Four-character native description identity required')
         key_bytes = key.encode('ascii')
         raw = descriptions[key]
-        head = unpack_chunk(unit_parts(raw)[0], b'HEAD')[3]
+        if kind == b'DUNT':
+            parts = unit_parts(raw)
+        else:
+            from .legacy_description_action import action_parts
+            parts = action_parts(raw)
+        head = unpack_chunk(parts[0], b'HEAD')[3]
         if head[:4] != key_bytes:
             raise ValueError('Description header/archive identity disagreement')
         end = head.find(b'\0', 8)
@@ -127,8 +138,8 @@ def encode_unit_cam(descriptions):
         directory += struct.pack('<20sII', label, offset, len(raw))
         offset += len(raw)
         payloads.append(raw)
-        expected[b'DUNT', key_bytes] = raw
-    result = (b'CYLBPC  \x01\x00\x01\x00' + struct.pack('<II4sI', 1, directory_bytes, b'DUNT', 28) +
+        expected[kind, key_bytes] = raw
+    result = (b'CYLBPC  \x01\x00\x01\x00' + struct.pack('<II4sI', 1, directory_bytes, kind, 28) +
               directory + b''.join(payloads))
     if cam_payloads(result) != expected:
         raise ValueError('Native descriptor CAM round trip differs')

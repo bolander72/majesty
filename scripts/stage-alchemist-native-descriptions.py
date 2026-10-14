@@ -152,7 +152,7 @@ def stage(composition, game, package, output):
                   files={identity + '.dunt': dict(bytes=len(raw), sha256=registry.sha(raw))
                          for identity, raw in descriptions.items()},
                   archive=dict(path='alchemist-native-unittype.cam', bytes=len(archive), sha256=registry.sha(archive)),
-                  pending=pending, actionPartsConverted=False, particleConverted=False,
+                  pending=pending, actionPartsConverted=False, particleConverted='AMM4' in descriptions,
                   completeNativeDescriptors=False, nativeHooksQualified=False,
                   browserPlayable=False, installed=False, published=False,
                   soundBindingVerified=True, completeSoundBodyCompatibilityQualified=False)

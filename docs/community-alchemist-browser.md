@@ -171,6 +171,44 @@ outside the nominal PRIM chunk, so a generic DUNT child-chunk parser cannot
 convert actions. The exact sample is retained in
 `output/alchemist988-action-layout-observation.json` for the next conversion.
 
+That action conversion is now implemented in
+`scripts/lib/legacy_description_action.py` and
+`scripts/stage-alchemist-native-actions.py`. The native fixed 64-byte PRIM,
+external script route and version3 SECD are preserved separately. The encoder
+matches **127 whole original DACT resources byte for byte**; five other stock
+actions remain explicit exceptions. Repeated SpellType declarations are native
+bit masks, not duplicate scalar properties: Attack + CombatUtility must remain
+3. Even stock actions omitting Game in XML carry a default SECD on disk.
+
+Private `output/alchemist991-native-actions` contains all **13 authored and
+composed potion/combat actions**, with effect and validation symbols bound to
+the exact composed GPL source. It preserves Stun Serum's 5-second effect/
+45-second cooldown at level5/rank5, Flash Flask's Special animation at level3/
+rank4 and 30/45-second timing, and Miasma's actual
+`Alchemist_Miasma_Mist_Hit` callback at level8/rank4 and 21/60-second timing.
+The six stock and four private potion actions retain their generated policy
+validators; no new shopping or potion mechanics are invented.
+
+`scripts/lib/legacy_description_particle.py` serializes the complete authored
+emitter/particle/bounds/colour/spin data in the pinned PRIM-v5 layout, matching
+**all 22 original particle engine parts exactly**. Current unit staging
+`output/alchemist993-native-descriptions` now contains **25 complete native
+units**, including the actual Miasma cloud particle `AMM4`, in an 8,077-byte
+CAM, SHA-256
+`35193a4ddb9e8dbfb3c05644c395fe4d001e5bfcf50a2caaedee7ebd0db00f91`.
+It preserves the mod's Area+Column emitter, 8-per-second rate, 10-particle
+limit, declared colours/fade, one-second particle lifespan and size curve.
+Phoenix Phial remains explicitly unconverted. All 556 original HEADs and
+548 supported engine parts compare exactly; eight unrelated stock engine
+exceptions remain explicit. No content is installed or browser-qualified.
+
+```sh
+python3 scripts/stage-alchemist-native-actions.py \
+  --composition output/alchemist-source-composition \
+  --game-source /path/to/Majesty --package /path/to/CustomGuildAlchemist \
+  --out output/alchemist-native-actions
+```
+
 ```sh
 python3 scripts/stage-alchemist-native-descriptions.py \
   --composition output/alchemist-source-composition \
@@ -244,11 +282,12 @@ python3 -m unittest discover -s tests -p test_alchemist_gameplay_composition.py
 python3 -m unittest discover -s tests -p test_alchemist_compiler_staging.py
 python3 -m unittest discover -s tests -p test_alchemist_legacy_game_parts.py
 python3 -m unittest discover -s tests -p test_alchemist_legacy_engine_parts.py
+python3 -m unittest discover -s tests -p test_alchemist_native_actions_particles.py
 ```
 
 The authentic composition test requires `MAJESTY_ALCHEMIST_PACKAGE` and
 `MAJESTY_GAME_SOURCE` pointing to private Workshop and installed game inputs.
-With those set, all 29 focused Python checks and six JavaScript checks pass.
+With those set, all 34 focused Python checks and six JavaScript checks pass.
 This includes unchanged unrelated authored functions, both sides of the
 temporary stat lifecycle, denied Fire Balm/allowed Strength purchase policy,
 and all generated action validator bindings.
@@ -259,3 +298,7 @@ The full native-description check additionally verifies actual artwork IDs,
 voice IDs, movement attachments, complete building names, spell callbacks,
 overlay attachment points and CAM round trips. Unsupported content remains
 explicitly unconverted; it is not replaced with stock actors.
+Additional original-file checks verify complete action byte comparisons,
+actual callbacks/validators, spell ranks, animation/sound choices, durations,
+and Miasma's authored emitter, bounds, colours and size. Passing these static
+conversions does not prove in-game spell execution or native UI compatibility.

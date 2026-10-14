@@ -74,14 +74,14 @@ class AuthenticNativeDescriptionTests(unittest.TestCase):
             root = Path(name)
             stager.helpers().compose(package, game, root / 'composition')
             report = stager.stage(root / 'composition', game, package, root / 'native')
-            self.assertEqual(report['privateUnitCount'], 24)
-            self.assertEqual(report['exactStockHeaders'], 534)
+            self.assertEqual(report['privateUnitCount'], 25)
+            self.assertEqual(report['exactStockHeaders'], 556)
             self.assertEqual(report['exactStockEngineParts'],
-                             dict(Building=113, Character=96, Overlay=202, Projectile=37, General=78))
+                             dict(Building=113, Character=96, Overlay=202, ParticleSystem=22, Projectile=37, General=78))
             self.assertEqual(len(report['stockExceptions']), 8)
-            self.assertEqual({p['id'] for p in report['pending']}, {'AMM4', 'PXF1'})
+            self.assertEqual({p['id'] for p in report['pending']}, {'PXF1'})
             archive = cam_payloads((root / 'native/alchemist-native-unittype.cam').read_bytes())
-            self.assertEqual(len(archive), 24)
+            self.assertEqual(len(archive), 25)
             parts = unit_parts(archive[b'DUNT', b'ALC1'])
             head = unpack_chunk(parts[0])[3]
             self.assertEqual(head[8:].split(b'\0')[0], b'Alchemist')
@@ -107,7 +107,8 @@ class AuthenticNativeDescriptionTests(unittest.TestCase):
             self.assertEqual(struct.unpack_from('<I', prim, 24)[0], 2)
             self.assertEqual(prim[36:prim.index(0, 36)].decode(), 'Alchemy_Paralytic_Oil_End')
             self.assertTrue(report['soundBindingVerified'])
-            for key in ('actionPartsConverted', 'particleConverted', 'completeNativeDescriptors',
+            self.assertTrue(report['particleConverted'])
+            for key in ('actionPartsConverted', 'completeNativeDescriptors',
                         'nativeHooksQualified', 'browserPlayable', 'installed', 'published',
                         'completeSoundBodyCompatibilityQualified'):
                 self.assertIs(report[key], False)

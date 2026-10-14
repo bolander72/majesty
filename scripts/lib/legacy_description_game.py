@@ -53,14 +53,14 @@ def fourcc(value):
     return int.from_bytes(value.encode('ascii'), 'little')
 
 
-def fields(game, allowed):
+def fields(game, allowed, repeatable=('Flags',)):
     if game is None or game.tag != 'Game' or game.attrib != {'version': '1'}:
         raise ValueError('Require a supported complete Game version1 element')
     seen = set()
     for child in game:
         if child.tag not in allowed:
             raise ValueError('Unsupported authored game field: ' + child.tag)
-        if child.tag != 'Flags' and child.tag in seen:
+        if child.tag not in repeatable and child.tag in seen:
             raise ValueError('Duplicate authored game field: ' + child.tag)
         seen.add(child.tag)
 
