@@ -1,12 +1,15 @@
-// Private live-guest qualification through the official mod API; not a public content build.
+// Private live-guest qualification through the official mod API; not a public
+// content build.
+#include "RuntimeFeatureRegistry.h"
 #include "controller_lifecycle.h"
 #include "name_registration.h"
-#include "resource_meter.h"
-#include "RuntimeFeatureRegistry.h"
 #include "pop_mod_api.h"
+#include "resource_meter.h"
+#include <algorithm>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <vector>
 
@@ -18,6 +21,13 @@ MajestyStockControllers::Registry recipes;
 MajestyCommunity::PanelLifecycle lifecycle(recipes);
 std::uint32_t scratch = 0;
 std::vector<std::uint32_t> hooks;
+bool traceRecruitment = false;
+bool attributeCompat = false;
+std::uint32_t attributeFunction = 0;
+bool traceArmed = false;
+unsigned traceCalls = 0;
+unsigned traceOperators = 0;
+std::vector<std::string> missingFunctions;
 void require(bool ok, const char *why) {
     if (!ok) {
         std::fprintf(stderr, "[alchemist-native-probe] refused: %s\n", why);
@@ -117,8 +127,133 @@ void meter(std::uint32_t p, std::uint64_t generation) {
         if (r.panelKey == s.recipe->panelKey)
             MajestyCommunity::PresentResourceMeter(ops, p, r);
 }
+std::string guestString(std::uint32_t p) {
+    const auto text = read(p), length = read(p + 8);
+    require(length < 256, "attribute string bound");
+    std::string result(length, '\0');
+    for (std::uint32_t i = 0; i < length; ++i) {
+        std::uint8_t ch = 0;
+        require(host->guest_read_u8(host, text + i, &ch) == POP_OK, "attribute string read");
+        result[i] = char(ch);
+    }
+    return result;
+}
+std::uint32_t valueRef(std::uint32_t value, std::uint32_t offset) {
+    return call(read(read(value) + offset), value);
+}
+void addAttribute(std::uint32_t context) {
+    // Native external-call arguments are references to GPL values. Resolve
+    // the real agent and use its original attribute map, not a host sidecar.
+    const auto value = [context](unsigned index) {
+        return read(read(read(context + 4) + index * 4));
+    };
+    const auto agent = call(0x006255e0U, valueRef(value(1), 0x5c));
+    require(agent != 0, "AddAttribute live agent");
+    const auto name = valueRef(value(2), 0x30);
+    const auto typeName = guestString(valueRef(value(3), 0x30));
+    const auto input = value(4), type = read(input + 4);
+    require((typeName == "boolean" && type == 6) || (typeName == "integer" && type == 1) ||
+                (typeName == "function" && type == 8),
+            "AddAttribute authored type agreement");
+    if (call(0x00626440U, agent, {name}) & 0xff)
+        return;
+    const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+    const auto copy = call(0x0062a810U, pool, {type});
+    // Original list-copy path 00639ac0..00639ada allocates by type then
+    // copies through virtual +18. Attribute insertion 006261c0 copies the
+    // key and takes the value pointer; the original saver owns both.
+    call(read(read(copy) + 0x18), copy, {input});
+    if (!(call(0x006261c0U, agent, {name, copy}) & 0xff)) {
+        call(0x0062aa20U, pool, {copy});
+        require(false, "AddAttribute original insertion refused");
+    }
+    std::fprintf(stderr, "[alchemist-attributes] installed name=%s type=%u\n",
+                 guestString(name).c_str(), type);
+}
+void registerAttributes() {
+    constexpr char name[] = "AddAttribute";
+    for (unsigned i = 0; i < sizeof name; ++i)
+        require(host->guest_write_u8(host, scratch + 128 + i, name[i]) == POP_OK,
+                "attribute registration string");
+    write(scratch + 96, scratch + 128);
+    write(scratch + 100, sizeof name - 1);
+    write(scratch + 104, sizeof name - 1);
+    const auto runtime = read(read(0x007218b4U) + 0x10);
+    // The recognized dispatcher hook below implements only this registered
+    // external name. NullFunction itself and all other calls stay original.
+    // Registry type 10 is void (00631bf5), distinct from the interpreter's
+    // internal no-result operation code 12.
+    call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 10, 0, 0});
+    attributeFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+    require(attributeFunction && read(attributeFunction + 20) == 0x005a9600U,
+            "AddAttribute registered dispatch identity");
+}
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (target == 0x00424f10U) {
+        next(inv, cpu);
+        registerAttributes();
+        return;
+    }
+    if (target == 0x00631b40U) {
+        const auto name = read(cpu->esp + 4);
+        next(inv, cpu);
+        if (!cpu->eax && missingFunctions.size() < 64) {
+            const auto text = guestString(name);
+            // The interpreter also probes constants in the function registry
+            // before resolving them elsewhere. Those misses are expected.
+            if (!text.empty() && text[0] != '#' &&
+                std::find(missingFunctions.begin(), missingFunctions.end(), text) ==
+                    missingFunctions.end()) {
+                missingFunctions.push_back(text);
+                std::fprintf(stderr, "[alchemist-recruit-trace] missing-function=%s\n",
+                             text.c_str());
+            }
+        }
+        return;
+    }
+    // Optional, bounded observation of the authored hero's GPL execution.
+    // Read the original function object's string and operator arguments;
+    // continue every call unchanged, including the guest's failure path.
+    if (target == 0x006381b0U) {
+        if (attributeCompat && self == attributeFunction) {
+            addAttribute(read(cpu->esp + 4) + 0x14);
+            returned(cpu, 0);
+            return;
+        }
+        if (!traceRecruitment) {
+            next(inv, cpu);
+            return;
+        }
+        char name[128] = {};
+        const auto text = read(self), length = read(self + 8);
+        bool valid = text && length && length < sizeof name;
+        for (std::uint32_t i = 0; valid && i < length; ++i) {
+            std::uint8_t ch = 0;
+            valid = host->guest_read_u8(host, text + i, &ch) == POP_OK;
+            name[i] = ch >= 32 && ch < 127 ? char(ch) : '?';
+        }
+        if (valid) {
+            if (std::strstr(name, "Alchemist_birth") || std::strstr(name, "alchemist_birth"))
+                traceArmed = true;
+            if (traceArmed && traceCalls++ < 2048)
+                std::fprintf(stderr, "[alchemist-recruit-trace] call=%s block=%08x target=%08x\n",
+                             name, read(self + 12), read(self + 20));
+        }
+        next(inv, cpu);
+        return;
+    }
+    if (target == 0x0063cb20U) {
+        const auto sp = cpu->esp;
+        const auto operation = read(sp + 4), left = read(sp + 8), right = read(sp + 12);
+        next(inv, cpu);
+        if (traceArmed && traceOperators++ < 256)
+            std::fprintf(stderr,
+                         "[alchemist-recruit-trace] operator=%u left-type=%u "
+                         "right-type=%u result=%08x\n",
+                         operation, left, right, cpu->eax);
+        return;
+    }
     if (target == 0x004cd8d0U) {
         next(inv, cpu);
         NameOps ops;
@@ -177,6 +312,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         !api->guest_call || !api->hook_install_ex)
         return POP_E_ABI;
     host = api;
+    const char *trace = std::getenv("RECOMP_ALCHEMIST_RECRUIT_TRACE");
+    traceRecruitment = trace && !std::strcmp(trace, "1");
+    const char *attributes = std::getenv("RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT");
+    attributeCompat = attributes && !std::strcmp(attributes, "1");
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
     std::string error;
@@ -186,7 +325,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             "original MMFR parser");
     require(MajestyStockControllers::ParseRegistry(c.data(), c.size(), &recipes, &error),
             "original MMCR parser");
-    if (host->guest_alloc(host, 64, &scratch) != POP_OK)
+    if (host->guest_alloc(host, 256, &scratch) != POP_OK)
         return POP_E_RANGE;
     for (const auto a :
          {0x004cd8d0U, 0x004ca4f0U, 0x00465f00U, 0x00465270U, 0x0047a360U, 0x0047a760U}) {
@@ -199,6 +338,23 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     }
     host->log(host, "Private Alchemist names/factory/setup probe loaded; Back/event entries "
                     "require official function discovery and remain unhooked.");
+    if (traceRecruitment || attributeCompat) {
+        std::vector<std::uint32_t> extraHooks{0x006381b0U};
+        if (traceRecruitment)
+            extraHooks.push_back(0x0063cb20U);
+        if (traceRecruitment)
+            extraHooks.push_back(0x00631b40U);
+        if (attributeCompat)
+            extraHooks.push_back(0x00424f10U);
+        for (const auto a : extraHooks) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, a, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
+    }
     return POP_OK;
 }
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
@@ -208,5 +364,6 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     if (scratch)
         host->guest_free(host, scratch);
     scratch = 0;
+    attributeFunction = 0;
     return POP_OK;
 }

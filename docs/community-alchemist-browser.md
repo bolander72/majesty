@@ -5,6 +5,57 @@ Lab**, including its original animated Alchemist, three building stages, voices,
 reagent economy, research and combat/sovereign alchemy. Lost Trail, Wayfinder and
 Trail Lodge remain retired. Production still runs the original game.
 
+## Current native qualification
+
+Candidate1093 now passes ordinary paid Laboratory construction. Trial1125
+spends1400 gold at a normally revealed, unobstructed site and saves completed
+ABx1 unit915, original agent40 (`AlchemistsLaboratory`), at153/235HP. Trial1129
+restores that exact original save and displays the authentic finished building,
+interior panel,600-gold Alchemist control and Brewing control. This supersedes
+the earlier unsuccessful placement/construction trials described below.
+
+Recruitment remains unqualified. Trial1130 charges600 gold and shows the
+generated name Aneline Amberglass; its immediate original save retains a
+recruitment order, not a living ALC1 agent. Waiting for the hero's birth exposes
+an API absent from the pinned Old engine: `$AddAttribute` resolves to
+`NullFunction`, leaving the movement marker absent and failing its next read.
+
+The private native probe has an opt-in
+`RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT=1` adapter for the author's boolean, integer
+and function attributes. It uses original GPL value allocation/copying,
+original agent attribute insertion and original function registration. It
+preserves the package and compiled GPL, does not substitute hero behavior or
+store state outside native agents, and uses a cached function identity to avoid
+reading strings on every ordinary call. Trials1137/1139/1141 install
+Should_Kite, KitingTime, AlchemistRecruitmentVoice and
+AlchemistBaseMovementApplied and pass the previously failing birth path.
+Later execution still fails at the boolean comparison return00644372; no
+living hero save/reload, alchemy gameplay or browser qualification is claimed.
+Trial1143's expanded bounded trace reaches the stock `List_Heroes` call and
+`ListSize` immediately before that failure. It reports no nonconstant function
+lookup misses. Treat a further missing intrinsic as unproven: next inspect the
+comparison's actual result/value ownership and the active GPL block instead of
+adding speculative API stubs.
+
+`RECOMP_ALCHEMIST_RECRUIT_TRACE=1` optionally observes native GPL calls,
+operator signatures and distinct function-registry misses. Output is bounded;
+constant probes beginning with `#` are excluded because their function-registry
+misses are expected. This observer neither changes a query nor suppresses an
+exception. Native fixture builds use the official `tools/test.py`, with the
+already installed Command Line Tools selected by `DEVELOPER_DIR` when the
+machine's selected Xcode requests license acceptance. No license is accepted
+or system developer-directory preference changed by the build.
+
+Next qualify the later failure, ordinary living recruitment and original
+save/reload before activating the remaining research/alchemy controllers or
+publishing any Alchemist assets. All these trials are private, muted and
+guarded; public runtime/content and player data remain unchanged.
+
+Rollout/manual-data audit: none required for this private source checkpoint.
+The audited surfaces are native function/attribute registries, original GMP
+ownership, build flags and production asset inclusion. Existing public players
+have no Alchemist state to migrate; this probe is not a production launch input.
+
 ## Source and package
 
 - [Alchemist source](https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-alchemist),
