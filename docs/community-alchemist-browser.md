@@ -493,13 +493,33 @@ Ten focused tests pass, covering destination isolation, stock preservation, prer
 classification coverage, native catalog collisions, potion override identity
 and semantic text merging. The script is private staging, not release activation.
 
-The Laboratory has not yet been exposed in a qualified building list. A prior
-level-2 Palace save still lacked it after preparation; newly generated worlds
-with the merged catalogs had a level-1 Palace. Its normal upgrade tooltip
-requires four heroes, and those worlds started with zero. Next establish that
-ordinary prerequisite and inspect actual native build eligibility before
-assuming a prototype-ID or descriptor problem. Do not repeat home-menu scans
-or infer gameplay support merely from opened resource files.
+The normal four-hero gate was met through paid recruitment at existing temples:
+two healers and two monks survive in original saves. The ordinary paid Palace
+upgrade completed. The Laboratory still failed to appear, isolating a native
+filter rather than a prerequisite problem.
+
+Pinned Old AP03 list construction at `00468a80..00468a97` masks the descriptor's
+second byte with `ff00`, requires `4200` and then requires first byte `41`.
+Only `AB` building IDs pass; the acquired `ALB1` does not. This is verified
+original code, not an inferred restriction from an unsuccessful literal scan.
+
+`scripts/alias-alchemist-native-buildings.py` assigns unused `ABs1..ABs3`
+identities to the actual Laboratory tiers. It adapts only the HEAD identity,
+upgrade references, directory/title/dependency keys and native controller family.
+Names, PRIM artwork/audio/geometry, prices, HP, income, hero slots, the produced
+actual Alchemist and compiled GPL stay unchanged. No stock actor is renamed or
+replaced. Occupied IDs are refused. Four focused alias tests pass.
+
+Private native trial1053 displays **Alchemy Lab, 1400 gold** with its original
+framed flask icon. Its genuine circular construction artwork also renders in
+the placement preview. Ordinary construction, completion and Alchemist
+recruitment remain unqualified; crowded starting locations produced red previews.
+Do not repeat the completed selector/menu discovery.
+
+Every new save selection must exclude **all** copied input GMP hashes. A
+profile can contain both Day0 and Day1 worlds. Trials that resume a specific
+receipt should copy only that bound GMP into a fresh owned save directory,
+preventing an older listed file from being mistaken for the intended world.
 
 Rollout/manual-data audit: none for this source checkpoint. The new script only
 creates private candidate files. Production assets, launcher configuration,
