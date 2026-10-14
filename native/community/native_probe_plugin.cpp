@@ -8,6 +8,7 @@
 #include "resource_meter.h"
 #include "research_descriptors.h"
 #include "research_activity.h"
+#include "upgrade_research_gate.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -137,6 +138,20 @@ struct ActivityOps {
         call(setter, unit, {0x0d425041U, activity.duration});
     }
 };
+struct UpgradeOps {
+    std::uint32_t completionAttribute(std::uint32_t action, std::uint32_t stockTemplate) {
+        if (!(read(0x006d81e0U) & 0xff))
+            call(0x004736a0U, 0);
+        ResearchOps ops;
+        auto descriptor = ops.lookup(action);
+        if (!descriptor)
+            descriptor = call(0x00474480U, 0, {stockTemplate});
+        return descriptor ? read(descriptor + 16) : 0;
+    }
+    bool complete(std::uint32_t unit, std::uint32_t attribute) {
+        return call(0x005a1c40U, unit, {attribute, 0}) != 0;
+    }
+};
 std::vector<unsigned char> file(const char *name, std::size_t limit) {
     std::ifstream in(std::string(host->mod_dir(host)) + "/" + name,
                      std::ios::binary | std::ios::ate);
@@ -207,6 +222,36 @@ void meter(std::uint32_t p, std::uint64_t generation) {
     for (const auto &r : recipes.meters)
         if (r.panelKey == s.recipe->panelKey)
             MajestyCommunity::PresentResourceMeter(ops, p, r);
+}
+bool upgradeAllowed(std::uint32_t controller, std::uint64_t generation) {
+    const auto session = lifecycle.find(controller);
+    if (!panelBridge || !session.recipe || !session.parent || session.generation != generation)
+        return true;
+    const auto unit = call(0x00481ec0U, controller);
+    const auto kindLevel = unit ? read(unit + 0x6c) >> 24 : 0;
+    const auto level = kindLevel >= '1' && kindLevel <= '3' ? kindLevel - '0' : 0;
+    UpgradeOps ops;
+    const bool allowed = MajestyCommunity::UpgradeResearchComplete(
+        ops, recipes, session.recipe->panelKey, level, unit);
+    static unsigned reports = 0;
+    if (reports++ < 4)
+        std::fprintf(stderr, "[alchemist-upgrade] unit=%08x level=%u research-complete=%d\n", unit,
+                     level, allowed);
+    return allowed;
+}
+void upgradePresentation(std::uint32_t controller, std::uint64_t generation) {
+    if (upgradeAllowed(controller, generation))
+        return;
+    const auto session = lifecycle.find(controller);
+    const auto window = read(controller + 0x14);
+    if (!window)
+        return;
+    MeterOps ops;
+    for (const auto &gate : recipes.upgradeGates)
+        if (gate.panelKey == session.recipe->panelKey) {
+            call(read(read(window) + 0x68), window, {gate.upgradeControlId, 0x0a, 1, 0});
+            ops.visible(window, gate.upgradePriceControlId, false);
+        }
 }
 void researchProgress() {
     if (!researchBridge || researchCompletionStaged)
@@ -723,6 +768,17 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         return;
     }
     const auto s = lifecycle.find(self);
+    if (target == 0x00465f00U && s.parent && s.recipe && panelBridge)
+        for (const auto &gate : recipes.upgradeGates)
+            if (gate.panelKey == s.recipe->panelKey &&
+                read(cpu->esp + 4) == gate.upgradeControlId &&
+                !upgradeAllowed(self, s.generation)) {
+                upgradePresentation(self, s.generation);
+                returned(cpu, 0);
+                host->log(host,
+                          "Private Laboratory upgrade rejected by authored research prerequisite.");
+                return;
+            }
     if (target == 0x00465f00U && s.parent && s.recipe &&
         read(cpu->esp + 4) == s.recipe->openCommandId) {
         const auto unit = call(0x00481ec0U, self), family = read(read(unit + 0x80) + 4) & 0xffffffU,
@@ -757,6 +813,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         meter(self, s.generation);
     if (target == 0x0047a760U)
         researchPresentation(self, s.generation);
+    if (target == 0x004652a0U || target == 0x00466110U)
+        upgradePresentation(self, s.generation);
 }
 } // namespace
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
@@ -795,12 +853,14 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 method "
                     "eligibility is unchanged. Private dispatch is explicitly opt-in.");
     if (panelBridge) {
-        std::uint32_t id = 0;
-        const auto status = host->hook_install_ex(host, 0x00466110U, 0, hook, POP_HOOK_WRAP,
-                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
-        if (status != POP_OK)
-            return status;
-        hooks.push_back(id);
+        for (const auto address : {0x00466110U, 0x004652a0U}) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
         host->log(host, "Private AP69 instances use original RET4/RET16 dispatch bridges.");
     }
     if (researchBridge) {

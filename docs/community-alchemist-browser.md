@@ -168,6 +168,26 @@ fixture compiles this code; live progress presentation, upgrade gating, paid
 execution and in-progress/completed save/reload remain unqualified and required
 before browser qualification and publication.
 
+The parent CG01/AP10 panel now applies the creator's declared upgrade gates
+under the private panel bridge: level1 requires Weapon Oil, level2 requires
+Phoenix Phial. It reads the original completion attribute from the registered
+descriptor, or the declared native stock completion template before Brewing
+has initialized the private rows. The original setup/event presenter runs
+first; an unmet prerequisite disables the existing upgrade control8007 and
+hides price8015. The control handler also refuses that upgrade command while
+the prerequisite is unmet. A completed prerequisite delegates all normal tier,
+gold, health and construction checks to the original handler.
+
+The focused fixture covers each tier independently, missing unit/descriptor,
+unrelated stock panels and the absence of a further level3 prerequisite.
+Native1206 observes the actual Lab at level1 with research completion false;
+it opens Brewing and returns twice, then saves/exits normally at149.5MiB RSS.
+This confirms the real prerequisite query/presentation runs without affecting
+stock navigation. The Lab is also damaged: this observation does not isolate
+research as the only disabled-upgrade condition, prove a paid tier upgrade,
+or qualify positive research completion. Those ordinary-play gates remain
+pending the rebuilt engine and actual paid research.
+
 Rollout/manual-data audit: none required for this private source checkpoint.
 The audited surfaces are native function/attribute registries, original GMP
 ownership, build flags and production asset inclusion. Existing public players

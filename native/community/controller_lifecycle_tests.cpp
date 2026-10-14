@@ -3,6 +3,7 @@
 #include "resource_meter.h"
 #include "research_descriptors.h"
 #include "research_activity.h"
+#include "upgrade_research_gate.h"
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
@@ -176,6 +177,32 @@ int main(int argc, char **argv) {
     MajestyStockControllers::Registry registry;
     std::string error;
     check(MajestyStockControllers::ParseRegistry(bytes.data(), bytes.size(), &registry, &error));
+    struct UpgradeOps {
+        bool weaponOil = false, phoenix = false, missingDescriptor = false;
+        std::uint32_t completionAttribute(std::uint32_t action, std::uint32_t stockTemplate) {
+            if (missingDescriptor)
+                return 0;
+            check((action == 10771 && stockTemplate == 5020) ||
+                  (action == 10774 && stockTemplate == 5043));
+            return action == 10771 ? 0x2a425041U : 0x29425041U;
+        }
+        bool complete(std::uint32_t unit, std::uint32_t attribute) {
+            check(unit == 300);
+            return attribute == 0x2a425041U ? weaponOil : phoenix;
+        }
+    } upgradeOps;
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.weaponOil = true;
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.phoenix = true;
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.missingDescriptor = true;
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 0));
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "stock-panel", 1, 300));
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 3, 300));
     check(registry.panels.size() == 1 && registry.meters.size() == 1 &&
           registry.researchRows.size() == 2 && registry.upgradeGates.size() == 1 &&
           registry.timedRageActions.size() == 1 && registry.rageCommandActions.size() == 1 &&
