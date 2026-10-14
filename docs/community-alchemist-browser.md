@@ -202,6 +202,45 @@ Phoenix Phial remains explicitly unconverted. All 556 original HEADs and
 548 supported engine parts compare exactly; eight unrelated stock engine
 exceptions remain explicit. No content is installed or browser-qualified.
 
+Phoenix Phial now has a source-bound **private representation**, rather than
+being replaced or having its unsupported fields discarded. Read-only inspection
+of the actual modern executable verified `IsInventoryItem = 0x400`, the
+`CanDropItem` alias to `ATTRIB_CanDropItem`, and the native CRC attribute-key
+algorithm/table. The resulting attribute keys are 529,619,686 for
+`ATTRIB_CanDropItem` and 3,775,212,793 for `PhoenixPhial`, both with authored
+initial value 0. Evidence is retained in
+`output/alchemist995-inventory-description-observation.json`.
+
+These newer attributes belong to a different modern description map. They are
+preserved in `inventory-description-extensions.json`; they are **not** stuffed
+into an unrelated old map or truncated into four-character names. The old SECD
+retains the source flag bits and all supported item fields, and the original
+`PXF1` artwork/full `PhoenixPhial` name remain intact. Runtime support for the
+extension remains required and unqualified. The default converter still refuses
+unsupported metadata unless this explicit private extension step is requested.
+
+Current `output/alchemist996-native-descriptions` has 26 unit DUNT records in an
+8,589-byte CAM, SHA-256
+`0491bdb6b4d86923d3aae7a06c01365e2530a62000c884d5c37b9430dba6b6ec`,
+plus the bound extension file. No runtime or browser qualification is inferred
+from having all resource records. The pinned guest remains DirectDraw; the
+modern executable is used only as read-only evidence for source semantics.
+
+The original `CreateNewInventoryItem` packs numeric index113 as `0x71564e49`
+(`INV` plus byte113), which fits its existing legacy inventory representation.
+The modern numeric-inventory drop query also returns the legacy drop type
+before inspecting standalone item attributes. The community's actual
+`gravestone` prelude consumes the Phial before either revival or ordinary death.
+No stock item behavior is substituted. Ordinary purchase, both lethal outcomes,
+revival at25%HP/flee and save/reload still require live qualification.
+
+```sh
+python3 scripts/stage-alchemist-native-descriptions.py \
+  --composition output/alchemist-source-composition --game-source /path/to/Majesty \
+  --package /path/to/CustomGuildAlchemist --inventory-source /path/to/Majesty \
+  --out output/alchemist-native-inventory-descriptions
+```
+
 ```sh
 python3 scripts/stage-alchemist-native-actions.py \
   --composition output/alchemist-source-composition \
@@ -283,11 +322,12 @@ python3 -m unittest discover -s tests -p test_alchemist_compiler_staging.py
 python3 -m unittest discover -s tests -p test_alchemist_legacy_game_parts.py
 python3 -m unittest discover -s tests -p test_alchemist_legacy_engine_parts.py
 python3 -m unittest discover -s tests -p test_alchemist_native_actions_particles.py
+python3 -m unittest discover -s tests -p test_alchemist_inventory_description.py
 ```
 
 The authentic composition test requires `MAJESTY_ALCHEMIST_PACKAGE` and
 `MAJESTY_GAME_SOURCE` pointing to private Workshop and installed game inputs.
-With those set, all 34 focused Python checks and six JavaScript checks pass.
+With those set, all 36 focused Python checks and six JavaScript checks pass.
 This includes unchanged unrelated authored functions, both sides of the
 temporary stat lifecycle, denied Fire Balm/allowed Strength purchase policy,
 and all generated action validator bindings.
@@ -302,3 +342,6 @@ Additional original-file checks verify complete action byte comparisons,
 actual callbacks/validators, spell ranks, animation/sound choices, durations,
 and Miasma's authored emitter, bounds, colours and size. Passing these static
 conversions does not prove in-game spell execution or native UI compatibility.
+Inventory checks preserve actual Phial art/name/flag/attributes, keep its newer
+attributes out of the old maps, and reject changed source/flag/value bindings or
+an invented runtime qualification claim.

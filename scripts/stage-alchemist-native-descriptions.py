@@ -54,7 +54,7 @@ def native_names(table, records, tag):
             table[name] = identity
 
 
-def stage(composition, game, package, output):
+def stage(composition, game, package, output, inventory_source=None):
     if output.exists():
         raise ValueError('Preserve existing native-description staging; choose a new directory')
     helper = helpers()
@@ -126,7 +126,8 @@ def stage(composition, game, package, output):
             name = record.to_element().get('Name', '').casefold()
             if private_tables['Sound'].get(name) != record.description_id:
                 raise ValueError('Private sound artwork/XML binding differs: ' + record.description_id)
-    descriptions, pending = {}, []
+    descriptions, pending, inventory_extensions = {}, [], []
+    modern_raw = inspection.read(inventory_source, 'MajestyHD.exe') if inventory_source is not None else None
     for record in document.records:
         if record.type != 'Unit':
             continue
@@ -139,11 +140,18 @@ def stage(composition, game, package, output):
             game_part = None
             if subtype in GAME_ENCODERS:
                 names = private_tables['Action' if subtype == 'Character' else 'Unit']
-                game_part = GAME_ENCODERS[subtype](element.find('Game'), names, {'CGAL': 'CG01'})
+                if record.description_id == 'PXF1' and modern_raw is not None:
+                    from lib.legacy_inventory_description import plan, encode_game
+                    extension = plan(element, modern_raw)
+                    game_part = encode_game(element.find('Game'), names, {'CGAL': 'CG01'}, extension)
+                    inventory_extensions.append(extension)
+                else:
+                    game_part = GAME_ENCODERS[subtype](element.find('Game'), names, {'CGAL': 'CG01'})
             descriptions[record.description_id] = descriptor(element, private_tables, game_part)
         except ValueError as error:
             pending.append(dict(id=record.description_id, reason=str(error)))
     archive = encode_unit_cam(descriptions)
+    extension_raw = (json.dumps(inventory_extensions, indent=2) + '\n').encode()
     report = dict(format='majesty-alchemist-native-description-stage-v1',
                   sourceCompositionSha256=registry.sha((composition / 'source-composition.json').read_bytes()),
                   definitionSha256=contract['definitionSha256'], originalInputs=inputs,
@@ -153,6 +161,10 @@ def stage(composition, game, package, output):
                          for identity, raw in descriptions.items()},
                   archive=dict(path='alchemist-native-unittype.cam', bytes=len(archive), sha256=registry.sha(archive)),
                   pending=pending, actionPartsConverted=False, particleConverted='AMM4' in descriptions,
+                  inventoryExtensions=inventory_extensions,
+                  inventoryExtensionFile=dict(path='inventory-description-extensions.json',
+                                              bytes=len(extension_raw), sha256=registry.sha(extension_raw)),
+                  inventoryRuntimeRequired=bool(inventory_extensions),
                   completeNativeDescriptors=False, nativeHooksQualified=False,
                   browserPlayable=False, installed=False, published=False,
                   soundBindingVerified=True, completeSoundBodyCompatibilityQualified=False)
@@ -160,6 +172,7 @@ def stage(composition, game, package, output):
     for identity, raw in descriptions.items():
         (output / (identity + '.dunt')).write_bytes(raw)
     (output / 'alchemist-native-unittype.cam').write_bytes(archive)
+    (output / 'inventory-description-extensions.json').write_bytes(extension_raw)
     (output / 'native-description-stage.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
@@ -168,9 +181,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('composition', 'game-source', 'package', 'out'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--inventory-source', type=Path, help='Private audited modern source directory; does not change the pinned guest')
     args = parser.parse_args()
     try:
-        report = stage(args.composition, args.game_source, args.package, args.out)
+        report = stage(args.composition, args.game_source, args.package, args.out, args.inventory_source)
     except (OSError, ValueError) as error:
         parser.exit(1, f'Alchemist native-description staging refused: {error}\n')
     print(json.dumps(dict(privateUnitCount=report['privateUnitCount'], exactStockHeaders=report['exactStockHeaders'],
