@@ -123,6 +123,44 @@ inputs from a source-composition receipt and the qualified SDK runtime. It
 refuses altered composed source, incomplete policy composition, a different
 compiler/runtime, and existing output directories.
 
+`scripts/lib/legacy_description_game.py` now serializes the complete supported
+Character, Building and Overlay **game parts** directly from XML. It does not
+clone a stock actor. The scalar order and version1 key/value maps were checked
+against the pinned guest's vehicle/building/overlay writers and original CAM
+bytes. Unit and Action IDs use separate namespaces: stock descriptions reuse
+FourCCs across these types, so one global name/ID dictionary loses valid spells.
+
+Private staging `output/alchemist984-game-parts` contains 23 SECD blocks:
+the actual Alchemist (including all three private spells, Dagger/Leather,
+`NM18`, `hAL0` and full authored stats), the two scripted spell actors, three
+Lab tiers with their actual prices/production/upgrades, and all 17 overlays.
+`CGAL` is explicitly remapped to staged `CG01`, matching the existing registry.
+HEAD/PRIM artwork, movement/script attachments, projectile/particle data,
+action parts and the remaining inventory actor still require conversion and
+integration. These isolated `.secd` files are not installed or discoverable by
+the live game; they do not establish complete native descriptions.
+
+The original corpus comparison matches **404 complete game parts byte for
+byte**: 85 Characters, 114 Buildings and 205 Overlays. Thirteen other stock
+Characters differ only at `RecruitDelay`/`NameGenType` words containing
+`0xCDCDCDCD`. Their exact discrepancies are retained in the receipt; that value
+is not copied into generated data, and the receipt does not call the whole
+corpus a successful round trip. Independent assignments for the co-occurring
+stock `NotFlaggable`/`NotSpellTarget` character flags remain unqualified; only
+their proved combined mask is supported.
+
+Phoenix Phial's authored `IsInventoryItem` flag and its `CanDropItem`/
+`PhoenixPhial` description attributes need native compatibility work. The
+converter refuses unsupported flags and unresolved attribute bindings instead
+of dropping them or substituting a stock item. Unsupported fields, ambiguous
+names, duplicate keys, bad bounds and unknown equipment also fail closed.
+
+```sh
+python3 scripts/stage-alchemist-game-parts.py \
+  --composition output/alchemist-source-composition \
+  --game-source /path/to/Majesty --out output/alchemist-game-parts
+```
+
 The existing Mod Manager DLL cannot run directly in WASM. Its supported GOG
 executable is different from our pinned `MajestyHD - Old.exe`, SHA-256
 `654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542`.
@@ -166,11 +204,15 @@ python3 -m unittest discover -s tests -p test_alchemist_package_inspection.py
 python3 -m unittest discover -s tests -p test_alchemist_runtime_staging.py
 python3 -m unittest discover -s tests -p test_alchemist_gameplay_composition.py
 python3 -m unittest discover -s tests -p test_alchemist_compiler_staging.py
+python3 -m unittest discover -s tests -p test_alchemist_legacy_game_parts.py
 ```
 
 The authentic composition test requires `MAJESTY_ALCHEMIST_PACKAGE` and
 `MAJESTY_GAME_SOURCE` pointing to private Workshop and installed game inputs.
-With those set, all 16 focused Python checks and six JavaScript checks pass.
+With those set, all 23 focused Python checks and six JavaScript checks pass.
 This includes unchanged unrelated authored functions, both sides of the
 temporary stat lifecycle, denied Fire Balm/allowed Strength purchase policy,
 and all generated action validator bindings.
+The original-file integration check also verifies stock byte comparisons,
+explicit discrepancies, actual hero equipment/spell IDs and all three Lab
+prices/production bindings. It does not launch the game.
