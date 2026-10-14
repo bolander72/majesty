@@ -14,28 +14,37 @@ restores that exact original save and displays the authentic finished building,
 interior panel,600-gold Alchemist control and Brewing control. This supersedes
 the earlier unsuccessful placement/construction trials described below.
 
-Recruitment remains unqualified. Trial1130 charges600 gold and shows the
-generated name Aneline Amberglass; its immediate original save retains a
-recruitment order, not a living ALC1 agent. Waiting for the hero's birth exposes
-an API absent from the pinned Old engine: `$AddAttribute` resolves to
-`NullFunction`, leaving the movement marker absent and failing its next read.
+Ordinary paid native recruitment is now qualified. Trial1161 charges600 gold,
+shows the native recruitment notification and saves living ALC1 unit1076,
+agent44, title `Alchemist`, at15HP. Trial1163 restores that exact original GMP
+in a fresh owned profile. Its native Laboratory roster shows Ameline Amberglass
+alive at level3; trial1165 selects the hero and displays the authentic portrait,
+Alchemist class, health and native Spells/Items/Stats controls. Later combat in
+trial1163 kills this fragile hero normally, and the engine saves and exits
+without a crash. Preserve living receipt1162 separately from dead receipt1164.
 
 The private native probe has an opt-in
 `RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT=1` adapter for the author's boolean, integer
 and function attributes. It uses original GPL value allocation/copying,
-original agent attribute insertion and original function registration. It
-preserves the package and compiled GPL, does not substitute hero behavior or
-store state outside native agents, and uses a cached function identity to avoid
-reading strings on every ordinary call. Trials1137/1139/1141 install
-Should_Kite, KitingTime, AlchemistRecruitmentVoice and
-AlchemistBaseMovementApplied and pass the previously failing birth path.
-Later execution still fails at the boolean comparison return00644372; no
-living hero save/reload, alchemy gameplay or browser qualification is claimed.
-Trial1143's expanded bounded trace reaches the stock `List_Heroes` call and
-`ListSize` immediately before that failure. It reports no nonconstant function
-lookup misses. Treat a further missing intrinsic as unproven: next inspect the
-comparison's actual result/value ownership and the active GPL block instead of
-adding speculative API stubs.
+original agent attribute insertion and original function registration, keeping
+state in native agents and leaving the package and compiled GPL unchanged.
+The original save and fresh reload retain Should_Kite=False, KitingTime=0,
+AlchemistBaseMovementApplied=True and the actual Alchemist_Recruitment_Voice
+function context; Home still references the Laboratory's original agent40.
+
+An earlier adapter bug registered AddAttribute with result type10. That is the
+function registry's missing-symbol fallback, not void. Allocating it from the
+nine native value buckets overlaps the pool's growth settings. Trial1155
+witnesses a corrupted boolean-growth request of17,527,268 objects; trial1153
+witnesses a returned value with zero type/vtable immediately before the failed
+comparison. The adapter now registers result type0, independently verified
+against the original SetAttribute binding. Registration checks that result,
+and insertion checks the original typed allocation, independent map ownership
+and all nine unchanged growth settings. The previous later-AI-crash checkpoint
+is superseded; do not add speculative AI replacements or reset growth fields.
+
+Native play is qualified only for the checks above. Research, full reagent/oil/
+sovereign-spell/Phoenix behavior and browser play/publication remain pending.
 
 `RECOMP_ALCHEMIST_RECRUIT_TRACE=1` optionally observes native GPL calls,
 operator signatures and distinct function-registry misses. Output is bounded;
@@ -46,9 +55,9 @@ already installed Command Line Tools selected by `DEVELOPER_DIR` when the
 machine's selected Xcode requests license acceptance. No license is accepted
 or system developer-directory preference changed by the build.
 
-Next qualify the later failure, ordinary living recruitment and original
-save/reload before activating the remaining research/alchemy controllers or
-publishing any Alchemist assets. All these trials are private, muted and
+Next activate and qualify the remaining research/alchemy controllers, then
+qualify the actual mechanics and browser integration before publishing assets.
+All these trials are private, muted and
 guarded; public runtime/content and player data remain unchanged.
 
 Rollout/manual-data audit: none required for this private source checkpoint.

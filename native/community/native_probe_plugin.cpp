@@ -27,6 +27,7 @@ std::uint32_t attributeFunction = 0;
 bool traceArmed = false;
 unsigned traceCalls = 0;
 unsigned traceOperators = 0;
+unsigned traceValues = 0;
 std::vector<std::string> missingFunctions;
 void require(bool ok, const char *why) {
     if (!ok) {
@@ -158,7 +159,15 @@ void addAttribute(std::uint32_t context) {
     if (call(0x00626440U, agent, {name}) & 0xff)
         return;
     const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+    std::uint32_t growthBefore[9];
+    for (unsigned i = 0; i < 9; ++i)
+        growthBefore[i] = read(pool + 0xa4 + i * 4);
+    if (traceRecruitment)
+        std::fprintf(stderr,
+                     "[alchemist-pool-trace] attribute-before name=%s pool=%08x growth=%u\n",
+                     guestString(name).c_str(), pool, read(pool + 0xbc));
     const auto copy = call(0x0062a810U, pool, {type});
+    require(copy && read(copy + 4) == type, "AddAttribute original typed allocation");
     // Original list-copy path 00639ac0..00639ada allocates by type then
     // copies through virtual +18. Attribute insertion 006261c0 copies the
     // key and takes the value pointer; the original saver owns both.
@@ -167,29 +176,119 @@ void addAttribute(std::uint32_t context) {
         call(0x0062aa20U, pool, {copy});
         require(false, "AddAttribute original insertion refused");
     }
+    require(call(0x006263d0U, agent, {name}) == copy,
+            "AddAttribute original map owns independent value");
+    for (unsigned i = 0; i < 9; ++i)
+        require(read(pool + 0xa4 + i * 4) == growthBefore[i],
+                "AddAttribute preserves native pool growth settings");
     std::fprintf(stderr, "[alchemist-attributes] installed name=%s type=%u\n",
                  guestString(name).c_str(), type);
+    if (traceRecruitment)
+        std::fprintf(stderr, "[alchemist-pool-trace] attribute-after name=%s pool=%08x growth=%u\n",
+                     guestString(name).c_str(), pool, read(pool + 0xbc));
 }
 void registerAttributes() {
-    constexpr char name[] = "AddAttribute";
-    for (unsigned i = 0; i < sizeof name; ++i)
-        require(host->guest_write_u8(host, scratch + 128 + i, name[i]) == POP_OK,
-                "attribute registration string");
-    write(scratch + 96, scratch + 128);
-    write(scratch + 100, sizeof name - 1);
-    write(scratch + 104, sizeof name - 1);
+    const auto prepareName = [](const char *name) {
+        const auto length = std::strlen(name);
+        require(length < 64, "attribute registration name bound");
+        for (unsigned i = 0; i <= length; ++i)
+            require(host->guest_write_u8(host, scratch + 128 + i, name[i]) == POP_OK,
+                    "attribute registration string");
+        write(scratch + 96, scratch + 128);
+        write(scratch + 100, length);
+        write(scratch + 104, length);
+    };
     const auto runtime = read(read(0x007218b4U) + 0x10);
+    for (const char *name : {"SetAttribute"}) {
+        prepareName(name);
+        require(call(0x00631b40U, read(runtime + 8), {scratch + 96}) != 0,
+                "stock void binding exists");
+        const auto type = call(0x00631ba0U, read(runtime + 8), {scratch + 96});
+        require(type == 0, "stock void registry type");
+        if (traceRecruitment)
+            std::fprintf(stderr, "[alchemist-attributes] stock-void name=%s type=%u\n", name, type);
+    }
+    prepareName("AddAttribute");
     // The recognized dispatcher hook below implements only this registered
     // external name. NullFunction itself and all other calls stay original.
-    // Registry type 10 is void (00631bf5), distinct from the interpreter's
-    // internal no-result operation code 12.
-    call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 10, 0, 0});
+    // Void is the original None value type 0. Type 10 is the registry's
+    // missing-symbol fallback and must never be allocated from the nine
+    // value buckets: its index overlaps the pool's growth settings.
+    call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 0, 0, 0});
+    require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 0,
+            "AddAttribute registered as original None result");
     attributeFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
     require(attributeFunction && read(attributeFunction + 20) == 0x005a9600U,
             "AddAttribute registered dispatch identity");
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (target == 0x0062a6a0U) {
+        next(inv, cpu);
+        std::fprintf(stderr, "[alchemist-pool-trace] constructor pool=%08x growth=%u\n", self,
+                     read(self + 0xbc));
+        return;
+    }
+    if (target == 0x0062a7c0U) {
+        const auto type = read(cpu->esp + 4), count = read(cpu->esp + 8);
+        next(inv, cpu);
+        std::fprintf(stderr,
+                     "[alchemist-pool-trace] setter pool=%08x type=%u growth=%u boolean=%u\n", self,
+                     type, count, read(self + 0xbc));
+        return;
+    }
+    if (target == 0x0062abf0U) {
+        const auto type = read(cpu->esp + 4), count = read(cpu->esp + 8);
+        next(inv, cpu);
+        if (traceArmed && type == 6) {
+            const auto bucket = self + (type + 1) * 16;
+            std::fprintf(stderr,
+                         "[alchemist-pool-trace] boolean-growth count=%u pool=%08x "
+                         "start=%08x end=%08x capacity=%08x\n",
+                         count, self, read(bucket + 4), read(bucket + 8), read(bucket + 12));
+        }
+        return;
+    }
+    if (target == 0x0062a810U || target == 0x0062a890U) {
+        const auto type = read(cpu->esp + 4), caller = read(cpu->esp), instruction = cpu->esi;
+        next(inv, cpu);
+        if (traceArmed && traceValues++ < 1024) {
+            std::uint32_t actual = 0, vtable = 0, boolean = 0;
+            if (cpu->eax) {
+                host->guest_read_u32(host, cpu->eax, &vtable);
+                host->guest_read_u32(host, cpu->eax + 4, &actual);
+                if (vtable)
+                    host->guest_read_u32(host, vtable + 0x2c, &boolean);
+            }
+            std::fprintf(
+                stderr,
+                "[alchemist-value-trace] requested=%u actual=%u value=%08x "
+                "vtable=%08x bool-method=%08x allocator=%08x caller=%08x instruction=%08x\n",
+                type, actual, cpu->eax, vtable, boolean, target, caller, instruction);
+            if (caller == 0x0061e586U) {
+                std::fprintf(stderr,
+                             "[alchemist-result-trace] operation=%u result-ref=%08x "
+                             "left-ref=%08x left-value=%08x right-ref=%08x right-value=%08x\n",
+                             read(instruction), read(instruction + 16), read(instruction + 20),
+                             read(read(instruction + 20)), read(instruction + 24),
+                             read(read(instruction + 24)));
+            }
+            if (type == 6 && actual != type) {
+                const auto bucket = self + (type + 1) * 16;
+                const auto start = read(bucket + 4), end = read(bucket + 8);
+                std::fprintf(stderr,
+                             "[alchemist-pool-trace] invalid-boolean pool=%08x "
+                             "start=%08x end=%08x capacity=%08x\n",
+                             self, start, end, read(bucket + 12));
+                if (end >= start && end - start <= 4096) {
+                    for (auto at = end > start + 64 ? end - 64 : start; at < end; at += 4)
+                        std::fprintf(stderr, "[alchemist-pool-trace] slot=%08x value=%08x\n", at,
+                                     read(at));
+                }
+            }
+        }
+        return;
+    }
     if (target == 0x00424f10U) {
         next(inv, cpu);
         registerAttributes();
@@ -344,6 +443,16 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             extraHooks.push_back(0x0063cb20U);
         if (traceRecruitment)
             extraHooks.push_back(0x00631b40U);
+        if (traceRecruitment)
+            extraHooks.push_back(0x0062a810U);
+        if (traceRecruitment)
+            extraHooks.push_back(0x0062a890U);
+        if (traceRecruitment)
+            extraHooks.push_back(0x0062abf0U);
+        if (traceRecruitment) {
+            extraHooks.push_back(0x0062a6a0U);
+            extraHooks.push_back(0x0062a7c0U);
+        }
         if (attributeCompat)
             extraHooks.push_back(0x00424f10U);
         for (const auto a : extraHooks) {
