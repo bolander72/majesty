@@ -128,6 +128,46 @@ vtable+124. Current native534 classifies004ABF70 as a non-hookable block.
 Curate its real entry through source/config and official regeneration before
 installing the completion wrapper; never change generated hookability flags.
 
+Native1197 independently observes the active original world table00682950 and
+its simulation-update slot+8C at005D9680. The main-loop caller4179DB invokes
+that slot only during phase3, and native534 already carries a hookable entry
+for005D9680. The muted observation trial exits normally at155.8MiB peak RSS.
+
+The private `RECOMP_ALCHEMIST_RESEARCH_BRIDGE=1` implementation now connects
+the owner to native submission00495900, capture immediately after original
+simulation update005D9680, and literal completion004ABF70. The wrapper restores
+AP10 recruitment around native completion, verifies the original descriptor
+identity, suppresses AP69 rendering during that staged callback, and drops raw
+owner references at the original quest/GPL teardown00628E60. Native gold,
+timing, completion attribute, alerts and cleanup remain original. This code
+compiles in official fixture1198, but the flag stays off in native534 trials:
+that older binary cannot install the completion entry hook. No paid research
+or completion is claimed by the compilation result.
+
+`scripts/prepare-alchemist-research-engine.py` prepares a separate engine
+directory, verifies the pinned executable and literal dispatch/prologue bytes,
+and adds only00474C10/004ABF70 to source `entry_points`. Original instruction
+patches, overrides and gameplay settings remain exact. It snapshots native
+source bytes and preserves earlier builds. Four focused tests cover independent
+executable/config pins, dispatch mismatch and idempotent scoped curation.
+
+The full official regeneration in1195 stopped while reading an original
+Ghidra listing offloaded to iCloud, before compilation. Finder reports full
+iCloud storage; Download Now has not restored the first missing input
+`functions/004017E0.asm` (lowercase filename on disk). Do not restart this
+build until the actual original listing files are local. No source, game or
+save file was deleted to free storage, and no generated metadata was edited.
+Engine1194 is staged, not built or qualified. The private progress presenter
+uses Old AP10's actual streamed-message slot+68 (native callsites46577F/465790),
+not the newer Mod Manager's+74. Its simulation clock0071C6A8 is independently
+read by original research submission at4AC383 and AP10 progress at46574A.
+The creator's action/price/progress/active-display controls receive the original
+four-word progress message, using captured native timing. Controller generation
+checks and quest teardown prevent updates to retired panels. The original
+fixture compiles this code; live progress presentation, upgrade gating, paid
+execution and in-progress/completed save/reload remain unqualified and required
+before browser qualification and publication.
+
 Rollout/manual-data audit: none required for this private source checkpoint.
 The audited surfaces are native function/attribute registries, original GMP
 ownership, build flags and production asset inclusion. Existing public players

@@ -24,11 +24,16 @@ MajestyStockControllers::Registry recipes;
 MajestyCommunity::PanelLifecycle lifecycle(recipes);
 MajestyCommunity::PrivateControllerDispatch privateDispatch;
 MajestyCommunity::ResearchDescriptors researchDescriptors;
+MajestyCommunity::ResearchActivity researchActivity;
 std::uint32_t scratch = 0;
 std::vector<std::uint32_t> hooks;
 bool traceRecruitment = false;
 bool attributeCompat = false;
 bool panelBridge = false;
+bool researchBridge = false;
+bool researchCompletionStaged = false;
+std::uint32_t researchController = 0;
+std::uint64_t researchControllerGeneration = 0;
 std::uint32_t attributeFunction = 0;
 bool traceArmed = false;
 unsigned traceCalls = 0;
@@ -119,6 +124,19 @@ struct ResearchOps {
         return lookup(id) == descriptor;
     }
 };
+struct ActivityOps {
+    MajestyCommunity::BuildingActivity capture(std::uint32_t unit) {
+        return {call(0x005a1c40U, unit, {0x2c425041U, 0}),
+                call(0x005a1c40U, unit, {0x38425041U, 0}),
+                call(0x005a1c40U, unit, {0x0d425041U, 0})};
+    }
+    void restore(std::uint32_t unit, const MajestyCommunity::BuildingActivity &activity) {
+        const auto setter = read(read(unit) + 0x124);
+        call(setter, unit, {0x2c425041U, activity.command});
+        call(setter, unit, {0x38425041U, activity.startedAt});
+        call(setter, unit, {0x0d425041U, activity.duration});
+    }
+};
 std::vector<unsigned char> file(const char *name, std::size_t limit) {
     std::ifstream in(std::string(host->mod_dir(host)) + "/" + name,
                      std::ios::binary | std::ios::ate);
@@ -190,6 +208,47 @@ void meter(std::uint32_t p, std::uint64_t generation) {
         if (r.panelKey == s.recipe->panelKey)
             MajestyCommunity::PresentResourceMeter(ops, p, r);
 }
+void researchProgress() {
+    if (!researchBridge || researchCompletionStaged)
+        return;
+    const auto session = lifecycle.find(researchController);
+    if (!session.recipe || session.parent || session.generation != researchControllerGeneration)
+        return;
+    MeterOps ops;
+    const auto unit = ops.unit(researchController), window = ops.window(researchController);
+    if (!unit || !window)
+        return;
+    const bool busy = researchActivity.phase() != MajestyCommunity::ResearchActivity::Phase::Idle;
+    for (const auto &row : recipes.researchRows) {
+        if (row.panelKey != session.recipe->panelKey)
+            continue;
+        const bool active =
+            researchActivity.phase() == MajestyCommunity::ResearchActivity::Phase::Active &&
+            researchActivity.unit() == unit && researchActivity.command() == row.actionControlId;
+        ops.visible(window, row.progressControlId, active);
+        ops.visible(window, row.activeDisplayControlId, active);
+        const auto send = [&](std::uint32_t control, std::uint32_t message, std::uint32_t parameter,
+                              std::uint32_t value) {
+            // Old AP10's literal progress messages at46577F/465790 use +68,
+            // unlike the newer Mod Manager build's +74 streamed-message slot.
+            call(read(read(window) + 0x68), window, {control, message, parameter, value});
+        };
+        if (active) {
+            ops.visible(window, row.actionControlId, false);
+            ops.visible(window, row.priceControlId, false);
+            const auto &order = researchActivity.submitted();
+            const auto now = read(0x0071c6a8U);
+            write(scratch + 192, 7);
+            write(scratch + 196, now > order.startedAt ? now - order.startedAt : 0);
+            write(scratch + 200, 0);
+            write(scratch + 204, order.duration);
+            send(row.progressControlId, 0x29, 0, scratch + 192);
+            send(row.progressControlId, 8, 0, 0);
+        } else if (busy) {
+            send(row.actionControlId, 0x0a, 1, 0);
+        }
+    }
+}
 void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
     const auto session = lifecycle.find(controller);
     if (!panelBridge || !session.recipe || session.parent || session.generation != generation)
@@ -203,6 +262,17 @@ void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
     const auto unit = ops.unit(controller), window = ops.window(controller);
     if (!unit || !window)
         return;
+    static bool updateReported = false;
+    if (!updateReported) {
+        const auto manager = read(0x0071c68cU);
+        const auto world = manager ? read(manager + 0x10) : 0;
+        if (world) {
+            std::fprintf(stderr,
+                         "[alchemist-research] original-world=%08x table=%08x update-entry=%08x\n",
+                         world, read(world), read(read(world) + 0x8c));
+            updateReported = true;
+        }
+    }
     for (const auto &row : recipes.researchRows) {
         if (row.panelKey != session.recipe->panelKey)
             continue;
@@ -246,6 +316,41 @@ void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
             ops.visible(window, action.iconControlId, buildingLevel >= action.requiredLevel);
             ops.visible(window, action.priceControlId, false);
         }
+    researchProgress();
+}
+void beginResearch(std::uint32_t controller,
+                   const MajestyStockControllers::ResearchRowRecord &row) {
+    ActivityOps activity;
+    ResearchOps descriptors;
+    const auto unit = descriptors.unit(controller);
+    const auto descriptor = descriptors.lookup(row.actionControlId);
+    if (!unit || !descriptor ||
+        researchActivity.phase() != MajestyCommunity::ResearchActivity::Phase::Idle)
+        return;
+    const auto owner = read(unit + 0x84), unitId = read(unit + 0x70);
+    if (!owner || !unitId)
+        return;
+    // Retain the stock row's level/completion/construction/health guards in
+    // addition to the creator's original AP99 gold validation.
+    const auto kindLevel = read(unit + 0x6c) >> 24;
+    const auto level = kindLevel >= '1' && kindLevel <= '3' ? kindLevel - '0' : 0;
+    if (level < read(descriptor + 4) || call(0x005a1c40U, unit, {read(descriptor + 16), 0}) ||
+        !call(0x005a1c40U, unit, {0x02425041U, 0}) || (call(0x00431630U, unit) & 0xff))
+        return;
+    const auto recruitment = activity.capture(unit);
+    activity.restore(unit, {});
+    const bool affordable = (call(0x00474c10U, controller, {row.actionControlId}) & 0xff) != 0;
+    if (!affordable) {
+        activity.restore(unit, recruitment);
+        return;
+    }
+    require(researchActivity.begin(unit, row.actionControlId), "private research owner");
+    call(0x00495900U, 0, {owner, unit, row.actionControlId});
+    const bool captured = researchActivity.capture(activity, recruitment);
+    if (!captured)
+        activity.restore(unit, recruitment);
+    host->log(host, captured ? "Private research submitted and native tuple captured."
+                             : "Private research submitted; original queued tuple pending.");
 }
 std::string guestString(std::uint32_t p) {
     const auto text = read(p), length = read(p + 8);
@@ -342,6 +447,48 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (researchBridge && target == 0x00628e60U) {
+        // The original quest/GPL teardown retires all raw world references.
+        // No host activity tuple may survive into a fresh loaded world.
+        researchActivity = {};
+        researchController = 0;
+        researchControllerGeneration = 0;
+        next(inv, cpu);
+        return;
+    }
+    if (researchBridge && target == 0x005d9680U) {
+        const bool pending =
+            researchActivity.phase() == MajestyCommunity::ResearchActivity::Phase::Pending;
+        ActivityOps activity;
+        const auto recruitment = pending ? activity.capture(researchActivity.unit())
+                                         : MajestyCommunity::BuildingActivity{};
+        next(inv, cpu);
+        if (pending && researchActivity.capture(activity, recruitment))
+            host->log(host,
+                      "Original simulation update installed private research; AP10 restored.");
+        researchProgress();
+        return;
+    }
+    if (researchBridge && target == 0x004abf70U) {
+        const auto unit = read(cpu->esp + 8), eventType = read(cpu->esp + 20);
+        ActivityOps activity;
+        const auto command = researchActivity.command();
+        researchCompletionStaged = true;
+        const bool handled = researchActivity.complete(activity, unit, eventType, [&] {
+            ResearchOps descriptors;
+            require(call(0x00474480U, 0, {command}) == descriptors.lookup(command),
+                    "private completion descriptor still owned by native AP99");
+            next(inv, cpu);
+        });
+        researchCompletionStaged = false;
+        if (!handled)
+            next(inv, cpu);
+        else if (researchActivity.phase() == MajestyCommunity::ResearchActivity::Phase::Idle) {
+            host->log(host, "Original event2009 completed private research; AP10 restored.");
+            researchPresentation(researchController, researchControllerGeneration);
+        }
+        return;
+    }
     const auto privateEntry = privateDispatch.find(self);
     const auto privateSession = lifecycle.find(self);
     if (privateEntry.table && privateEntry.generation == privateSession.generation &&
@@ -361,10 +508,16 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 returned(cpu, 1);
             } else {
                 bool privateAction = false;
-                for (const auto &row : recipes.researchRows)
-                    privateAction =
-                        privateAction || (row.panelKey == privateSession.recipe->panelKey &&
-                                          row.actionControlId == command);
+                for (const auto &row : recipes.researchRows) {
+                    const bool selected = row.panelKey == privateSession.recipe->panelKey &&
+                                          row.actionControlId == command;
+                    privateAction = privateAction || selected;
+                    if (selected && researchBridge) {
+                        beginResearch(self, row);
+                        returned(cpu, 0);
+                        return;
+                    }
+                }
                 for (const auto &action : recipes.timedRageActions)
                     privateAction =
                         privateAction || (action.panelKey == privateSession.recipe->panelKey &&
@@ -390,6 +543,11 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             return;
         }
         if (target == MajestyCommunity::PrivateControllerDispatch::eventBridge) {
+            if (researchCompletionStaged) {
+                require(host->hook_return(host, cpu, 0, 16) == POP_OK,
+                        "private completion event ret16 discipline");
+                return;
+            }
             const auto argument2 = read(sp + 8), argument3 = read(sp + 12);
             const auto result =
                 call(0x0047aae0U, self, {read(sp + 4), read(sp + 8), read(sp + 12), read(sp + 16)});
@@ -557,6 +715,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 DispatchOps ops;
                 require(privateDispatch.install(ops, cpu->eax, session.generation),
                         "private child dispatch binding");
+                researchController = cpu->eax;
+                researchControllerGeneration = session.generation;
             }
             host->log(host, "Alchemist private panel constructed through original factory.");
         }
@@ -588,6 +748,10 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         DispatchOps ops;
         privateDispatch.destroyed(ops, self, s.generation);
         lifecycle.destroyed(self, s.generation);
+        if (self == researchController && s.generation == researchControllerGeneration) {
+            researchController = 0;
+            researchControllerGeneration = 0;
+        }
     }
     if (target == 0x0047a760U || target == 0x0047aae0U)
         meter(self, s.generation);
@@ -606,6 +770,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     attributeCompat = attributes && !std::strcmp(attributes, "1");
     const char *panels = std::getenv("RECOMP_ALCHEMIST_PANEL_BRIDGE");
     panelBridge = panels && !std::strcmp(panels, "1");
+    const char *research = std::getenv("RECOMP_ALCHEMIST_RESEARCH_BRIDGE");
+    researchBridge = panelBridge && research && !std::strcmp(research, "1");
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
     std::string error;
@@ -636,6 +802,20 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             return status;
         hooks.push_back(id);
         host->log(host, "Private AP69 instances use original RET4/RET16 dispatch bridges.");
+    }
+    if (researchBridge) {
+        require(read(0x006c2028U) == 0x2009U && read(0x006c202cU) == 0x004abf70U &&
+                    read(0x006c2030U) == 0x200bU && read(0x00682950U + 0x8c) == 0x005d9680U,
+                "original research completion and simulation dispatch bindings");
+        for (const auto address : {0x004abf70U, 0x005d9680U, 0x00628e60U}) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
+        host->log(host, "Private research route enabled through original queue/update/event2009.");
     }
     if (traceRecruitment || attributeCompat) {
         std::vector<std::uint32_t> extraHooks{0x006381b0U};

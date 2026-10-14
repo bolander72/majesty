@@ -56,6 +56,9 @@ class ResearchActivity {
     std::uint32_t unit() const {
         return unit_;
     }
+    std::uint32_t command() const {
+        return command_;
+    }
     const BuildingActivity &submitted() const {
         return submitted_;
     }
