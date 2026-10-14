@@ -3,6 +3,7 @@
 #include "resource_meter.h"
 #include "research_descriptors.h"
 #include "research_activity.h"
+#include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include <fstream>
 #include <iterator>
@@ -34,7 +35,7 @@ struct MeterOps {
         return stock;
     }
     void visible(std::uint32_t window, std::uint32_t control, bool shown) {
-        check(window == 201 && shown && (control == 10787 || control == 10788));
+        check(window == 201 && shown && (control == 10787 || control == 10788 || control == 10789));
         ++visibleCalls;
     }
     void integer(std::uint32_t window, std::uint32_t control, std::int32_t value) {
@@ -89,6 +90,24 @@ struct ResearchOps : DispatchOps {
 };
 
 int main(int argc, char **argv) {
+    MajestyCommunity::RageDispatch rage;
+    check(!rage.begin(0, 915, "Alchemist_DoInvigoratingElixer"));
+    check(rage.begin(300, 915, "Alchemist_DoInvigoratingElixer"));
+    check(!rage.begin(301, 916, "Alchemist_Arcane_Infusion"));
+    {
+        MajestyCommunity::RageDispatch::Scope privateCall(rage, 300, 915);
+        check(rage.callback() == "Alchemist_DoInvigoratingElixer");
+        {
+            MajestyCommunity::RageDispatch::Scope stockCall(rage, 301, 916);
+            check(rage.callback().empty());
+        }
+        check(rage.callback() == "Alchemist_DoInvigoratingElixer");
+        rage.reset();
+        check(rage.begin(300, 915, "Alchemist_Arcane_Infusion"));
+    }
+    check(rage.callback().empty() && rage.pending());
+    rage.reset();
+
     DispatchOps identityOps;
     identityOps.memory = {{300 + 0x84, 400}, {300 + 0x60, 915}, {300 + 0x70, 0}};
     check(MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
@@ -312,7 +331,7 @@ int main(int argc, char **argv) {
     check(lifecycle.child(101, 8009, 0x00424c41U) == 0);
     MeterOps meter;
     check(MajestyCommunity::PresentResourceMeter(meter, 101, registry.meters[0]));
-    check(meter.reads == 1 && meter.visibleCalls == 2 && meter.integerCalls == 1 &&
+    check(meter.reads == 1 && meter.visibleCalls == 3 && meter.integerCalls == 1 &&
           meter.stock == 23 && meter.shownStock == 23);
     meter.stock = -9;
     check(MajestyCommunity::PresentResourceMeter(meter, 101, registry.meters[0]));

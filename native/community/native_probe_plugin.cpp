@@ -8,6 +8,7 @@
 #include "resource_meter.h"
 #include "research_descriptors.h"
 #include "research_activity.h"
+#include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include <algorithm>
 #include <cstddef>
@@ -15,6 +16,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <vector>
 
 POP_MOD_DECLARE_ABI();
@@ -32,6 +34,26 @@ bool traceRecruitment = false;
 bool attributeCompat = false;
 bool panelBridge = false;
 bool researchBridge = false;
+bool traceCombat = false;
+bool actionBridge = false;
+bool sharedFunctions = false;
+unsigned sharedLookupDepth = 0;
+std::map<std::string, std::string> sharedAliases;
+std::map<std::pair<std::uint32_t, std::string>, std::uint32_t> sharedResolved;
+std::string folded(std::string value) {
+    for (auto &ch : value)
+        if (ch >= 'A' && ch <= 'Z')
+            ch += 'a' - 'A';
+    return value;
+}
+MajestyCommunity::RageDispatch rageDispatch;
+struct TimedAction {
+    std::uint32_t unit = 0, control = 0, started = 0, duration = 0;
+} timedAction;
+bool controlledParty = false, controlledPartyApplied = false;
+bool controlledStock = false, controlledStockApplied = false;
+bool controlledDeath = false, controlledDeathApplied = false;
+std::uint32_t controlledDeathUnit = 0, controlledDeathClock = 0, controlledDeathDelay = 0;
 bool researchCompletionStaged = false;
 std::uint32_t researchController = 0;
 std::uint64_t researchControllerGeneration = 0;
@@ -253,6 +275,123 @@ void upgradePresentation(std::uint32_t controller, std::uint64_t generation) {
             ops.visible(window, gate.upgradePriceControlId, false);
         }
 }
+std::uint32_t actionPalace(std::uint32_t unit) {
+    return call(0x00418b50U, call(0x00415b40U, 0), {read(unit + 0x70)});
+}
+std::int32_t actionStock(std::uint32_t unit, const std::string &panel,
+                         const std::string &resource) {
+    MeterOps ops;
+    for (const auto &meter : recipes.meters)
+        if (meter.panelKey == panel && meter.resourceKey == resource)
+            return ops.attribute(unit, meter.attributeId);
+    return -1;
+}
+void setupControlledStock(std::uint32_t controller) {
+    if (!controlledStock || controlledStockApplied)
+        return;
+    const auto unit = call(0x00481ec0U, controller);
+    if (!unit || read(unit + 0x6c) != 0x33784241U)
+        return;
+    const auto id = call(0x005a1c40U, unit, {0x4541U, 0});
+    const auto agent = call(0x006236b0U, call(0x00623b20U, 0), {id});
+    require(agent != 0, "controlled reagent fixture actor");
+    std::uint32_t text = 0;
+    require(host->guest_alloc(host, 128, &text) == POP_OK, "controlled reagent fixture name");
+    const char name[] = "num_resources";
+    for (unsigned i = 0; i < sizeof(name); ++i)
+        require(host->guest_write_u8(host, text + 64 + i, name[i]) == POP_OK,
+                "controlled reagent fixture name write");
+    call(0x004e3520U, text, {text + 64});
+    const auto value = call(0x006263d0U, agent, {text});
+    require(value && read(value + 4) == 1, "controlled reagent fixture existing integer");
+    controlledStockApplied = true;
+    // Explicit test precondition only. Ordinary collected-resource saves are
+    // kept separately; the real private GPL owns every subsequent debit.
+    write(call(read(read(value) + 0x28), value), 25);
+    call(0x004e3820U, text);
+    require(host->guest_free(host, text) == POP_OK, "controlled reagent fixture name release");
+    call(read(read(unit) + 0x124), unit, {0x30565041U, 25});
+    host->log(
+        host,
+        "Controlled fixture initialized exactly25 reagents; ordinary collection unqualified.");
+}
+bool timedActionActive() {
+    if (timedAction.unit && read(0x0071c6a8U) - timedAction.started >= timedAction.duration)
+        timedAction = {};
+    return timedAction.unit != 0;
+}
+bool actionReady(std::uint32_t unit, const std::string &panel, const std::string &resource,
+                 std::uint32_t level, std::uint32_t cost, std::uint32_t gold,
+                 std::uint32_t completionTemplate = 0) {
+    if (!unit || (read(unit + 0x6c) & 0xffffffU) != 0x00784241U ||
+        read(unit + 0x6c) >> 24 < '0' + level || !read(unit + 0x60) || rageDispatch.pending())
+        return false;
+    const auto manager = call(0x00415b40U, 0);
+    if (read(unit + 0x70) != read(manager + 0x24))
+        return false;
+    MeterOps ops;
+    const auto palace = actionPalace(unit);
+    if (!palace || ops.attribute(unit, 0x00555041U) <= 0 ||
+        ops.attribute(palace, 0x07425041U) != 0 ||
+        actionStock(unit, panel, resource) < static_cast<std::int32_t>(cost))
+        return false;
+    if (completionTemplate) {
+        const auto descriptor = call(0x00474480U, 0, {completionTemplate});
+        if (!descriptor || !read(descriptor + 16) || ops.attribute(palace, read(descriptor + 16)))
+            return false;
+    }
+    const auto player = call(0x00416980U, manager);
+    return player &&
+           static_cast<std::int32_t>(call(read(read(player) + 0x20), player, {0x00505041U})) >=
+               static_cast<std::int32_t>(gold);
+}
+void submitRageAction(std::uint32_t unit, const std::string &callback) {
+    require(rageDispatch.begin(unit, read(unit + 0x60), callback), "private Rage command owner");
+    // Old AP24 control0047DBA0/0047DC0F..31 uses this exact coordinate
+    // metadata and four-word command packet. Gold/resources belong to GPL.
+    call(0x005ad740U, unit, {scratch + 232});
+    call(0x004974b0U, 0, {1, read(unit + 0x60), read(scratch + 232), read(scratch + 236)});
+    host->log(host, "Private sovereign action queued through original Rage command packet.");
+}
+void actionPresentation(std::uint32_t controller, std::uint64_t generation) {
+    const auto session = lifecycle.find(controller);
+    if (!actionBridge || !session.recipe || session.parent || session.generation != generation)
+        return;
+    MeterOps ops;
+    const auto unit = ops.unit(controller), window = ops.window(controller);
+    if (!unit || !window)
+        return;
+    const auto send = [&](std::uint32_t id, bool disabled) {
+        call(read(read(window) + 0x68), window, {id, 0x0a, disabled ? 1U : 0U, 0});
+    };
+    for (const auto &action : recipes.timedRageActions) {
+        if (action.panelKey != session.recipe->panelKey)
+            continue;
+        const bool active = timedActionActive() && timedAction.unit == unit &&
+                            timedAction.control == action.actionControlId;
+        ops.visible(window, action.progressControlId, active);
+        ops.visible(window, action.activeDisplayControlId, active);
+        if (active) {
+            const auto elapsed = read(0x0071c6a8U) - timedAction.started;
+            for (unsigned i = 0; i < 4; ++i)
+                write(scratch + 160 + i * 4, i == 0   ? 7
+                                             : i == 1 ? elapsed
+                                             : i == 3 ? timedAction.duration
+                                                      : 0);
+            call(read(read(window) + 0x68), window,
+                 {action.progressControlId, 0x29, 0, scratch + 160});
+            call(read(read(window) + 0x68), window, {action.progressControlId, 8, 0, 0});
+        }
+        send(action.actionControlId,
+             active || !actionReady(unit, action.panelKey, action.resourceKey, action.requiredLevel,
+                                    action.resourceCost, action.goldCost));
+    }
+    for (const auto &action : recipes.rageCommandActions)
+        if (action.panelKey == session.recipe->panelKey)
+            send(action.actionControlId,
+                 !actionReady(unit, action.panelKey, action.resourceKey, action.requiredLevel,
+                              action.resourceCost, 0, action.completionTemplateResearchControlId));
+}
 void researchProgress() {
     if (!researchBridge || researchCompletionStaged)
         return;
@@ -361,6 +500,7 @@ void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
             ops.visible(window, action.priceControlId, false);
         }
     researchProgress();
+    actionPresentation(controller, generation);
 }
 void beginResearch(std::uint32_t controller,
                    const MajestyStockControllers::ResearchRowRecord &row) {
@@ -414,6 +554,57 @@ std::string guestString(std::uint32_t p) {
         result[i] = char(ch);
     }
     return result;
+}
+// Resolve an authored export before the original VM prepares its call frame.
+// Function objects carry both bytecode and local-variable models: replacing a
+// block at execution time would retain the wrong model and corrupt the frame.
+bool sharedFunctionLookup(pop_cpu_v1 *cpu, PopHookInvocation *inv) {
+    if (!sharedFunctions || sharedLookupDepth)
+        return false;
+    const auto argument = cpu->esp + 4, originalName = read(argument);
+    const auto found = sharedAliases.find(folded(guestString(originalName)));
+    if (found == sharedAliases.end())
+        return false;
+    const auto key = std::make_pair(cpu->ecx, found->first);
+    const auto cached = sharedResolved.find(key);
+    if (cached != sharedResolved.end()) {
+        // The first twelve bytes of the original function object are its
+        // owned TString. Its lifetime ends at the quest teardown hook below.
+        ++sharedLookupDepth;
+        write(argument, cached->second);
+        next(inv, cpu);
+        write(argument, originalName);
+        --sharedLookupDepth;
+        return true;
+    }
+    ++sharedLookupDepth;
+    std::uint32_t text = 0;
+    require(host->guest_alloc(host, 256, &text) == POP_OK, "shared function string allocation");
+    for (unsigned i = 0; i <= found->second.size(); ++i)
+        require(host->guest_write_u8(host, text + 128 + i, found->second[i]) == POP_OK,
+                "shared function alias write");
+    call(0x004e3520U, text, {text + 128});
+    const auto alias = call(0x00631b40U, cpu->ecx, {text});
+    if (alias) {
+        const auto original = call(0x00631b40U, cpu->ecx, {originalName});
+        require(read(alias + 20) == 0x0061e4c0U, "authored alias interpreted dispatch");
+        if (original) {
+            require(read(original + 20) == 0x0061e4c0U, "shared export cannot replace native API");
+            require(call(0x00631ba0U, cpu->ecx, {originalName}) ==
+                        call(0x00631ba0U, cpu->ecx, {text}),
+                    "shared export return type agrees");
+        }
+        sharedResolved.emplace(key, alias);
+        write(argument, text);
+    }
+    // A miss during declaration loading is deliberately not cached. All
+    // aliases must be registered before the subsequent original linking pass.
+    next(inv, cpu);
+    write(argument, originalName);
+    call(0x004e3820U, text);
+    require(host->guest_free(host, text) == POP_OK, "shared function string release");
+    --sharedLookupDepth;
+    return true;
 }
 std::uint32_t valueRef(std::uint32_t value, std::uint32_t offset) {
     return call(read(read(value) + offset), value);
@@ -499,16 +690,53 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
-    if (researchBridge && target == 0x00628e60U) {
+    if ((researchBridge || sharedFunctions) && target == 0x00628e60U) {
+        sharedResolved.clear();
         // The original quest/GPL teardown retires all raw world references.
         // No host activity tuple may survive into a fresh loaded world.
         researchActivity = {};
+        rageDispatch.reset();
+        timedAction = {};
         researchController = 0;
         researchControllerGeneration = 0;
+        controlledPartyApplied = false;
+        controlledStockApplied = false;
+        controlledDeathApplied = false;
+        controlledDeathUnit = 0;
+        controlledDeathClock = 0;
+        next(inv, cpu);
+        return;
+    }
+    if (controlledDeath && target == 0x005a1c40U) {
+        if (read(self + 0x60) == 1719 && read(self + 0x6c) == 0x31434c41U)
+            controlledDeathUnit = self;
         next(inv, cpu);
         return;
     }
     if (researchBridge && target == 0x005d9680U) {
+        // Optional isolated test setup: use the already implemented ordinary
+        // single-player cheat, never rewrite actor statistics or mod balance.
+        const auto state = read(0x006d7670U);
+        static unsigned partyReports = 0;
+        if (controlledParty && state && partyReports++ < 4)
+            std::fprintf(stderr, "[alchemist-test-party] state=%u pending=%u\n", read(state),
+                         read(state + 4));
+        if (controlledParty && !controlledPartyApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4)) {
+            std::uint32_t text = 0;
+            require(host->guest_alloc(host, 128, &text) == POP_OK, "test party string allocation");
+            const char code[] = "level 1000";
+            for (unsigned i = 0; i < sizeof(code); ++i)
+                require(host->guest_write_u8(host, text + 64 + i, code[i]) == POP_OK,
+                        "test party string write");
+            call(0x004e3520U, text, {text + 64});
+            const auto recognized = call(0x00480e00U, 0, {text});
+            call(0x004e3820U, text);
+            require(host->guest_free(host, text) == POP_OK, "test party string release");
+            require(recognized == 1, "ordinary single-player test cheat recognition");
+            controlledPartyApplied = true;
+            host->log(host, "Controlled test party requested through ordinary level 1000 cheat.");
+        }
         const bool pending =
             researchActivity.phase() == MajestyCommunity::ResearchActivity::Phase::Pending;
         ActivityOps activity;
@@ -518,7 +746,54 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (pending && researchActivity.capture(activity, recruitment))
             host->log(host,
                       "Original simulation update installed private research; AP10 restored.");
+        if (controlledDeath && !controlledDeathApplied && controlledDeathUnit && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4)) {
+            if (!controlledDeathClock)
+                controlledDeathClock = read(0x0071c6a8U);
+            const auto unit = controlledDeathUnit;
+            require(read(unit + 0x60) == 1719 && read(unit + 0x6c) == 0x31434c41U,
+                    "controlled Phoenix injury still owns exact hero");
+            require(read(unit + 0x70) == read(call(0x00415b40U, 0) + 0x24),
+                    "controlled Phoenix injury owner");
+            if (read(0x0071c6a8U) - controlledDeathClock >= controlledDeathDelay) {
+                controlledDeathApplied = true;
+                // Test-only lethal injury enters the original HP setter and its
+                // death observer. Never call gravestone/resurrection ourselves or
+                // modify the inventory, chance roll or authored effect duration.
+                call(read(read(unit) + 0x124), unit, {0x00555041U, 0});
+                host->log(host, "Controlled Phoenix injury submitted through original HP setter.");
+            }
+        }
         researchProgress();
+        if (actionBridge && timedAction.unit)
+            actionPresentation(researchController, researchControllerGeneration);
+        return;
+    }
+    if (actionBridge && target == 0x0047dd10U) {
+        const auto unit = read(cpu->esp + 4);
+        const bool owned = rageDispatch.matches(unit, read(unit + 0x60));
+        {
+            MajestyCommunity::RageDispatch::Scope scope(rageDispatch, unit, read(unit + 0x60));
+            next(inv, cpu);
+        }
+        if (owned) {
+            rageDispatch.reset();
+            host->log(host, "Original Rage dispatch returned from private GPL action.");
+            actionPresentation(researchController, researchControllerGeneration);
+        }
+        return;
+    }
+    if (actionBridge && target == 0x004e3520U && !rageDispatch.callback().empty() &&
+        read(cpu->esp + 4) == 0x006c0170U) {
+        const auto argument = cpu->esp + 4;
+        const auto &callback = rageDispatch.callback();
+        for (unsigned i = 0; i <= callback.size(); ++i)
+            require(host->guest_write_u8(host, scratch + 128 + i, callback[i]) == POP_OK,
+                    "private GPL callback string");
+        write(argument, scratch + 128);
+        next(inv, cpu);
+        write(argument, 0x006c0170U);
+        host->log(host, "Original Rage invocation constructed the authored private GPL callback.");
         return;
     }
     if (researchBridge && target == 0x004abf70U) {
@@ -563,6 +838,34 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 returned(cpu, 1);
             } else {
                 bool privateAction = false;
+                if (actionBridge) {
+                    const auto unit = call(0x00481ec0U, self);
+                    for (const auto &action : recipes.timedRageActions)
+                        if (action.panelKey == privateSession.recipe->panelKey &&
+                            action.actionControlId == command) {
+                            if (!timedActionActive() &&
+                                actionReady(unit, action.panelKey, action.resourceKey,
+                                            action.requiredLevel, action.resourceCost,
+                                            action.goldCost)) {
+                                timedAction = {unit, command, read(0x0071c6a8U), action.durationMs};
+                                submitRageAction(unit, action.callbackSymbol);
+                            }
+                            actionPresentation(self, privateSession.generation);
+                            returned(cpu, 0);
+                            return;
+                        }
+                    for (const auto &action : recipes.rageCommandActions)
+                        if (action.panelKey == privateSession.recipe->panelKey &&
+                            action.actionControlId == command) {
+                            if (actionReady(unit, action.panelKey, action.resourceKey,
+                                            action.requiredLevel, action.resourceCost, 0,
+                                            action.completionTemplateResearchControlId))
+                                submitRageAction(unit, action.callbackSymbol);
+                            actionPresentation(self, privateSession.generation);
+                            returned(cpu, 0);
+                            return;
+                        }
+                }
                 for (const auto &row : recipes.researchRows) {
                     const bool selected = row.panelKey == privateSession.recipe->panelKey &&
                                           row.actionControlId == command;
@@ -609,6 +912,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             meter(self, privateSession.generation);
             if (MajestyCommunity::ResearchRowsNeedRefresh(argument2, argument3))
                 researchPresentation(self, privateSession.generation);
+            else if (actionBridge && (argument3 == 0x30565041U || argument3 == 0x07425041U))
+                actionPresentation(self, privateSession.generation);
             require(host->hook_return(host, cpu, result, 16) == POP_OK,
                     "private event ret16 discipline");
             return;
@@ -685,6 +990,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         registerAttributes();
         return;
     }
+    if ((target == 0x00631b40U || target == 0x00631ba0U) && sharedFunctionLookup(cpu, inv))
+        return;
     if (target == 0x00631b40U) {
         const auto name = read(cpu->esp + 4);
         next(inv, cpu);
@@ -711,7 +1018,7 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             returned(cpu, 0);
             return;
         }
-        if (!traceRecruitment) {
+        if (!traceRecruitment && !traceCombat) {
             next(inv, cpu);
             return;
         }
@@ -724,9 +1031,40 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             name[i] = ch >= 32 && ch < 127 ? char(ch) : '?';
         }
         if (valid) {
+            static unsigned combatReports = 0;
+            static std::map<std::string, unsigned> combatNameReports;
+            std::string lower(name);
+            std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char ch) {
+                return ch >= 'A' && ch <= 'Z' ? char(ch + 'a' - 'A') : char(ch);
+            });
+            if (lower.rfind("mja_", 0) == 0)
+                lower.erase(0, 4);
+            if (traceCombat && combatReports < 256 &&
+                (lower == "dropgoldinradius" || lower == "alchemist_award_monster_part" ||
+                 lower == "alchemy_transmutation_oil_hit" ||
+                 lower == "alchemy_paralytic_oil_begin" ||
+                 lower.find("alchemist_stun_serum") == 0 ||
+                 lower.find("alchemist_flash_flask") == 0 ||
+                 lower.find("alchemist_miasma_mist") == 0 || lower == "purchase_phoenix_phial" ||
+                 lower == "phoenix_phial_resurrection_end" || lower == "gravestone" ||
+                 lower == "shared_begin_resurrect" || lower == "shared_end_resurrect") &&
+                combatNameReports[lower]++ < 8) {
+                ++combatReports;
+                std::fprintf(stderr, "[alchemist-combat-call] function=%s block=%08x\n", name,
+                             read(self + 12));
+            }
+            if (traceCombat && controlledDeathApplied && controlledDeathUnit &&
+                lower == "phoenix_phial_resurrection_end") {
+                next(inv, cpu);
+                std::fprintf(stderr, "[alchemist-phoenix-return] unit=%u hp=%u maxhp=%u\n",
+                             read(controlledDeathUnit + 0x60),
+                             call(0x005a1c40U, controlledDeathUnit, {0x00555041U, 0}),
+                             call(0x005a1c40U, controlledDeathUnit, {0x01555041U, 0}));
+                return;
+            }
             if (std::strstr(name, "Alchemist_birth") || std::strstr(name, "alchemist_birth"))
                 traceArmed = true;
-            if (traceArmed && traceCalls++ < 2048)
+            if (traceRecruitment && traceArmed && traceCalls++ < 2048)
                 std::fprintf(stderr, "[alchemist-recruit-trace] call=%s block=%08x target=%08x\n",
                              name, read(self + 12), read(self + 20));
         }
@@ -825,6 +1163,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         researchPresentation(self, s.generation);
     if (target == 0x004652a0U || target == 0x00466110U)
         upgradePresentation(self, s.generation);
+    if (target == 0x004652a0U && s.parent)
+        setupControlledStock(self);
 }
 } // namespace
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
@@ -834,12 +1174,47 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     host = api;
     const char *trace = std::getenv("RECOMP_ALCHEMIST_RECRUIT_TRACE");
     traceRecruitment = trace && !std::strcmp(trace, "1");
+    const char *combat = std::getenv("RECOMP_ALCHEMIST_COMBAT_TRACE");
+    traceCombat = combat && !std::strcmp(combat, "1");
     const char *attributes = std::getenv("RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT");
     attributeCompat = attributes && !std::strcmp(attributes, "1");
     const char *panels = std::getenv("RECOMP_ALCHEMIST_PANEL_BRIDGE");
     panelBridge = panels && !std::strcmp(panels, "1");
     const char *research = std::getenv("RECOMP_ALCHEMIST_RESEARCH_BRIDGE");
     researchBridge = panelBridge && research && !std::strcmp(research, "1");
+    const char *actions = std::getenv("RECOMP_ALCHEMIST_ACTION_BRIDGE");
+    actionBridge = researchBridge && actions && !std::strcmp(actions, "1");
+    const char *party = std::getenv("RECOMP_ALCHEMIST_TEST_PARTY_LEVELS");
+    controlledParty = researchBridge && party && !std::strcmp(party, "1");
+    const char *stock = std::getenv("RECOMP_ALCHEMIST_TEST_REAGENTS");
+    controlledStock = actionBridge && stock && !std::strcmp(stock, "25");
+    const char *death = std::getenv("RECOMP_ALCHEMIST_TEST_PHOENIX_DEATH");
+    controlledDeath = researchBridge && death && !std::strcmp(death, "1719");
+    const char *delay = std::getenv("RECOMP_ALCHEMIST_TEST_PHOENIX_DELAY_MS");
+    controlledDeathDelay = delay && !std::strcmp(delay, "10000") ? 10000 : 0;
+    const char *shared = std::getenv("RECOMP_ALCHEMIST_SHARED_FUNCTIONS");
+    sharedFunctions = shared && !std::strcmp(shared, "1");
+    if (sharedFunctions) {
+        const auto raw = file("shared-overrides.tsv", 32768);
+        std::istringstream input(std::string(raw.begin(), raw.end()));
+        std::string line;
+        require(bool(std::getline(input, line)) && line == "majesty-alchemist-shared-gpl-v1",
+                "shared function route version");
+        while (std::getline(input, line)) {
+            const auto tab = line.find('\t');
+            require(tab != std::string::npos && tab > 0 && tab < 101,
+                    "shared function route shape");
+            const auto name = line.substr(0, tab), alias = line.substr(tab + 1);
+            require(alias == "MJA_" + name && alias.size() < 128 &&
+                        name.find_first_not_of(
+                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789") ==
+                            std::string::npos &&
+                        sharedAliases.emplace(folded(name), alias).second,
+                    "shared function route identity");
+        }
+        require(!sharedAliases.empty() && sharedAliases.size() <= 128,
+                "shared function route bound");
+    }
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
     std::string error;
@@ -887,12 +1262,39 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         }
         host->log(host, "Private research route enabled through original queue/update/event2009.");
     }
-    if (traceRecruitment || attributeCompat) {
+    if (controlledDeath) {
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x005a1c40U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+    }
+    if (sharedFunctions && !researchBridge) {
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x00628e60U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+    }
+    if (actionBridge)
+        for (const auto address : {0x0047dd10U, 0x004e3520U}) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
+    if (traceRecruitment || traceCombat || attributeCompat || sharedFunctions) {
         std::vector<std::uint32_t> extraHooks{0x006381b0U};
         if (traceRecruitment)
             extraHooks.push_back(0x0063cb20U);
-        if (traceRecruitment)
+        if (traceRecruitment || sharedFunctions)
             extraHooks.push_back(0x00631b40U);
+        if (sharedFunctions)
+            extraHooks.push_back(0x00631ba0U);
         if (traceRecruitment)
             extraHooks.push_back(0x0062a810U);
         if (traceRecruitment)
@@ -922,6 +1324,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     for (const auto id : hooks)
         host->hook_remove(host, id);
     hooks.clear();
+    sharedResolved.clear();
+    sharedAliases.clear();
+    sharedLookupDepth = 0;
     if (scratch)
         host->guest_free(host, scratch);
     scratch = 0;

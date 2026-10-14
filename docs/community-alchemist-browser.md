@@ -5,7 +5,100 @@ Lab**, including its original animated Alchemist, three building stages, voices,
 reagent economy, research and combat/sovereign alchemy. Lost Trail, Wayfinder and
 Trail Lodge remain retired. Production still runs the original game.
 
-## Current native qualification
+## Latest mechanics qualification (October 14)
+
+Ordinary native progression now includes paid Lab2 (1800 gold), completed
+336HP construction, Phoenix research (750 gold), paid Lab3 (2200 gold), its
+444HP finished creator artwork, and another ordinary 600-gold recruit. The
+unchanged original Day10 save is bound by private receipt1261; research and
+level3 state survive native save/reload. Weapon Oil research was independently
+qualified by receipt1252. These checks supersede earlier pending-research
+notes retained below as investigation history.
+
+The private sovereign bridge submits the original four-word Rage command for
+one exact Laboratory. Only that command's scoped native TString construction
+substitutes the declared GPL callback; nested stock commands cannot inherit it.
+The original script owns resource/gold debits and effects. Unit identity,
+controller generation and quest teardown retire pending host references.
+Focused official native tests cover nested dispatch, address reuse and reset.
+
+Vigor trial1290 started from a deliberately supplied 25-reagent test fixture,
+charged exactly1500 gold and one reagent, and saved the normal Alchemist at
+31HP instead of11. Trial1303 freshly reloaded that original active save, let
+its timed effect expire, and saved the hero back at11HP. The same trial then
+invoked Arcane Infusion normally: stock24 became14, the creator effect appeared,
+the action became disabled, the hero's native resistance bonus increased25,
+and its persisted AlchemistArcaneInfusionApplied boolean is true. These are
+controlled resource-precondition tests, not ordinary collection qualification.
+The numeric reagent binding is now shown alongside its native label.
+
+Trial1288 established a legacy linker problem: monster deaths called stock
+`dropgoldinradius`, bypassing the authored reagent function; weapon-oil hit
+callbacks were also absent. The original registry keeps the first same-name
+function. `scripts/prepare-alchemist-shared-functions.py` therefore appends
+source-identical `MJA_` exports while preserving every original export, body,
+DAT and project. The official SDK compiled all97 aliases successfully in1297,
+producing1943189 bytes, SHA256
+`ae72ff05716fd94dcc9d46a6af5993972fd893596c8a550fe32d9368238e8ae6`.
+Private candidate1299 preserves candidate1093 and its original bytecode.
+
+The opt-in `RECOMP_ALCHEMIST_SHARED_FUNCTIONS=1` adapter reads the staged route
+map and resolves both function pointers and return types through the original
+registry before native argument/local-frame preparation. It validates matching
+interpreted dispatch/return types. Positive resolutions cache only original
+function objects, scoped to their registry and cleared at original quest
+teardown; declaration-time misses are not cached. It never swaps executing
+bytecode blocks or patches generated translation metadata.
+
+Native1299 replayed a fixed encounter with an explicitly controlled level1000
+party. It witnessed the authored reagent-award, Transmutation Oil, Flash Flask,
+Stun Serum and Miasma callbacks and saved both living Alchemists carrying one
+actual collected reagent each. Receipt1301 binds the358394-byte generated save,
+SHA256`589bdfcb262f283a3037241954a4e46c8b9a815bfa7f36deecbbc8b85bb08bc9`.
+The encounter proves real collection and execution; it does not qualify normal
+low-level survival, numerical combat effects or Phoenix resurrection.
+Trial1306 then restored that exact save without reapplying the level cheat:
+one Alchemist returned to the authentic Laboratory, its carried count became0,
+and the native Lab's num_resources/APV0 became1. Receipt1309 binds this natural
+deposit. Trial1308 freshly restored Arcane state and refused a second click
+without another reagent charge; trial1312 paid600 gold for a new Alchemist,
+whose persisted AlchemistArcaneInfusionApplied flag is also true. The first
+1308 recruit attempt clicked the wrong row and created no hero;1312 corrects it.
+
+Ordinary paid exploration in trial1314 funded the heroes' actual shopping
+choices. Both executed Purchase_Phoenix_Phial and saved the real index113 item
+in their native inventory (receipt1317). Both reagent loads also deposited;
+the Lab stock is2. No inventory or purse fixture was used in this branch.
+
+Phoenix qualification deliberately applies a test-only lethal injury through
+the original unit HP setter; the original death observer, inventory transaction,
+chance roll, effect and revival callbacks remain untouched. Trial1319 exercised
+the failed chance outcome: the exact hero's item disappeared and the stock grave
+path continued. Trial1323 allowed ten seconds of ordinary simulation before the
+same controlled injury and exercised success. Its original
+Phoenix_Phial_Resurrection_End returned with HP1244/MaxHP4977, exactly integer
+25%, followed by ordinary fleeing/rest behavior and an original generated GMP
+(receipt1327). The other hero's unused Phial remains present. Do not confuse these
+controlled death tests with ordinary low-level combat survival.
+
+The kit now compiles C++ builtin plugins and separately compiled `support/`
+implementation files. The actual C/C++ ABI/link fixture passes through official
+tools/test.py, including the companion implementation and no phantom plugin
+registration. Core resources now retain binary registries and TSV route maps;
+24 focused packaging tests pass. Private source-bound browser engine1325 stages
+the same tested adapter and original community parsers without changing the
+production launcher or assets. Its WASM build/browser qualification remains
+pending. SDK source recovery1328 preserves the original iCloud-offloaded SDK.
+
+The official focused controller fixture passes, and63 focused Python tests
+run with five unavailable optional fixtures skipped. Compiler1297 was silent,
+guarded and closed normally. Native1299/1303 exited0 below150MiB owned RSS.
+Browser integration, Phoenix purchase/consume/resurrection, Philosopher targeting, full effect/reload controls and public rollout
+remain pending. No public Alchemist assets or production runtime changed.
+There are no production data migrations for these private source changes;
+release still requires source-bound browser packaging and gameplay qualification.
+
+## Earlier native qualification
 
 Candidate1093 now passes ordinary paid Laboratory construction. Trial1125
 spends1400 gold at a normally revealed, unobstructed site and saves completed
@@ -43,8 +136,8 @@ and insertion checks the original typed allocation, independent map ownership
 and all nine unchanged growth settings. The previous later-AI-crash checkpoint
 is superseded; do not add speculative AI replacements or reset growth fields.
 
-Native play is qualified only for the checks above. Research, full reagent/oil/
-sovereign-spell/Phoenix behavior and browser play/publication remain pending.
+These earlier construction/recruitment checks are supplemented by the latest
+mechanics qualification above. Full Phoenix and browser publication remain pending.
 
 `RECOMP_ALCHEMIST_RECRUIT_TRACE=1` optionally observes native GPL calls,
 operator signatures and distinct function-registry misses. Output is bounded;
