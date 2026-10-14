@@ -1,6 +1,6 @@
-# Original Mod Manager data modules
+# Original Mod Manager modules
 
-These unmodified Python data and GPL composition modules come from Phantomstar721's
+These unmodified Python data/GPL composition modules and C++ runtime registry parser come from Phantomstar721's
 [Majesty Mod Manager](https://github.com/Phantomstar721/majesty-gold-hd-mod-manager)
 at commit `63a81840e0f9264067d7984ad0d2b39859fa1896`.
 
@@ -10,7 +10,7 @@ bound by `content/community-mods/alchemist/source-contract.json`.
 `scripts/stage-alchemist-runtime-registries.py` validates them before use.
 
 The upstream MIT license is preserved in `LICENSE`. This subset includes no
-retail assets, mod media, native DLL, launcher, account integration or GUI.
+retail assets, mod media, compiled native DLL, launcher, account integration or GUI.
 It does not make the browser runtime support the capabilities it encodes.
 
 The original description codec and potion/typed-provider composers are also

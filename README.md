@@ -22,11 +22,12 @@ translations and local trial output are excluded. See
 
 ## Current content milestone
 
-The Lost Trail is published with Wayfinder heroes and Trail Lodge buildings.
-Native ordinary victory and persisted completion passed; browser selection,
-world entry and original save/reload passed, including the deployed root.
-The mission uses existing Fertile Plain geometry and borrowed artwork.
-See `content/the-lost-trail/` and `content/wayfinder-trail-lodge/`.
+Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
+sources and prior saves are preserved. The active milestone is the community's
+actual Alchemist Lab, with original art, audio and alchemy mechanics. Creator
+permission is confirmed, but native/browser gameplay integration is unfinished
+and the mod is not yet published. See [integration status](docs/community-alchemist-browser.md)
+and [creator credits](CREDITS.md).
 
 Co-op joining, shared saves and resume have already been exercised. Completing
 the restored Chapter 3 mission is deferred and is not a prerequisite for this

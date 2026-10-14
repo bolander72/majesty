@@ -32,9 +32,13 @@ log and installed item manifest report successful download of the exact pinned
 manifest. The original Steam directory is preserved. Do not repeat the rejected
 anonymous request.
 
-The package has no license file for its original media. Mike chose to contact
-the creator himself about public redistribution. No message was sent by the
-agent. Private integration can proceed; public media release remains pending.
+Mike confirmed creator permission on October 13, 2026 for redistribution of the
+original Alchemist artwork/audio in the public browser build and GitHub asset
+repository, with creator credit. Mike contacted the creator himself; no message
+was sent by the agent. The package contains no separate media license file, so
+this records the reported permission without applying the source MIT license
+to all media. See [creator credits](../CREDITS.md). Publication still requires
+playable runtime verification.
 
 Inspect an extracted package without installing it:
 
@@ -345,3 +349,40 @@ conversions does not prove in-game spell execution or native UI compatibility.
 Inventory checks preserve actual Phial art/name/flag/attributes, keep its newer
 attributes out of the old maps, and reject changed source/flag/value bindings or
 an invented runtime qualification claim.
+
+## Native Alchemist name registration
+
+`native/community/community_names.cpp` implements the pinned Old guest's
+original name-generator lifecycle for the actual NM18 / HN69–HN72 tables.
+It creates the original 56-byte generator and eight-byte owning wrapper,
+retains the stock destructor/vtable and rejects existing IDs or missing
+resources. The original community C++ MMFR parser is vendored unchanged and
+hash-bound to the source contract. The override remains uninstalled; neither
+the public launcher nor the active runtime enables it.
+
+The focused official native test compiles the adapter and checks registration,
+stock preservation, duplicate refusal, missing resources, failed allocation/
+construction cleanup, and every truncated boundary of the acquired registry.
+This is a native fixture test, not live guest registration or recruitment
+qualification. To prepare it on a resident upstream checkout:
+
+```sh
+python3 scripts/prepare-alchemist-name-fixture.py \
+  --game /path/to/majesty-recomp \
+  --registry /path/to/source-bound/RuntimeFeatures.bin \
+  --out /path/to/new-private-fixture
+/path/to/majesty-recomp/.venv/bin/python /path/to/majesty-recomp/kit/tools/test.py \
+  --game-dir /path/to/new-private-fixture \
+  --native-test community_name_registration_tests --jobs 1
+```
+
+The local successful trial used an isolated, resident CMake 4.1.2/Ninja 1.13.0
+installation and unmodified official tools. Missing iCloud configure inputs
+were recovered from the pinned upstream commit in a private view; originals
+were preserved. No game, media asset or default launcher was changed.
+
+Rollout/manual-data audit: none required for this source checkpoint. It adds
+credits, private staging/test code and an uninstalled adapter; deployed
+collection selection, player saves, profile schemas, asset manifests and
+runtime environment settings remain unchanged. Alchemist release still
+requires the remaining controls and full playable verification.

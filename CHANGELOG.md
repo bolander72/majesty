@@ -1,5 +1,11 @@
 # Changelog
 
+## Community Alchemist development — October 13, 2026
+
+- Credit Phantomstar721 for Alchemist Lab and Majesty Mod Manager; record Mike's confirmation of creator permission for original mod media distribution.
+- Preserve the authentic community source, package bindings and original mechanics while preparing legacy descriptions and native name registration.
+- The adapter passes a focused native fixture but remains uninstalled. Alchemist Lab is not yet playable or released; production remains the original game.
+
 ## Retire Lost Trail — October 13, 2026
 
 - Remove Lost Trail, Wayfinders and Trail Lodges from the live root game and setup catalog. Retired edition links mount original game data; cached custom packs are no longer selected or updated.
