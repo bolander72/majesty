@@ -2,9 +2,12 @@
 // content build.
 #include "RuntimeFeatureRegistry.h"
 #include "controller_lifecycle.h"
+#include "controller_dispatch.h"
 #include "name_registration.h"
 #include "pop_mod_api.h"
 #include "resource_meter.h"
+#include "research_descriptors.h"
+#include "research_activity.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -19,10 +22,13 @@ const PopModApi *host = nullptr;
 MajestyRuntimeFeatures::Registry features;
 MajestyStockControllers::Registry recipes;
 MajestyCommunity::PanelLifecycle lifecycle(recipes);
+MajestyCommunity::PrivateControllerDispatch privateDispatch;
+MajestyCommunity::ResearchDescriptors researchDescriptors;
 std::uint32_t scratch = 0;
 std::vector<std::uint32_t> hooks;
 bool traceRecruitment = false;
 bool attributeCompat = false;
+bool panelBridge = false;
 std::uint32_t attributeFunction = 0;
 bool traceArmed = false;
 unsigned traceCalls = 0;
@@ -57,6 +63,62 @@ void next(PopHookInvocation *inv, pop_cpu_v1 *cpu) {
 void returned(pop_cpu_v1 *cpu, std::uint32_t value) {
     require(host->hook_return(host, cpu, value, 4) == POP_OK, "original ret4 discipline");
 }
+struct DispatchOps {
+    std::uint32_t read(std::uint32_t address) {
+        return ::read(address);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        ::write(address, value);
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        std::uint32_t address = 0;
+        return host->guest_alloc(host, bytes, &address) == POP_OK ? address : 0;
+    }
+    void release(std::uint32_t address) {
+        require(host->guest_free(host, address) == POP_OK, "private dispatch release");
+    }
+};
+struct ResearchOps {
+    std::uint32_t unit(std::uint32_t controller) {
+        return ::call(0x00481ec0U, controller);
+    }
+    std::uint32_t call(std::uint32_t address, std::uint32_t self,
+                       std::initializer_list<std::uint32_t> args) {
+        return ::call(address, self, args);
+    }
+    std::uint32_t fixedScale() {
+        ::call(0x0051f310U, scratch + 220, {0x006d81c8U});
+        return ::read(scratch + 220);
+    }
+    std::uint32_t read(std::uint32_t address) {
+        return ::read(address);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        ::write(address, value);
+    }
+    std::uint32_t lookup(std::uint32_t id) {
+        write(scratch + 208, id);
+        call(0x00475390U, 0x006d81d0U, {scratch + 212, scratch + 208});
+        const auto node = read(scratch + 212);
+        return node == read(0x006d81d4U) ? 0 : read(node + 16);
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        return call(0x0064c616U, 0, {bytes});
+    }
+    void release(std::uint32_t address) {
+        call(0x00645bc0U, 0, {address});
+    }
+    bool insert(std::uint32_t id, std::uint32_t descriptor) {
+        if (lookup(id))
+            return false;
+        write(scratch + 208, id);
+        const auto slot = call(0x00475270U, 0x006d81d0U, {scratch + 208});
+        if (!slot || read(slot))
+            return false;
+        write(slot, descriptor);
+        return lookup(id) == descriptor;
+    }
+};
 std::vector<unsigned char> file(const char *name, std::size_t limit) {
     std::ifstream in(std::string(host->mod_dir(host)) + "/" + name,
                      std::ios::binary | std::ios::ate);
@@ -127,6 +189,63 @@ void meter(std::uint32_t p, std::uint64_t generation) {
     for (const auto &r : recipes.meters)
         if (r.panelKey == s.recipe->panelKey)
             MajestyCommunity::PresentResourceMeter(ops, p, r);
+}
+void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
+    const auto session = lifecycle.find(controller);
+    if (!panelBridge || !session.recipe || session.parent || session.generation != generation)
+        return;
+    if (!(read(0x006d81e0U) & 0xff))
+        call(0x004736a0U, 0);
+    ResearchOps descriptors;
+    require(researchDescriptors.prepare(descriptors, recipes.researchRows),
+            "native private research descriptors");
+    MeterOps ops;
+    const auto unit = ops.unit(controller), window = ops.window(controller);
+    if (!unit || !window)
+        return;
+    for (const auto &row : recipes.researchRows) {
+        if (row.panelKey != session.recipe->panelKey)
+            continue;
+        static unsigned reports = 0;
+        if (reports++ < 8) {
+            const auto descriptor = descriptors.lookup(row.actionControlId);
+            std::fprintf(stderr,
+                         "[alchemist-research] id=%u level=%u price=%u completion=%08x "
+                         "complete=%d unit-kind=%08x activity=%d affordable=%d\n",
+                         row.actionControlId, read(descriptor + 4), read(descriptor + 8),
+                         read(descriptor + 16), ops.attribute(unit, read(descriptor + 16)),
+                         read(unit + 0x6c), ops.attribute(unit, 0x2c425041U),
+                         MajestyCommunity::ResearchAffordable(descriptors, controller, descriptor));
+        }
+        call(0x004748c0U, 0, {window, unit, row.actionControlId});
+        // The private queued-research/completion route is still being ported.
+        // Idle native worlds must not display template progress as an order.
+        ops.visible(window, row.progressControlId, false);
+        ops.visible(window, row.activeDisplayControlId, false);
+    }
+    const auto level = read(unit + 0x6c) >> 24;
+    const auto buildingLevel = level >= '1' && level <= '3' ? level - '0' : 0;
+    for (const auto &action : recipes.timedRageActions)
+        if (action.panelKey == session.recipe->panelKey) {
+            const bool available = buildingLevel >= action.requiredLevel;
+            ops.visible(window, action.actionControlId, available);
+            ops.visible(window, action.iconControlId, available);
+            ops.visible(window, action.priceControlId, available);
+            ops.visible(window, action.progressControlId, false);
+            ops.visible(window, action.activeDisplayControlId, false);
+        }
+    for (const auto &action : recipes.rageCommandActions)
+        if (action.panelKey == session.recipe->panelKey) {
+            ops.visible(window, action.actionControlId, buildingLevel >= action.requiredLevel);
+            ops.visible(window, action.iconControlId, buildingLevel >= action.requiredLevel);
+            ops.visible(window, action.priceControlId, false);
+        }
+    for (const auto &action : recipes.sovereignTargetActions)
+        if (action.panelKey == session.recipe->panelKey) {
+            ops.visible(window, action.visualControlId, buildingLevel >= action.requiredLevel);
+            ops.visible(window, action.iconControlId, buildingLevel >= action.requiredLevel);
+            ops.visible(window, action.priceControlId, false);
+        }
 }
 std::string guestString(std::uint32_t p) {
     const auto text = read(p), length = read(p + 8);
@@ -223,6 +342,65 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    const auto privateEntry = privateDispatch.find(self);
+    const auto privateSession = lifecycle.find(self);
+    if (privateEntry.table && privateEntry.generation == privateSession.generation &&
+        privateSession.recipe && !privateSession.parent) {
+        const auto sp = cpu->esp;
+        if (target == MajestyCommunity::PrivateControllerDispatch::controlBridge) {
+            const auto command = read(sp + 4);
+            if (command == 0x1f4dU) {
+                const auto unit = call(0x00481ec0U, self);
+                if (!unit) {
+                    returned(cpu, 0);
+                    return;
+                }
+                const auto manager = call(0x00415b40U, 0), window = read(self + 0x14);
+                call(read(read(window) + 0x14), window);
+                call(0x00416890U, manager, {privateSession.recipe->parentDialogId, unit, 0, 0});
+                returned(cpu, 1);
+            } else {
+                bool privateAction = false;
+                for (const auto &row : recipes.researchRows)
+                    privateAction =
+                        privateAction || (row.panelKey == privateSession.recipe->panelKey &&
+                                          row.actionControlId == command);
+                for (const auto &action : recipes.timedRageActions)
+                    privateAction =
+                        privateAction || (action.panelKey == privateSession.recipe->panelKey &&
+                                          action.actionControlId == command);
+                for (const auto &action : recipes.rageCommandActions)
+                    privateAction =
+                        privateAction || (action.panelKey == privateSession.recipe->panelKey &&
+                                          action.actionControlId == command);
+                for (const auto &action : recipes.sovereignTargetActions)
+                    privateAction =
+                        privateAction ||
+                        (action.panelKey == privateSession.recipe->panelKey &&
+                         (action.visualControlId == command || action.privateControlId == command));
+                // Presentation/navigation are qualified separately. Until each
+                // authored transaction is ported, never let an overlapping
+                // stock command execute a different spell under its new label.
+                if (privateAction) {
+                    returned(cpu, 0);
+                    return;
+                }
+                returned(cpu, call(0x0047a790U, self, {command}));
+            }
+            return;
+        }
+        if (target == MajestyCommunity::PrivateControllerDispatch::eventBridge) {
+            const auto argument2 = read(sp + 8), argument3 = read(sp + 12);
+            const auto result =
+                call(0x0047aae0U, self, {read(sp + 4), read(sp + 8), read(sp + 12), read(sp + 16)});
+            meter(self, privateSession.generation);
+            if (MajestyCommunity::ResearchRowsNeedRefresh(argument2, argument3))
+                researchPresentation(self, privateSession.generation);
+            require(host->hook_return(host, cpu, result, 16) == POP_OK,
+                    "private event ret16 discipline");
+            return;
+        }
+    }
     if (target == 0x0062a6a0U) {
         next(inv, cpu);
         std::fprintf(stderr, "[alchemist-pool-trace] constructor pool=%08x growth=%u\n", self,
@@ -374,6 +552,12 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             write(a, requested);
             require(lifecycle.capture(cpu->eax, requested, window, context),
                     "private factory result");
+            const auto session = lifecycle.find(cpu->eax);
+            if (panelBridge && !session.parent) {
+                DispatchOps ops;
+                require(privateDispatch.install(ops, cpu->eax, session.generation),
+                        "private child dispatch binding");
+            }
             host->log(host, "Alchemist private panel constructed through original factory.");
         }
         return;
@@ -400,10 +584,15 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         return;
     }
     next(inv, cpu);
-    if (target == 0x00465270U || target == 0x0047a360U)
+    if (target == 0x00465270U || target == 0x0047a360U) {
+        DispatchOps ops;
+        privateDispatch.destroyed(ops, self, s.generation);
         lifecycle.destroyed(self, s.generation);
+    }
     if (target == 0x0047a760U || target == 0x0047aae0U)
         meter(self, s.generation);
+    if (target == 0x0047a760U)
+        researchPresentation(self, s.generation);
 }
 } // namespace
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
@@ -415,6 +604,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     traceRecruitment = trace && !std::strcmp(trace, "1");
     const char *attributes = std::getenv("RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT");
     attributeCompat = attributes && !std::strcmp(attributes, "1");
+    const char *panels = std::getenv("RECOMP_ALCHEMIST_PANEL_BRIDGE");
+    panelBridge = panels && !std::strcmp(panels, "1");
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
     std::string error;
@@ -435,8 +626,17 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             return status;
         hooks.push_back(id);
     }
-    host->log(host, "Private Alchemist names/factory/setup probe loaded; Back/event entries "
-                    "require official function discovery and remain unhooked.");
+    host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 method "
+                    "eligibility is unchanged. Private dispatch is explicitly opt-in.");
+    if (panelBridge) {
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x00466110U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+        host->log(host, "Private AP69 instances use original RET4/RET16 dispatch bridges.");
+    }
     if (traceRecruitment || attributeCompat) {
         std::vector<std::uint32_t> extraHooks{0x006381b0U};
         if (traceRecruitment)
@@ -467,6 +667,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     return POP_OK;
 }
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
+    DispatchOps ops;
+    privateDispatch.clear(ops);
     for (const auto id : hooks)
         host->hook_remove(host, id);
     hooks.clear();

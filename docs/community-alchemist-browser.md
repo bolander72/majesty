@@ -60,6 +60,74 @@ qualify the actual mechanics and browser integration before publishing assets.
 All these trials are private, muted and
 guarded; public runtime/content and player data remain unchanged.
 
+## Private Brewing navigation and research descriptors
+
+`RECOMP_ALCHEMIST_PANEL_BRIDGE=1` now enables a source adapter attached only to
+owned private CG02/AP69 controller instances. It copies the eleven original
+32-bit virtual entries, redirects only the RET4 control and RET16 event slots
+through verified stock AP10 entries, and delegates to the original AP69 methods
+with their original arguments. Back substitutes the declared CG01 parent ID.
+The original global tables and generated eligibility metadata remain unchanged;
+the previously prepared AP69 module is not required for this private dispatch.
+Destructor generations prevent stale teardown from releasing a replacement
+instance; plugin teardown restores any surviving owned table before freeing
+its separate allocation. Other stock controllers pass through normally.
+
+Native1175 opens the authentic Brewing panel and returns to the original Lab
+with Back. Native1177/1179 repeat that navigation with research descriptors and
+normal original saving/exit, below156MiB peak RSS. The focused official native
+fixture verifies unchanged stock entries, wrong-layout/allocation refusal,
+address reuse and teardown, plus descriptor collision/renewal boundaries.
+
+Two20-byte descriptors are cloned into the original AP99 registry through its
+own map and allocator: Weapon Oil10771 is level1/250gold with completion
+attribute2A425041; Phoenix Phial10774 is level2/750gold with attribute29425041.
+All opaque template fields are retained. Native1179 independently reads those
+values back and observes both completion attributes and current research as0.
+The original row presenter owns availability/price presentation, including its
+building-health check. Private idle progress overlays are hidden, and higher
+level powers follow the creator's level requirements. The test Lab is damaged
+and under attack; its disabled row is not evidence of a completed research.
+
+Payment, asynchronous research ownership, timed completion, simultaneous
+recruitment, upgrade gating, research-state save/reload and all remaining powers
+are **not qualified or enabled by this milestone**. The next implementation must
+port the creator's BeginPrivateResearch/CaptureSubmittedResearch/completion
+route, preserving the AP10 recruitment tuple. Old native research submission
+is00495900; its stock command reads the selected unit's command owner at+84.
+Old research rows refresh at004748C0 and descriptors live in map006D81D0.
+CanSubmitResearch00474C10 and bulk refresh00474BB0 were independently located
+in the pinned executable but are absent from the current generated entries;
+do not call an undiscovered address through the mod API or edit generated flags.
+Prepare a proper source/API translation path or faithfully port the audited
+native eligibility calculation before enabling submission.
+
+The source now ports the literal affordability calculation from00474C10,
+using the original command-owner discount lookup, fixed-point helpers0051F310/
+0051F2D0 and current-player gold. This is affordability only, not permission
+to bypass level, completion, health or native command validation. The private
+readback reports affordability without submitting an order.
+Native1190 reports both declared recipes affordable in the restored original
+Lab world, with completion/current-research still zero. Brewing opens, returns,
+reopens and returns again; ordinary save/exit succeeds at147.9MiB peak RSS.
+Official fixture1189 passes with the final plugin source.
+
+`ResearchActivity` ports the creator's separate pending/active research owner.
+Its fixture covers delayed submission, unrelated tuples, zero duration,
+duplicate submission, wrong-building/wrong-event completion, a native callback
+that retains the order, and restoration of concurrent recruitment after actual
+native retirement. This owner is not wired into live submission/completion yet;
+passing those controls does not qualify paid research or persistence.
+
+The private event bridge now follows the original AP99 notification filter,
+instead of refreshing compound research controls on every event. Original
+event2009's dispatch is independently bound in the pinned Old image: slot
+006C202C points to004ABF70, between event IDs2009 and200B. That routine uses
+the original descriptor resolver00474480 and packed-attribute setter at
+vtable+124. Current native534 classifies004ABF70 as a non-hookable block.
+Curate its real entry through source/config and official regeneration before
+installing the completion wrapper; never change generated hookability flags.
+
 Rollout/manual-data audit: none required for this private source checkpoint.
 The audited surfaces are native function/attribute registries, original GMP
 ownership, build flags and production asset inclusion. Existing public players

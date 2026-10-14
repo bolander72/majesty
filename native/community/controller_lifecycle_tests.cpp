@@ -1,9 +1,13 @@
 #include "controller_lifecycle.h"
+#include "controller_dispatch.h"
 #include "resource_meter.h"
+#include "research_descriptors.h"
+#include "research_activity.h"
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
 #include <vector>
+#include <map>
 
 void check(bool value) {
     if (!value)
@@ -38,8 +42,133 @@ struct MeterOps {
         shownStock = value;
     }
 };
+struct DispatchOps {
+    std::map<std::uint32_t, std::uint32_t> memory;
+    std::vector<std::uint32_t> freed;
+    std::uint32_t next = 1000;
+    bool allocationFails = false;
+    std::uint32_t read(std::uint32_t address) {
+        return memory.at(address);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        memory[address] = value;
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        check(bytes == 44);
+        if (allocationFails)
+            return 0;
+        const auto address = next;
+        next += bytes;
+        return address;
+    }
+    void release(std::uint32_t address) {
+        freed.push_back(address);
+    }
+};
+
+struct ResearchOps : DispatchOps {
+    std::map<std::uint32_t, std::uint32_t> descriptors;
+    std::uint32_t lookup(std::uint32_t id) {
+        return descriptors.count(id) ? descriptors.at(id) : 0;
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        check(bytes == 20);
+        if (allocationFails)
+            return 0;
+        const auto result = next;
+        next += bytes;
+        return result;
+    }
+    bool insert(std::uint32_t id, std::uint32_t value) {
+        if (lookup(id))
+            return false;
+        descriptors[id] = value;
+        return true;
+    }
+};
 
 int main(int argc, char **argv) {
+    struct ActivityOps {
+        MajestyCommunity::BuildingActivity activity{8000, 100, 12000};
+        MajestyCommunity::BuildingActivity capture(std::uint32_t unit) {
+            check(unit == 300);
+            return activity;
+        }
+        void restore(std::uint32_t unit, MajestyCommunity::BuildingActivity value) {
+            check(unit == 300);
+            activity = value;
+        }
+    } activityOps;
+    MajestyCommunity::ResearchActivity activityOwner;
+    const auto recruitment = activityOps.activity;
+    check(!activityOwner.begin(0, 10771));
+    check(activityOwner.begin(300, 10771));
+    check(!activityOwner.begin(301, 10774));
+    // An unrelated update or incomplete tuple must not steal recruitment.
+    check(!activityOwner.capture(activityOps, recruitment));
+    activityOps.activity = {10771, 200, 0};
+    check(!activityOwner.capture(activityOps, recruitment));
+    activityOps.activity = {10771, 200, 30000};
+    check(activityOwner.capture(activityOps, recruitment));
+    check(activityOps.activity.command == 8000 && activityOps.activity.duration == 12000);
+    unsigned completionCalls = 0;
+    auto completion = [&] {
+        ++completionCalls;
+        check(activityOps.activity.command == 10771 && activityOps.activity.startedAt == 200);
+        activityOps.activity = {};
+    };
+    check(!activityOwner.complete(activityOps, 301, 2, completion));
+    check(!activityOwner.complete(activityOps, 300, 1, completion));
+    check(completionCalls == 0);
+    // A native callback that leaves the order active must retain its owner.
+    check(activityOwner.complete(activityOps, 300, 2, [] {}));
+    check(activityOwner.phase() == MajestyCommunity::ResearchActivity::Phase::Active);
+    check(activityOps.activity.command == 8000);
+    check(activityOwner.complete(activityOps, 300, 2, completion));
+    check(completionCalls == 1 &&
+          activityOwner.phase() == MajestyCommunity::ResearchActivity::Phase::Idle);
+    check(activityOps.activity.command == 8000 && activityOps.activity.startedAt == 100);
+    check(!activityOwner.complete(activityOps, 300, 2, completion));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(0, 0));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(0, 0x00505041U));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(1, 0x00505041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(1, 0x2c425041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(1, 0x02425041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(7, 0x18000000U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(7, 0x2b000000U));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(7, 0x2b000001U));
+    DispatchOps dispatchOps;
+    dispatchOps.memory[100] = 200;
+    const std::uint32_t original[] = {0x0047a360U, 0x0047a760U, 3,           0x0047a790U, 5, 6,
+                                      7,           8,           0x0047aae0U, 10,          11};
+    for (unsigned i = 0; i < 11; ++i)
+        dispatchOps.memory[200 + i * 4] = original[i];
+    MajestyCommunity::PrivateControllerDispatch dispatch;
+    dispatchOps.allocationFails = true;
+    check(!dispatch.install(dispatchOps, 100, 1) && dispatchOps.read(100) == 200);
+    dispatchOps.allocationFails = false;
+    check(dispatch.install(dispatchOps, 100, 1));
+    const auto clone = dispatch.find(100).table;
+    for (unsigned i = 0; i < 11; ++i) {
+        check(dispatchOps.read(200 + i * 4) == original[i]);
+        check(dispatchOps.read(clone + i * 4) == (i == 3   ? dispatch.controlBridge
+                                                  : i == 8 ? dispatch.eventBridge
+                                                           : original[i]));
+    }
+    check(!dispatch.install(dispatchOps, 100, 2));
+    dispatch.destroyed(dispatchOps, 100, 2);
+    check(dispatch.find(100).table == clone && dispatchOps.freed.empty());
+    dispatch.destroyed(dispatchOps, 100, 1);
+    check(!dispatch.find(100).table && dispatchOps.freed.size() == 1);
+    dispatchOps.memory[100] = 200;
+    check(dispatch.install(dispatchOps, 100, 2));
+    const auto replacementDispatch = dispatch.find(100).table;
+    dispatch.destroyed(dispatchOps, 100, 1);
+    check(dispatch.find(100).table == replacementDispatch);
+    dispatch.clear(dispatchOps);
+    check(dispatchOps.read(100) == 200 && dispatchOps.freed.size() == 2);
+    dispatchOps.memory[200 + 12] = 0;
+    check(!dispatch.install(dispatchOps, 100, 3) && dispatchOps.read(100) == 200);
     check(argc == 2);
     std::ifstream input(argv[1], std::ios::binary);
     const std::vector<unsigned char> bytes((std::istreambuf_iterator<char>(input)), {});
@@ -51,6 +180,46 @@ int main(int argc, char **argv) {
           registry.researchRows.size() == 2 && registry.upgradeGates.size() == 1 &&
           registry.timedRageActions.size() == 1 && registry.rageCommandActions.size() == 1 &&
           registry.sovereignTargetActions.size() == 1);
+    ResearchOps researchOps;
+    for (const auto &row : registry.researchRows) {
+        for (const auto id : {row.descriptorTemplateControlId, row.completionTemplateControlId}) {
+            if (researchOps.lookup(id))
+                continue;
+            const auto address = researchOps.allocate(20);
+            researchOps.descriptors[id] = address;
+            for (unsigned i = 0; i < 5; ++i)
+                researchOps.memory[address + i * 4] = id * 10 + i + 1;
+        }
+    }
+    const auto beforeTemplates = researchOps.memory;
+    MajestyCommunity::ResearchDescriptors research;
+    researchOps.allocationFails = true;
+    check(!research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows)
+        check(!researchOps.lookup(row.actionControlId));
+    researchOps.allocationFails = false;
+    check(research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows) {
+        const auto descriptorClone = researchOps.lookup(row.actionControlId);
+        const auto source = researchOps.lookup(row.descriptorTemplateControlId);
+        const auto completion = researchOps.lookup(row.completionTemplateControlId);
+        check(researchOps.read(descriptorClone) == beforeTemplates.at(source));
+        check(researchOps.read(descriptorClone + 4) == row.requiredLevel);
+        check(researchOps.read(descriptorClone + 8) == row.price);
+        check(researchOps.read(descriptorClone + 12) == beforeTemplates.at(source + 12));
+        check(researchOps.read(descriptorClone + 16) == beforeTemplates.at(completion + 16));
+        for (unsigned i = 0; i < 5; ++i)
+            check(researchOps.read(source + i * 4) == beforeTemplates.at(source + i * 4));
+    }
+    const auto firstClone = researchOps.lookup(registry.researchRows[0].actionControlId);
+    check(research.prepare(researchOps, registry.researchRows));
+    check(researchOps.lookup(registry.researchRows[0].actionControlId) == firstClone);
+    researchOps.descriptors[registry.researchRows[0].actionControlId] = 9999;
+    check(!research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows)
+        researchOps.descriptors.erase(row.actionControlId);
+    check(research.prepare(researchOps, registry.researchRows));
+    check(researchOps.lookup(registry.researchRows[0].actionControlId) != firstClone);
     const auto &panel = registry.panels[0];
     check(panel.panelKey == "brewing" && panel.parentDialogId == 0x31304743U &&
           panel.childDialogId == 0x32304743U && panel.buildingFamilyId == 0x00424c41U &&
