@@ -2,6 +2,12 @@
 #include <cstdint>
 
 namespace MajestyCommunity {
+// Original research commands (00495900) serialize the unit identity at+60.
+// The separate+70 field is the player number; zero is a valid local player.
+template <class Ops> bool ResearchUnitHasIdentity(Ops &ops, std::uint32_t unit) {
+    return unit && ops.read(unit + 0x84) && ops.read(unit + 0x60);
+}
+
 // Literal Old AP99 CanSubmitResearch (00474C10): use the game's original
 // fixed-point helpers and live command-owner discount, then its current player
 // gold. This routine is affordability only; row state/health/completion and
@@ -48,6 +54,7 @@ class ResearchActivity {
     Phase phase_ = Phase::Idle;
     std::uint32_t unit_ = 0, command_ = 0;
     BuildingActivity submitted_;
+    BuildingActivity pendingRecruitment_;
 
   public:
     Phase phase() const {
@@ -62,11 +69,12 @@ class ResearchActivity {
     const BuildingActivity &submitted() const {
         return submitted_;
     }
-    bool begin(std::uint32_t unit, std::uint32_t command) {
+    bool begin(std::uint32_t unit, std::uint32_t command, BuildingActivity recruitment = {}) {
         if (phase_ != Phase::Idle || !unit || !command)
             return false;
         unit_ = unit;
         command_ = command;
+        pendingRecruitment_ = recruitment;
         phase_ = Phase::Pending;
         return true;
     }
@@ -76,7 +84,9 @@ class ResearchActivity {
         const auto submitted = ops.capture(unit_);
         if (submitted.command != command_ || static_cast<std::int32_t>(submitted.duration) <= 0)
             return false;
-        ops.restore(unit_, recruitment);
+        // The native command dispatcher can install research before the next
+        // world-update hook. That tuple is not an AP10 recruitment order.
+        ops.restore(unit_, recruitment.command == command_ ? pendingRecruitment_ : recruitment);
         submitted_ = submitted;
         phase_ = Phase::Active;
         return true;

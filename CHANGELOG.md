@@ -1,5 +1,11 @@
 # Changelog
 
+## Private Alchemist research adapter — October 14, 2026
+
+- Check the original building identity when submitting research, allowing player zero's single-player Laboratory to reach native validation. Preserve original construction, health and gold checks.
+- Add focused controls for player zero, missing identities and missing command owners. Browser research and the remaining alchemy mechanics still require qualification before release.
+- Preserve the original recruitment order when queued research reaches native dispatch before the next simulation update, preventing a completed research command from being restored as recruitment.
+
 ## Community Alchemist development — October 13, 2026
 
 - Credit Phantomstar721 for Alchemist Lab and Majesty Mod Manager; record Mike's confirmation of creator permission for original mod media distribution.

@@ -213,6 +213,51 @@ places a hostile reward but accidentally adds another to the friendly Lab when
 selection is attempted without cancelling flag placement. Preserve that fork
 for diagnosis only; it is not the next research checkpoint.
 
+The private research submission identity guard now follows the original
+command serializer00495900: building identity is at+60, while+70 is the
+player number used by native discount lookup00474860. The prior adapter
+treated player zero as a missing building and returned before native health
+or gold validation. Trial1238 witnesses actual command10771 reaching that
+early return. The corrected helper accepts a valid player-zero building and
+refuses missing unit identity or command owner; those regression controls
+pass the official controller lifecycle fixture1240. Keep the native health,
+construction, level and affordability checks. Live payment/completion still
+needs independent evidence; fixture success does not establish it.
+
+Native1241 now reaches original validation with level1, constructed1,
+damaged0 and native-can-submit1. The normal250-gold row queues Weapon Oil,
+shows the creator's research progress UI and receives the original event2009
+completion. Its genuine generated GMP preserves the completion attribute as1.
+This first positive run also exposed a cleanup error: native dispatch installed
+research before the update wrapper captured its supposed recruitment tuple,
+so the adapter later restored the research command as if it were recruitment.
+Do not use that fork as a clean completed-research checkpoint.
+
+`ResearchActivity` now retains the genuine recruitment tuple supplied at begin.
+If native dispatch has already installed this research command before the
+update hook, capture restores that retained tuple instead. An unrelated genuine
+recruitment order observed at capture still takes precedence. Fixture1244
+checks the early-dispatch case through completion alongside the existing
+concurrent-recruitment and completion guards. Native cleanup and a fresh
+original save/reload must still confirm this correction.
+
+Those checks now pass in native1245/1248. Normal Weapon Oil research shows
+the progress bar and completes through original event2009. At the matching
+Day8 checkpoint, the prior same-input no-order control1230 has18940 gold;
+the completed research world has18690, consistent with the normal250-gold
+charge. This is a matched-world comparison, not an atomic debit trace.
+The genuine generated345249-byte GMP (SHA256
+`2c81ccdda7795d167ef8675954e481afa0c51a1672878773a583ccc1fc13ed66`)
+contains Weapon Oil completion1 with command/start/duration all0. A fresh
+owned profile1248 restores it; the native research and upgrade queries read
+completion1 and activity0. Its newly generated346172-byte GMP preserves
+those values (SHA256
+`427e7a6211750cfdef987919a12b13c9f71946c3e663bce45c835b0fc29c57b5`).
+Qualification1252 binds these observations. Both silent trials exit normally
+below155MiB owned RSS. In-progress research reload, live concurrent recruitment,
+paid upgrades, Phoenix/reagents/oils/sovereign mechanics and browser integration
+remain unqualified; no Alchemist content is published.
+
 ## Recovering offloaded analysis inputs
 
 The offloaded original listings can be regenerated from the exact pinned

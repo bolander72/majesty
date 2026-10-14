@@ -89,6 +89,18 @@ struct ResearchOps : DispatchOps {
 };
 
 int main(int argc, char **argv) {
+    DispatchOps identityOps;
+    identityOps.memory = {{300 + 0x84, 400}, {300 + 0x60, 915}, {300 + 0x70, 0}};
+    check(MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    // A nonzero player number cannot substitute for a missing unit identity.
+    identityOps.memory[300 + 0x70] = 1;
+    identityOps.memory[300 + 0x60] = 0;
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    identityOps.memory[300 + 0x60] = 915;
+    identityOps.memory[300 + 0x84] = 0;
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 0));
+
     struct ActivityOps {
         MajestyCommunity::BuildingActivity activity{8000, 100, 12000};
         MajestyCommunity::BuildingActivity capture(std::uint32_t unit) {
@@ -102,6 +114,16 @@ int main(int argc, char **argv) {
     } activityOps;
     MajestyCommunity::ResearchActivity activityOwner;
     const auto recruitment = activityOps.activity;
+    // Original dispatch can install research before the world-update wrapper
+    // observes it. Do not restore that research tuple as recruitment on finish.
+    MajestyCommunity::ResearchActivity earlyDispatch;
+    check(earlyDispatch.begin(300, 10771, recruitment));
+    activityOps.activity = {10771, 200, 10000};
+    check(earlyDispatch.capture(activityOps, activityOps.activity));
+    check(activityOps.activity.command == recruitment.command);
+    check(earlyDispatch.complete(activityOps, 300, 2, [&] { activityOps.activity = {}; }));
+    check(earlyDispatch.phase() == MajestyCommunity::ResearchActivity::Phase::Idle);
+    check(activityOps.activity.command == recruitment.command);
     check(!activityOwner.begin(0, 10771));
     check(activityOwner.begin(300, 10771));
     check(!activityOwner.begin(301, 10774));

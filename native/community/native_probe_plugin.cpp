@@ -333,7 +333,6 @@ void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
                          MajestyCommunity::ResearchAffordable(descriptors, controller, descriptor));
         }
         call(0x004748c0U, 0, {window, unit, row.actionControlId});
-        // The private queued-research/completion route is still being ported.
         // Idle native worlds must not display template progress as an order.
         ops.visible(window, row.progressControlId, false);
         ops.visible(window, row.activeDisplayControlId, false);
@@ -372,24 +371,32 @@ void beginResearch(std::uint32_t controller,
     if (!unit || !descriptor ||
         researchActivity.phase() != MajestyCommunity::ResearchActivity::Phase::Idle)
         return;
-    const auto owner = read(unit + 0x84), unitId = read(unit + 0x70);
-    if (!owner || !unitId)
+    if (!MajestyCommunity::ResearchUnitHasIdentity(descriptors, unit))
         return;
+    const auto owner = read(unit + 0x84);
     // Retain the stock row's level/completion/construction/health guards in
     // addition to the creator's original AP99 gold validation.
     const auto kindLevel = read(unit + 0x6c) >> 24;
     const auto level = kindLevel >= '1' && kindLevel <= '3' ? kindLevel - '0' : 0;
-    if (level < read(descriptor + 4) || call(0x005a1c40U, unit, {read(descriptor + 16), 0}) ||
-        !call(0x005a1c40U, unit, {0x02425041U, 0}) || (call(0x00431630U, unit) & 0xff))
+    const auto completed = call(0x005a1c40U, unit, {read(descriptor + 16), 0});
+    const auto constructed = call(0x005a1c40U, unit, {0x02425041U, 0});
+    const auto damaged = call(0x00431630U, unit) & 0xff;
+    std::fprintf(stderr,
+                 "[alchemist-research-command] id=%u level=%u required=%u completed=%u "
+                 "constructed=%u damaged=%u\n",
+                 row.actionControlId, level, read(descriptor + 4), completed, constructed, damaged);
+    if (level < read(descriptor + 4) || completed || !constructed || damaged)
         return;
     const auto recruitment = activity.capture(unit);
     activity.restore(unit, {});
     const bool affordable = (call(0x00474c10U, controller, {row.actionControlId}) & 0xff) != 0;
+    std::fprintf(stderr, "[alchemist-research-command] native-can-submit=%d\n", affordable);
     if (!affordable) {
         activity.restore(unit, recruitment);
         return;
     }
-    require(researchActivity.begin(unit, row.actionControlId), "private research owner");
+    require(researchActivity.begin(unit, row.actionControlId, recruitment),
+            "private research owner");
     call(0x00495900U, 0, {owner, unit, row.actionControlId});
     const bool captured = researchActivity.capture(activity, recruitment);
     if (!captured)
@@ -541,6 +548,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto sp = cpu->esp;
         if (target == MajestyCommunity::PrivateControllerDispatch::controlBridge) {
             const auto command = read(sp + 4);
+            static unsigned commandReports = 0;
+            if (researchBridge && commandReports++ < 32)
+                std::fprintf(stderr, "[alchemist-private-control] command=%u\n", command);
             if (command == 0x1f4dU) {
                 const auto unit = call(0x00481ec0U, self);
                 if (!unit) {
