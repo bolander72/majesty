@@ -7,6 +7,43 @@ Trail Lodge remain retired. Production still runs the original game.
 
 ## Latest mechanics qualification (October 14)
 
+Browser trial1363 now proves ordinary root entry, an original native Day10
+save restore, authentic completed Lab3 art, ordinary paid recruitment, native
+Brewing controls and both completed research flags. It generated an original
+Day11 GMP (receipt1377) and restored it in a fresh WASM engine (screenshot1381).
+Low-level heroes died during ordinary combat, so this is not balanced-survival
+qualification. A separate controlled funded input1313 then used normal browser
+clicks for Vigor (14→13 reagents) and Philosopher's Stone against a visible
+hostile (13→3, gold award, exact native source/target callback). Repeating the
+unaffordable action produced no second callback. Generated browser save1394
+persists3 reagents and both research unlocks. The browser closed normally at
+1828.9MiB peak owned RSS. Base/original-campaign shared GPL, Phoenix browser
+lifecycle and the remaining negative controls still require verification;
+production remains unchanged.
+
+
+Philosopher's Stone now uses the original native spell packet, preserving the
+player, world position and exact clicked target. A private mode carries the
+source Laboratory's stable unit ID. The receiver validates ownership, Lab3
+and the ten-reagent requirement, creates the authored ALS1 spell through the
+original creation path, and invokes `Philosophers_Stone_Hit(Spell, Lab, Target)`
+through the original GPL call wrapper. Stock spells retain their normal path.
+Native trial1354 submitted a controlled packet against existing hostile1797:
+the original callback ran, reagent stock14 became4, and the hostile no longer
+appeared in the generated original save (receipt1355). This proves the native
+backend with a controlled packet; ordinary mouse-target casting and protected
+or insufficient-resource controls remain pending. The sender/receiver path is
+not a claim that multiplayer has been qualified.
+
+WASM build1359 completed through official tools/build.py using the same adapter
+source, C++ builtin support and original creator parsers. It peaked at1704MiB
+owned RSS. Recovered SDK JavaScript dependencies were installed from its pinned
+lockfile after the prior link attempt reported missing acorn. Browser gameplay
+and deployment remain pending. The private content overlay binds25 resources
+(28,853,565bytes) to exact original archive replacement hashes. It preserves the
+base collection and uses the original Majesty save identity. Public activation
+is still absent from the deployed catalog.
+
 Ordinary native progression now includes paid Lab2 (1800 gold), completed
 336HP construction, Phoenix research (750 gold), paid Lab3 (2200 gold), its
 444HP finished creator artwork, and another ordinary 600-gold recruit. The

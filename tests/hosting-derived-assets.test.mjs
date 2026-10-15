@@ -82,3 +82,33 @@ test('derived copy keeps original File handles and replaces only the copy', asyn
   assert.equal(base[1].file, config);
   assert.equal(await config.text(), 'original');
 });
+
+
+test('Alchemist accepts its complete source-bound media pack with exact sizes', async () => {
+  const {ALCHEMIST_FILES, ALCHEMIST_SIZES} = await import('../web/content/alchemist-files.mjs');
+  const plan = {format: descriptor.format, games: {'majesty-alchemist-v1': {baseId: 'majesty',
+    patches: Object.entries(ALCHEMIST_FILES).map(([path, sha256]) => ({path, sha256,
+      bytes: ALCHEMIST_SIZES[path],
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + path}))}}};
+  assert.equal(derivedDescriptor(plan, 'majesty-alchemist-v1').contentSet, 'alchemist-v1');
+  assert.ok(plan.games['majesty-alchemist-v1'].patches.some(p => p.bytes > 1024 * 1024));
+  for (const change of [p => p.patches.pop(), p => p.patches[0].bytes++,
+    p => {p.patches[0].sha256 = '0'.repeat(64);}, p => {p.patches[0] = p.patches[1];}]) {
+    const bad = structuredClone(plan); change(bad.games['majesty-alchemist-v1']);
+    assert.throws(() => derivedDescriptor(bad, 'majesty-alchemist-v1'));
+  }
+});
+
+test('Alchemist verifies every replaced original file before fetching media', async () => {
+  const {ALCHEMIST_REPLACEMENTS} = await import('../web/content/alchemist-files.mjs');
+  const config = new File(['original'], 'config'), text = new File(['customized'], 'text');
+  await assert.rejects(buildDerivedFiles([
+    {path: 'MajestyHD - Old.exe', file: new File(['exe'], 'exe')},
+    {path: 'DataMX/mx_miscdata.cam', file: config}, {path: 'Data/textdata.cam', file: text},
+  ], {contentSet: 'alchemist-v1', patches: [{path: 'Data/textdata.cam'}]}, {
+    fetchFile: () => assert.fail('Do not download onto a customized collection'),
+    hashFile: file => file === config ? Promise.resolve('14adacc16a0340f14cf951d933cf10b9bb08b770d189e8591660aebebfac3fb3') : hashBlob(file),
+  }), /modified content/);
+  assert.ok(ALCHEMIST_REPLACEMENTS['Data/textdata.cam']);
+  assert.equal(await text.text(), 'customized');
+});

@@ -36,6 +36,20 @@ bool panelBridge = false;
 bool researchBridge = false;
 bool traceCombat = false;
 bool actionBridge = false;
+bool targetBridge = false;
+unsigned targetBeginDepth = 0;
+struct TargetOwner {
+    const MajestyStockControllers::SovereignTargetActionRecord *action = nullptr;
+    std::uint32_t unit = 0, identity = 0;
+} targetOwner;
+struct TargetExecution {
+    const MajestyStockControllers::SovereignTargetActionRecord *action = nullptr;
+    std::uint32_t source = 0, clicked = 0, player = 0, spawned = 0;
+    bool invoked = false;
+} targetExecution;
+std::vector<std::uint32_t> targetSpawnMethods;
+std::map<std::uint32_t, std::uint32_t> targetDescriptors;
+void hook(const PopModApi *, pop_cpu_v1 *, PopHookInvocation *, void *);
 bool sharedFunctions = false;
 unsigned sharedLookupDepth = 0;
 std::map<std::string, std::string> sharedAliases;
@@ -54,6 +68,7 @@ bool controlledParty = false, controlledPartyApplied = false;
 bool controlledStock = false, controlledStockApplied = false;
 bool controlledDeath = false, controlledDeathApplied = false;
 std::uint32_t controlledDeathUnit = 0, controlledDeathClock = 0, controlledDeathDelay = 0;
+bool controlledTarget = false, controlledTargetApplied = false;
 bool researchCompletionStaged = false;
 std::uint32_t researchController = 0;
 std::uint64_t researchControllerGeneration = 0;
@@ -286,6 +301,126 @@ std::int32_t actionStock(std::uint32_t unit, const std::string &panel,
             return ops.attribute(unit, meter.attributeId);
     return -1;
 }
+bool targetReadyForPlayer(std::uint32_t unit,
+                          const MajestyStockControllers::SovereignTargetActionRecord &action,
+                          std::uint32_t player) {
+    if (!unit || (read(unit + 0x6c) & 0xffffffU) != 0x00784241U ||
+        (read(unit + 0x6c) >> 24) < '0' + action.requiredLevel)
+        return false;
+    MeterOps ops;
+    return read(unit + 0x70) == player && ops.attribute(unit, 0x00555041U) > 0 &&
+           actionStock(unit, action.panelKey, action.resourceKey) >=
+               static_cast<std::int32_t>(action.resourceCost);
+}
+bool targetReady(std::uint32_t unit,
+                 const MajestyStockControllers::SovereignTargetActionRecord &action) {
+    return targetReadyForPlayer(unit, action, read(call(0x00415b40U, 0) + 0x24));
+}
+std::uint32_t spellDescriptor(std::uint32_t id) {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 32, &memory) == POP_OK, "spell descriptor lookup storage");
+    write(memory, id);
+    call(0x0047b130U, 0x006d8218U, {memory + 8, memory});
+    const auto node = read(memory + 8);
+    const auto result = node == read(0x006d821cU) ? 0 : read(node + 16);
+    require(host->guest_free(host, memory) == POP_OK, "spell descriptor lookup release");
+    return result;
+}
+std::uint32_t
+ensureTargetDescriptor(const MajestyStockControllers::SecondaryPanelRecord &panel,
+                       const MajestyStockControllers::SovereignTargetActionRecord &action) {
+    std::uint8_t initialized = 0;
+    require(host->guest_read_u8(host, 0x006d822aU, &initialized) == POP_OK,
+            "native spell registry initialization flag");
+    if (!initialized)
+        call(0x004782c0U, 0);
+    const auto original = spellDescriptor(action.targetTemplateControlId);
+    require(original && read(original + 8) == action.stockTargetMode,
+            "native target template mode");
+    auto descriptor = spellDescriptor(action.privateControlId);
+    const auto owned = targetDescriptors.find(action.privateControlId);
+    if (descriptor) {
+        require(owned != targetDescriptors.end() && owned->second == descriptor,
+                "private spell descriptor ownership");
+    } else {
+        // The native descriptor map owns this original-heap allocation and
+        // retires it through its own destructor, just like its stock entries.
+        descriptor = call(0x0064c616U, 0, {20});
+        require(descriptor != 0, "private spell descriptor allocation");
+        for (unsigned i = 0; i < 5; ++i)
+            write(descriptor + i * 4, read(original + i * 4));
+        write(descriptor, panel.buildingFamilyId);
+        write(descriptor + 4, panel.childDialogId);
+        write(descriptor + 12, 1);
+        write(descriptor + 16, 0);
+        std::uint32_t memory = 0;
+        require(host->guest_alloc(host, 32, &memory) == POP_OK,
+                "spell descriptor insertion storage");
+        write(memory, action.privateControlId);
+        write(memory + 4, descriptor);
+        call(0x0047b220U, 0x006d8218U, {memory + 8, memory});
+        require(spellDescriptor(action.privateControlId) == descriptor,
+                "original map owns private spell descriptor");
+        require(host->guest_free(host, memory) == POP_OK, "spell descriptor insertion release");
+        targetDescriptors[action.privateControlId] = descriptor;
+    }
+    return descriptor;
+}
+void beginTarget(std::uint32_t unit, const MajestyStockControllers::SecondaryPanelRecord &panel,
+                 const MajestyStockControllers::SovereignTargetActionRecord &action) {
+    if (!targetReady(unit, action))
+        return;
+    ensureTargetDescriptor(panel, action);
+    targetOwner = {&action, unit, read(unit + 0x60)};
+    ++targetBeginDepth;
+    call(0x00479fc0U, 0, {action.privateControlId});
+    --targetBeginDepth;
+    host->log(host, "Private target entered the original sovereign selection lifecycle.");
+}
+void ensureTargetSpawnHook() {
+    const auto world = read(0x0071c68cU);
+    require(world && read(world + 4), "original sovereign world manager");
+    const auto table = read(read(world + 4));
+    require(read(table + 0x64) == 0x005a1480U && read(table + 0x68) == 0x005a1350U,
+            "pinned sovereign coordinate wrapper and original creation entry");
+    // Slot64's coordinate wrapper is a recovered block. Its slot68 callee is
+    // independently listed and eligible. Verify both native return addresses
+    // around that entry instead of changing the wrapper's eligibility.
+    const auto method = read(table + 0x68);
+    if (std::find(targetSpawnMethods.begin(), targetSpawnMethods.end(), method) !=
+        targetSpawnMethods.end())
+        return;
+    std::uint32_t id = 0;
+    const auto status = host->hook_install_ex(host, method, 0, hook, POP_HOOK_WRAP,
+                                              POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+    std::fprintf(stderr, "[alchemist-target] original-spawn-method=%08x hook-status=%d\n", method,
+                 status);
+    require(status == POP_OK, "original sovereign creation method must be eligible");
+    hooks.push_back(id);
+    targetSpawnMethods.push_back(method);
+    std::fprintf(stderr, "[alchemist-target] original-spawn-method=%08x\n", method);
+}
+void invokeSourceTarget(const TargetExecution &execution) {
+    const auto &callback = execution.action->sourceTargetCallback;
+    require(!callback.empty() && callback.size() < 120, "source-target GPL callback bound");
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 256, &memory) == POP_OK, "source-target native call storage");
+    for (unsigned i = 0; i <= callback.size(); ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, callback[i]) == POP_OK,
+                "source-target callback name");
+    call(0x004e3520U, memory, {memory + 128});
+    call(0x00629910U, memory + 32, {memory});
+    require(read(memory + 36) != 0, "source-target original function binding");
+    call(0x004e3820U, memory);
+    call(0x00629bf0U, memory + 32);
+    // Original 629A20 boxes actual game units as agent arguments. Let the
+    // original call wrapper prepare all parameters, locals and return state.
+    for (const auto unit : {execution.spawned, execution.source, execution.clicked})
+        call(0x00629a20U, memory + 32, {unit});
+    call(0x00629c40U, memory + 32);
+    call(0x006299b0U, memory + 32);
+    require(host->guest_free(host, memory) == POP_OK, "source-target native call release");
+}
 void setupControlledStock(std::uint32_t controller) {
     if (!controlledStock || controlledStockApplied)
         return;
@@ -391,6 +526,12 @@ void actionPresentation(std::uint32_t controller, std::uint64_t generation) {
             send(action.actionControlId,
                  !actionReady(unit, action.panelKey, action.resourceKey, action.requiredLevel,
                               action.resourceCost, 0, action.completionTemplateResearchControlId));
+    if (targetBridge)
+        for (const auto &action : recipes.sovereignTargetActions)
+            if (action.panelKey == session.recipe->panelKey) {
+                ensureTargetDescriptor(*session.recipe, action);
+                send(action.visualControlId, !targetReady(unit, action));
+            }
 }
 void researchProgress() {
     if (!researchBridge || researchCompletionStaged)
@@ -692,6 +833,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
     if ((researchBridge || sharedFunctions) && target == 0x00628e60U) {
         sharedResolved.clear();
+        targetOwner = {};
+        targetExecution = {};
+        targetBeginDepth = 0;
         // The original quest/GPL teardown retires all raw world references.
         // No host activity tuple may survive into a fresh loaded world.
         researchActivity = {};
@@ -704,7 +848,158 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         controlledDeathApplied = false;
         controlledDeathUnit = 0;
         controlledDeathClock = 0;
+        controlledTargetApplied = false;
         next(inv, cpu);
+        return;
+    }
+    if (targetBridge && target == 0x004380c0U) {
+        // Any ordinary mode selection replaces our source owner. The private
+        // begin call uses the same native method inside its explicit scope.
+        if (!targetBeginDepth)
+            targetOwner = {};
+        next(inv, cpu);
+        return;
+    }
+    if (targetBridge && target == 0x005cd860U && targetOwner.action && self == read(0x0071c844U) &&
+        read(self + 0x30) == targetOwner.action->stockTargetMode && read(cpu->esp + 4) == 23) {
+        // Sp23's native registration uses cursor23. Keep its target predicate
+        // and invalid-target feedback while presenting the declared cursor39.
+        const auto argument = cpu->esp + 4;
+        write(argument, targetOwner.action->cursorOrdinal);
+        next(inv, cpu);
+        write(argument, 23);
+        return;
+    }
+    if (targetBridge && self == 0x006d8218U && (target == 0x0047b130U || target == 0x0047b220U)) {
+        const auto panel = lifecycle.find(researchController);
+        const auto key = read(cpu->esp + 8);
+        // The visible native control and the private command descriptor have
+        // separate IDs. Both find() and the old operator[] insertion probe are
+        // used by native hover/price presenters; scope both to this live panel.
+        if (panel.recipe && !panel.parent && panel.generation == researchControllerGeneration &&
+            (target != 0x0047b220U || read(key + 4) == 0)) {
+            for (const auto &action : recipes.sovereignTargetActions) {
+                const auto owned = targetDescriptors.find(action.privateControlId);
+                if (action.panelKey == panel.recipe->panelKey &&
+                    read(key) == action.visualControlId && owned != targetDescriptors.end() &&
+                    spellDescriptor(action.privateControlId) == owned->second) {
+                    write(key, action.privateControlId);
+                    next(inv, cpu);
+                    write(key, action.visualControlId);
+                    return;
+                }
+            }
+        }
+        next(inv, cpu);
+        return;
+    }
+    if (targetBridge && target == 0x004a7420U) {
+        const auto argument = cpu->esp + 4;
+        const auto mode = read(argument), cost = read(argument + 20);
+        if (targetOwner.action && mode == targetOwner.action->stockTargetMode) {
+            const auto &action = *targetOwner.action;
+            if (read(targetOwner.unit + 0x60) == targetOwner.identity &&
+                read(argument + 4) == read(targetOwner.unit + 0x70) &&
+                targetReady(targetOwner.unit, action)) {
+                // Keep player, coordinates and the exact clicked target in
+                // their native packet fields. The otherwise-zero price field
+                // carries the source building ID, as the community v2 contract
+                // requires. Receipt/execution does not depend on a UI pointer.
+                write(argument, action.privateMode);
+                write(argument + 20, targetOwner.identity);
+                host->log(host,
+                          "Private source and clicked target committed in native spell packet.");
+            } else {
+                // Preserve native repeat-target behavior and its ordinary
+                // unaffordable-cast feedback without executing another spell.
+                write(argument + 20, 0x7fffffffU);
+            }
+            next(inv, cpu);
+            write(argument, mode);
+            write(argument + 20, cost);
+            return;
+        }
+        next(inv, cpu);
+        return;
+    }
+    if (targetBridge && target == 0x004a60b0U) {
+        const auto previous = targetExecution;
+        targetExecution = {};
+        const auto argument = cpu->esp + 4, mode = read(argument), cost = read(argument + 24);
+        const MajestyStockControllers::SovereignTargetActionRecord *action = nullptr;
+        for (const auto &candidate : recipes.sovereignTargetActions)
+            if (candidate.privateMode == mode)
+                action = &candidate;
+        if (action) {
+            // The original receiver adds its sequence/unit field between mode
+            // and player, so this executor has seven words, not the sender's
+            // six. Preserve that original packet/acknowledgement lifecycle.
+            const auto world = read(0x0071c68cU);
+            const auto manager = world ? read(world + 4) : 0, player = read(argument + 8);
+            if (!manager) {
+                targetExecution = previous;
+                require(host->hook_return(host, cpu, 0, 0) == POP_OK,
+                        "retired-world private spell cdecl return");
+                return;
+            }
+            const auto source = call(0x005a10d0U, manager, {cost});
+            const auto clicked = call(0x005a10d0U, manager, {read(argument + 20)});
+            if (!source || !clicked || read(source + 0x60) != cost ||
+                !targetReadyForPlayer(source, *action, player)) {
+                targetExecution = previous;
+                require(host->hook_return(host, cpu, 0, 0) == POP_OK,
+                        "invalid private spell original cdecl return");
+                return;
+            }
+            ensureTargetSpawnHook();
+            targetExecution = {action, source, clicked, player, 0, false};
+            write(argument, action->stockExecutorMode);
+            write(argument + 24, 0);
+        }
+        next(inv, cpu);
+        if (action) {
+            require(!targetExecution.spawned || targetExecution.invoked,
+                    "created private spell must invoke its authored source-target callback");
+            write(argument, mode);
+            write(argument + 24, cost);
+        }
+        targetExecution = previous;
+        return;
+    }
+    if (targetBridge && targetExecution.action &&
+        std::find(targetSpawnMethods.begin(), targetSpawnMethods.end(), target) !=
+            targetSpawnMethods.end() &&
+        read(cpu->esp) == 0x005a14c2U && read(cpu->esp + 0x30) == 0x004a70d8U) {
+        const auto argument = cpu->esp + 8, original = read(argument);
+        require(original == 0x31455657U, "original Lightning Storm creation description");
+        write(argument, targetExecution.action->privateUnitId);
+        next(inv, cpu);
+        write(argument, original);
+        targetExecution.spawned = cpu->eax;
+        if (cpu->eax)
+            require(read(cpu->eax + 0x6c) == targetExecution.action->privateUnitId &&
+                        read(cpu->eax + 0x70) == targetExecution.player,
+                    "created native private spell identity and owner");
+        return;
+    }
+    if (targetBridge && target == 0x005ae750U && targetExecution.action &&
+        targetExecution.spawned && read(cpu->esp + 4) == targetExecution.spawned &&
+        read(cpu->esp) == 0x004a7174U) {
+        std::fprintf(
+            stderr, "[alchemist-target] callback=%s expected=%s target=%08x expected-target=%08x\n",
+            guestString(self).c_str(), targetExecution.action->sourceTargetCallback.c_str(),
+            read(cpu->esp + 8), targetExecution.clicked);
+        // The old Character description leaves this stock two-argument script
+        // slot empty for the community's paired callback. Its validated MMCR
+        // record supplies the name; 629910 resolves that original GPL export.
+        require(read(cpu->esp + 8) == targetExecution.clicked && !targetExecution.invoked,
+                "native private spell callback and exact clicked target");
+        invokeSourceTarget(targetExecution);
+        targetExecution.invoked = true;
+        host->log(host,
+                  "Native spell invoked authored callback with Spell, Lab and clicked enemy.");
+        require(host->hook_return(host, cpu, 1, 8) == POP_OK,
+                "private spell preserves original two-argument RET8");
         return;
     }
     if (controlledDeath && target == 0x005a1c40U) {
@@ -743,6 +1038,31 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (controlledTarget && !controlledTargetApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4)) {
+            const auto world = read(0x0071c68cU), manager = world ? read(world + 4) : 0;
+            require(manager && recipes.sovereignTargetActions.size() == 1,
+                    "controlled target original world and declared action");
+            const auto source = call(0x005a10d0U, manager, {915});
+            const auto clicked = call(0x005a10d0U, manager, {1797});
+            const auto &action = recipes.sovereignTargetActions.front();
+            MeterOps ops;
+            require(source && clicked && targetReady(source, action) &&
+                        read(clicked + 0x60) == 1797 && read(clicked + 0x70) == 7 &&
+                        ops.attribute(clicked, 0x00555041U) > 0,
+                    "controlled target exact existing hostile and funded Lab");
+            controlledTargetApplied = true;
+            std::uint32_t position = 0;
+            require(host->guest_alloc(host, 16, &position) == POP_OK,
+                    "controlled target original coordinate storage");
+            call(0x005ad740U, clicked, {position});
+            call(0x004a7420U, 0,
+                 {action.privateMode, read(source + 0x70), read(position), read(position + 4), 1797,
+                  915});
+            require(host->guest_free(host, position) == POP_OK,
+                    "controlled target coordinate release");
+            host->log(host, "Controlled existing target submitted through original spell packet.");
+        }
         if (pending && researchActivity.capture(activity, recruitment))
             host->log(host,
                       "Original simulation update installed private research; AP10 restored.");
@@ -861,6 +1181,18 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                                             action.requiredLevel, action.resourceCost, 0,
                                             action.completionTemplateResearchControlId))
                                 submitRageAction(unit, action.callbackSymbol);
+                            actionPresentation(self, privateSession.generation);
+                            returned(cpu, 0);
+                            return;
+                        }
+                }
+                if (targetBridge) {
+                    const auto unit = call(0x00481ec0U, self);
+                    for (const auto &action : recipes.sovereignTargetActions)
+                        if (action.panelKey == privateSession.recipe->panelKey &&
+                            (command == action.visualControlId ||
+                             command == action.privateControlId)) {
+                            beginTarget(unit, *privateSession.recipe, action);
                             actionPresentation(self, privateSession.generation);
                             returned(cpu, 0);
                             return;
@@ -1184,6 +1516,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     researchBridge = panelBridge && research && !std::strcmp(research, "1");
     const char *actions = std::getenv("RECOMP_ALCHEMIST_ACTION_BRIDGE");
     actionBridge = researchBridge && actions && !std::strcmp(actions, "1");
+    const char *targets = std::getenv("RECOMP_ALCHEMIST_TARGET_BRIDGE");
+    targetBridge = actionBridge && targets && !std::strcmp(targets, "1");
+    const char *targetTest = std::getenv("RECOMP_ALCHEMIST_TEST_TARGET_COMMAND");
+    controlledTarget = targetBridge && targetTest && !std::strcmp(targetTest, "1797");
     const char *party = std::getenv("RECOMP_ALCHEMIST_TEST_PARTY_LEVELS");
     controlledParty = researchBridge && party && !std::strcmp(party, "1");
     const char *stock = std::getenv("RECOMP_ALCHEMIST_TEST_REAGENTS");
@@ -1287,6 +1623,16 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
                 return status;
             hooks.push_back(id);
         }
+    if (targetBridge)
+        for (const auto address : {0x004380c0U, 0x0047b130U, 0x0047b220U, 0x004a7420U, 0x004a60b0U,
+                                   0x005ae750U, 0x005cd860U}) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
     if (traceRecruitment || traceCombat || attributeCompat || sharedFunctions) {
         std::vector<std::uint32_t> extraHooks{0x006381b0U};
         if (traceRecruitment)
@@ -1327,6 +1673,11 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     sharedResolved.clear();
     sharedAliases.clear();
     sharedLookupDepth = 0;
+    targetOwner = {};
+    targetExecution = {};
+    targetBeginDepth = 0;
+    targetDescriptors.clear();
+    targetSpawnMethods.clear();
     if (scratch)
         host->guest_free(host, scratch);
     scratch = 0;

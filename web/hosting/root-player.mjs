@@ -1,8 +1,8 @@
 import {launcherClient} from './launcher-client.mjs';
 import {ensureAutomaticAssets} from './automatic-assets.mjs';
 
-// Retired content remains in player storage for backups, but live launches use
-// the original game collection. Never delete or reimport a player's profiles.
+// Retired collections remain available for backups. A qualified catalog may
+// mount community data while retaining Majesty's original profile identity.
 export async function prepareRootPlayer({search = location.search,
   openClient = launcherClient, ensureAssets = ensureAutomaticAssets, signal} = {}) {
   const client = await openClient({signal});
@@ -19,6 +19,17 @@ export async function prepareRootPlayer({search = location.search,
     }
     signal?.throwIfAborted();
     const {contentStorageId, defaultContentStorageId, ...original} = game;
+    const contentId = game.defaultContentStorageId;
+    if (contentId === 'majesty-alchemist-v1' && client.games.some(item => item.id === contentId)) {
+      await ensureAssets(contentId, {
+        status: id => client.status(id),
+        importZip: (id, file) => client.importZip(id, file),
+        importFiles: (id, files) => client.importFiles(id, files),
+        signal, progress: () => {},
+      });
+      signal?.throwIfAborted();
+      return [{...original, contentStorageId: contentId}];
+    }
     return [original];
   } finally { client.close(); }
 }

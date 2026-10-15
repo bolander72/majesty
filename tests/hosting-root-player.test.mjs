@@ -46,3 +46,24 @@ test('missing original configuration fails without importing a retired edition',
     status:()=>assert.fail(),close:()=>{closed=true;}})}),/original game configuration/);
   assert.equal(closed,true);
 });
+
+
+test('qualified Alchemist catalog mounts separate data with the original save identity', async () => {
+  let closed = false, prepared = false;
+  const games = [{id: 'majesty', title: 'Majesty', defaultContentStorageId: 'majesty-alchemist-v1'},
+    {id: 'majesty-alchemist-v1'}];
+  const result = await prepareRootPlayer({search: '', openClient: async () => ({games,
+    status: async () => ({status: {state: 'ready'}}), close() {closed = true;}}),
+    ensureAssets: async id => {assert.equal(id, 'majesty-alchemist-v1'); prepared = true;}});
+  assert.deepEqual(result, [{id: 'majesty', title: 'Majesty', contentStorageId: 'majesty-alchemist-v1'}]);
+  assert.ok(prepared && closed);
+});
+
+test('failed Alchemist preparation cannot launch a partial collection', async () => {
+  let closed = false;
+  await assert.rejects(prepareRootPlayer({search: '', openClient: async () => ({games: [
+    {id: 'majesty', defaultContentStorageId: 'majesty-alchemist-v1'}, {id: 'majesty-alchemist-v1'}],
+    status: async () => ({status: {state: 'ready'}}), close() {closed = true;}}),
+    ensureAssets: async () => {throw Error('Incomplete content');}}), /Incomplete content/);
+  assert.ok(closed);
+});
