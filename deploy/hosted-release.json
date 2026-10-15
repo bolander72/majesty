@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "native-regressions918",
-  "bytes": 7530607,
-  "sha256": "48af1acae861b923fc956b37078da52947ed328d671e2754b9caeebdfb89bac5",
-  "engineSha256": "51b2c998905eefbc8b0ffb03446aa64a9a1e87e60b8be62fe289bc27c5ba8e33",
+  "release": "alchemist-lab1417",
+  "bytes": 7718613,
+  "sha256": "cdaddb71068efffc29ca8546bb975dc68fd709f2137d59335fcfe77f7b34755b",
+  "engineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -98,16 +98,16 @@
       "sha256": "1a63bf3bf5a774c2739a4f4cb4e45bd6c38c3fd32fc68dc50a15d7d658c485d6"
     },
     "static/majesty/MajestyRecomp.data": {
-      "bytes": 5083871,
-      "sha256": "74da12fe011d820f1c4b8277a31ecaf5744b738b9d94f0db0f8d863b4ecfc024"
+      "bytes": 5092097,
+      "sha256": "ca842f5f4f3a4dae47573c1426e20fba3c66185f754b95977737dbfa1db82d29"
     },
     "static/majesty/MajestyRecomp.js": {
-      "bytes": 471708,
-      "sha256": "fbbe0f6d651d9474b4f2d90959b97bed0a171e5a64f776d6d999387464c82dcf"
+      "bytes": 472568,
+      "sha256": "bbc777bd8be0d6d45ad8528f0ddfa057a7c5f5ebf2cddbf6c5fe26c0bec8e1c9"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 6867044,
-      "sha256": "e0fa7188fc58ccbc55a0255cb680297a5b0ce5685e34476ccde72a1dd1255b7b"
+      "bytes": 7053302,
+      "sha256": "4ab27fad42c71fa513a0a69981828813165b5477a2889497dfe9c4e4468a9637"
     },
     "static/majesty/index.html": {
       "bytes": 19657,
@@ -598,5 +598,5 @@
       "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
     }
   },
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/be50ee84ba92bed2f8f07e1a848d6f35fa17a84e/assets/releases/native-regressions918.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/releases/alchemist-lab1417.tar.gz"
 }

@@ -7,6 +7,25 @@ Trail Lodge remain retired. Production still runs the original game.
 
 ## Latest mechanics qualification (October 14)
 
+Release candidate `alchemist-lab1417` uses WASM SHA256
+`b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af`.
+Browser1410 restored the original Phoenix-revived save1327 without test injury
+flags, continued normally, and generated a new original GMP. Hero1719 remains
+alive at4977HP; both heroes subsequently own actual index113 Phials. Native1416
+started the original Scions of Chaos quest with the exact candidate1299 and
+exited normally at168.6MiB peak RSS. GoldHD's original campaign uses the fixed
+DataMX GPL; no unqualified unified-Data candidate was selected for release.
+The25 actual creator resources are commit-pinned in the public asset branch.
+
+The release preserves the original Majesty profile identity and installs a
+separate immutable `majesty-alchemist-v1` game-data collection. Existing base
+collections and backups remain intact. Community content is qualified for
+single-player; its sovereign actions have not been qualified for multiplayer.
+Vigor's actual buff persists and expires across saves, but its progress display
+is not reconstructed after reload. This remaining cosmetic limitation is
+explicitly recorded in the release manifest.
+
+
 Browser trial1363 now proves ordinary root entry, an original native Day10
 save restore, authentic completed Lab3 art, ordinary paid recruitment, native
 Brewing controls and both completed research flags. It generated an original

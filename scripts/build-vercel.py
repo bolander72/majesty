@@ -177,6 +177,64 @@ def retire_custom_content(static):
     assets_file.write_text(json.dumps(assets, indent=2) + '\n')
 
 
+
+def install_alchemist_release(static):
+    """Mount only the engine-bound, qualified community content collection."""
+    descriptor = ROOT / 'deploy/alchemist-release.json'
+    if not descriptor.exists():
+        return None
+    content = json.loads(descriptor.read_text())
+    release = json.loads((ROOT / 'deploy/hosted-release.json').read_text())
+    required = ['nativeMechanicsQualified', 'browserWorldSaveReloadQualified',
+                'browserSovereignActionsQualified', 'browserPhoenixSaveQualified',
+                'originalCampaignEntryQualified']
+    if (content.get('format') != 'majesty-alchemist-content-release-v1'
+            or content.get('engineSha256') != release['engineSha256']
+            or content.get('storageId') != 'majesty-alchemist-v1'
+            or any(content.get(key) is not True for key in required)):
+        raise ValueError('Require engine-bound Alchemist gameplay qualification')
+    text = (ROOT / 'web/content/alchemist-files.mjs').read_text()
+    start = text.split('export const ALCHEMIST_FILES = Object.freeze(', 1)[1]
+    bindings = json.loads(start.split(');', 1)[0])
+    start = text.split('export const ALCHEMIST_SIZES = Object.freeze(', 1)[1]
+    sizes = json.loads(start.split(');', 1)[0])
+    patches = content.get('patches', [])
+    if len(patches) != len(bindings) or len({p['path'] for p in patches}) != len(bindings):
+        raise ValueError('Missing Alchemist resources')
+    for patch in patches:
+        if (bindings.get(patch['path']) != patch.get('sha256')
+                or sizes.get(patch['path']) != patch.get('bytes')
+                or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Alchemist resources differ from verified bindings')
+    environment = {name: '1' for name in [
+        'RECOMP_RULE_INVENTORY_COMPAT', 'RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT',
+        'RECOMP_ALCHEMIST_PANEL_BRIDGE', 'RECOMP_ALCHEMIST_RESEARCH_BRIDGE',
+        'RECOMP_ALCHEMIST_ACTION_BRIDGE', 'RECOMP_ALCHEMIST_TARGET_BRIDGE',
+        'RECOMP_ALCHEMIST_SHARED_FUNCTIONS']}
+    if content.get('requiredRuntimeEnvironment') != environment:
+        raise ValueError('Alchemist runtime environment differs')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-alchemist-v1'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    games = [game for game in games if game['id'] != 'majesty-alchemist-v1']
+    games.append({**original, 'id': 'majesty-alchemist-v1', 'title': 'Majesty: Alchemist Lab'})
+    original['defaultContentStorageId'] = 'majesty-alchemist-v1'
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    anchor = '      m.ENV.RECOMP_GUEST_ARGS ='
+    if html.count(anchor) != 1:
+        raise ValueError('Review Alchemist runtime environment placement')
+    html = html.replace(anchor, ''.join('      m.ENV.' + name + ' = "1";\n'
+                                      for name in environment) + anchor, 1)
+    player.write_text(html)
+    return content
+
+
 def unpack_release(data, release, destination):
     if len(data) != release['bytes'] or hashlib.sha256(data).hexdigest() != release['sha256']:
         raise ValueError('Hosted release download failed integrity verification')
@@ -308,6 +366,7 @@ def build(destination=None):
     install_automatic_assets(static)
     install_content_v2_release(static)
     retire_custom_content(static)
+    install_alchemist_release(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:
