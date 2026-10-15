@@ -8,7 +8,9 @@ artwork, JavaScript animation loop or new engine build is required.
 `scripts/build-vercel.py` appends these options to the active game catalogs and
 hides the browser pointer only over the ready game canvas. Startup, recovery and
 content outside the game canvas retain the browser pointer. Both the root player
-and the game deep link receive the same readiness rule.
+and the game deep link receive the same readiness rule. The cursor declaration
+uses `!important` because SDL updates the canvas inline cursor style during
+focus/pointer changes; an ordinary stylesheet rule loses that cascade.
 
 Muted isolated browser trial cursor1531 verified the original hand in the main
 menu, load menu and Palace interface, then the original attack flag cursor with

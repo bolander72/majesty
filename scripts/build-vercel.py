@@ -250,7 +250,9 @@ def enable_native_cursor(static):
     html = player.read_text()
     # Keep the normal pointer during startup/recovery and outside the canvas.
     # The original game renders its cursor into presented frames after startup.
-    rule = '  body[data-game-ready] #canvas { cursor: none; }\n'
+    # SDL writes an inline cursor style when focus/pointer state changes.
+    # This game-specific rule must outrank it while the native cursor is drawn.
+    rule = '  body[data-game-ready] #canvas { cursor: none !important; }\n'
     anchor = '  body[data-game-ready] #canvas { visibility: visible; }\n'
     if html.count(anchor) != 1:
         raise ValueError('Review native cursor readiness placement')

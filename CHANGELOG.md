@@ -2,6 +2,8 @@
 
 ## Original Majesty cursor — October 14, 2026
 
+- Keep the browser arrow hidden when SDL updates its inline canvas cursor style, preventing a second cursor over the game.
+
 - Enable the original software cursor in the browser, preserving its artwork, animation, hotspot and contextual states. Hide the browser arrow over the ready game canvas.
 
 ## Alchemist map selection — October 14, 2026
