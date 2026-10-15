@@ -5,6 +5,32 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
+## Pending CPU-only write fast path
+
+[The private candidate](../deploy/cpu-only-write-candidate.json) moves the existing
+GPU surface-generation check ahead of the dynamic legacy-writeback setting
+lookup. Recorded writes without a GPU copy need neither binding nor upload.
+This avoids repeated environment lookups per pixel span without caching the
+setting, changing write records, or changing simulation and save behavior.
+The inactive patch is
+`patches/experimental/recomp-kit-cpu-only-write-fastpath.patch`.
+
+The official `host_tests` suite passes 4,175,535 checks, including stale
+surface generations, dynamic setting changes and partial-write pixel fidelity.
+The official browser build passes. Candidate gameplay and save/reload remain
+unqualified: its owned browser reached the unchanged 2400 MiB aggregate RSS
+guard before menu readiness and was closed. The candidate engine is private;
+production still uses the baseline-reuse release below.
+
+This pass also corrected the private test site's default collection from an
+older `campaign3test3` candidate to production's `campaign3`. The corrected
+baseline loaded the 111-building input at an 800 by 633 viewport and measured
+23.31 fresh acknowledged frames/s in a 20-second sample, using the explicit
+`--liftoff-only` test compiler mode. This is a baseline, not evidence of an
+improvement, and it does not describe normal optimizing-browser performance.
+The earlier private-collection samples remain historical measurements of their
+own setup. No failed or guard-stopped trial supplies a candidate FPS result.
+
 ## Reuse the synchronized primary baseline
 
 `patches/recomp-kit-present-baseline-reuse.patch` removes a duplicate full-surface

@@ -1,0 +1,63 @@
+--- a/host/d3d_render.cpp
++++ b/host/d3d_render.cpp
+@@ -3648,9 +3648,12 @@
+     return renderer && renderer->coherentSurface(s, g, r, n) ? 1 : 0;
+ }
+ extern "C" void host_d3d_apply_cpu(const HostD3DSurface *s, const HostBlitRecord *r) {
+-    if (!host_d3d_legacy_writeback())
+-        if (auto *renderer = D3DRenderer::shared())
+-            renderer->applyCPU(s, r);
++    auto *renderer = D3DRenderer::shared();
++    // CPU-only surfaces have no GPU copy to update. Reject those writes before
++    // reading the dynamic compatibility setting on every recorded pixel span.
++    if (renderer && r && renderer->slotFor(r->dst, r->dst_generation) >= 0 &&
++        !host_d3d_legacy_writeback())
++        renderer->applyCPU(s, r);
+ }
+ extern "C" void host_d3d_swap_generations(uint32_t a, uint32_t ag, uint32_t b, uint32_t bg) {
+     if (auto *r = D3DRenderer::shared())
+@@ -3676,7 +3679,7 @@
+ 
+ extern "C" void host_d3d_prepare_cpu_write(const HostD3DSurface *s, uint32_t g, uint64_t f) {
+     D3DRenderer *renderer = D3DRenderer::shared();
+-    if (!host_d3d_legacy_writeback() && renderer && renderer->slotFor(s->id, g) >= 0)
++    if (renderer && renderer->slotFor(s->id, g) >= 0 && !host_d3d_legacy_writeback())
+         renderer->bindSurface(s, g, f);
+ }
+ 
+--- a/host/tests/host_tests.cpp
++++ b/host/tests/host_tests.cpp
+@@ -4069,7 +4069,33 @@
+     record.cpu_bpp = 16;
+     record.cpu_pitch = 8;
+     record.coverage = coverage.data();
++    // An absent/stale generation must neither create a scene nor change the
++    // current one. A CPU-only write is uploaded only if a later draw needs it.
++    record.dst_generation = 2;
++    host_d3d_prepare_cpu_write(&surface.desc, 2, 7005);
+     host_d3d_apply_cpu(&surface.desc, &record);
++    CHECK_EQ(renderer->slotFor(surface.desc.id, 2), -1);
++    CHECK(renderer->slotFor(surface.desc.id, 1) >= 0);
++    record.dst_generation = 1;
++    const char *saved = recomp_env("LEGACY_WRITEBACK");
++    const std::string old = saved ? saved : "";
++    const bool had_setting = saved != nullptr;
++    os_setenv("RECOMP_LEGACY_WRITEBACK", "1");
++    host_d3d_apply_cpu(&surface.desc, &record);
++    Readback untouched = read_target(renderer);
++    int red, green, blue, alpha;
++    untouched.rgb(21, 21, &red, &green, &blue, &alpha);
++    CHECK_EQ(red, 0x17);
++    CHECK_EQ(green, 0x2b);
++    CHECK_EQ(blue, 0x3f);
++    // The setting remains dynamic; a previous early return must not cache it.
++    os_setenv("RECOMP_LEGACY_WRITEBACK", "0");
++    host_d3d_prepare_cpu_write(&surface.desc, 1, 7005);
++    host_d3d_apply_cpu(&surface.desc, &record);
++    if (had_setting)
++        os_setenv("RECOMP_LEGACY_WRITEBACK", old.c_str());
++    else
++        os_unsetenv("RECOMP_LEGACY_WRITEBACK");
+     Readback rb = read_target(renderer);
+     CHECK_EQ(rb.w, 1280);
+     CHECK_EQ(rb.h, 960);
