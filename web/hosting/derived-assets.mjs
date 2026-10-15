@@ -41,7 +41,8 @@ export async function collectGameFiles(root) {
 
 export async function buildDerivedFiles(baseFiles, recipe, {fetchFile = fetch, signal, hashFile = hashBlob} = {}) {
   const files = new Map(baseFiles.map(file => [file.path, file]));
-  if (files.size !== baseFiles.length || !files.has('MajestyHD - Old.exe'))
+  if (files.size !== baseFiles.length || new Set(baseFiles.map(file => file.path.toLowerCase())).size !== files.size
+      || !files.has('MajestyHD - Old.exe'))
     throw Error('A complete original game copy is required.');
   const oldConfig = files.get('DataMX/mx_miscdata.cam');
   if (!oldConfig || await hashFile(oldConfig.file) !== '14adacc16a0340f14cf951d933cf10b9bb08b770d189e8591660aebebfac3fb3')
@@ -52,6 +53,8 @@ export async function buildDerivedFiles(baseFiles, recipe, {fetchFile = fetch, s
   // collections remain untouched, and only new File handles replace this copy.
   for (const patch of recipe.patches) {
     const original = files.get(patch.path), expected = replacements[patch.path];
+    if (!original && baseFiles.some(file => file.path.toLowerCase() === patch.path.toLowerCase()))
+      throw Error('The source includes a conflicting resource path; it was preserved.');
     if (expected ? !original || await hashFile(original.file) !== expected : original)
       throw Error('The source already includes modified content; it was preserved.');
   }

@@ -112,3 +112,10 @@ test('Alchemist verifies every replaced original file before fetching media', as
   assert.ok(ALCHEMIST_REPLACEMENTS['Data/textdata.cam']);
   assert.equal(await text.text(), 'customized');
 });
+
+
+test('case-folded resource collisions cannot enter a native content collection', async () => {
+  const exe = {path: 'MajestyHD - Old.exe', file: new File(['exe'], 'exe')};
+  await assert.rejects(buildDerivedFiles([exe, {...exe, path: 'majestyhd - old.exe'}], {patches: []}),
+    /complete original game/);
+});
