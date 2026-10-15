@@ -22,7 +22,7 @@
     }
   },
   "patch": "patches/recomp-kit-cpu-snapshot-present.patch",
-  "patchSha256": "57c54f4036c3e0007b83f8ec0717bc8539bfb2823f697b5ade989b9b097cc29c",
+  "patchSha256": "5f0856457aecf3226b3f876e89f612a02a363ff47e6531c536e5e5d854f55024",
   "sourceBinding": {
     "dx/coherence.h": {
       "before": "714ab264b4eaacc76710dfef58c14b94189aecdc6b48fc0e74d86a52c3380356",
@@ -123,7 +123,7 @@
     "exactPatchRoundTrip": true,
     "scopedOfficialGameLiteralCheck": true,
     "scopedOfficialTrackedBoundaryCheck": true,
-    "patchSha256": "57c54f4036c3e0007b83f8ec0717bc8539bfb2823f697b5ade989b9b097cc29c",
+    "patchSha256": "5f0856457aecf3226b3f876e89f612a02a363ff47e6531c536e5e5d854f55024",
     "scopedFiles": [
       "dx/coherence.h",
       "dx/d3d.cpp",
@@ -139,7 +139,8 @@
       "host/tests/test_frame_builder.h",
       "host/tests/ui_layer_tests.cpp",
       "host/ui_layer.cpp"
-    ]
+    ],
+    "zeroContextArtifactRoundTrip": true
   },
   "officialBuild": {
     "exitCode": 0,
