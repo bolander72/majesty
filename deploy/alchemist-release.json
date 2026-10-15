@@ -1,7 +1,7 @@
 {
   "format": "majesty-alchemist-content-release-v1",
   "engineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
-  "storageId": "majesty-alchemist-v1",
+  "storageId": "majesty-alchemist-v1-labels2",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
   "browserWorldSaveReloadQualified": true,
@@ -44,9 +44,9 @@
     },
     {
       "path": "DataMX/Alchemist-native-interface-text.cam",
-      "bytes": 123493,
-      "sha256": "77feb575ba84396ab0fb5de9ee8040800a985fd60d60d843e30ad2e974330a2c",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist-native-interface-text.cam"
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/DataMX/Alchemist-native-interface-text.cam"
     },
     {
       "path": "DataMX/Alchemist_Composed.bcd",
@@ -110,15 +110,15 @@
     },
     {
       "path": "Data/textdata.cam",
-      "bytes": 363942,
-      "sha256": "f6d10816a4c6fdc8f60a16f31cee96632a9ed0a8c5e366ff7b1870a52440d304",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/textdata.cam"
+      "bytes": 363958,
+      "sha256": "a88f2c8be3e775fb8bf4fecd37396c50d1dff036115b549d9eb3c16bda6c626f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/textdata.cam"
     },
     {
       "path": "Data/Alchemist-native-interface-text.cam",
-      "bytes": 123493,
-      "sha256": "77feb575ba84396ab0fb5de9ee8040800a985fd60d60d843e30ad2e974330a2c",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-interface-text.cam"
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/Alchemist-native-interface-text.cam"
     },
     {
       "path": "Data/Alchemist_Composed.bcd",
@@ -174,5 +174,6 @@
     "Vigor effects survive saves; optional progress display is not reconstructed after reload."
   ],
   "creator": "Phantomstar721",
-  "credits": "CREDITS.md"
+  "credits": "CREDITS.md",
+  "displayLabelsRevision": 2
 }

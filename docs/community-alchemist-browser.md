@@ -7,6 +7,14 @@ Trail Lodge remain retired. Production still runs the original game.
 
 ## Latest mechanics qualification (October 14)
 
+The building-list title correction keeps `ABx1`, `ABx2`, and `ABx3` identities,
+prices and gameplay descriptors intact while displaying “Alchemy Lab”,
+“Alchemy Lab Level 2”, and “Alchemy Lab Level 3”. Only the three UNTN records
+in the original and community interface text archives change. Revisioned game
+data `majesty-alchemist-v1-labels2` refreshes existing browser installations
+without deleting their older collection or moving their Majesty profiles.
+
+
 Release candidate `alchemist-lab1417` uses WASM SHA256
 `b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af`.
 Browser1410 restored the original Phoenix-revived save1327 without test injury

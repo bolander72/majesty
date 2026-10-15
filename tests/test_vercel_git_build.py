@@ -168,7 +168,7 @@ class AlchemistReleaseIntegrity(unittest.TestCase):
             'RECOMP_ALCHEMIST_PANEL_BRIDGE', 'RECOMP_ALCHEMIST_RESEARCH_BRIDGE',
             'RECOMP_ALCHEMIST_ACTION_BRIDGE', 'RECOMP_ALCHEMIST_TARGET_BRIDGE', 'RECOMP_ALCHEMIST_SHARED_FUNCTIONS']}
         content = dict(format='majesty-alchemist-content-release-v1', engineSha256='a'*64,
-            storageId='majesty-alchemist-v1', requiredRuntimeEnvironment=env,
+            storageId='majesty-alchemist-v1-labels2', requiredRuntimeEnvironment=env,
             nativeMechanicsQualified=True, browserWorldSaveReloadQualified=True,
             browserSovereignActionsQualified=True, browserPhoenixSaveQualified=True,
             originalCampaignEntryQualified=True, patches=[dict(path=name,sha256=digest,bytes=sizes[name],
@@ -196,5 +196,5 @@ class AlchemistReleaseIntegrity(unittest.TestCase):
             with patch.object(build,'ROOT',root):build.install_alchemist_release(root/'static')
             games=json.loads((root/'static/games.json').read_text())
             self.assertEqual(games[0]['id'],'majesty')
-            self.assertEqual(games[0]['defaultContentStorageId'],'majesty-alchemist-v1')
+            self.assertEqual(games[0]['defaultContentStorageId'],'majesty-alchemist-v1-labels2')
             self.assertIn('RECOMP_ALCHEMIST_TARGET_BRIDGE = "1"',(root/'static/majesty/index.html').read_text())

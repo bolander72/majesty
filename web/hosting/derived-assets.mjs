@@ -7,10 +7,10 @@ import {assetUrl} from './asset-url.mjs';
 
 export function derivedDescriptor(value, id) {
   const record = value?.games?.[id];
-  const alchemist = id === 'majesty-alchemist-v1';
+  const alchemist = id === 'majesty-alchemist-v1-labels2';
   const expected = alchemist ? ALCHEMIST_FILES : id === 'majesty-lost-trail-v2' ? LOST_TRAIL_V2_FILES :
     id === 'majesty-lost-trail' ? LOST_TRAIL_FILES : WAYFINDER_FILES;
-  if (value?.format !== 'majesty-automatic-assets-v1' || !['majesty-wayfinder', 'majesty-lost-trail', 'majesty-lost-trail-v2', 'majesty-alchemist-v1'].includes(id)
+  if (value?.format !== 'majesty-automatic-assets-v1' || !['majesty-wayfinder', 'majesty-lost-trail', 'majesty-lost-trail-v2', 'majesty-alchemist-v1-labels2'].includes(id)
       || record?.baseId !== 'majesty' || !Array.isArray(record.patches)
       || record.patches.length !== Object.keys(expected).length)
     throw Error('Invalid content asset recipe.');

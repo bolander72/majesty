@@ -20,7 +20,7 @@ export async function prepareRootPlayer({search = location.search,
     signal?.throwIfAborted();
     const {contentStorageId, defaultContentStorageId, ...original} = game;
     const contentId = game.defaultContentStorageId;
-    if (contentId === 'majesty-alchemist-v1' && client.games.some(item => item.id === contentId)) {
+    if (contentId === 'majesty-alchemist-v1-labels2' && client.games.some(item => item.id === contentId)) {
       await ensureAssets(contentId, {
         status: id => client.status(id),
         importZip: (id, file) => client.importZip(id, file),
