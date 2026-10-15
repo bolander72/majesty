@@ -5,31 +5,90 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
-## Pending CPU-only write fast path
+## Exact SIMD change masks
+
+`patches/recomp-kit-exact-pixel-mask.patch` batches the 16-bit recorder's exact
+per-pixel change-mask generation in eight-pixel WASM SIMD groups. It retains
+whole-row equality filters, changed-row bounds, row maps and rectangle merging.
+The mask remains one byte per pixel with exactly 0/1 coverage; the helper never
+loads beyond a row or writes beyond the caller's mask. Portable formats and
+tails keep exact scalar comparisons. No persistent buffer or kingdom-sized
+cache is added. The patch also includes the CPU-only write fast path below.
+
+Apply this incremental patch from the previously qualified baseline-reuse kit
+root with `patch -p1 -i /absolute/path/to/recomp-kit-exact-pixel-mask.patch`.
+It is not a bootstrap patch for an unmodified upstream kit. Use the official
+`tools/test.py` targets `pixel_kernel_tests`, `dx_tests` and `host_tests`, and
+`tools/build.py`; never edit generated translations.
+
+The official pixel-kernel suite passes 4,957,386 checks on both portable native
+and WASM SIMD builds. Tests compare every output mask and bounds against a
+byte-wise oracle across four formats, unaligned inputs, row tails and all 256
+eight-lane combinations. DirectDraw passes 182,820 checks, and host tests for
+the included write fast path pass 4,175,535 checks. Scoped literal and repository
+boundary checks pass, and the patch round-trips to the bound source exactly.
+
+The isolated WASM mask benchmark alternates old/new order and mutates its input.
+Across sparse, block and full-row changes at 640 and 1280 pixels with three
+alignments, its geometric mean speedup is 2.32 times (range 1.28 to 3.70).
+This is helper time, not whole-game FPS. Existing exact recording and native
+simulation, actor updates, frame ownership, resolution and saves retain their
+contracts.
+
+[The source-bound qualification receipt](../deploy/exact-pixel-mask-verification.json)
+records the ordinary save and fresh-profile reload, plus these short camera-pan
+samples on the same 111-building input with normal optimizing V8:
+
+| Viewport | Prior release | Exact mask candidate | Change |
+| --- | ---: | ---: | ---: |
+| 800 × 633 | 50.31 fresh FPS | 57.13 fresh FPS | +13.5% |
+| 1280 × 633 | 35.00 fresh FPS | 43.33 fresh FPS | +23.8% |
+
+The 800-pixel sample's 95th-percentile fresh-frame gap fell from 34.00 to
+18.55 ms; at 1280 pixels it changed from 34.80 to 33.82 ms. Aggregate owned
+browser CPU remained about 1.15–1.18 cores, slightly higher for the candidate;
+no total CPU reduction is established. These are camera-motion measurements,
+not comparisons against the stationary scene's roughly 20 changed frames/s.
+Both use the same muted isolated launch configuration, one compilation task,
+60-Hz frame setting and unchanged 2400 MiB resource ceiling.
+
+The candidate's ordinary save retains all 111 completed, full-health buildings
+and 35 surviving heroes with saved AI. A fresh logical profile restored that
+exact hash-bound save, continued into Day 1 and showed a native Guardhouse at
+200/200 HP. All qualification browsers closed normally. The synthetic input
+is not the user's Siege save. These samples do not qualify sustained 60 FPS,
+other resolutions, arbitrary kingdom sizes or a fix for recurring crashes.
+
+## CPU-only write fast path
 
 [The private candidate](../deploy/cpu-only-write-candidate.json) moves the existing
 GPU surface-generation check ahead of the dynamic legacy-writeback setting
 lookup. Recorded writes without a GPU copy need neither binding nor upload.
 This avoids repeated environment lookups per pixel span without caching the
-setting, changing write records, or changing simulation and save behavior.
-The inactive patch is
+setting or changing write records, simulation or save behavior.
+The standalone patch remains archived at
 `patches/experimental/recomp-kit-cpu-only-write-fastpath.patch`.
 
 The official `host_tests` suite passes 4,175,535 checks, including stale
 surface generations, dynamic setting changes and partial-write pixel fidelity.
-The official browser build passes. Candidate gameplay and save/reload remain
-unqualified: its owned browser reached the unchanged 2400 MiB aggregate RSS
-guard before menu readiness and was closed. The candidate engine is private;
-production still uses the baseline-reuse release below.
+The official browser build, world, ordinary save and fresh-profile reload pass.
+The generated save retains 111 completed buildings and 29 surviving heroes
+with saved AI; the native Guardhouse card displays 200/200 HP after reload.
 
-This pass also corrected the private test site's default collection from an
-older `campaign3test3` candidate to production's `campaign3`. The corrected
-baseline loaded the 111-building input at an 800 by 633 viewport and measured
-23.31 fresh acknowledged frames/s in a 20-second sample, using the explicit
-`--liftoff-only` test compiler mode. This is a baseline, not evidence of an
-improvement, and it does not describe normal optimizing-browser performance.
-The earlier private-collection samples remain historical measurements of their
-own setup. No failed or guard-stopped trial supplies a candidate FPS result.
+With normal optimizing V8, the matched stationary samples measured 20.22
+versus 20.40 fresh frames/s and 1.096 versus 1.115 aggregate CPU cores. This
+establishes no meaningful average performance gain. A separate moving-camera
+sample reached 56.70 fresh frames/s: a stationary scene's changed-frame rate
+is not a general rendering cap. Do not compare those different workloads as
+a 20-to-57 FPS improvement.
+
+Earlier trials hit the unchanged 2400 MiB owned-browser guard and remain failed
+trials. The subsequent isolated launch configuration prevents Chrome's hidden
+new-tab/address-popup preloads; it retains GPU rendering, normal optimizing
+V8 and the same resource ceiling. It is a test-launch configuration, not a
+change to visitors' browser settings. Browser storage was accessed only through
+public OPFS APIs. The private catalog uses production's `campaign3` collection;
+older `campaign3test3` measurements are not interchangeable.
 
 ## Reuse the synchronized primary baseline
 

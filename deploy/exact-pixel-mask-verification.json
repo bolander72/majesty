@@ -1,0 +1,222 @@
+{
+  "format": "majesty-exact-pixel-mask-verification-v1",
+  "status": "native and browser qualified",
+  "engineSha256": "3bd3326dd6f201d58071d05470691874cb674f9393c3016d327d8dd2dab751e2",
+  "priorEngineSha256": "178fdeeeee46b8fcd1ead8f71b3f6de2a5e0de251ba60336beaf60d1930d7f8e",
+  "engine": {
+    "js": {
+      "sha256": "a2453ce312e6e67b2fecff98c1d4c957f0fa07d7b119ad820b64d6c2b2619d1c",
+      "bytes": 472568
+    },
+    "data": {
+      "sha256": "6fed95aefb357a2a895945c041bb10004d6481bd4c4c2a220b685c3a93cc8f67",
+      "bytes": 5092034
+    },
+    "wasm": {
+      "sha256": "3bd3326dd6f201d58071d05470691874cb674f9393c3016d327d8dd2dab751e2",
+      "bytes": 90550667
+    },
+    "js.symbols": {
+      "sha256": "03d869007e38fdd4658d38276a60ac98eecd32195a3b6ffb12b056f573e0805f",
+      "bytes": 2137057
+    }
+  },
+  "patch": "patches/recomp-kit-exact-pixel-mask.patch",
+  "patchSha256": "c53c5dd01ded5411f380faeb93812d0b88ff45957d24b2aa3dc584e4eb9c0d4a",
+  "sourceBinding": {
+    "host/d3d_render.cpp": {
+      "before": "d9a0a465b762b9012d99408274a7cfb24f91a658bf2850c88b978a76ba154a9e",
+      "after": "efcc6ce172fc89daa95150c25f25c3460a468f36d8b0a19929e0331b8f231016"
+    },
+    "host/tests/host_tests.cpp": {
+      "before": "da3fa26f001b641a2533d6504d84abda47ae7ec8cb772199384e5552dab98f2a",
+      "after": "acd4454a24f8a8438b312eb51d50a3a02ccbe08effb1a962667b76502e50c773"
+    },
+    "dx/ddraw.cpp": {
+      "before": "4c88a6834ccbaa734c5f21e0fbff00bf2667d54b7cd5da27a7de7b15b29f5cb7",
+      "after": "826e81ca1cf35d88e89dc831b26ae82e20eb813f645b4e1d8ab15548aa05d298"
+    },
+    "dx/pixel_change_mask.h": {
+      "before": null,
+      "after": "531ef6a992e3c8d30bebf8159dee5141658730006ec91b12eeb6c72c5712cf14"
+    },
+    "host/tests/pixel_kernel_tests.cpp": {
+      "before": "558b85b4e9d0580e213a9e4284e18a6460756659e72b6c553c308061d21bf614",
+      "after": "9a3d350097e7a029b69daebf75691814cd1bd8d03c8b063f84bc14c8cb09424f"
+    },
+    "host/tests/pixel_compare_bench.cpp": {
+      "before": "dcd08db9fcac470dcb922c6a8efb991489116d61de3acba383aa5404d8641d77",
+      "after": "32fc0c49c0fe7a91640ae8a5fa659e14c93b316e53cd6926b7d67f783ee2ce36"
+    }
+  },
+  "checks": {
+    "pixelKernelNative": {
+      "checks": 4957386,
+      "failures": 0
+    },
+    "pixelKernelWasmSimd": {
+      "checks": 4957386,
+      "failures": 0
+    },
+    "directDraw": {
+      "checks": 182820,
+      "failures": 0
+    },
+    "host": {
+      "checks": 4175535,
+      "failures": 0
+    },
+    "officialBuild": {
+      "exitCode": 0,
+      "peakOwnedRssMiB": 1711.5
+    },
+    "scopedOfficialGameLiterals": true,
+    "scopedOfficialTrackedBoundaries": true,
+    "exactPatchRoundTrip": true
+  },
+  "helperBenchmark": {
+    "changedRowCases": 18,
+    "geometricMeanSpeedup": 2.3203,
+    "minimumSpeedup": 1.2775,
+    "maximumSpeedup": 3.6962,
+    "wholeGameClaim": false
+  },
+  "browser": {
+    "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882",
+    "syntheticKingdom": {
+      "completedBuildings": 111,
+      "livingHeroes": 41,
+      "cityGuards": 30
+    },
+    "compilerMode": "normal optimizing V8; one compilation task",
+    "muted": true,
+    "isolated": true,
+    "browserUiPreloadsDisabledInOwnedTestLaunchOnly": true,
+    "ownedRssGuardMiB": 2400,
+    "generatedSave": {
+      "sha256": "2448b288e5d8e4f003e7f9ae1b15e625de4bc7b726c821056e03f144d1391fd9",
+      "bytes": 1627500,
+      "completedBuildings": 111,
+      "fullHealthBuildings": 111,
+      "livingHeroesWithAi": 35
+    },
+    "freshLogicalProfileReload": {
+      "exactGeneratedSave": true,
+      "worldContinuedIntoDay1": true,
+      "nativeGuardhouseHp": "200/200"
+    },
+    "currentCommunityStorageId": "majesty-alchemist-v1-campaign3",
+    "actualRequestedEngineVerified": true,
+    "cameraComparisons": [
+      {
+        "viewport": [
+          800,
+          633
+        ],
+        "workload": "Same bound original-world input, 20 seconds settling, five right/left camera pans of two seconds each; screenshots confirm camera motion.",
+        "samples": {
+          "production": {
+            "freshFrames": 1092,
+            "durationSeconds": 21.68366503715515,
+            "freshFps": 50.31437250716435,
+            "medianIntervalMs": 16.71004295349121,
+            "p95IntervalMs": 33.99515151977539,
+            "aggregateCpuCores": 1.1527889231652326,
+            "cameraMotionVisuallyConfirmed": true,
+            "resources": {
+              "peakOwnedRssMiB": 2179.5
+            },
+            "compilerMode": "normal optimizing V8; one compilation task",
+            "viewport": [
+              800,
+              633
+            ]
+          },
+          "candidate": {
+            "freshFrames": 1233,
+            "durationSeconds": 21.566064834594727,
+            "freshFps": 57.12678736009893,
+            "medianIntervalMs": 16.675114631652832,
+            "p95IntervalMs": 18.5549259185791,
+            "aggregateCpuCores": 1.1655689608660782,
+            "cameraMotionVisuallyConfirmed": true,
+            "resources": {
+              "peakOwnedRssMiB": 1969.8
+            },
+            "compilerMode": "normal optimizing V8; one compilation task",
+            "viewport": [
+              800,
+              633
+            ]
+          }
+        },
+        "freshFpsChangePercent": 13.539699520180925,
+        "cpuChangePercent": 1.1086190580106514
+      },
+      {
+        "viewport": [
+          1280,
+          633
+        ],
+        "workload": "Same bound original-world input, 20 seconds settling, five right/left camera pans of two seconds each; screenshots confirm camera motion.",
+        "samples": {
+          "production": {
+            "freshFrames": 753,
+            "durationSeconds": 21.482659816741943,
+            "freshFps": 35.00497640492117,
+            "medianIntervalMs": 33.23483467102051,
+            "p95IntervalMs": 34.8048210144043,
+            "aggregateCpuCores": 1.1676035371268125,
+            "cameraMotionVisuallyConfirmed": true,
+            "resources": {
+              "peakOwnedRssMiB": 2080.0
+            },
+            "compilerMode": "normal optimizing V8; one compilation task",
+            "viewport": [
+              1280,
+              633
+            ]
+          },
+          "candidate": {
+            "freshFrames": 942,
+            "durationSeconds": 21.716184854507446,
+            "freshFps": 43.33173650456768,
+            "medianIntervalMs": 16.955137252807617,
+            "p95IntervalMs": 33.820152282714844,
+            "aggregateCpuCores": 1.1803699973702428,
+            "cameraMotionVisuallyConfirmed": true,
+            "resources": {
+              "peakOwnedRssMiB": 2068.8
+            },
+            "compilerMode": "normal optimizing V8; one compilation task",
+            "viewport": [
+              1280,
+              633
+            ]
+          }
+        },
+        "freshFpsChangePercent": 23.787360983554006,
+        "cpuChangePercent": 1.0933899939054248
+      }
+    ],
+    "allQualificationTrialsClosedNormally": true
+  },
+  "simulationTimingChanged": false,
+  "gameContentChanged": false,
+  "saveFormatChanged": false,
+  "generatedTranslationsEdited": false,
+  "qualificationLimits": [
+    "Short camera-motion samples, not a guarantee across missions, kingdom sizes or resolutions.",
+    "The synthetic workload is not the user's Siege save.",
+    "Stationary fresh frames/s is not a universal rendering cap.",
+    "No general crash, sewer-cheat crash, memory leak or host-app crash fix is established."
+  ],
+  "rollout": {
+    "state": "none",
+    "manualDataOperations": "No migrations, backfills, credential changes, player profile writes or content collection changes are required. Audited engine manifests, static release contents and profile/save contracts.",
+    "release": "pixel-mask1744",
+    "immutableAssetsCommit": "fb9e0b0fc61e0202ffa20c0f708eee42646778b0",
+    "releasePath": "Existing main-branch Vercel Git integration; verify deployed root and engine HTTP hashes after push.",
+    "rollback": "Restore hosted/alchemist engine manifests to the preserved baseline-reuse1704 bindings and deploy; no player data restoration needed."
+  }
+}

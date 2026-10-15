@@ -1,5 +1,11 @@
 # Changelog
 
+## Exact SIMD change masks — October 15, 2026
+
+- Batch exact 16-bit changed-pixel mask generation with WASM SIMD, preserving native recording, simulation and save behavior. Skip redundant dynamic setting lookups for writes without a GPU surface.
+- Pass native/WASM pixel checks, DirectDraw and host regressions, plus ordinary browser saving and fresh-profile reload of a 111-building kingdom.
+- Short matched camera-motion samples improve from 50.31 to 57.13 fresh FPS at 800×633 and 35.00 to 43.33 at 1280×633. Wider views remain below 60 FPS; no general crash fix is claimed.
+
 ## Reuse synchronized primary pixels — October 15, 2026
 
 - Reuse the current DirectDraw pixel baseline during synchronous presentation after a recorded primary write, avoiding a second full-surface scan. Independent presents still discover later retained-pointer writes.

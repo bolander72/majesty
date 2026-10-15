@@ -1,6 +1,6 @@
 {
   "format": "majesty-cpu-only-write-candidate-v1",
-  "status": "private candidate; not released",
+  "status": "privately qualified; included in exact-pixel-mask release",
   "productionEngineUnchanged": "178fdeeeee46b8fcd1ead8f71b3f6de2a5e0de251ba60336beaf60d1930d7f8e",
   "candidateEngineSha256": "9c147d34bb394fe6156d95717167adf43b976080020e2cf231e48f77f43476da",
   "patch": "patches/experimental/recomp-kit-cpu-only-write-fastpath.patch",
@@ -64,7 +64,22 @@
     "compilerMode": "--liftoff-only",
     "defaultContentStorageId": "majesty-alchemist-v1-campaign3"
   },
-  "candidateBrowser": {
+  "qualificationLimits": [
+    "No meaningful average stationary FPS or CPU reduction was established.",
+    "Stationary fresh frame rate is not a rendering cap: a separate camera pan reached 56.70 fresh FPS with this engine.",
+    "Camera motion and stationary samples are different workloads, not a before/after speedup.",
+    "No general 60-FPS, lag-free kingdom or crash-fix claim.",
+    "Earlier guard-stopped trials remain failed trials; later successful tests used an isolated browser configuration disabling browser UI preloads under the same resource ceiling."
+  ],
+  "generatedTranslationsEdited": false,
+  "simulationTimingChanged": false,
+  "gameContentChanged": false,
+  "playerSavesChanged": false,
+  "rollout": {
+    "state": "none",
+    "manualDataOperations": "No data migration required. Combined release is bound by deploy/exact-pixel-mask-verification.json."
+  },
+  "earlierGuardStoppedBrowser": {
     "trial": 1719,
     "guardStopped": true,
     "peakOwnedRssMiB": 2443.9,
@@ -73,18 +88,55 @@
     "fpsQualified": false,
     "saveReloadQualified": false
   },
-  "qualificationLimits": [
-    "No candidate gameplay FPS or CPU improvement is qualified.",
-    "No 60-FPS, lag-free large-kingdom or crash-fix claim.",
-    "Corrected the private test catalog from campaign3test3 to production campaign3; historical samples on those collections are not interchangeable.",
-    "A memory guard stop does not identify an allocation or establish system RAM exhaustion."
-  ],
-  "generatedTranslationsEdited": false,
-  "simulationTimingChanged": false,
-  "gameContentChanged": false,
-  "playerSavesChanged": false,
-  "rollout": {
-    "state": "none",
-    "reason": "Source-only inactive candidate; hosted release and production engine bindings unchanged."
+  "candidateBrowser": {
+    "actualEngineUrlVerified": true,
+    "gameplayTrial": 1731,
+    "freshReloadTrial": 1732,
+    "generatedSaveSha256": "824e59888cd9608ab217e622467991e89c3a0c0e0d1ffd8da72ae7acc0b2a1cb",
+    "bytes": 1614443,
+    "completedBuildings": 111,
+    "livingHeroesWithAi": 29,
+    "saveReloadQualified": true,
+    "stockGuardhouseHp": "200/200",
+    "compilerMode": "normal optimizing V8; one compilation task",
+    "muted": true,
+    "isolated": true,
+    "guardStops": false
+  },
+  "stationaryComparison": {
+    "production": {
+      "freshFrames": 611,
+      "durationSeconds": 30.165030002593994,
+      "freshFps": 20.222091605662055,
+      "medianIntervalMs": 49.97992515563965,
+      "p95IntervalMs": 66.2851333618164,
+      "aggregateCpuCores": 1.095625102453639,
+      "resources": {
+        "peakOwnedRssMiB": 2070.3
+      },
+      "compilerMode": "normal optimizing V8; one compilation task",
+      "viewport": [
+        800,
+        633
+      ],
+      "warmupSeconds": 60
+    },
+    "candidate": {
+      "freshFrames": 615,
+      "durationSeconds": 30.099329948425293,
+      "freshFps": 20.399125198204707,
+      "medianIntervalMs": 49.99494552612305,
+      "p95IntervalMs": 50.83012580871582,
+      "aggregateCpuCores": 1.114807596055854,
+      "resources": {
+        "peakOwnedRssMiB": 2119.9
+      },
+      "compilerMode": "normal optimizing V8; one compilation task",
+      "viewport": [
+        800,
+        633
+      ],
+      "warmupSeconds": 60
+    }
   }
 }
