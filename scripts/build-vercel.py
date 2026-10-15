@@ -187,10 +187,10 @@ def install_alchemist_release(static):
     release = json.loads((ROOT / 'deploy/hosted-release.json').read_text())
     required = ['nativeMechanicsQualified', 'browserWorldSaveReloadQualified',
                 'browserSovereignActionsQualified', 'browserPhoenixSaveQualified',
-                'originalCampaignEntryQualified']
+                'originalCampaignEntryQualified', 'baseCampaignRecruitmentSaveReloadQualified']
     if (content.get('format') != 'majesty-alchemist-content-release-v1'
             or content.get('engineSha256') != release['engineSha256']
-            or content.get('storageId') != 'majesty-alchemist-v1-labels2'
+            or content.get('storageId') != 'majesty-alchemist-v1-campaign3'
             or any(content.get(key) is not True for key in required)):
         raise ValueError('Require engine-bound Alchemist gameplay qualification')
     text = (ROOT / 'web/content/alchemist-files.mjs').read_text()
@@ -215,14 +215,14 @@ def install_alchemist_release(static):
         raise ValueError('Alchemist runtime environment differs')
     assets_file = static / 'hosting/automatic-assets.json'
     assets = json.loads(assets_file.read_text())
-    assets['games']['majesty-alchemist-v1-labels2'] = {'baseId': 'majesty', 'patches': patches}
+    assets['games']['majesty-alchemist-v1-campaign3'] = {'baseId': 'majesty', 'patches': patches}
     assets_file.write_text(json.dumps(assets, indent=2) + '\n')
     games_file = static / 'games.json'
     games = json.loads(games_file.read_text())
     original = next(game for game in games if game['id'] == 'majesty')
-    games = [game for game in games if game['id'] != 'majesty-alchemist-v1-labels2']
-    games.append({**original, 'id': 'majesty-alchemist-v1-labels2', 'title': 'Majesty: Alchemist Lab'})
-    original['defaultContentStorageId'] = 'majesty-alchemist-v1-labels2'
+    games = [game for game in games if game['id'] != 'majesty-alchemist-v1-campaign3']
+    games.append({**original, 'id': 'majesty-alchemist-v1-campaign3', 'title': 'Majesty: Alchemist Lab'})
+    original['defaultContentStorageId'] = 'majesty-alchemist-v1-campaign3'
     games_file.write_text(json.dumps(games, indent=2) + '\n')
     player = static / 'majesty/index.html'
     html = player.read_text()

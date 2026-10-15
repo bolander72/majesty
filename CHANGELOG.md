@@ -1,5 +1,11 @@
 # Changelog
 
+## Alchemist original-mission recruitment — October 14, 2026
+
+- Include the official expansion helper dependencies used by the community Alchemist in its script library, fixing the original-mission exit at first recruitment or Bazaar shopping.
+- Preserve the creator's gameplay, existing hero identities and saves; refresh content separately from player profiles.
+- Verify Brashnard recruitment, an ordinary browser save and a fresh browser reload. Require original-campaign recruitment qualification when publishing content.
+
 ## Original Majesty cursor — October 14, 2026
 
 - Keep the browser arrow hidden when SDL updates its inline canvas cursor style, preventing a second cursor over the game.

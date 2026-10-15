@@ -5,6 +5,44 @@ Lab**, including its original animated Alchemist, three building stages, voices,
 reagent economy, research and combat/sovereign alchemy. Lost Trail, Wayfinder and
 Trail Lodge remain retired. Production still runs the original game.
 
+## Original campaign recruitment compatibility (October 14)
+
+Original Majesty quests do not load every Northern Expansion GPL helper that
+Freestyle supplies. The genuine community Alchemist calls `GetTruePalace` at
+birth and the Bazaar shopping library afterward. Missing functions resolved to
+`NullFunction`; missing item expressions became void values. Assigning those
+values to typed agents/lists exited with `0xe06d7363` (3765269347).
+
+`scripts/prepare-alchemist-campaign-functions.py` recursively follows the
+referenced official SDK definitions, including nested TaskModules. It imports
+eight functions and 29 expressions without changing the existing 215 authored
+definitions, DAT, canonical GUID or shared-function alias routes. The original
+SDK compiler produced 2,067,851 bytes, SHA256
+`2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09`.
+The engine remains the qualified `alchemist-selection1528` WASM.
+
+Native1597 resumed the same pre-recruit Brashnard save that reproduced the
+production exception, recruited through the normal Lab button, executed the
+formerly missing Bazaar helpers and saved normally. Its isolated test harness
+used the ordinary Restoration cheat to keep the besieged Palace alive; this is
+crash-path coverage, not a campaign balance or victory qualification.
+Browser1598 restored that campaign, paid 600 gold for another Alchemist and
+created an ordinary Day2 save (SHA256
+`c3a81eda1d13dd36fccd86325c0a3e5b2e6795199c622fd08f3d653d4355dcac`).
+A stopped-save audit found live ALC1 hero4937 and the prior dead Alchemist;
+browser1599 loaded this exact save in a fresh silent session and continued
+without the exception. Neither browser used native test injury/restore flags.
+Native1601 also restored the existing Day12 Rat Scouts Freestyle save and
+continued normally. The source preparation, cache revision and release gate
+have focused tests. See `deploy/alchemist-campaign-verification.json` for
+compiler bindings, individual checks and test limits.
+
+The new `majesty-alchemist-v1-campaign3` content collection preserves earlier
+collections and all original Majesty profile paths. It refreshes script data
+for returning players without requiring a save migration. Earlier Scions of
+Chaos entry checks exercised an expansion quest; they did not cover original
+Majesty hero recruitment. Deployment now requires that separate qualification.
+
 ## Latest mechanics qualification (October 14)
 
 The building-list title correction keeps `ABx1`, `ABx2`, and `ABx3` identities,

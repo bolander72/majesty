@@ -86,16 +86,16 @@ test('derived copy keeps original File handles and replaces only the copy', asyn
 
 test('Alchemist accepts its complete source-bound media pack with exact sizes', async () => {
   const {ALCHEMIST_FILES, ALCHEMIST_SIZES} = await import('../web/content/alchemist-files.mjs');
-  const plan = {format: descriptor.format, games: {'majesty-alchemist-v1-labels2': {baseId: 'majesty',
+  const plan = {format: descriptor.format, games: {'majesty-alchemist-v1-campaign3': {baseId: 'majesty',
     patches: Object.entries(ALCHEMIST_FILES).map(([path, sha256]) => ({path, sha256,
       bytes: ALCHEMIST_SIZES[path],
       url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + path}))}}};
-  assert.equal(derivedDescriptor(plan, 'majesty-alchemist-v1-labels2').contentSet, 'alchemist-v1');
-  assert.ok(plan.games['majesty-alchemist-v1-labels2'].patches.some(p => p.bytes > 1024 * 1024));
+  assert.equal(derivedDescriptor(plan, 'majesty-alchemist-v1-campaign3').contentSet, 'alchemist-v1');
+  assert.ok(plan.games['majesty-alchemist-v1-campaign3'].patches.some(p => p.bytes > 1024 * 1024));
   for (const change of [p => p.patches.pop(), p => p.patches[0].bytes++,
     p => {p.patches[0].sha256 = '0'.repeat(64);}, p => {p.patches[0] = p.patches[1];}]) {
-    const bad = structuredClone(plan); change(bad.games['majesty-alchemist-v1-labels2']);
-    assert.throws(() => derivedDescriptor(bad, 'majesty-alchemist-v1-labels2'));
+    const bad = structuredClone(plan); change(bad.games['majesty-alchemist-v1-campaign3']);
+    assert.throws(() => derivedDescriptor(bad, 'majesty-alchemist-v1-campaign3'));
   }
 });
 

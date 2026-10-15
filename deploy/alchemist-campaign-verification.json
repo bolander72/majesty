@@ -1,0 +1,299 @@
+{
+  "format": "majesty-alchemist-campaign-verification-v1",
+  "engineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
+  "sourceFiles": {
+    "Alchemist_Composed.gpl": {
+      "bytes": 219473,
+      "sha256": "e7337df1af261bf44242bd5effd796761d421051f758352860f8e235cd3bddfe"
+    },
+    "Alchemist_Composed.dat": {
+      "bytes": 2643,
+      "sha256": "198e8979dcafb8a7778fe1c0dab7bba2c5c95d2b7836190f5307016c172de1f3"
+    },
+    "Alchemist_Composed.gplproj": {
+      "bytes": 62,
+      "sha256": "a1a192ebf22bad6a5c5b8fbc696102a17636513c3e13d8c1c34a61407c5f6ebb"
+    }
+  },
+  "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+  "compiledBytecode": {
+    "bytes": 2067851,
+    "sha256": "2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09"
+  },
+  "officialHelperImports": [
+    {
+      "name": "Does_Resist_Fire",
+      "sdkFile": "GPLMx/TaskModules/Subtasks/mx_Spells.gpl",
+      "sdkFileSha256": "c02896fdc0f36764acc042c3baba936142ede7bc63ee17494939029e84b40238",
+      "bodySha256": "a7c79063fc02cb89bcbbd444d5dcbbbcd0c726bb90b2837d24910a8eeee0fc8d"
+    },
+    {
+      "name": "Get_Bazaar_Cost",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Magic_Bazaar.gpl",
+      "sdkFileSha256": "1935a99c4bc1470657315ea91989740f095d942c475b8619608a3c14ce1de412",
+      "bodySha256": "74a34e66fdf218831ddae7993ff4afa0e2da2b53cb99b2c9733082940e6edcad"
+    },
+    {
+      "name": "Get_Bazaar_Task_Name",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Magic_Bazaar.gpl",
+      "sdkFileSha256": "1935a99c4bc1470657315ea91989740f095d942c475b8619608a3c14ce1de412",
+      "bodySha256": "552e11c99c0818529402bbd6fd150a89395416ee7ce81a03660ee0af8f38fa8a"
+    },
+    {
+      "name": "GetTruePalace",
+      "sdkFile": "GPLMx/mx_LowLevel.gpl",
+      "sdkFileSha256": "b1ef595b202ee7870fef43e83b50e953efe494cf9edf8e2bd7ad15180e956050",
+      "bodySha256": "d5cdc10267a552b3c9819a252b19860add0c83fe5cb2243339a4b072170fbc60"
+    },
+    {
+      "name": "Goblin_Spawn",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Goblin_Fortress.gpl",
+      "sdkFileSha256": "f67fcab1a5ccf7d2ee67277112ee7b22b90c6089f2d142b0520bbb277fc4f67f",
+      "bodySha256": "87dfaddef18ed12f5f1c7ac44e0590fee9ff402830380a1e1f58393622eb077b"
+    },
+    {
+      "name": "GoblinFortHitSpawn",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Goblin_Fortress.gpl",
+      "sdkFileSha256": "f67fcab1a5ccf7d2ee67277112ee7b22b90c6089f2d142b0520bbb277fc4f67f",
+      "bodySha256": "f9da9d199a24c1b9a4736a83fa71ed1060b9983f5e05cc41cda0854d4de6673c"
+    },
+    {
+      "name": "Researched_Item",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Magic_Bazaar.gpl",
+      "sdkFileSha256": "1935a99c4bc1470657315ea91989740f095d942c475b8619608a3c14ce1de412",
+      "bodySha256": "005de8f8ab8f43b3ee05a707b70385c35860298e02e8bfdd725513f2c8621e89"
+    },
+    {
+      "name": "SetBuyerIntent",
+      "sdkFile": "GPLMx/TaskModules/Buildings/Magic_Bazaar.gpl",
+      "sdkFileSha256": "1935a99c4bc1470657315ea91989740f095d942c475b8619608a3c14ce1de412",
+      "bodySha256": "273ff5db364e3d92259416b40a04ca3db955722ac9c2f219bffe2be8d6974968"
+    }
+  ],
+  "officialExpressionImports": [
+    {
+      "name": "#Bazaar_Item_Five",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "4309f02fd944cad080d7f851e674b31d5e7ab61f2165cfc29629f80f218f02a2"
+    },
+    {
+      "name": "#Bazaar_Item_Five_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "8019843bcf53d643eb8206a56863b7915e7a739f93b10c8b2c905dd77dbe3736"
+    },
+    {
+      "name": "#Bazaar_Item_Four",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "e0fee16576fb2ee6099f267fdeac154908328036da7889ba0ce70cf751be364d"
+    },
+    {
+      "name": "#Bazaar_Item_Four_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "c5483552a2663fccae8eb459f0666910dabb3a0a6db14a164a380bce890ae319"
+    },
+    {
+      "name": "#Bazaar_Item_One",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "93fe458d3d3b49161ab7bcc35420132e9ee40c48285355d40ee3db0fbcafdff5"
+    },
+    {
+      "name": "#Bazaar_Item_One_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "d7a12606b29857a887cb7a9832e810cbedf20950e0ad3942f6a73e4823d43d45"
+    },
+    {
+      "name": "#Bazaar_Item_Six",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "b866e53dc9f5e8cbd44601d7032db213ead2e16f9016c6c4f6fb7f7e0e1a25cc"
+    },
+    {
+      "name": "#Bazaar_Item_Six_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "e5fd53375bfab3ac34175693bcbb47f44b997a27d2b7f20dae1afb56f8770dc0"
+    },
+    {
+      "name": "#Bazaar_Item_Three",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "133d7feff021e601aa1fc22d522194384cdcd15dd33b60bd756f258e3ba16b64"
+    },
+    {
+      "name": "#Bazaar_Item_Three_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "06e43202ca673e27b6f4940a6679f8e96f29940dcf88d27d642a72831c1f2847"
+    },
+    {
+      "name": "#Bazaar_Item_Two",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "3659cd4559e2d892726d9f62e86c525dff1a6bdaa115e2448c362e3a2ea8ade5"
+    },
+    {
+      "name": "#Bazaar_Item_Two_Price",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "e6de6ed7a67b5b5fa04374502246342042db48091050404286a06a6ae8d69b4c"
+    },
+    {
+      "name": "#FireBalmDamageBonus",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "f9543bd0d255608423e997ebf2715cc3ef1a5a09b4f2301d94c2cf1f31afdb46"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_Five",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "001af6566e402a59300cc7980729fd4cc9dc805a5060c65ea95bc209c7619996"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_Four",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "d6a17890d3f804b6ba2154c7e1c6a774e6dd9b054d18c9cedadcc4316f89037a"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_One",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "fb17b5b58f865052440bec6bea4c01660a8301143d4305ddc7aaa9a0ae8b822a"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_Six",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "f69b71c295aa99fc965328b9a3ffa0dd268e13370cb04611e206202d279fe649"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_Three",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "c4d631cb2a581cc3e089551bf3616e36d7991d8fe51288451063b686d0ec6dd5"
+    },
+    {
+      "name": "#Intent_purchasing_Bazaar_Item_Two",
+      "sdkFile": "GPLMx/mx_defines.gpl",
+      "sdkFileSha256": "6dee38e83d14ed9fe24366f83a74b683c05a86f3208052ea165d13aadf9c4e57",
+      "bodySha256": "b7bb87faee4f7ce9b0ca720ba4ced64f0dfd2bfb93def6d1b28a05a154af9f7c"
+    },
+    {
+      "name": "#QItem_LH_Belt_Reflection",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "30de421796b90f2465712553cde1debc3339e21dbe1523c8d89d8f73db73b3ca"
+    },
+    {
+      "name": "#QItem_LH_Helm_Displacement",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "0c46e82ed3754f183398ba98d6ec91e6450b1323a1874cf5a64475a424d5eb14"
+    },
+    {
+      "name": "#QItem_LH_Rune_Healing",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "5b9966b9ebd939e34970e150a5c1e1694917ebcce94a043ae6a4361ef5059398"
+    },
+    {
+      "name": "#QItem_LH_Stonebacks_Shield",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "8e9607171f0b7c2c26e44a76a179eab9125581559c9c86f6af7844085972d2ba"
+    },
+    {
+      "name": "#QItem_LH_Teevus_Wand",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "c8c59351a5d1bf31d2f2c9d45dbcf7a6c347ee6fc29f418cf4801507adf27187"
+    },
+    {
+      "name": "#QItem_LH_Wand_Immolation",
+      "sdkFile": "GPLMx/mx_QItems.gpl",
+      "sdkFileSha256": "d1f06bd5bd03b702cf807aaf08c1f4b43079847b9a20ff21eb9346c9c0b5c9f3",
+      "bodySha256": "c792d026eea2017e1328a470aaa3cde37553c1442ba35bea5a80c0ca2b83c697"
+    },
+    {
+      "name": "#Spawn_GobArcher_Chance",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "341d7ead3cd8fdecc43732628e29018a1f00aaae669be2619a45474cbb503a5c"
+    },
+    {
+      "name": "#Spawn_GobChampion_Chance",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "f3dad8c96cc0ddd2989d86e112b59477d685eb00500c507097fd7ec4139f5c2d"
+    },
+    {
+      "name": "#Spawn_GobOverlord_Chance",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "482e199fc72893be83dfc6a7fe0161edd065d5bb1b9fdf35a202a07add77cee1"
+    },
+    {
+      "name": "#Spawn_GobShaman_Chance",
+      "sdkFile": "GPLMx/mx_Globals.gpl",
+      "sdkFileSha256": "09866297496ae1f89c2011f0225fe85892d232660f657c1215a1e18f2be37db0",
+      "bodySha256": "fa68840265f797c6f61c210d99af164113adefbe27a12e0b845fb3d86ed0bd24"
+    }
+  ],
+  "originalAuthoredDefinitionsUnchanged": 215,
+  "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
+  "nativeRecruitment": {
+    "trial": 1597,
+    "quest": "Brashnard's Ultimate Sphere of Power",
+    "inputSaveSha256": "10a8e965a67c04baed567f31c3ca4af9718212f2f58ddc194b38ec9fbc3ea229",
+    "normalRecruitButton": true,
+    "formerMissingBazaarCallsExecuted": true,
+    "exitCode": 0,
+    "guardStopped": false,
+    "peakRssMiB": 158.1,
+    "controlledOrdinaryRestorationCheat": true
+  },
+  "browserRecruitment": {
+    "trial": 1598,
+    "normalRecruitButton": true,
+    "goldCost": 600,
+    "generatedSaveBytes": 1347047,
+    "generatedSaveSha256": "c3a81eda1d13dd36fccd86325c0a3e5b2e6795199c622fd08f3d653d4355dcac",
+    "savedLiveAlchemistUnitId": 4937,
+    "nativeTestFlags": false,
+    "restartGuardStopped": true,
+    "restartGuardReason": "rss-margin",
+    "restartGuardRssMiB": 2400.2,
+    "hostAppExited": false
+  },
+  "browserFreshReload": {
+    "trial": 1599,
+    "loadedExactGeneratedSave": true,
+    "worldContinued": true,
+    "exception": false,
+    "closedNormally": true,
+    "peakRssMiB": 2260.3
+  },
+  "nativeFreestyleCompatibility": {
+    "trial": 1601,
+    "inputSaveSha256": "df5b2b3897a3550f72ce5a5e681dd596b54014492fb7155543aee00e6313c1b1",
+    "quest": "Rat Scouts (Beginner) - S",
+    "day": 12,
+    "worldContinued": true,
+    "exitCode": 0,
+    "guardStopped": false,
+    "peakRssMiB": 146.6
+  },
+  "limitations": [
+    "Focused recruitment and save/reload regression coverage, not full campaign completion or balance qualification.",
+    "One private native name-registration probe failed before world load; the subsequent instrumented native run and independent browser loads succeeded.",
+    "Restarting two game instances within one owned browser session exceeded the 2.4 GiB test limit; a separate fresh-session reload stayed below the limit.",
+    "No new browser character-card qualification is claimed by this script-only update; prior selection qualification is retained."
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "format": "majesty-alchemist-content-release-v1",
   "engineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
-  "storageId": "majesty-alchemist-v1-labels2",
+  "storageId": "majesty-alchemist-v1-campaign3",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
   "browserWorldSaveReloadQualified": true,
@@ -50,9 +50,9 @@
     },
     {
       "path": "DataMX/Alchemist_Composed.bcd",
-      "bytes": 1943189,
-      "sha256": "ae72ff05716fd94dcc9d46a6af5993972fd893596c8a550fe32d9368238e8ae6",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist_Composed.bcd"
+      "bytes": 2067851,
+      "sha256": "2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0914992d11c5fb57dd46c30b9873b0f0bcbc851e/assets/content/alchemist-v1-campaign3/DataMX/Alchemist_Composed.bcd"
     },
     {
       "path": "DataMX/Alchemist-native-actions.cam",
@@ -178,5 +178,8 @@
   "displayLabelsRevision": 2,
   "priorQualifiedEngineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
   "browserMapSelectionQualified": true,
-  "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload"
+  "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload",
+  "baseCampaignRecruitmentSaveReloadQualified": true,
+  "campaignCompatibilityRevision": 3,
+  "campaignCompatibilityVerification": "deploy/alchemist-campaign-verification.json"
 }
