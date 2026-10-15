@@ -5,6 +5,49 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
+## Reduce complete-image CPU bookkeeping
+
+The current priority is responsiveness and visible stalls rather than a target
+frame-rate number. `patches/recomp-kit-cpu-snapshot-present.patch` adds an
+explicit complete-image CPU path. The browser's qualified DirectDraw engine
+already publishes a full owned image; it no longer also builds exact masks,
+row-map nodes and per-rectangle pixel/coverage copies for these CPU-only lock
+writes. It computes the same exact changed bounds for overlapping-lock rebasing.
+Retained-pointer detection, revisions, palette leases and frame ownership stay
+in place. Unchanged locks still produce no new content.
+
+The runtime option is off by default. The Git site builder enables
+`RECOMP_DDRAW_CPU_SNAPSHOT_ONLY=1` only when the renderer descriptor, engine and
+[native/browser proof](../deploy/cpu-snapshot-verification.json) agree.
+A snapshot frame explicitly tells UI extraction to use its complete image,
+including the native cursor, rather than incomplete replay records. Textures,
+GPU-backed or dirty generations and mixed GPU frames keep exact recording.
+Creating a GPU device closes a pending CPU image before recording GPU work.
+Fallback recording reuses map nodes for continuing exact spans and skips GPU
+coverage cleanup when no GPU copy or dirty pixels exist.
+
+This is an incremental patch on the qualified `pixel-mask1744` kit, not a bare
+upstream bootstrap. Apply with `patch -p1`; build and test only through official
+`tools/build.py` and `tools/test.py`. Native DirectDraw, pixel kernels, UI layer,
+presenter and host checks pass. Actual WASM SIMD kernel checks also pass.
+
+In matched continuous scrolling through the same 111-building mission input at
+1280×633, the 95th-percentile displayed-image gap decreased from 33.95 to
+18.13 ms; the longest gap decreased from 66.92 to 36.06 ms. Six gaps over 50 ms
+became zero in these short samples. This measures scrolling smoothness, not
+exact click-to-visible latency. A fresh logical profile reloaded the exact
+ordinary save with all 111 completed, full-health buildings and 32 surviving
+heroes with saved AI. Native Guardhouse and Palace cards, a live resize to
+1920×1080, extended scrolling, Options and resuming play were checked visually.
+The larger-view trial had no gap over 100 ms during its 39-second sample; it
+has no matched older-engine control.
+
+Image resolution, simulation timing, saved profiles and content collections
+are unchanged. No general freeze/crash fix or lag-free kingdom-size guarantee
+is established. Reverting the release commit restores the prior renderer;
+a manual manifest rollback must also remove the CPU renderer descriptor so its
+flag cannot be enabled with an older engine. Player data needs no migration.
+
 ## Exact SIMD change masks
 
 `patches/recomp-kit-exact-pixel-mask.patch` batches the 16-bit recorder's exact

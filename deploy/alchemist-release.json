@@ -1,6 +1,6 @@
 {
   "format": "majesty-alchemist-content-release-v1",
-  "engineSha256": "3bd3326dd6f201d58071d05470691874cb674f9393c3016d327d8dd2dab751e2",
+  "engineSha256": "108e65fe6e9079f602f0cfe5223520ebaffa0c9c9a83a44e23b74166dd4115f4",
   "storageId": "majesty-alchemist-v1-campaign3",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
@@ -190,5 +190,6 @@
   "instantHeroLevelVerification": "deploy/instant-level-verification.json",
   "pixelComparisonVerification": "deploy/wide-pixel-compare-verification.json",
   "presentBaselineReuseVerification": "deploy/present-baseline-reuse-verification.json",
-  "exactPixelMaskVerification": "deploy/exact-pixel-mask-verification.json"
+  "exactPixelMaskVerification": "deploy/exact-pixel-mask-verification.json",
+  "cpuSnapshotVerification": "deploy/cpu-snapshot-verification.json"
 }

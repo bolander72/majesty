@@ -1,5 +1,11 @@
 # Changelog
 
+## Smoother CPU-rendered kingdoms — October 15, 2026
+
+- Publish the complete native CPU image without also building redundant per-pixel replay records. Preserve resolution, native UI, simulation, profiles and saves; retain exact GPU/texture recording and device transitions.
+- In the matched large-kingdom scrolling sample, reduce the longest display gap from 67 to 36 ms and remove six brief hitches over 50 ms. This is a bounded sample, not a guarantee for every mission.
+- Verify original saving/reloading, building cards, larger-view scrolling, native Options and resuming play. Enable the new path only with its qualified engine.
+
 ## Exact SIMD change masks — October 15, 2026
 
 - Batch exact 16-bit changed-pixel mask generation with WASM SIMD, preserving native recording, simulation and save behavior. Skip redundant dynamic setting lookups for writes without a GPU surface.

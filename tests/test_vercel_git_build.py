@@ -52,6 +52,43 @@ class ReleaseIntegrity(unittest.TestCase):
                     build.unpack_release(data, release, Path(temp))
 
 
+class CpuSnapshotReleaseIntegrity(unittest.TestCase):
+    def fixture(self, directory):
+        root = Path(directory)
+        (root / 'deploy').mkdir()
+        (root / 'static/majesty').mkdir(parents=True)
+        engine = 'a' * 64
+        release = {'format': 'majesty-cpu-snapshot-release-v1', 'engineSha256': engine,
+            'requiredRuntimeEnvironment': {'RECOMP_DDRAW_CPU_SNAPSHOT_ONLY': '1'}}
+        proof = dict(engineSha256=engine, nativeControlsQualified=True,
+            browserWorldSaveReloadQualified=True, browserInteractionQualified=True)
+        for name, value in [('cpu-snapshot-release', release), ('cpu-snapshot-verification', proof),
+                            ('hosted-release', {'engineSha256': engine})]:
+            (root / ('deploy/' + name + '.json')).write_text(json.dumps(value))
+        (root / 'static/majesty/index.html').write_text('      m.ENV.RECOMP_GUEST_ARGS = "";')
+        return root, proof
+
+    def test_mismatched_engine_or_unverified_interaction_is_rejected(self):
+        for key, value in [('engineSha256', 'b' * 64), ('browserInteractionQualified', False),
+                           ('browserWorldSaveReloadQualified', False)]:
+            with tempfile.TemporaryDirectory() as temp:
+                root, proof = self.fixture(temp)
+                proof[key] = value
+                (root / 'deploy/cpu-snapshot-verification.json').write_text(json.dumps(proof))
+                with patch.object(build, 'ROOT', root), self.assertRaises(ValueError):
+                    build.install_cpu_snapshot_release(root / 'static')
+
+    def test_enables_qualified_renderer_and_refuses_duplicate_injection(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, _ = self.fixture(temp)
+            with patch.object(build, 'ROOT', root):
+                build.install_cpu_snapshot_release(root / 'static')
+                self.assertIn('RECOMP_DDRAW_CPU_SNAPSHOT_ONLY = "1"',
+                    (root / 'static/majesty/index.html').read_text())
+                with self.assertRaises(ValueError):
+                    build.install_cpu_snapshot_release(root / 'static')
+
+
 class ContentReleaseIntegrity(unittest.TestCase):
     def fixture(self, directory):
         root = Path(directory)

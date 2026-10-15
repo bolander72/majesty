@@ -235,6 +235,31 @@ def install_alchemist_release(static):
     return content
 
 
+def install_cpu_snapshot_release(static):
+    """Enable the complete-image renderer only for its qualified engine."""
+    descriptor = ROOT / 'deploy/cpu-snapshot-release.json'
+    if not descriptor.exists():
+        return
+    release = json.loads(descriptor.read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    proof = json.loads((ROOT / 'deploy/cpu-snapshot-verification.json').read_text())
+    if (release.get('format') != 'majesty-cpu-snapshot-release-v1'
+            or release.get('engineSha256') != engine
+            or proof.get('engineSha256') != engine
+            or release.get('requiredRuntimeEnvironment') != {'RECOMP_DDRAW_CPU_SNAPSHOT_ONLY': '1'}
+            or any(proof.get(key) is not True for key in [
+                'nativeControlsQualified', 'browserWorldSaveReloadQualified',
+                'browserInteractionQualified'])):
+        raise ValueError('Require the qualified CPU snapshot engine and browser checks')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    anchor = '      m.ENV.RECOMP_GUEST_ARGS ='
+    if html.count(anchor) != 1 or 'm.ENV.RECOMP_DDRAW_CPU_SNAPSHOT_ONLY =' in html:
+        raise ValueError('Review CPU snapshot runtime environment placement')
+    player.write_text(html.replace(anchor,
+        '      m.ENV.RECOMP_DDRAW_CPU_SNAPSHOT_ONLY = "1";\n' + anchor, 1))
+
+
 def enable_native_cursor(static):
     """Use Majesty's own cursor renderer, including native context/animation."""
     games_file = static / 'games.json'
@@ -393,6 +418,7 @@ def build(destination=None):
     install_content_v2_release(static)
     retire_custom_content(static)
     install_alchemist_release(static)
+    install_cpu_snapshot_release(static)
     enable_native_cursor(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
