@@ -5,6 +5,7 @@
 #include "research_activity.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
+#include "map_selection_identity.h"
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
@@ -90,6 +91,44 @@ struct ResearchOps : DispatchOps {
 };
 
 int main(int argc, char **argv) {
+    DispatchOps selectionOps;
+    selectionOps.memory = {{300 + 0x5c, 1},
+                           {300 + 0x60, 915},
+                           {300 + 0x6c, 0x31434c41},
+                           {300 + 0x80, 400},
+                           {400 + 4, 0x31434c41}};
+    MajestyCommunity::MapSelectionIdentity selection;
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    selection.enter();
+    selection.character(selectionOps, 300, 0x00418bc0); // ordinary card/AI call excluded
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    selection.enter();
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31435641);
+    check(selection.leave(selectionOps));
+    check(selectionOps.read(300 + 0x6c) == 0x31435641); // outer predicate still owns it
+    check(selection.restore(selectionOps));             // full card sees real community identity
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    check(selection.leave(selectionOps));
+    selection.enter();
+    selectionOps.memory[300 + 0x6c] = 0x31485641; // stock Ranger unaffected
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31485641);
+    check(selection.leave(selectionOps));
+    selectionOps.memory[300 + 0x6c] = 0x31434c41;
+    for (auto caller : {0x0043dde4U, 0x0043de62U, 0x0043dee6U}) {
+        selection.enter();
+        selection.character(selectionOps, 300, caller);
+        check(selectionOps.read(300 + 0x6c) == 0x31435641);
+        check(selection.leave(selectionOps));
+        check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    }
+    selection.enter();
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    selectionOps.memory[300 + 0x60] = 916; // refuse recycled actors
+    check(!selection.restore(selectionOps));
+
     MajestyCommunity::RageDispatch rage;
     check(!rage.begin(0, 915, "Alchemist_DoInvigoratingElixer"));
     check(rage.begin(300, 915, "Alchemist_DoInvigoratingElixer"));

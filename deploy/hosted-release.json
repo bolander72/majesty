@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "alchemist-lab1417",
-  "bytes": 7718613,
-  "sha256": "cdaddb71068efffc29ca8546bb975dc68fd709f2137d59335fcfe77f7b34755b",
-  "engineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
+  "release": "alchemist-selection1528",
+  "bytes": 7680589,
+  "sha256": "ee253d7e96fcdda17bc36a65133386b4f5b06a35069995e71b9d2f0ca2c707db",
+  "engineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -63,7 +63,7 @@
     },
     "static/games.json": {
       "bytes": 1821,
-      "sha256": "3af1c1d9a62d5f73b7339dad39da37205c760ad31fc4346a846309db652134e9"
+      "sha256": "94fe1a6b3ec146601eba745d85fb971f226262508ec4b7339bed0d095db61b78"
     },
     "static/hosting/autoload.mjs": {
       "bytes": 984,
@@ -98,16 +98,16 @@
       "sha256": "1a63bf3bf5a774c2739a4f4cb4e45bd6c38c3fd32fc68dc50a15d7d658c485d6"
     },
     "static/majesty/MajestyRecomp.data": {
-      "bytes": 5092097,
-      "sha256": "ca842f5f4f3a4dae47573c1426e20fba3c66185f754b95977737dbfa1db82d29"
+      "bytes": 5092051,
+      "sha256": "d5bb4d046b8d725243aaa6088bc092efac76d09986b31bb2c32f612c954cae16"
     },
     "static/majesty/MajestyRecomp.js": {
       "bytes": 472568,
-      "sha256": "bbc777bd8be0d6d45ad8528f0ddfa057a7c5f5ebf2cddbf6c5fe26c0bec8e1c9"
+      "sha256": "ee79c7c764cc681e5b33ddc7f6847af545b4cdbc07324ab3fb418d7774efdb6b"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 7053302,
-      "sha256": "4ab27fad42c71fa513a0a69981828813165b5477a2889497dfe9c4e4468a9637"
+      "bytes": 7053746,
+      "sha256": "7ea70f262c68c2bbe6263bf2302433bc5db3c9d7428c93d781f72e9070aa94bc"
     },
     "static/majesty/index.html": {
       "bytes": 19657,
@@ -598,5 +598,5 @@
       "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
     }
   },
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/releases/alchemist-lab1417.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/378d76592308ea967e753ed32d7d065fe6eb9d82/assets/releases/alchemist-selection1528.tar.gz"
 }

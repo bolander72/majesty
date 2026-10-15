@@ -1,6 +1,6 @@
 {
   "format": "majesty-alchemist-content-release-v1",
-  "engineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
+  "engineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
   "storageId": "majesty-alchemist-v1-labels2",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
@@ -175,5 +175,8 @@
   ],
   "creator": "Phantomstar721",
   "credits": "CREDITS.md",
-  "displayLabelsRevision": 2
+  "displayLabelsRevision": 2,
+  "priorQualifiedEngineSha256": "b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af",
+  "browserMapSelectionQualified": true,
+  "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload"
 }

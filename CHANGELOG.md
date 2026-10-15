@@ -1,5 +1,11 @@
 # Changelog
 
+## Alchemist map selection — October 14, 2026
+
+- Allow the community Alchemist to pass the original map selection and hover predicates. Its ALC1 identity previously matched a legacy exclusion for effect actors.
+- Preserve the real identity before character-card dispatch, after each map callback and in saved games. Keep stock selection and native card panels.
+- Verify direct selection of both Alchemists natively, then direct browser selection, Stats and an ordinary Day13 save/reload with no temporary identity in the save.
+
 ## Private Alchemist research adapter — October 14, 2026
 
 - Check the original building identity when submitting research, allowing player zero's single-player Laboratory to reach native validation. Preserve original construction, health and gold checks.

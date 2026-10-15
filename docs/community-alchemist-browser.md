@@ -1090,3 +1090,50 @@ no public Alchemist records or assets exist to migrate. Public game assets,
 player schemas and runtime launch configuration are unchanged. Do not release
 candidate1093 until ordinary Lab construction/recruitment and the remaining
 mechanics/browser gates pass.
+
+
+### Map selection compatibility — October 14, 2026
+
+The original map predicates reject every character whose unit-code second byte
+is L, P or R. The authentic community `ALC1` identifier collides with that
+legacy filter. The hero is correctly classified as a character and its native
+AP20 card works through Lab Members, but clicking its world sprite was rejected.
+
+`native/community/map_selection_identity.h` scopes a predicate-only identity to
+ALC1 actors with the original character family and a matching descriptor ID at
+descriptor offset4. Descriptor offset0 is the virtual table, not the unit code.
+Only the audited IsCharacter return sites inside the native map predicates use
+the compatibility identity. Restore the original ALC1 code before card dispatch
+and at the outer callback boundary. Unit identity guards reject stale storage;
+stock actors and ordinary AI/card predicates remain unchanged.
+
+`python3 scripts/prepare-alchemist-selection-engine.py --game OWNED_GAME_DIR`
+checks the pinned executable and declares original entries0043dfc0,0043e250 and
+005b6670. Regenerate metadata through the official game build tools. Never edit
+generated translations. The official regeneration changes hook eligibility;
+all123 translated chunks/runtime declarations matched prior instruction bodies.
+The browser build includes that exact generated symbol resource and the source
+adapter. The optional stationary movement helper used for native click controls
+is private and is absent from the deployed browser source.
+
+Owned native trial1509 opens both Adalia Smokesleeve and Ameline Amberglass
+cards through ordinary left clicks, with only movement suppressed for coordinate
+control. Earlier phase7 trials cannot qualify clicks because that state blocks
+part of normal map input. Browser trial1512 runs normal simulation: a world
+click opens Adalia's actual Alchemist portrait/HP/Spells/Items/Stats card; Stats
+shows Artifice, and a stock Ratman remains selectable. Ordinary saving creates
+Day13,363009bytes,SHA256
+`a1ccab8f81cd29858d1c378ade78827a704651fd2d5e43442eaead10fbc93dfd`.
+It reloads normally at13057gold; its bytes contain three ALC1 occurrences and
+zero temporary AVC1 occurrences. These raw counts confirm identity persistence,
+not an independent actor census. Browser peak owned RSS was1606.7MiB; all owned
+games and browsers closed normally. Evidence is the resident
+`alchemist1527-map-selection-qualified.json` receipt and its screenshots.
+
+Rollout audit: no player-data migration, content reimport or account action.
+Keep collection `majesty-alchemist-v1-labels2`, canonical GUID, original save/profile
+paths and every asset binding. Publish the new immutable JS/data/WASM archive,
+then update both engine-bound release descriptors together. Previous full
+alchemy-mechanics qualification remains historical evidence; this regression
+check covers map selection, the card, normal simulation and save/reload. Rollback
+restores the previous descriptors/archive; it does not rewrite player saves.

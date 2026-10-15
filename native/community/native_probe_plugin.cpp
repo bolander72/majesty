@@ -10,6 +10,7 @@
 #include "research_activity.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
+#include "map_selection_identity.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -33,6 +34,7 @@ std::vector<std::uint32_t> hooks;
 bool traceRecruitment = false;
 bool attributeCompat = false;
 bool panelBridge = false;
+MajestyCommunity::MapSelectionIdentity mapSelection;
 bool researchBridge = false;
 bool traceCombat = false;
 bool actionBridge = false;
@@ -831,6 +833,30 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    // Gold HD reserves second-byte L for non-selectable legacy actors. The
+    // community's ALC1 collides with that broad test. Scope the compatibility
+    // identity to the original map predicates; restore before card dispatch
+    // and before the callback returns. Descriptors, GPL and saves retain ALC1.
+    if (panelBridge && (target == 0x0043dfc0U || target == 0x0043e250U || target == 0x0043ee80U ||
+                        target == 0x0043ddb0U || target == 0x0043de30U || target == 0x0043ded0U)) {
+        DispatchOps ops;
+        mapSelection.enter();
+        next(inv, cpu);
+        require(mapSelection.leave(ops), "map selection identity lifetime");
+        return;
+    }
+    if (panelBridge && target == 0x005b6670U) {
+        DispatchOps ops;
+        mapSelection.character(ops, self, read(cpu->esp));
+        next(inv, cpu);
+        return;
+    }
+    if (panelBridge && target == 0x00418660U) {
+        DispatchOps ops;
+        require(mapSelection.restore(ops), "map selection identity before card");
+        next(inv, cpu);
+        return;
+    }
     if ((researchBridge || sharedFunctions) && target == 0x00628e60U) {
         sharedResolved.clear();
         targetOwner = {};
@@ -1574,7 +1600,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 method "
                     "eligibility is unchanged. Private dispatch is explicitly opt-in.");
     if (panelBridge) {
-        for (const auto address : {0x00466110U, 0x004652a0U}) {
+        for (const auto address : {0x00466110U, 0x004652a0U, 0x0043dfc0U, 0x0043e250U, 0x0043ee80U,
+                                   0x005b6670U, 0x00418660U, 0x0043ddb0U, 0x0043de30U, 0x0043ded0U}) {
             std::uint32_t id = 0;
             const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
                                                       POP_HOOK_NO_GAME_VIEW, nullptr, &id);
