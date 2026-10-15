@@ -1,0 +1,123 @@
+--- a/dx/pixel_change_mask.h
++++ b/dx/pixel_change_mask.h
+@@ -84,2 +84,5 @@
+-// Same exact bounds without a mask allocation or writes. CPU snapshot frames
+-// still need these bounds to rebase overlapping locks correctly.
++// CPU snapshots need the exact outer bounds to rebase overlapping locks, but
++// never consume the interior mask. Search in from both ends: a scrolling row
++// often differs at both edges, so walking every changed interior pixel would
++// do work whose result nobody uses. Byte boundaries round out to whole pixels,
++// including 24-bit pixels and vector groups which straddle a pixel boundary.
+@@ -88 +91,49 @@
+-    return pixel_change_scan<false>(was, now, pixels, bb, nullptr);
++    const size_t bytes = pixels * bb;
++    size_t first = 0;
++#ifdef __wasm_simd128__
++    for (; bytes - first >= 16; first += 16) {
++        const unsigned bits = wasm_i8x16_bitmask(
++            wasm_i8x16_ne(wasm_v128_load(was + first), wasm_v128_load(now + first)));
++        if (bits) {
++            first += __builtin_ctz(bits);
++            break;
++        }
++    }
++#else
++    for (; bytes - first >= 8; first += 8) {
++        uint64_t a, b;
++        std::memcpy(&a, was + first, 8);
++        std::memcpy(&b, now + first, 8);
++        if (a != b)
++            break;
++    }
++#endif
++    while (first < bytes && was[first] == now[first])
++        ++first;
++    if (first == bytes)
++        return {pixels, 0};
++    size_t end = bytes;
++#ifdef __wasm_simd128__
++    while (end - first >= 16) {
++        const unsigned bits = wasm_i8x16_bitmask(
++            wasm_i8x16_ne(wasm_v128_load(was + end - 16), wasm_v128_load(now + end - 16)));
++        if (bits) {
++            end -= 16;
++            end += 32 - __builtin_clz(bits);
++            break;
++        }
++        end -= 16;
++    }
++#else
++    while (end - first >= 8) {
++        uint64_t a, b;
++        std::memcpy(&a, was + end - 8, 8);
++        std::memcpy(&b, now + end - 8, 8);
++        if (a != b)
++            break;
++        end -= 8;
++    }
++#endif
++    while (was[end - 1] == now[end - 1])
++        --end;
++    return {first / bb, (end - 1) / bb + 1};
+--- a/host/tests/pixel_kernel_tests.cpp
++++ b/host/tests/pixel_kernel_tests.cpp
+@@ -109,0 +110,28 @@
++    const auto empty_bounds = pixel_change_bounds(nullptr, nullptr, 0, 2);
++    check(empty_bounds.begin == 0 && empty_bounds.end == 0);
++    // Single differing bytes at every position catch rounding at the two
++    // boundaries, particularly SIMD groups which split a three-byte pixel.
++    // Paired endpoints and dense interiors must return those same bounds.
++    for (unsigned bb : {1u, 2u, 3u, 4u})
++        for (size_t width : {1u, 7u, 8u, 15u, 16u, 17u, 31u, 32u, 33u, 257u, 1024u})
++            for (size_t offset = 0; offset < 16; ++offset) {
++                std::vector<uint8_t> before(width * bb + 32, 0x39), after(before);
++                const auto *a = before.data() + offset;
++                auto *b = after.data() + 15 - offset;
++                for (size_t byte = 0; byte < width * bb; ++byte) {
++                    b[byte] ^= 0x80;
++                    const auto single = pixel_change_bounds(a, b, width, bb);
++                    check(single.begin == byte / bb && single.end == byte / bb + 1);
++                    b[byte] ^= 0x80;
++                    const size_t last = width * bb - 1;
++                    b[byte] ^= 1;
++                    b[last] ^= 0x80;
++                    const auto pair = pixel_change_bounds(a, b, width, bb);
++                    check(pair.begin == byte / bb && pair.end == width);
++                    b[byte] ^= 1;
++                    b[last] ^= 0x80;
++                }
++                memset(b, 0xc6, width * bb);
++                const auto dense = pixel_change_bounds(a, b, width, bb);
++                check(dense.begin == 0 && dense.end == width);
++            }
+--- a/host/tests/pixel_compare_bench.cpp
++++ b/host/tests/pixel_compare_bench.cpp
+@@ -95,0 +96,8 @@
++NOINLINE PixelChangeSpan previous_bounds(const uint8_t *a, const uint8_t *b, size_t pixels,
++                                         uint8_t *) {
++    return pixel_change_scan<false>(a, b, pixels, 2, nullptr);
++}
++NOINLINE PixelChangeSpan current_bounds(const uint8_t *a, const uint8_t *b, size_t pixels,
++                                        uint8_t *) {
++    return pixel_change_bounds(a, b, pixels, 2);
++}
+@@ -97,0 +106,19 @@
++    {
++        for (size_t pixels : {640, 1280, 1920})
++            for (unsigned offset : {0, 1, 15})
++                for (unsigned pattern = 0; pattern < 4; ++pattern) {
++                    size_t a = 0, b = 0;
++                    double oldMs, newMs;
++                    if ((offset + pattern) & 1) {
++                        newMs = measure_mask(current_bounds, pixels, pattern, offset, &b);
++                        oldMs = measure_mask(previous_bounds, pixels, pattern, offset, &a);
++                    } else {
++                        oldMs = measure_mask(previous_bounds, pixels, pattern, offset, &a);
++                        newMs = measure_mask(current_bounds, pixels, pattern, offset, &b);
++                    }
++                    failed += a != b;
++                    std::printf("{\"kind\":\"bounds\",\"pixels\":%zu,\"offset\":%u,\"pattern\":%u,"
++                                "\"oldMs\":%.3f,\"newMs\":%.3f,\"checksum\":%zu}\n",
++                                pixels, offset, pattern, oldMs, newMs, b);
++                }
++    }

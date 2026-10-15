@@ -5,6 +5,65 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
+## Faster changed-row bounds and guest copies
+
+The `smooth-copy1799` release adds two incremental patches to the previously
+qualified `cpu-snapshot1770` source. Apply both with `patch -p1`; they are not
+bootstrap patches for a bare upstream checkout.
+
+`patches/recomp-kit-exact-change-bounds.patch` searches from the two ends of a
+changed row instead of visiting its unused interior. It preserves exact outer
+pixel bounds, including unaligned 24-bit pixels and SIMD tails. Mask-producing
+GPU/texture paths and overlapping-lock rebasing keep their contracts. It adds
+no persistent allocation.
+
+`patches/recomp-kit-bulk-string-copy.patch` batches generic REP MOVS copies.
+Disjoint spans use memcpy; safe-direction overlaps use memmove. Overlaps whose
+writes feed later reads retain x86 smear order. Armed watchpoints, small copies
+and null/wrapping/out-of-arena spans retain the scalar path. Registers, flags,
+per-element dirty boundaries and guest-baton ownership stay exact. There are
+no Majesty source-address constants in the generic helper.
+
+The same original 111-building saved kingdom, native viewport and camera
+sequence give the following short 1920×1080 comparison:
+
+| Displayed-image gap | Previous release | Combined candidate |
+| --- | ---: | ---: |
+| 95th percentile | 34.25 ms | 18.73 ms |
+| Longest | 116.09 ms | 51.62 ms |
+| Pauses over 50 ms | 10 | 2 |
+| Pauses over 100 ms | 1 | 0 |
+
+Each sample covers about 39 seconds. These are scrolling display intervals,
+not exact click latency or a guarantee for every mission. Total browser CPU
+was slightly higher, about 1.29 versus 1.23 cores; no overall CPU or RAM saving
+is established. Resolution and the simulation cadence are unchanged.
+
+Portable and actual WASM pixel-kernel targets pass; DirectDraw passes 182,934
+checks. The independent REP MOVS oracle passes 84,539 checks on portable and
+WASM builds, covering both directions, all three widths, overlap, dirty ranges
+and watch values. Six translated cases also pass against Unicorn. The explicit
+WASM copy benchmark passes 84,554 checks including its 15 cases; its helper
+speedups are not whole-game estimates.
+
+Native Guardhouse and Palace cards, live resizing, scrolling, Options and
+resuming play were checked visually. Ordinary saving retained all 111 completed
+buildings and 29 living heroes with AI; three buildings had ordinary combat
+damage. A fresh logical profile restored that exact Day-2 save, displayed the
+native cards and continued its mission. Qualified browser peaks stayed below
+2088 MiB with the unchanged 2400-MiB guard. The
+[bound qualification](../deploy/cpu-snapshot-verification.json) preserves the
+prior renderer proof separately and records the incremental source hashes.
+
+Use official `tools/test.py --native-test pixel_kernel_tests`,
+`--native-test dx_tests`, `--native-test string_ops_tests`, and the configured
+browser preset for the WASM variants. Use
+`python -m pytest -q tools/recomp/tests/test_translate_insns.py -k 'REP and MOVS'`
+for the original x86 instruction comparison. `string_ops_bench` is an explicit
+benchmark target excluded from normal nogame checks. Build through
+`tools/build.py`, which refreshes the generated runtime-header copy under its
+build lock; never edit generated translations or their copied header manually.
+
 ## Reduce complete-image CPU bookkeeping
 
 The current priority is responsiveness and visible stalls rather than a target
@@ -315,3 +374,27 @@ not identify the exhausted host resource or prove which allocation caused it.
 The experiment remains excluded and the original DirectDraw source is restored.
 Earlier apparent comparisons used the old nested engine and were discarded.
 No general crash fix or lag-free kingdom-size guarantee is claimed.
+
+
+## Lessons from other browser ports
+
+Research checked on October 15, 2026 informs these experiments; results from
+another engine are not estimates for Majesty.
+
+| Primary source | Relevant technique | Majesty application |
+| --- | --- | --- |
+| [Qwasm](https://github.com/GMH-Code/Qwasm#notes-on-x86-assembler) | Replace platform assembly with portable C operations and compare equivalent workloads. It also has separate software and WebGL renderers. | Our static translation already avoids general-purpose CPU emulation, but copying rows still executes translated element stores and dirty bookkeeping. A private REP MOVS candidate batches eligible copies while preserving overlap, registers and dirty boundaries. Its full engine passed browser scrolling, native selection and save/reload qualification. |
+| [D3Wasm author's technical account](https://www.continuation-labs.com/projects/d3wasm/) | Progressively remove GL emulation layers and stream geometry through a direct browser renderer, keeping a working intermediate build. Long synchronous operations also caused stalls. | Continue removing measured compatibility overhead. Audit remaining pixel uploads and synchronization after the current CPU work. Its historical browser, threading and SIMD limitations are not current platform guidance. |
+| [wipEout rewrite author](https://phoboslab.org/log/2023/08/rewriting-wipeout) | Use a small renderer interface, one texture atlas and shared shaders; replace blocking scene loops with browser-driven callbacks. The author identifies one-time static-geometry uploads as a further improvement. | Batch compatible graphics work and reuse resources rather than issuing many tiny operations. Majesty already separates the guest worker and browser loop. A future renderer change still must preserve original sprites, palettes, cursor and immutable frames; the other renderer is not a drop-in replacement. |
+| [Emscripten threading guide](https://emscripten.org/docs/porting/pthreads.html) | Keep blocking game work off the browser UI thread and account for synchronous proxy calls. | The SDL host already runs `web_guest` in a worker and `web_frame` on the browser loop. Adding another main-thread proxy blindly is inappropriate; inspect the remaining cross-thread work. |
+| [Emscripten graphics optimization guide](https://emscripten.org/docs/optimizing/Optimizing-WebGL.html) | Reduce API traffic, reuse resources, batch work and avoid GPU/CPU waits. | The active browser presenter uses WebGPU, so these are architectural leads, not drop-in GL flags. Preserve immutable frame ownership and native pixels while measuring equivalent upload and submission costs. |
+| [Emscripten memory settings](https://emscripten.org/docs/tools_reference/settings_reference.html#growable-arraybuffers) | Threaded growable memory can pay for refreshing JavaScript views. `GROWABLE_ARRAYBUFFERS=1` detects support and retains a fallback; `2` requires the newer API. Heap-growth policies trade extra reserved memory against resize pauses. | The SDK 6.0.10 detection and string-decoding fixes were checked. A private value-`1` build loaded the original world with a growable shared buffer, but crossed the 2400-MiB guard during larger-view resize (2452 MiB observed). It was closed and excluded before a matched performance/save comparison. The qualified fixed-view source and engine were restored; the exact memory source remains unresolved. |
+| [OpenTTD browser pacing report](https://github.com/OpenTTD/OpenTTD/issues/15151) | A reported fast-forward problem ties simulation progress to display refresh. | Keep simulation cadence separate from presentation. Judge Majesty changes by pauses, interaction and equivalent kingdom work. This issue supplies an example of the hazard, not a verified solution for our runtime. |
+
+Only the exact-bounds and REP-copy changes qualified in this pass. The memory-view
+experiment remains excluded. Neither an
+HTTP success nor a fast isolated kernel proves that a large mission feels
+responsive. Use matched original mission saves, native selection and menus,
+normal save/reload, visible scrolling and bounded resource measurements before
+publishing changes. Rewrites to HTML/DOM or a different source language do not
+by themselves remove the measured work.

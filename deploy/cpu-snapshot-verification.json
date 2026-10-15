@@ -1,241 +1,292 @@
 {
   "format": "majesty-cpu-snapshot-verification-v1",
-  "status": "native and browser qualified",
-  "engineSha256": "108e65fe6e9079f602f0cfe5223520ebaffa0c9c9a83a44e23b74166dd4115f4",
-  "priorEngineSha256": "3bd3326dd6f201d58071d05470691874cb674f9393c3016d327d8dd2dab751e2",
+  "status": "incremental native and browser qualified",
+  "engineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+  "priorEngineSha256": "108e65fe6e9079f602f0cfe5223520ebaffa0c9c9a83a44e23b74166dd4115f4",
   "engine": {
     "js": {
       "bytes": 472568,
-      "sha256": "4d106bb8c17fdb2491e858be78210c2967a827eeaade16d322ad3dff0019c98b"
+      "sha256": "423575ea4ca15e7c4797da647eeded789b44334b7476d6450677c7f62019fe56"
     },
     "data": {
       "bytes": 5092034,
       "sha256": "6fed95aefb357a2a895945c041bb10004d6481bd4c4c2a220b685c3a93cc8f67"
     },
     "wasm": {
-      "bytes": 90552121,
-      "sha256": "108e65fe6e9079f602f0cfe5223520ebaffa0c9c9a83a44e23b74166dd4115f4"
+      "bytes": 90503913,
+      "sha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e"
     },
     "js.symbols": {
-      "bytes": 2137248,
-      "sha256": "a13f224bbe1ecf55e983f078914258d28179a5d3476ee468cff8b23853a42647"
+      "bytes": 2138320,
+      "sha256": "e004d8cc6f373c5c65cccd9729a1eb8329e009cf5654c73c3958df851b9f44fd"
     }
   },
-  "patch": "patches/recomp-kit-cpu-snapshot-present.patch",
-  "patchSha256": "5f0856457aecf3226b3f876e89f612a02a363ff47e6531c536e5e5d854f55024",
-  "sourceBinding": {
-    "dx/coherence.h": {
-      "before": "714ab264b4eaacc76710dfef58c14b94189aecdc6b48fc0e74d86a52c3380356",
-      "after": "1af2e281a629c8f8141bf5a3b65d019ef6f3e8770e45b7441677d60d7e862279"
+  "priorQualification": "deploy/cpu-snapshot1770-verification.json",
+  "incrementalPatches": [
+    {
+      "path": "patches/recomp-kit-exact-change-bounds.patch",
+      "patchSha256": "445f909331c7b00c5cfc4bce5d81de5d19785efdf6c1789d0239b223bf53aebe",
+      "exactPatchRoundTrip": true,
+      "sources": {
+        "dx/pixel_change_mask.h": {
+          "before": "30b42a300450aa2a79700f5f0c88521ec298b9bc4455309a60ab1758dba9b67a",
+          "after": "4a41f71f2752caea7bdb7cc6eac9c458fa6e09301220d6ecc8308e8f9cd4786f"
+        },
+        "host/tests/pixel_kernel_tests.cpp": {
+          "before": "725ba35dee3b0b08f61e1ff57a8669c2c099aa07d004f43029224e6cefb906f9",
+          "after": "49cc5651ff5c9208c2a1f682a914bf477042573f5128febbefe1ce4eb4ec1a39"
+        },
+        "host/tests/pixel_compare_bench.cpp": {
+          "before": "32fc0c49c0fe7a91640ae8a5fa659e14c93b316e53cd6926b7d67f783ee2ce36",
+          "after": "7a89217df6d8758c79fb6da1e60a77aeee5ad5ca48f2700aa0bddf9da7caff50"
+        }
+      },
+      "scopedOfficialGameLiteralCheck": true,
+      "scopedOfficialTrackedBoundaryCheck": true
     },
-    "dx/d3d.cpp": {
-      "before": "24144be221a6ba04a874b236d12236780bb9bda83bf90403491a863a27bc6282",
-      "after": "f1f6c5c7d85296a01b1c567d5d27609f046e77fa25514ae0caa45d2e75ee5bab"
-    },
-    "dx/ddraw.cpp": {
-      "before": "826e81ca1cf35d88e89dc831b26ae82e20eb813f645b4e1d8ab15548aa05d298",
-      "after": "3770c042d3c678f76ce344f3518510e37648a6697dbee7278317c83b36179513"
-    },
-    "dx/host_api.cpp": {
-      "before": "92f57ed56c06b8cb2742d12279fedd26653b930a679667a31fd68f1a4d6fada4",
-      "after": "d6b88d2c452720737e7edde920c22233eacd86c3372a095a11c293077a490511"
-    },
-    "dx/passes.h": {
-      "before": "1a3846e7c150aab9ddd383221329258bb134ca19808e7878c488420cfaa18678",
-      "after": "8dde391b2e55208a547da2147fc47ecb3050f40422c742ca42b91e6fa6424695"
-    },
-    "dx/pixel_change_mask.h": {
-      "before": "531ef6a992e3c8d30bebf8159dee5141658730006ec91b12eeb6c72c5712cf14",
-      "after": "30b42a300450aa2a79700f5f0c88521ec298b9bc4455309a60ab1758dba9b67a"
-    },
-    "dx/tests/dx_tests.cpp": {
-      "before": "31c3119dd2294a93fcf9f2590d2d65312a30733eaf4398685fc1a4ab6b0d4bc0",
-      "after": "f297e31114a328876de535405ae0c4715773d27bafbaf958b76915a6975e29c5"
-    },
-    "host/d3d_render.cpp": {
-      "before": "efcc6ce172fc89daa95150c25f25c3460a468f36d8b0a19929e0331b8f231016",
-      "after": "7c3063821b64fce7d5e2d879e48efe9425837b517582d1b6e921ebd32deea4fd"
-    },
-    "host/tests/host_tests.cpp": {
-      "before": "acd4454a24f8a8438b312eb51d50a3a02ccbe08effb1a962667b76502e50c773",
-      "after": "e55572f56df120989925ff010c69d22eb1a74dd1c44780cdd9139547357b8ebc"
-    },
-    "host/tests/pixel_kernel_tests.cpp": {
-      "before": "9a3d350097e7a029b69daebf75691814cd1bd8d03c8b063f84bc14c8cb09424f",
-      "after": "725ba35dee3b0b08f61e1ff57a8669c2c099aa07d004f43029224e6cefb906f9"
-    },
-    "host/tests/test_frame_builder.cpp": {
-      "before": "40f24d714653aa5fb3350c4a1b1edd16ae01ccf51dceb839bbe0afcb12ba6757",
-      "after": "b3789522c105d5a72400b0297d7adb99dc2837a368e604c2fabf3570ffc64071"
-    },
-    "host/tests/test_frame_builder.h": {
-      "before": "c97bd716c4074e30270e6e02049a847736c149cb502ac82418bf1202a6e6d086",
-      "after": "bb25b79b2531ffe9f060ad148855a5f7eecad2db6806e50f0873e95da8b0f80e"
-    },
-    "host/tests/ui_layer_tests.cpp": {
-      "before": "647c049ee9b72a014da0945771be812a5246ec4eb9dc00d216bb09b9df83bc2a",
-      "after": "2e1c474cca13369cf96933b975a39a322faf72ce5fed01c21473822d7db28e2a"
-    },
-    "host/ui_layer.cpp": {
-      "before": "f8d7e12a470fe90e8463f20272167081de4c182388920a6cd5fd5e70ab9c78b9",
-      "after": "037552394ffda897d5dde3dee90c896308deceaa667cb1f841ed587cc6b0b22d"
+    {
+      "path": "patches/recomp-kit-bulk-string-copy.patch",
+      "patchSha256": "5e57745d3c8e50d3968eded655bde0d866a2488f9876d6eff934d224911937ea",
+      "exactPatchRoundTrip": true,
+      "sources": {
+        "runtime/x86.h": {
+          "before": "8218013933e0e57f734f884e5d295c4cfb5fe9e2cc6563587b959bcd85f0a09f",
+          "after": "09669cf5443a23e1bd7474cd27deb478a0d4040d490c755bc8c29b183e17434c"
+        },
+        "runtime/CMakeLists.txt": {
+          "before": "0dae6e47518e4eaa8093ad483f0d33c654373a6d146fc5660e9e3f55695b50a5",
+          "after": "be1aa7669f57656333e0356b27a44c4057b2112f249bd5c02a80c6b2883eddbc"
+        },
+        "runtime/tests/string_ops_tests.cpp": {
+          "before": null,
+          "after": "47e216691c23ab1183c40ab0d4a2ca7016fa750f51827377a7c2089fd98c0725"
+        },
+        "tools/recomp/tests/test_translate_insns.py": {
+          "before": "054b8c601efdf7294be4a404321bb405aa925181254930765cb276c5a385bf9c",
+          "after": "c27bfe312a894aa5107cfadb1dea81bffe66174af7e2766d586d639b7192ec0c"
+        }
+      },
+      "scopedOfficialGameLiteralCheck": true,
+      "scopedOfficialTrackedBoundaryCheck": true
     }
-  },
+  ],
   "requiredRuntimeEnvironment": {
     "RECOMP_DDRAW_CPU_SNAPSHOT_ONLY": "1"
   },
   "nativeControlsQualified": true,
   "browserWorldSaveReloadQualified": true,
   "browserInteractionQualified": true,
-  "successCriteria": [
-    "Reduce visible rendering stalls in large kingdoms.",
-    "Keep scrolling, native selection/cards and menus working.",
-    "Preserve image quality, simulation, profiles and saves."
-  ],
   "nativeChecks": {
-    "officialToolsOnly": true,
+    "priorUnchangedRendererControls": "deploy/cpu-snapshot1770-verification.json",
+    "portablePixelKernels": "passed official target",
+    "wasmSimdPixelKernels": "passed official target",
     "directDraw": {
       "checks": 182934,
       "failures": 0
     },
-    "wasmPixelKernels": {
-      "checks": 4992202,
+    "portableRepMovs": {
+      "checks": 84539,
       "failures": 0
     },
-    "nativePixelKernels": "passed",
-    "uiLayer": "1/1 suite passed",
-    "presenterService": "1/1 suite passed",
-    "host": {
-      "checks": 4184667,
+    "actualWasmRepMovs": {
+      "checks": 84539,
       "failures": 0
     },
-    "controls": [
-      "unchanged CPU locks produce no new frame",
-      "changed and retained-pointer bytes reach the complete image",
-      "texture writes retain exact records",
-      "device transition seals the CPU image before GPU records",
-      "masked GPU cleaning and stale generations preserve coverage",
-      "snapshot UI bypass clears prior elements without reading incomplete records",
-      "all exact bound and mask oracles pass"
-    ]
-  },
-  "scopedChecks": {
-    "exactPatchRoundTrip": true,
-    "scopedOfficialGameLiteralCheck": true,
-    "scopedOfficialTrackedBoundaryCheck": true,
-    "patchSha256": "5f0856457aecf3226b3f876e89f612a02a363ff47e6531c536e5e5d854f55024",
-    "scopedFiles": [
-      "dx/coherence.h",
-      "dx/d3d.cpp",
-      "dx/ddraw.cpp",
-      "dx/host_api.cpp",
-      "dx/passes.h",
-      "dx/pixel_change_mask.h",
-      "dx/tests/dx_tests.cpp",
-      "host/d3d_render.cpp",
-      "host/tests/host_tests.cpp",
-      "host/tests/pixel_kernel_tests.cpp",
-      "host/tests/test_frame_builder.cpp",
-      "host/tests/test_frame_builder.h",
-      "host/tests/ui_layer_tests.cpp",
-      "host/ui_layer.cpp"
-    ],
-    "zeroContextArtifactRoundTrip": true
+    "translatedUnicornInstructionCases": {
+      "passed": 6,
+      "deselectedUnchangedCases": 74
+    },
+    "repBenchmarkWithChecks": {
+      "checks": 84554,
+      "failures": 0,
+      "cases": [
+        {
+          "bytes": 64,
+          "delta": 16384,
+          "scalarMs": 1.759,
+          "bulkMs": 0.335
+        },
+        {
+          "bytes": 256,
+          "delta": 16384,
+          "scalarMs": 6.189,
+          "bulkMs": 0.344
+        },
+        {
+          "bytes": 1280,
+          "delta": 16384,
+          "scalarMs": 30.733,
+          "bulkMs": 0.541
+        },
+        {
+          "bytes": 2560,
+          "delta": 16384,
+          "scalarMs": 60.915,
+          "bulkMs": 0.695
+        },
+        {
+          "bytes": 7680,
+          "delta": 16384,
+          "scalarMs": 170.642,
+          "bulkMs": 2.143
+        },
+        {
+          "bytes": 64,
+          "delta": -16,
+          "scalarMs": 1.72,
+          "bulkMs": 0.347
+        },
+        {
+          "bytes": 256,
+          "delta": -16,
+          "scalarMs": 6.313,
+          "bulkMs": 0.348
+        },
+        {
+          "bytes": 1280,
+          "delta": -16,
+          "scalarMs": 30.894,
+          "bulkMs": 0.525
+        },
+        {
+          "bytes": 2560,
+          "delta": -16,
+          "scalarMs": 58.587,
+          "bulkMs": 0.719
+        },
+        {
+          "bytes": 7680,
+          "delta": -16,
+          "scalarMs": 181.638,
+          "bulkMs": 1.674
+        },
+        {
+          "bytes": 64,
+          "delta": 16,
+          "scalarMs": 1.689,
+          "bulkMs": 1.778
+        },
+        {
+          "bytes": 256,
+          "delta": 16,
+          "scalarMs": 6.22,
+          "bulkMs": 6.343
+        },
+        {
+          "bytes": 1280,
+          "delta": 16,
+          "scalarMs": 30.647,
+          "bulkMs": 30.84
+        },
+        {
+          "bytes": 2560,
+          "delta": 16,
+          "scalarMs": 61.875,
+          "bulkMs": 59.785
+        },
+        {
+          "bytes": 7680,
+          "delta": 16,
+          "scalarMs": 183.046,
+          "bulkMs": 183.029
+        }
+      ],
+      "limit": "isolated helper work, not whole-game speed"
+    }
   },
   "officialBuild": {
     "exitCode": 0,
     "stopReason": null,
-    "peakOwnedRssMiB": 1761.2
+    "peakOwnedRssMiB": 1731.7
   },
   "browser": {
     "muted": true,
     "isolated": true,
-    "ownedRssCeilingMiB": 2400,
     "normalOptimizingV8": true,
     "compilerTasks": 1,
-    "nativeModeActivationObserved": true,
+    "ownedRssCeilingMiB": 2400,
+    "runtimeFlagSupplied": true,
     "actualRequestedEngineUrlVerified": true,
-    "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882",
-    "syntheticInitialKingdom": {
-      "completedBuildings": 111,
-      "livingHeroes": 41,
-      "cityGuards": 30
-    },
+    "inputSaveSha256": "b08e5793fe83c468dc92365ec982fe0a9e4b1f32998cce233cb53a56673507ec",
     "matchedCameraMotion": {
       "baseline": {
-        "scenario": "continuous camera motion in 111-building kingdom",
         "viewport": [
-          1280,
-          633
+          1920,
+          1080
         ],
-        "samples": 948,
-        "medianGapMs": 17.025113105773926,
-        "p95GapMs": 33.950090408325195,
-        "p99GapMs": 35.96997261047363,
-        "worstGapMs": 66.92004203796387,
-        "gapsOver50Ms": 6,
-        "gapsOver100Ms": 0,
+        "samples": 1745,
+        "medianGapMs": 17.08507537841797,
+        "p95GapMs": 34.25002098083496,
+        "p99GapMs": 37.850141525268555,
+        "worstGapMs": 116.08505249023438,
+        "gapsOver50Ms": 10,
+        "gapsOver100Ms": 1,
         "gapsOver200Ms": 0,
-        "qualificationLimit": "Displayed-image intervals during camera motion; not direct input-to-visible latency."
+        "aggregateCpuCores": 1.225397214305264
       },
       "candidate": {
-        "scenario": "continuous camera motion in 111-building kingdom",
+        "scenario": "matched continuous camera motion in original 111-building mission",
         "viewport": [
-          1280,
-          633
+          1920,
+          1080
         ],
-        "samples": 1282,
-        "medianGapMs": 16.664981842041016,
-        "p95GapMs": 18.13483238220215,
-        "p99GapMs": 31.40997886657715,
-        "worstGapMs": 36.05961799621582,
-        "gapsOver50Ms": 0,
+        "durationSeconds": 39.11645007133484,
+        "samples": 2261,
+        "medianGapMs": 16.69001579284668,
+        "p95GapMs": 18.73016357421875,
+        "p99GapMs": 33.82992744445801,
+        "worstGapMs": 51.6200065612793,
+        "gapsOver50Ms": 2,
         "gapsOver100Ms": 0,
         "gapsOver200Ms": 0,
-        "qualificationLimit": "Displayed-image intervals during camera motion; not direct input-to-visible latency."
+        "aggregateCpuCores": 1.2921786259393115,
+        "qualificationLimit": "Short displayed-image intervals during camera motion, not direct input-to-visible latency; synthetic original mission, not user Siege save."
       }
     },
     "generatedSave": {
-      "sha256": "b08e5793fe83c468dc92365ec982fe0a9e4b1f32998cce233cb53a56673507ec",
-      "bytes": 1629782,
+      "sha256": "747d291810b79182aa49183e6e7777da9efe8ee28dc7c433c67069dcc66c4be4",
+      "bytes": 1618463,
       "completedBuildings": 111,
-      "fullHealthBuildings": 111,
-      "livingHeroesWithAi": 32
+      "fullHealthBuildings": 108,
+      "livingHeroesWithAi": 29,
+      "heroLevels": [
+        1,
+        4
+      ]
     },
     "freshLogicalProfileReload": {
       "exactGeneratedSave": true,
-      "worldContinuedIntoDay1": true,
+      "dayDisplayed": 2,
       "guardhouseHp": "200/200",
-      "palaceHp": "550/550"
-    },
-    "largerView": {
-      "scenario": "extended scrolling at larger native view after exact save reload",
-      "viewport": [
-        1920,
-        1080
+      "palaceHp": "550/550",
+      "worldContinuedAfterLoad": true,
+      "frameIdProgression": [
+        371,
+        585
       ],
-      "durationSeconds": 38.949729919433594,
-      "samples": 1939,
-      "medianGapMs": 16.72506332397461,
-      "p95GapMs": 33.70499610900879,
-      "p99GapMs": 34.98983383178711,
-      "worstGapMs": 66.80488586425781,
-      "gapsOver50Ms": 4,
-      "gapsOver100Ms": 0,
-      "gapsOver200Ms": 0,
-      "qualificationLimit": "No matched prior-release sample at this size; not direct click-to-visible latency."
+      "sameFinalEngine": true
     },
     "interactions": [
       "native Guardhouse card",
       "native Palace card",
-      "live resize from 1280x633 to 1920x1080",
-      "extended larger-view scrolling",
-      "native Options menu",
-      "Escape resumes ordinary play"
+      "live resize from1280x633 to1920x1080",
+      "12 alternating continuous camera pans",
+      "native Options and Escape resume",
+      "ordinary save and fresh logical-profile reload"
     ],
     "guestErrorsObserved": [],
-    "allTrialsClosedNormally": true,
-    "peakOwnedRssMiB": 2170.0
+    "qualifiedTrialsClosedNormally": true,
+    "peakOwnedRssMiB": 2087.2
+  },
+  "excludedExperiment": {
+    "name": "GROWABLE_ARRAYBUFFERS=1",
+    "published": false,
+    "browserQualified": false,
+    "observedGrowableSharedMemory": true,
+    "stop": "owned RSS guard during larger-view resize",
+    "peakOwnedRssMiB": 2452.4,
+    "sourceRestored": true,
+    "causalConclusion": "Threshold exceeded; exact source of increase is unresolved. No matched performance or save qualification."
   },
   "simulationTimingChanged": false,
   "renderResolutionReduced": false,
@@ -244,15 +295,14 @@
   "gameContentChanged": false,
   "generatedTranslationsEdited": false,
   "qualificationLimits": [
-    "The short matched scrolling sample is not a guarantee for every kingdom or mission.",
-    "Display-update gaps are measured; exact click-to-visible latency is not quantified.",
-    "The larger 1920x1080 trial has no matched prior-release control.",
-    "This synthetic original mission is not the user's exact Siege save.",
-    "No fix is established for recurring guest exceptions or the host-app crash cause."
+    "Short displayed-image gaps are measured, not direct click-to-visible latency.",
+    "Synthetic original 111-building mission, not the user's exact Siege save or every kingdom.",
+    "Total browser CPU increased slightly in the combined trial; no overall CPU or RAM reduction claim.",
+    "No recurring guest-exception or host-app crash fix is established."
   ],
   "rollout": {
     "state": "none",
-    "manualDataOperations": "No migration, backfill, profile rewrite or content update required. Audited render flags, engine pins, source patch, frame ownership and save/profile contracts.",
-    "rollback": "Revert this release commit, or restore prior hosted/alchemist engine manifests and remove deploy/cpu-snapshot-release.json before rebuilding. Keep all player saves and profiles."
+    "manualDataOperations": "No migration, backfill, profile rewrite, content or memory-policy change. Only immutable engine bytes and qualification pins change.",
+    "rollback": "Restore the previous hosted/alchemist engine manifests, cpu-snapshot-release descriptor and archived cpu-snapshot1770 qualification; keep all player saves and profiles."
   }
 }

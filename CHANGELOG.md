@@ -1,5 +1,11 @@
 # Changelog
 
+## Faster kingdom scrolling and memory copies — October 15, 2026
+
+- Find exact changed-row edges without scanning the unused interior; batch safe REP MOVS copies while preserving x86 overlap, flags, dirty bounds and watchpoints.
+- In a matched 1080p kingdom sample, reduce the 95th-percentile display gap from 34.25 to 18.73 ms and pauses over 50 ms from ten to two. Preserve native cards, resolution, simulation and ordinary save/reload; no general crash fix or overall resource reduction is claimed.
+- Apply lessons from Qwasm, D3Wasm and wipEout. Exclude the growable-memory-view experiment after its owned browser reached the existing resource guard.
+
 ## Smoother CPU-rendered kingdoms — October 15, 2026
 
 - Publish the complete native CPU image without also building redundant per-pixel replay records. Preserve resolution, native UI, simulation, profiles and saves; retain exact GPU/texture recording and device transitions.
