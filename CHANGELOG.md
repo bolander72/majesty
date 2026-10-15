@@ -1,5 +1,11 @@
 # Changelog
 
+## Reuse synchronized primary pixels — October 15, 2026
+
+- Reuse the current DirectDraw pixel baseline during synchronous presentation after a recorded primary write, avoiding a second full-surface scan. Independent presents still discover later retained-pointer writes.
+- Preserve frame storage, simulation and saves. Pass 182,820 DirectDraw checks and a 111-building browser world/save/reload trial.
+- The matched short sample remains about 21 fresh frames/s, with no meaningful CPU reduction established; this is not a claim that large-kingdom lag or recurring crashes are fixed.
+
 ## Wide SIMD pixel comparisons — October 15, 2026
 
 - Compare long pixel rows in four-vector batches while preserving early mismatches, exact bounds and the existing frame storage. Retain the original simulation, graphics and save format.

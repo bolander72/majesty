@@ -5,6 +5,44 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
+## Reuse the synchronized primary baseline
+
+`patches/recomp-kit-present-baseline-reuse.patch` removes a duplicate full-surface
+comparison during recorded primary-surface writes. `surface_pixels_changed`
+first resynchronizes the retained-pointer baseline, then synchronously presents
+the same pixels under the guest baton. That internal present now reuses the
+successful resynchronization. There is no intervening guest execution.
+
+The shortcut is a call argument, never persistent surface state. Independent
+presents still scan for unannounced writes through retained pointers, including
+stores after Unlock. If no baseline exists, resynchronization reports failure
+and the normal discovery path runs. Frame ownership, write records, readbacks,
+texture uploads, simulation timing and save formats retain their contracts.
+No frame buffers or kingdom-sized caches are added.
+
+This is an incremental patch for the qualified runtime described below, not a
+bootstrap patch for a bare upstream kit. Apply from that kit root with
+`patch -p1 -i /absolute/path/to/recomp-kit-present-baseline-reuse.patch` and use
+the official `tools/test.py --native-test dx_tests --jobs 1` and `tools/build.py`.
+The added regression verifies exactly one present for a recorded primary
+Unlock and exactly one later present containing a new retained-pointer write.
+
+Qualification is bound by
+[the baseline reuse receipt](../deploy/present-baseline-reuse-verification.json).
+The official DirectDraw suite passes 182,820 checks. A muted, isolated browser
+loaded the synthetic 111-building/41-hero/30-guard input, generated an ordinary
+save, and a fresh owned profile restored that exact save with all 111 buildings
+and 36 surviving heroes with saved AI. Both used `--liftoff-only` to keep browser
+compilation memory bounded; this does not qualify normal optimizing-browser FPS.
+
+The matched 20-second sample measured 21.22 versus 21.29 fresh frames/s, 1.159
+versus 1.162 aggregate CPU cores, and 67.35 versus 67.40 ms 95th-percentile gaps.
+These results do not establish a meaningful overall speedup. The candidate's
+bounded CPU capture confirms the duplicate present-side scan is absent; the
+necessary resynchronization scan remains. Earlier profile percentages include
+the prior SIMD change and different world progress, so they cannot isolate this
+patch's contribution. No general crash or lag-free large-kingdom claim is made.
+
 ## One upload per completed frame
 
 `patches/recomp-kit-present-coalescing.patch` changes the host presentation
