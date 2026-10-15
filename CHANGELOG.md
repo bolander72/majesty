@@ -1,5 +1,11 @@
 # Changelog
 
+## Browser mission rendering — October 15, 2026
+
+- Expand and upload the final DirectDraw primary image once per sealed frame, avoiding repeated intermediate conversions and GPU uploads. Preserve native graphics, simulation timing, content and player saves.
+- Verify native presentation tests, an existing original mission comparison, ordinary save/reload and Alchemist panels. The short mission sample used about 24% less CPU and delivered 9% more fresh frames; larger Siege kingdoms and recurring random crashes remain unqualified.
+- Hold out a second pixel-diff experiment because its browser sample performed worse.
+
 ## Alchemist fog of war — October 15, 2026
 
 - Let the real community Alchemist pass the legacy sight-circle resource-ID check, so it reveals unexplored terrain using its current sight range and player ownership.

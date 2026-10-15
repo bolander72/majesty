@@ -1,0 +1,274 @@
+--- a/host/present.cpp
++++ b/host/present.cpp
+@@ -185,6 +185,10 @@
+     if (!stage && !dump)
+         return;
+     const uint8_t *frame = (const uint8_t *)pixels;
++    if (stage)
++        host_present_stage_pixels(frame, w, h, bpp, pitch, palette);
++    if (!dump)
++        return;
+     g_staged.rgba.resize((size_t)w * (size_t)h * 4);
+     if (bpp == 8)
+         host_present_expand_indexed(frame, w, h, pitch, palette, g_staged.rgba.data());
+@@ -206,11 +210,6 @@
+         snprintf(path, sizeof path, "%s/present_%05u.ppm", host_dump_dir(), g_present_count);
+         host_write_ppm(path, rgb.data(), w, h);
+     }
+-
+-    // Copy into this frame's private target. Only the shim's seal callback
+-    // makes it eligible for the worker; a present callback alone is no seal.
+-    if (stage)
+-        host_present_stage_rgba(g_staged.rgba.data(), w, h);
+ }
+ 
+ // A settings change only publishes a request. AppKit drains it on the main
+--- a/host/present.h
++++ b/host/present.h
+@@ -274,6 +274,9 @@
+ void host_frame_seal(void);
+ void host_present_first_write(void);
+ void host_present_stage_rgba(const uint8_t *rgba, int w, int h);
++// Own the latest surface immediately; expand and upload at frame seal.
++void host_present_stage_pixels(const uint8_t *pixels, int w, int h, int bpp, int pitch,
++                               const uint32_t *palette);
+ // Includes bounded command-completion recovery; faults reports that degraded
+ // path. Only drawable acknowledgements enter the windowed continuous metric.
+ uint64_t host_present_unique_completed(void);
+--- a/host/present_frame.h
++++ b/host/present_frame.h
+@@ -9,6 +9,7 @@
+ #include "ui_layer.h"
+ 
+ #include <memory>
++#include <array>
+ #include <vector>
+ 
+ struct Fence {
+@@ -32,6 +33,11 @@
+     int pixels_w = 0, pixels_h = 0;
+     gpu::Format pixels_format = gpu::Format::RGBA8;
+     std::vector<uint8_t> test_pixels;
++    // Latest CPU surface owned by this pool slot. Guest pointers and palettes
++    // may change before seal; snapshot them, but expand/upload only once.
++    std::vector<uint8_t> surface_pixels;
++    std::array<uint32_t, 256> surface_palette{};
++    int surface_w = 0, surface_h = 0, surface_bpp = 0;
+     void release_scene() {
+         if (device) {
+             if (scene.world)
+@@ -53,6 +59,7 @@
+     bool had_draws = false, supplied = false, gpu = false, shown = false;
+     bool released = false, dropped = false, success = true, repeat = false, staged_pixels = false;
+     bool completion_fallback = false;
++    bool pending_pixels = false;
+     double presented_ts = 0, gpu_ts = 0, submitted_ts = 0, sealed_ts = 0, gpu_ms = 0;
+     double acknowledgement_deadline = 0;
+     unsigned pending_prefixes = 0;
+--- a/host/present_thread.cpp
++++ b/host/present_thread.cpp
+@@ -106,6 +106,10 @@
+     }
+ };
+ struct Service : std::enable_shared_from_this<Service> {
++    uint64_t surface_flushes = 0;
++    // Upload consumes its bytes synchronously; only fake frames retain RGBA for tests.
++    // Reuse one conversion buffer instead of retaining RGBA in every frame-pool slot.
++    std::vector<uint8_t> expanded_pixels;
+     HostCaptureFactory capture_factory = nullptr;
+     std::mutex mutex;
+     std::condition_variable wake, completed;
+@@ -461,10 +465,45 @@
+         }
+         device->commit(cb);
+     }
++    // Guest-side, mutex held. Multiple primary writes belong to one immutable
++    // frame. Expand/upload their final owned image before publishing that frame.
++    void flush_pixels() {
++        if (!writing || !writing->pending_pixels || !writing->target)
++            return;
++        auto &t = *writing->target;
++        const int w = t.surface_w, h = t.surface_h, bpp = t.surface_bpp;
++        auto &rgba = fake ? t.test_pixels : expanded_pixels;
++        rgba.resize(size_t(w) * h * 4);
++        const auto *pixels = t.surface_pixels.data();
++        if (bpp == 8)
++            host_present_expand_indexed(pixels, w, h, w, t.surface_palette.data(), rgba.data());
++        else if (bpp == 16)
++            host_present_expand_rgb565(pixels, w, h, w * 2, rgba.data());
++        else
++            host_present_expand_xrgb8888(pixels, w, h, w * 4, rgba.data());
++        writing->pending_pixels = false;
++        writing->staged_pixels = true;
++        ++surface_flushes;
++        if (fake)
++            return;
++        t.device = device;
++        if (!t.pixels || t.pixels_w != w || t.pixels_h != h ||
++            t.pixels_format != gpu::Format::RGBA8) {
++            if (t.pixels)
++                device->destroy(t.pixels);
++            t.pixels = texture(w, h);
++            t.pixels_format = gpu::Format::RGBA8;
++            t.pixels_w = w;
++            t.pixels_h = h;
++        }
++        if (t.pixels)
++            device->upload(t.pixels, {0, 0, w, h}, rgba.data(), w * 4);
++    }
+     void seal(uint64_t id, HostScreenClass cls, bool had_draws, bool prefix_pending = false) {
+         std::lock_guard lock(mutex);
+         if (stop || !writing)
+             return;
++        flush_pixels();
+         auto f = std::move(writing);
+         f->frame_id = id;
+         f->cls = cls;
+@@ -1319,6 +1358,7 @@
+         return;
+     s->guest_w = w;
+     s->guest_h = h;
++    s->writing->pending_pixels = false;
+     s->writing->staged_pixels = true;
+     auto &t = *s->writing->target;
+     if (s->fake)
+@@ -1338,6 +1378,29 @@
+             s->device->upload(t.pixels, {0, 0, w, h}, rgba, w * 4);
+     }
+ }
++extern "C" void host_present_stage_pixels(const uint8_t *pixels, int w, int h, int bpp, int pitch,
++                                          const uint32_t *palette) {
++    auto s = active.load();
++    if (!s || !pixels || w <= 0 || h <= 0 || (bpp != 8 && bpp != 16 && bpp != 32) ||
++        uint64_t(w) * (bpp / 8) > uint64_t(std::max(0, pitch)))
++        return;
++    s->acquire(w, h, 0, 0);
++    std::lock_guard lock(s->mutex);
++    if (s->stop || !s->writing || !s->writing->target)
++        return;
++    auto &t = *s->writing->target;
++    const size_t row = size_t(w) * (bpp / 8);
++    t.surface_pixels.resize(row * h);
++    for (int y = 0; y < h; ++y)
++        memcpy(t.surface_pixels.data() + size_t(y) * row, pixels + size_t(y) * pitch, row);
++    if (bpp == 8)
++        for (int i = 0; i < 256; ++i)
++            t.surface_palette[i] = palette ? palette[i] : uint32_t(i * 0x010101u);
++    t.surface_w = s->guest_w = w;
++    t.surface_h = s->guest_h = h;
++    t.surface_bpp = bpp;
++    s->writing->pending_pixels = true;
++}
+ // Whether a real device is presenting, so a guest-side GPU path has a queue to
+ // put its work on and a frame to stage it into.
+ bool host_present_gpu_ready() {
+@@ -1375,6 +1438,7 @@
+     // their dimensions here sends touches beyond that area and hides cursors.
+     s->guest_w = guest_w;
+     s->guest_h = guest_h;
++    s->writing->pending_pixels = false;
+     s->writing->staged_pixels = true;
+     s->device->blit(cb, src, {0, 0, w, h}, t.pixels, 0, 0);
+     return true;
+@@ -1493,6 +1557,10 @@
+     auto f = host_frame_current();
+     if (!f.id)
+         return;
++    {
++        std::lock_guard lock(s->mutex);
++        s->flush_pixels();
++    }
+     if (s->offscreen && s->capture_factory) {
+         bool eligible = false;
+         {
+@@ -1633,6 +1701,13 @@
+     auto s = begin(true, automatic, offscreen);
+     s->flight_limit = !offscreen && display_frames >= 2 && display_frames <= 3 ? display_frames : 1;
+ }
++uint64_t host_present_test_surface_flushes() {
++    auto s = active.load();
++    if (!s)
++        return 0;
++    std::lock_guard lock(s->mutex);
++    return s->surface_flushes;
++}
+ unsigned host_present_test_flight_count() {
+     auto s = active.load();
+     std::lock_guard lock(s->mutex);
+--- a/host/present_test.h
++++ b/host/present_test.h
+@@ -5,6 +5,7 @@
+ void host_present_test_begin(bool automatic_ack = true, bool offscreen = false,
+                              unsigned display_frames = 1);
+ unsigned host_present_test_flight_count();
++uint64_t host_present_test_surface_flushes();
+ void host_present_test_seal(uint64_t id, HostScreenClass cls = HOST_SCREEN_GAMEPLAY,
+                             bool had_draws = true, bool prefix_pending = false);
+ void host_present_test_command_done(uint64_t id);
+--- a/host/tests/host_tests.cpp
++++ b/host/tests/host_tests.cpp
+@@ -5131,10 +5131,21 @@
+     host_present_first_write();
+     uint8_t indexed[4] = {1, 1, 1, 1};
+     uint32_t palette[256]{};
+-    palette[1] = 0x002a1307;
++    palette[1] = 0x00011307;
+     // Production 8-bpp callback, with no Direct3D draws or GPU prefixes.
+     host_present(indexed, 2, 2, 8, palette, 2);
++    for (unsigned i = 0; i < 100; ++i) {
++        palette[1] = 0x00011307 + i;
++        host_present(indexed, 2, 2, 8, palette, 2);
++    }
++    palette[1] = 0x002a1307;
++    host_present(indexed, 2, 2, 8, palette, 2);
++    // A present owns both inputs, but performs no expansion/upload until seal.
++    indexed[0] = 0;
++    palette[1] = 0;
++    CHECK_EQ(host_present_test_surface_flushes(), 0u);
+     host_frame_seal();
++    CHECK_EQ(host_present_test_surface_flushes(), 1u);
+     CHECK(frame.balanced());
+     CHECK_EQ(host_present_unique_completed(), 0u);
+     // The first frame must be submitted even if the display link never fires.
+@@ -6533,7 +6544,41 @@
+     }
+     test_repeat_fps = 0;
+ }
++static void test_surface_snapshot_ordering() {
++    host_present_test_begin();
++    // Padding is excluded, the latest size/format wins, and guest mutations
++    // after the callback cannot change the sealed pixels.
++    uint8_t indexed[4] = {3, 0, 0, 0};
++    uint8_t rgb565[8] = {0x00, 0xf8, 99, 99, 0x00, 0xf8, 99, 99};
++    host_present_stage_pixels(indexed, 1, 1, 8, 4, nullptr);
++    host_present_stage_pixels(rgb565, 1, 2, 16, 4, nullptr);
++    memset(rgb565, 0, sizeof rgb565);
++    CHECK_EQ(host_present_test_surface_flushes(), 0u);
++    host_present_test_seal(1, HOST_SCREEN_MENU);
++    host_present_tick_for_test(0);
++    CHECK_EQ(host_present_test_surface_flushes(), 1u);
++    CHECK_EQ(host_present_test_last_pixel(), 255);
++    // An explicit RGBA present supersedes a pending DirectDraw image.
++    const uint8_t rgba[4] = {17, 2, 3, 255};
++    host_present_stage_pixels(indexed, 1, 1, 8, 4, nullptr);
++    host_present_stage_rgba(rgba, 1, 1);
++    host_present_test_seal(2, HOST_SCREEN_MENU);
++    host_present_tick_for_test(.02);
++    CHECK_EQ(host_present_test_surface_flushes(), 1u);
++    CHECK_EQ(host_present_test_last_pixel(), 17);
++    // Conversely, a newer XRGB image supersedes explicit RGBA input.
++    uint8_t xrgb[4] = {1, 2, 42, 0};
++    host_present_stage_rgba(rgba, 1, 1);
++    host_present_stage_pixels(xrgb, 1, 1, 32, 4, nullptr);
++    xrgb[2] = 0;
++    host_present_test_seal(3, HOST_SCREEN_MENU);
++    host_present_tick_for_test(.04);
++    CHECK_EQ(host_present_test_surface_flushes(), 2u);
++    CHECK_EQ(host_present_test_last_pixel(), 42);
++    host_present_stop();
++}
+ static void test_presentation_service() {
++    test_surface_snapshot_ordering();
+     test_repeat_presentation_limit();
+     test_gdi_window_presentation();
+     test_d3d11_sealed_presentation();

@@ -1,6 +1,6 @@
 {
   "format": "majesty-alchemist-content-release-v1",
-  "engineSha256": "22ecf6f2208eed016e83f16f463a6198da36ce3734bab4a183e35232df38b2b0",
+  "engineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
   "storageId": "majesty-alchemist-v1-campaign3",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
@@ -176,12 +176,14 @@
   "creator": "Phantomstar721",
   "credits": "CREDITS.md",
   "displayLabelsRevision": 2,
-  "priorQualifiedEngineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
+  "priorQualifiedEngineSha256": "22ecf6f2208eed016e83f16f463a6198da36ce3734bab4a183e35232df38b2b0",
   "browserMapSelectionQualified": true,
   "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload",
   "baseCampaignRecruitmentSaveReloadQualified": true,
   "campaignCompatibilityRevision": 3,
   "campaignCompatibilityVerification": "deploy/alchemist-campaign-verification.json",
   "browserFogRevealQualified": true,
-  "fogRevealVerification": "deploy/alchemist-fog-verification.json"
+  "fogRevealVerification": "deploy/alchemist-fog-verification.json",
+  "browserPresentationQualified": true,
+  "presentationVerification": "deploy/gameplay-performance-verification.json"
 }

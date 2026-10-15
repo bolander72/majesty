@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "alchemist-fog1620",
-  "bytes": 6977142,
-  "sha256": "9408447a94f5def833969fe3fcf27387f45984fccbaab4a386ed81e73dd30eca",
-  "engineSha256": "22ecf6f2208eed016e83f16f463a6198da36ce3734bab4a183e35232df38b2b0",
+  "release": "gameplay-performance1638",
+  "bytes": 6937879,
+  "sha256": "d582962d733fc0615c0f074f866341a1f2455c91cf77e4fe5382c11c531f1dc8",
+  "engineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -63,7 +63,7 @@
     },
     "static/games.json": {
       "bytes": 1821,
-      "sha256": "7d5a818e848270a241737a7f49e900b56e643b6c4718ff5b9bc30b09c13caf82"
+      "sha256": "4b30faaad1a8f97953dac84fe0b84772a1c5c2bfa4d6f623cc9464597a1fc765"
     },
     "static/hosting/autoload.mjs": {
       "bytes": 984,
@@ -103,11 +103,11 @@
     },
     "static/majesty/MajestyRecomp.js": {
       "bytes": 472568,
-      "sha256": "e68bcba963080ffcb093b268bcfec1d187ce40c574580a2a25cac239a90b130d"
+      "sha256": "75bada13c5bc32225c275eac8294954507904c43a2c677b77a6e54b9a4df8718"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 6317016,
-      "sha256": "2cf9e498f22473ae62156ed6fe9cd992507c59503c9adbf67671f268d334d8a2"
+      "bytes": 6316382,
+      "sha256": "362c3cfcd83a2d7730614ec12fa323267c94db8812c65e858333dea477a1bdf9"
     },
     "static/majesty/index.html": {
       "bytes": 19657,
@@ -598,5 +598,5 @@
       "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
     }
   },
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/d1490529a9135994f1b8ec154cab65cc0603b64c/assets/releases/alchemist-fog1620.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/9027f50c671fc415db132c0b261ded6237da2d46/assets/releases/gameplay-performance1638.tar.gz"
 }
