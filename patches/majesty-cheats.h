@@ -4,6 +4,8 @@
 #include "runtime/guest.h"
 #include "runtime/native_seam.h"
 #include "platform/os.h"
+#include "majesty-instant-level.h"
+#include <vector>
 #include <algorithm>
 #include <array>
 #include <cstdio>
@@ -19,10 +21,12 @@ void characters(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, v
 
 // Seven digits fit the original treasury widget without clipping.
 constexpr int32_t gold_floor = 9999999;
-constexpr int32_t hero_level = 1000, levels_per_frame = 32;
+constexpr int32_t hero_level = 1000;
+struct PendingHero { uint32_t id; unsigned retries = 0; };
 struct State {
-  uint32_t world = 0, owner = 0, last_hero = 0;
-  bool gold = false, levels = false;
+  uint32_t world = 0, owner = 0;
+  bool gold = false, levels = false, scan_heroes = false;
+  std::vector<PendingHero> pending;
 } active;
 
 bool context(uint32_t &world, uint32_t &owner, bool settled = true) {
@@ -71,7 +75,9 @@ void input(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *
   }
   uint32_t world = 0, owner = 0;
   if (!context(world, owner)) { mods_call_next(api, inv, cpu); return; }
-  if (active.world != world || active.owner != owner) active = {world, owner};
+  if (active.world != world || active.owner != owner) {
+    active = {}; active.world = world; active.owner = owner;
+  }
   bool &enabled = value == "infinite gold" ? active.gold : active.levels;
   // Use a temporary mod allocation only for the original TString setter.
   // No guest string, actor pointer or hook CPU survives this callback.
@@ -79,7 +85,7 @@ void input(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *
   const char *reply = value == "infinite gold"
       ? (enabled ? "Infinite gold disabled." : "Infinite gold enabled.")
       : (enabled ? "Automatic hero leveling disabled."
-                 : "Heroes will advance to level 1000.");
+                 : "Heroes are now level 1000.");
   if (mods_guest_alloc(MODS_OWNER_RUNTIME, 64, &message) != POP_OK) {
     mods_call_next(api, inv, cpu); return;
   }
@@ -93,6 +99,10 @@ void input(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *
   mods_guest_free(MODS_OWNER_RUNTIME, message);
   if (status != POP_OK) { mods_call_next(api, inv, cpu); return; }
   enabled = !enabled;
+  if (value == "level 1000") {
+    active.scan_heroes = enabled;
+    active.pending.clear();
+  }
   std::fprintf(stderr, "[cheats] %.*s %s owner=%u\n", int(value.size()), value.data(),
                enabled ? "enabled" : "disabled", owner);
   // Original00480e00 is thiscall(TString*), returns recognition in EAX, pops4.
@@ -127,6 +137,8 @@ void construction_row(const PopModApi *api, pop_cpu_v1 *cpu,
   mods_hook_return(api, cpu, result, 12);
 }
 
+void spawned(const PopModApi *, pop_cpu_v1 *, PopHookInvocation *, void *);
+
 void install() {
   static bool attempted = false;
   if (attempted) return;
@@ -136,6 +148,10 @@ void install() {
        POP_HOOK_WRAP, POP_HOOK_NO_GAME_VIEW, nullptr, &hook) != POP_OK)
     std::fprintf(stderr, "[cheats] Native cheat input unavailable\n");
   else std::fprintf(stderr, "[cheats] Native cheat input installed\n");
+  uint32_t spawn_hook = 0;
+  if (mods_hook_install_ex(MODS_OWNER_RUNTIME, 0x005a1350u, 0, spawned,
+       POP_HOOK_WRAP, POP_HOOK_NO_GAME_VIEW, nullptr, &spawn_hook) != POP_OK)
+    std::fprintf(stderr, "[cheats] New-hero observation unavailable\n");
   uint32_t construction_hook = 0;
   if (mods_hook_install_ex(MODS_OWNER_RUNTIME, 0x00469eb0u, 0, construction_row,
        POP_HOOK_WRAP, POP_HOOK_NO_GAME_VIEW, nullptr, &construction_hook) != POP_OK)
@@ -187,51 +203,177 @@ void advance(X86 *c, uint32_t unit, int32_t target) {
   extra.r[R_ECX] = script; guest_call(&extra, 0x006299b0u);
 }
 
+// Original actor creation returns the initialized unit in EAX. Record only its
+// ID; hero_birth must finish before the frame boundary applies the final stats.
+void spawned(const PopModApi *api, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
+  mods_call_next(api, inv, cpu);
+  if (!active.levels) return;
+  const uint32_t unit = cpu->eax;
+  if (!unit || !gm_valid(unit, 0x88) || rd32(unit + 0x5c) != 1 ||
+      rd32(unit + 0x70) != active.owner || !rd32(unit + 0x60)) return;
+  const uint32_t id = rd32(unit + 0x60);
+  for (const auto &p : active.pending) if (p.id == id) return;
+  if (active.pending.size() >= 4096) { active.levels = false; return; }
+  active.pending.push_back({id});
+}
+
+struct LevelOps {
+  X86 cpu;
+  explicit LevelOps(X86 *c) : cpu(*c) { cpu.r[R_ESP] -= 512; }
+  uint32_t call(uint32_t fn, uint32_t self) {
+    cpu.r[R_ECX] = self; return guest_call(&cpu, fn);
+  }
+  uint32_t attribute(uint32_t unit, uint32_t id) {
+    cpu.r[R_ECX] = unit; return guest_call(&cpu, 0x005a1c40u, id, 0u);
+  }
+  void set(uint32_t unit, uint32_t id, int value) {
+    cpu.r[R_ECX] = unit;
+    guest_call(&cpu, rd32(rd32(unit) + 0x124), id, uint32_t(value));
+  }
+  uint32_t named(uint32_t agent, const char *name, uint32_t type, uint32_t slot) {
+    const uint32_t text = cpu.r[R_ESP] + 128, ascii = text + 32;
+    if (std::strlen(name) >= 64 || !gm_valid(text, 96)) return 0;
+    for (unsigned i = 0; i <= std::strlen(name); ++i) wr8(ascii + i, name[i]);
+    cpu.r[R_ECX] = text; guest_call(&cpu, 0x004e3520u, ascii);
+    cpu.r[R_ECX] = agent;
+    const uint32_t value = guest_call(&cpu, 0x006263d0u, text);
+    cpu.r[R_ECX] = text; guest_call(&cpu, 0x004e3820u);
+    if (!value || !gm_valid(value, 8) || rd32(value + 4) != type ||
+        !gm_valid(rd32(value), slot + 4)) return 0;
+    return call(rd32(rd32(value) + slot), value);
+  }
+  uint32_t agent(uint32_t unit, uint32_t runtime) {
+    const auto id = attribute(unit, 0x4541u);
+    if (!id) return 0;
+    cpu.r[R_ECX] = runtime; return guest_call(&cpu, 0x006236b0u, id);
+  }
+};
+// Core IDs come from original0041b940..0041e140 registrations. SetAttribute's
+// unit virtual+124 is also used by the qualified native community adapter.
+constexpr uint32_t vehicle_attr(unsigned index) { return 0x00565041u | (index << 24); }
+enum class LevelResult { Skip, Applied, NotReady, Refused };
+LevelResult instant_level(X86 *c, uint32_t factory, uint32_t id, uint32_t owner) {
+  const auto refuse = [id](const char *why) {
+    std::fprintf(stderr, "[cheats] Hero %u initialization refused: %s\n", id, why);
+    return LevelResult::Refused;
+  };
+  LevelOps ops(c); ops.cpu.r[R_ECX] = factory;
+  uint32_t unit = guest_call(&ops.cpu, 0x005a10d0u, id);
+  if (!unit || !gm_valid(unit, 0x88) || rd32(unit + 0x84) != factory ||
+      rd32(unit + 0x70) != owner || (rd32(unit + 0x64) & 4u)) return LevelResult::Skip;
+  if (!guest_call(&ops.cpu, 0x004c8ea0u, unit)) return LevelResult::Skip;
+  const auto current = int32_t(ops.attribute(unit, vehicle_attr(11)));
+  if (current >= hero_level || int32_t(ops.attribute(unit, 0x00555041u)) <= 0)
+    return LevelResult::Skip;
+  if (current < 1) return LevelResult::NotReady;
+  const auto runtime = ops.call(0x00623b20u, 0);
+  if (!runtime || !gm_valid(runtime, 0x28)) return refuse("GPL runtime");
+  uint32_t agent = ops.agent(unit, runtime);
+  if (!agent) return LevelResult::NotReady;
+  std::array<char, 64> title{};
+  if (!phrase(ops.named(agent, "title", 3, 0x30), title)) return LevelResult::NotReady;
+  // Only the expansion's one-time Gnome transformation needs interpreted work.
+  // Finish at most seven low-level steps; the remaining jump is one bulk commit.
+  if (std::string_view(title.data()) == "gnome" && current < 8) {
+    advance(c, unit, 8);
+    if (rd32(0x0071c68c) != active.world) return refuse("world changed");
+    ops.cpu.r[R_ECX] = factory; unit = guest_call(&ops.cpu, 0x005a10d0u, id);
+    if (!unit || !gm_valid(unit, 0x88) || rd32(unit + 0x84) != factory ||
+        rd32(unit + 0x70) != owner) return refuse("Gnome identity changed");
+    agent = ops.agent(unit, runtime);
+    if (!agent) return refuse("Gnome script agent");
+  }
+  const auto primary = ops.named(agent, "PrimaryStat", 1, 0x28);
+  const auto attack = ops.named(agent, "attacktype", 1, 0x28);
+  if (!primary || !attack || !gm_valid(primary, 4) || !gm_valid(attack, 4)) return refuse("hero stat declarations");
+  const auto primaryId = rd32(primary);
+  if ((primaryId & 0xffffffu) != 0x565041u || (primaryId >> 24) > 4)
+    return refuse("primary stat ID");
+  const auto rangeFlag = ops.named(agent, "rangeIncrease", 6, 0x2c);
+  const auto criticalFlag = ops.named(agent, "criticalIncrease", 6, 0x2c);
+  const bool criticalIncrease = criticalFlag && gm_valid(criticalFlag, 1) && rd8(criticalFlag);
+  const auto critical = criticalIncrease ? ops.named(agent, "critical_chance", 1, 0x28) : 0;
+  const bool healer = std::string_view(title.data()) == "healer";
+  const auto reborn = healer ? ops.named(agent, "Reborn_Counter", 1, 0x28) : 0;
+  if ((criticalIncrease && !gm_valid(critical, 4)) || (healer && !gm_valid(reborn, 4)))
+    return refuse("class counter declarations");
+  MajestyInstantLevel::Input in;
+  in.level = int32_t(ops.attribute(unit, vehicle_attr(11)));
+  in.primary = primaryId >> 24;
+  in.primaryValue = int32_t(ops.attribute(unit, primaryId));
+  in.vitality = int32_t(ops.attribute(unit, vehicle_attr(3)));
+  in.hp = int32_t(ops.attribute(unit, 0x00555041u));
+  in.maxHp = int32_t(ops.attribute(unit, 0x01555041u));
+  in.melee = int32_t(ops.attribute(unit, vehicle_attr(5)));
+  in.ranged = int32_t(ops.attribute(unit, vehicle_attr(6)));
+  in.parry = int32_t(ops.attribute(unit, vehicle_attr(7)));
+  in.dodge = int32_t(ops.attribute(unit, vehicle_attr(9)));
+  in.sight = int32_t(ops.attribute(unit, 0x03555041u));
+  in.range = int32_t(ops.attribute(unit, vehicle_attr(14)));
+  in.attackType = int32_t(rd32(attack));
+  in.rangeIncrease = rangeFlag && gm_valid(rangeFlag, 1) && rd8(rangeFlag);
+  in.criticalIncrease = criticalIncrease;
+  in.critical = critical ? int32_t(rd32(critical)) : 0;
+  in.healer = healer; in.reborn = reborn ? int32_t(rd32(reborn)) : 0;
+  in.seed = rd32(runtime + 0x24);
+  MajestyInstantLevel::Plan plan;
+  if (!MajestyInstantLevel::prepare(in, plan)) return refuse("stat range or overflow");
+  // Publish the PRNG state first, then a bounded number of ordinary property
+  // changes. There are no intermediate level notifications or per-level GPL calls.
+  wr32(runtime + 0x24, plan.seed);
+  ops.set(unit, 0x01555041u, plan.maxHp); ops.set(unit, 0x00555041u, plan.hp);
+  ops.set(unit, primaryId, plan.primaryValue);
+  if (in.attackType == 1) ops.set(unit, vehicle_attr(5), plan.melee);
+  if (in.attackType == 2) ops.set(unit, vehicle_attr(6), plan.ranged);
+  ops.set(unit, vehicle_attr(7), plan.parry); ops.set(unit, vehicle_attr(9), plan.dodge);
+  if (in.rangeIncrease) {
+    ops.set(unit, 0x03555041u, plan.sight); ops.set(unit, vehicle_attr(14), plan.range);
+  }
+  if (critical) wr32(critical, uint32_t(plan.critical));
+  if (reborn) wr32(reborn, uint32_t(plan.reborn));
+  ops.set(unit, vehicle_attr(11), hero_level);
+  return level(c, unit) == hero_level ? LevelResult::Applied : refuse("native level setter");
+}
+
 void heroes(X86 *c, uint32_t factory, uint32_t owner) {
-  X86 extra = *c; extra.r[R_ECX] = factory;
-  // Original heal cheat00495ce4 visits native group1 through005a10b0.
-  const uint32_t group = guest_call(&extra, 0x005a10b0u, 1u);
-  if (!group || !gm_valid(group, 0x30) || rd32(group + 4) != 1) return;
-  const uint32_t count = rd32(group + 0x18), begin = rd32(group + 0x10),
-                 end = rd32(group + 0x14);
-  if (count > 4096 || !begin || !end || !gm_valid(begin, 4) || !gm_valid(end, 4)) return;
-  uint32_t node = rd32(begin), stop = rd32(end), visited = 0;
-  uint32_t next = 0, next_id = UINT32_MAX, first = 0, first_id = UINT32_MAX;
-  while (node != stop) {
-    if (visited++ >= count || !node || !gm_valid(node, 12)) return;
-    const uint32_t unit = rd32(node + 8);
-    if (!unit || !gm_valid(unit, 0x88) || rd32(unit + 0x84) != factory) return;
-    if (rd32(unit + 0x70) == owner && !(rd32(unit + 0x64) & 4u)) {
-      const uint32_t id = rd32(unit + 0x60);
-      if (id && id < first_id) { first = unit; first_id = id; }
-      if (id > active.last_hero && id < next_id) { next = unit; next_id = id; }
+  if (active.scan_heroes) {
+    X86 extra = *c; extra.r[R_ECX] = factory;
+    const uint32_t group = guest_call(&extra, 0x005a10b0u, 1u);
+    if (!group || !gm_valid(group, 0x30) || rd32(group + 4) != 1) return;
+    const uint32_t count = rd32(group + 0x18), begin = rd32(group + 0x10), end = rd32(group + 0x14);
+    if (count > 4096 || !begin || !end || !gm_valid(begin, 4) || !gm_valid(end, 4)) return;
+    uint32_t node = rd32(begin), stop = rd32(end), visited = 0;
+    std::vector<PendingHero> found;
+    while (node != stop) {
+      if (visited++ >= count || !node || !gm_valid(node, 12)) return;
+      const uint32_t unit = rd32(node + 8);
+      if (!unit || !gm_valid(unit, 0x88) || rd32(unit + 0x84) != factory) return;
+      if (rd32(unit + 0x70) == owner && !(rd32(unit + 0x64) & 4u) && rd32(unit + 0x60))
+        found.push_back({rd32(unit + 0x60)});
+      node = rd32(node);
     }
-    node = rd32(node);
+    if (visited != count) return;
+    active.pending = std::move(found); active.scan_heroes = false;
   }
-  if (visited != count || (!next && !first)) return;
-  if (!next) { next = first; next_id = first_id; }
-  active.last_hero = next_id; // Scalar cursor; actors are reacquired each frame.
-  extra.r[R_ECX] = next;
-  const int32_t hp = int32_t(guest_call(&extra, 0x005a1c40u, 0x00555041u, 0u));
-  const int32_t current = level(c, next);
-  if (hp <= 0 || current < 1 || current >= hero_level ||
-      !guest_call(&extra, 0x004c8ea0u, next)) return;
-  advance(c, next, std::min(hero_level, current + levels_per_frame));
-  // Progression can morph a gnome or run authored class scripts. Reacquire
-  // the actor by its original ID before inspecting the result.
-  if (rd32(0x0071c68c) != active.world || rd32(active.world + 4) != factory) {
-    active = {}; return;
+  if (active.pending.empty()) return;
+  const auto started = os_monotonic_ns();
+  unsigned applied = 0;
+  auto pending = std::move(active.pending); active.pending.clear();
+  for (auto row : pending) {
+    const auto result = instant_level(c, factory, row.id, owner);
+    if (rd32(0x0071c68c) != active.world || rd32(active.world + 4) != factory) {
+      active = {}; return;
+    }
+    if (result == LevelResult::Refused || (result == LevelResult::NotReady && ++row.retries > 120)) {
+      active.levels = false; active.pending.clear();
+      std::fprintf(stderr, "[cheats] Instant hero initialization refused; leveling disabled\n");
+      return;
+    }
+    if (result == LevelResult::NotReady) active.pending.push_back(row);
+    if (result == LevelResult::Applied) ++applied;
   }
-  extra.r[R_ECX] = factory;
-  const uint32_t fresh = guest_call(&extra, 0x005a10d0u, next_id);
-  if (!fresh || !gm_valid(fresh, 0x88) || rd32(fresh + 0x84) != factory ||
-      rd32(fresh + 0x70) != owner) return;
-  const int32_t after = level(c, fresh);
-  if (after <= current) {
-    active.levels = false; // A mod that caps levels cannot spin every frame.
-    std::fprintf(stderr, "[cheats] Hero advancement refused; leveling disabled\n");
-  } else if (after >= hero_level)
-    std::fprintf(stderr, "[cheats] Hero %u reached level %d\n", next_id, after);
+  if (applied) std::fprintf(stderr, "[cheats] Instant levels applied=%u pending=%zu us=%llu\n",
+      applied, active.pending.size(), (unsigned long long)((os_monotonic_ns() - started) / 1000));
 }
 
 void observe_phase(uint32_t state) {
@@ -248,7 +390,7 @@ void tick(X86 *c) {
   }
   const uint32_t factory = rd32(world + 4);
   if (active.gold) refill_gold(c, factory, owner);
-  // Leave a settled native pause untouched. Batches bound interpreter work.
+  // Leave a settled native pause untouched. Completed heroes need no scans.
   const uint32_t state = rd32(0x006d7670);
   if (active.levels && rd32(state) == 3 && !rd32(state + 4)) heroes(c, factory, owner);
 }

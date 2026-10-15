@@ -7,19 +7,28 @@ normal message area.
 | Code | Effect |
 | --- | --- |
 | `infinite gold` | Replenishes your treasury to at least 9,999,999 gold after spending. |
-| `level 1000` | Advances your living heroes to level 1000, including later recruits. |
+| `level 1000` | Sets your living heroes to level 1000 in one update, including later recruits. |
 
 Enter the same code again to disable its automatic effect. Existing gold,
 levels and earned stats remain. Effects reset when leaving the quest; they
 are not account settings. Save files retain ordinary game attributes, but
 the automatic cheat switches must be entered again after loading.
 
-Hero advancement runs in batches of up to 32 levels for one unit per native
-frame, cycling through your units. Large kingdoms take longer. It uses the
-original `advance_to_level` script invoked by `grow up`, so each level applies
-normal health and stat progression, with the original skill limits. Pausing
-also pauses advancement. A script/mod that refuses advancement disables the
-automatic leveling rather than retrying indefinitely.
+Hero levels are set in one update, including later recruits. The host computes
+normal health rolls and stat progression in cheap native arithmetic, then
+commits the final level and stats through the original unit property setter.
+It does not replay hundreds of interpreted level-up scripts, display intermediate
+levels, or keep cycling through completed heroes. Normal damage deficits,
+primary-stat growth, skill caps, range growth, healer rebirths and critical
+chance growth are retained. An expansion Gnome's one-time level-eight class
+change uses the original script before the final jump.
+
+Only a bounded local arithmetic loop remains for randomized health gains; it
+contains no guest calls, UI events or level changes. Its original PRNG state
+is consumed exactly. Later recruits are observed at the original creation
+boundary and receive their final attributes after initialization, at the
+next settled frame boundary. Native pausing also pauses this update.
+Overflow or an unsupported hero attribute schema safely disables the effect.
 
 The original cheat codes and input stay intact. The two new codes preserve
 the game's cheat-enabled setting and refuse a joined multiplayer session.
@@ -49,7 +58,7 @@ Traversal is capped at 4096 nodes, validates the list before changing an
 actor, and retains only a scalar ID cursor between frames. Dormant cheats
 perform no unit scans. Gold deltas are clamped within signed 32-bit range.
 
-## Release verification
+## Initial release verification
 
 Native engine `native-cheats598` (`4f36119bda15e259a49cb3fc8d8032e94613b808030e30af476d10a5e27eba5a`)
 passed the official guarded WASM build and a muted single-player browser trial
@@ -70,3 +79,29 @@ incremental patches and preserves existing native edits. Reapplying the cheat
 patch to the staged viewport reproduces the exact native source used by the
 qualified build. Original game assets and generated translations remain
 private and are excluded from this repository.
+
+## Instant-level arithmetic checks
+
+`native/cheats/instant_level.h` owns the pure stat calculation. Setup stages it
+beside the game-specific cheat adapter. An independent scalar SDK progression
+reference compares health, damage deficit, PRNG state, primary growth, caps,
+range overshoot and class counters across 2,880 inputs; refusal controls check
+overflow, dead heroes and invalid targets.
+
+Prepare an existing owned native fixture with
+`python3 scripts/prepare-instant-level-tests.py --game-dir /absolute/fixture`,
+then run its official `kit/tools/test.py --game-dir /absolute/fixture
+--native-test instant_hero_level_tests --jobs 1 --preset YOUR_NATIVE_PRESET`.
+`scripts/verify-instant-level-bindings.py /absolute/MajestyHD\ -\ Old.exe`
+requires `pefile`, `capstone` and `unicorn`; it checks original property
+registrations/value-reference slots and emulates 1,344 original random draws.
+Do not modify generated translations or apply the held-out rendering experiment.
+
+The instant implementation is qualified by `deploy/instant-level-verification.json`.
+Normal muted browser trials verified original-mission Gnomes, existing and later
+Alchemist recruits, native cards, toggles and ordinary saves. Measured per-hero
+commits were 1.1–1.7 ms. A fresh owned profile restored the exact Alchemist save
+with all four heroes still at 1000 and their saved maximum health intact. That
+reload used V8's baseline-only compiler after one normal reload reached its
+2400 MiB guard; the normal gameplay trials used the standard optimizing mode.
+This is not a general crash fix or qualification of every modded class.

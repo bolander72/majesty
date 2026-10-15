@@ -1,5 +1,10 @@
 # Changelog
 
+## Instant level-1000 cheat — October 15, 2026
+
+- Replace repeated 32-level script batches with one native stat calculation and one final level update per hero. Observe new recruits and stop scanning completed heroes every frame.
+- Preserve normal health rolls, primary growth, skill caps, range and class counters; retain the original Gnome transition. Keep the single-player, ownership and living-hero restrictions.
+
 ## Browser mission rendering — October 15, 2026
 
 - Expand and upload the final DirectDraw primary image once per sealed frame, avoiding repeated intermediate conversions and GPU uploads. Preserve native graphics, simulation timing, content and player saves.

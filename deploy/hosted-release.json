@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "gameplay-performance1638",
-  "bytes": 6937879,
-  "sha256": "d582962d733fc0615c0f074f866341a1f2455c91cf77e4fe5382c11c531f1dc8",
-  "engineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
+  "release": "instant-level1652",
+  "bytes": 6940142,
+  "sha256": "719c1bdc33efecf6c6df26afc780a43f5765e879e54b919052a153aa795bc84e",
+  "engineSha256": "21e3b4592cd8e89e9b887bf77303934a3f69b6eb96607562e23c9f6125744049",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -63,7 +63,7 @@
     },
     "static/games.json": {
       "bytes": 1821,
-      "sha256": "4b30faaad1a8f97953dac84fe0b84772a1c5c2bfa4d6f623cc9464597a1fc765"
+      "sha256": "5cf6266998334295ca2fcccc2e01c02f88b529dc2ccccf5cb9e05439e4545e98"
     },
     "static/hosting/autoload.mjs": {
       "bytes": 984,
@@ -103,11 +103,11 @@
     },
     "static/majesty/MajestyRecomp.js": {
       "bytes": 472568,
-      "sha256": "75bada13c5bc32225c275eac8294954507904c43a2c677b77a6e54b9a4df8718"
+      "sha256": "d03dcb93757af527139deb575509a756ff8a8ccbf9d8fce35b3353acd5bc114a"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 6316382,
-      "sha256": "362c3cfcd83a2d7730614ec12fa323267c94db8812c65e858333dea477a1bdf9"
+      "bytes": 6318217,
+      "sha256": "27ede8e1288f239167c877ef51bce05d3b18a3923da3e3ad1a9950bbf7f35468"
     },
     "static/majesty/index.html": {
       "bytes": 19657,
@@ -598,5 +598,5 @@
       "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
     }
   },
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/9027f50c671fc415db132c0b261ded6237da2d46/assets/releases/gameplay-performance1638.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/5d7795524657770fb5c169ef60d59a60d94cd0d4/assets/releases/instant-level1652.tar.gz"
 }
