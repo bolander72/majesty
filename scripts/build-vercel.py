@@ -235,6 +235,30 @@ def install_alchemist_release(static):
     return content
 
 
+def enable_native_cursor(static):
+    """Use Majesty's own cursor renderer, including native context/animation."""
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    for game in games:
+        args = game.get('guestArgs', '').split()
+        for flag in ('-softwarecursor', '-nothreadedcursor'):
+            if flag not in args:
+                args.append(flag)
+        game['guestArgs'] = ' '.join(args)
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    # Keep the normal pointer during startup/recovery and outside the canvas.
+    # The original game renders its cursor into presented frames after startup.
+    rule = '  body[data-game-ready] #canvas { cursor: none; }\n'
+    anchor = '  body[data-game-ready] #canvas { visibility: visible; }\n'
+    if html.count(anchor) != 1:
+        raise ValueError('Review native cursor readiness placement')
+    if rule not in html:
+        html = html.replace(anchor, anchor + rule, 1)
+    player.write_text(html)
+
+
 def unpack_release(data, release, destination):
     if len(data) != release['bytes'] or hashlib.sha256(data).hexdigest() != release['sha256']:
         raise ValueError('Hosted release download failed integrity verification')
@@ -367,6 +391,7 @@ def build(destination=None):
     install_content_v2_release(static)
     retire_custom_content(static)
     install_alchemist_release(static)
+    enable_native_cursor(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:

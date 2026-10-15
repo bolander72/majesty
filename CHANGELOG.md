@@ -1,5 +1,9 @@
 # Changelog
 
+## Original Majesty cursor — October 14, 2026
+
+- Enable the original software cursor in the browser, preserving its artwork, animation, hotspot and contextual states. Hide the browser arrow over the ready game canvas.
+
 ## Alchemist map selection — October 14, 2026
 
 - Allow the community Alchemist to pass the original map selection and hover predicates. Its ALC1 identity previously matched a legacy exclusion for effect actors.
