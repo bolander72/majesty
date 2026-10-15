@@ -1,6 +1,6 @@
 {
   "format": "majesty-alchemist-content-release-v1",
-  "engineSha256": "21e3b4592cd8e89e9b887bf77303934a3f69b6eb96607562e23c9f6125744049",
+  "engineSha256": "f571183dad41932feba8b586f4042d495771d1e6bb2dc78b0f01cf0807078efb",
   "storageId": "majesty-alchemist-v1-campaign3",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
@@ -176,7 +176,7 @@
   "creator": "Phantomstar721",
   "credits": "CREDITS.md",
   "displayLabelsRevision": 2,
-  "priorQualifiedEngineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
+  "priorQualifiedEngineSha256": "21e3b4592cd8e89e9b887bf77303934a3f69b6eb96607562e23c9f6125744049",
   "browserMapSelectionQualified": true,
   "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload",
   "baseCampaignRecruitmentSaveReloadQualified": true,
@@ -187,5 +187,6 @@
   "browserPresentationQualified": true,
   "presentationVerification": "deploy/gameplay-performance-verification.json",
   "browserInstantHeroLevelQualified": true,
-  "instantHeroLevelVerification": "deploy/instant-level-verification.json"
+  "instantHeroLevelVerification": "deploy/instant-level-verification.json",
+  "pixelComparisonVerification": "deploy/wide-pixel-compare-verification.json"
 }

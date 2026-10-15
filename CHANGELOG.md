@@ -1,5 +1,11 @@
 # Changelog
 
+## Wide SIMD pixel comparisons — October 15, 2026
+
+- Compare long pixel rows in four-vector batches while preserving early mismatches, exact bounds and the existing frame storage. Retain the original simulation, graphics and save format.
+- Pass 3,676,361 native and WASM kernel checks; the explicit WASM helper benchmark takes about 40% less time. This is not a whole-game FPS claim.
+- Add a private source-only 111-building/41-hero stress fixture and hash-bound save inspector. Keep the unsuccessful CPU-band recorder experiment out of production.
+
 ## Instant level-1000 cheat — October 15, 2026
 
 - Replace repeated 32-level script batches with one native stat calculation and one final level update per hero. Observe new recruits and stop scanning completed heroes every frame.

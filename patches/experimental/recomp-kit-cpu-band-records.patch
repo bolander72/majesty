@@ -1,0 +1,294 @@
+--- a/dx/ddraw.cpp
++++ b/dx/ddraw.cpp
+@@ -1118,6 +1118,8 @@
+ bool g_after_first_draw = false;
+ bool g_after_first_hud = false;
+ bool g_device_present = false;
++// Opt-in for software-only 16-bit games. Refreshed at accepted mode changes.
++bool g_cpu_band_records = false;
+ HostScreenClass g_legacy_class = HOST_SCREEN_MENU;
+ bool g_sticky_legacy = false;
+ uint64_t g_legacy_count = 0;
+@@ -1941,6 +1943,7 @@
+     g_drew_since_seal = false;
+     g_next_revision = 1;
+     g_mode_w = g_mode_h = g_mode_bpp = 0;
++    g_cpu_band_records = false;
+     g_palette_version = 1;
+ }
+ uint64_t ddraw_frame_chunk_allocations_for_test(void) {
+@@ -2593,83 +2596,96 @@
+     while (band1 > band0 && !row_differs(band1))
+         --band1;
+     const int32_t band_h = band1 - band0 + 1;
+-    std::vector<uint8_t> changed((size_t)lw * band_h, 0);
+     int32_t x0 = lw, y0 = lh, x1 = -1, y1 = -1;
+-    for (int32_t y = band0; y <= band1; ++y) {
+-        const uint8_t *was = row_was(y);
+-        const uint8_t *now = row_now(y);
+-        if (pixel_bytes_equal(was, now, (size_t)sh.row_bytes))
+-            continue;
+-        // Unchanged stretches are skipped eight bytes at a time, whole pixels
+-        // of them when the pixel size divides eight; what is left is compared
+-        // a pixel at a time without a call.
+-        const int32_t step = bb == 3 ? 0 : int32_t(8 / bb);
+-        for (int32_t x = 0; x < lw; ++x) {
+-            if (step && x + step <= lw) {
+-                uint64_t a, b;
+-                memcpy(&a, was + (size_t)x * bb, 8);
+-                memcpy(&b, now + (size_t)x * bb, 8);
+-                if (a == b) {
+-                    x += step - 1;
++    std::vector<HostDirtyRect> boxes;
++    // With no D3D device, these pixels are authoritative CPU storage. Copying
++    // unchanged pixels inside the lock has the same result as replaying only
++    // changed spans. Keep exact masks for textures and mixed GPU rendering:
++    // their unchanged CPU bytes need not represent the GPU's current image.
++    if (g_cpu_band_records && !g_device_present && s->bpp == 16 && !(s->caps & DDSCAPS_TEXTURE) &&
++        !s->texture_handle) {
++        x0 = 0;
++        x1 = lw - 1;
++        y0 = band0;
++        y1 = band1;
++        boxes.push_back({0, band0, lw, band1 + 1});
++    } else {
++        std::vector<uint8_t> changed((size_t)lw * band_h, 0);
++        for (int32_t y = band0; y <= band1; ++y) {
++            const uint8_t *was = row_was(y);
++            const uint8_t *now = row_now(y);
++            if (pixel_bytes_equal(was, now, (size_t)sh.row_bytes))
++                continue;
++            // Unchanged stretches are skipped eight bytes at a time, whole pixels
++            // of them when the pixel size divides eight; what is left is compared
++            // a pixel at a time without a call.
++            const int32_t step = bb == 3 ? 0 : int32_t(8 / bb);
++            for (int32_t x = 0; x < lw; ++x) {
++                if (step && x + step <= lw) {
++                    uint64_t a, b;
++                    memcpy(&a, was + (size_t)x * bb, 8);
++                    memcpy(&b, now + (size_t)x * bb, 8);
++                    if (a == b) {
++                        x += step - 1;
++                        continue;
++                    }
++                }
++                bool differs;
++                if (bb == 2) {
++                    uint16_t a, b;
++                    memcpy(&a, was + (size_t)x * 2, 2);
++                    memcpy(&b, now + (size_t)x * 2, 2);
++                    differs = a != b;
++                } else if (bb == 4) {
++                    uint32_t a, b;
++                    memcpy(&a, was + (size_t)x * 4, 4);
++                    memcpy(&b, now + (size_t)x * 4, 4);
++                    differs = a != b;
++                } else if (bb == 1) {
++                    differs = was[x] != now[x];
++                } else {
++                    differs = memcmp(was + (size_t)x * bb, now + (size_t)x * bb, bb) != 0;
++                }
++                if (!differs)
++                    continue;
++                changed[(size_t)(y - band0) * lw + x] = 1;
++                if (x < x0)
++                    x0 = x;
++                if (x > x1)
++                    x1 = x;
++                if (y < y0)
++                    y0 = y;
++                if (y > y1)
++                    y1 = y;
++            }
++        }
++        if (x1 < 0)
++            return false;
++
++        std::map<std::pair<int, int>, size_t> previous;
++        for (int y = band0; y <= band1; ++y) {
++            std::map<std::pair<int, int>, size_t> next;
++            const size_t base = (size_t)(y - band0) * lw;
++            for (int x = 0; x < lw;) {
++                if (!changed[base + x]) {
++                    ++x;
+                     continue;
+                 }
++                int start = x;
++                while (x < lw && changed[base + x])
++                    ++x;
++                auto span = std::make_pair(start, x);
++                auto old = previous.find(span);
++                if (old != previous.end()) {
++                    boxes[old->second].y1 = y + 1;
++                    next[span] = old->second;
++                } else {
++                    next[span] = boxes.size();
++                    boxes.push_back({start, y, x, y + 1});
++                }
+             }
+-            bool differs;
+-            if (bb == 2) {
+-                uint16_t a, b;
+-                memcpy(&a, was + (size_t)x * 2, 2);
+-                memcpy(&b, now + (size_t)x * 2, 2);
+-                differs = a != b;
+-            } else if (bb == 4) {
+-                uint32_t a, b;
+-                memcpy(&a, was + (size_t)x * 4, 4);
+-                memcpy(&b, now + (size_t)x * 4, 4);
+-                differs = a != b;
+-            } else if (bb == 1) {
+-                differs = was[x] != now[x];
+-            } else {
+-                differs = memcmp(was + (size_t)x * bb, now + (size_t)x * bb, bb) != 0;
+-            }
+-            if (!differs)
+-                continue;
+-            changed[(size_t)(y - band0) * lw + x] = 1;
+-            if (x < x0)
+-                x0 = x;
+-            if (x > x1)
+-                x1 = x;
+-            if (y < y0)
+-                y0 = y;
+-            if (y > y1)
+-                y1 = y;
++            previous = std::move(next);
+         }
+-    }
+-    if (x1 < 0)
+-        return false;
+-
+-    std::vector<HostDirtyRect> boxes;
+-    std::map<std::pair<int, int>, size_t> previous;
+-    for (int y = band0; y <= band1; ++y) {
+-        std::map<std::pair<int, int>, size_t> next;
+-        const size_t base = (size_t)(y - band0) * lw;
+-        for (int x = 0; x < lw;) {
+-            if (!changed[base + x]) {
+-                ++x;
+-                continue;
+-            }
+-            int start = x;
+-            while (x < lw && changed[base + x])
+-                ++x;
+-            auto span = std::make_pair(start, x);
+-            auto old = previous.find(span);
+-            if (old != previous.end()) {
+-                boxes[old->second].y1 = y + 1;
+-                next[span] = old->second;
+-            } else {
+-                next[span] = boxes.size();
+-                boxes.push_back({start, y, x, y + 1});
+-            }
+-        }
+-        previous = std::move(next);
+     }
+     for (auto &box : boxes) {
+         box.x0 += sh.r[0];
+@@ -2726,6 +2742,8 @@
+     g_mode_w = w;
+     g_mode_h = h;
+     g_mode_bpp = bpp;
++    const char *bands = recomp_env("DDRAW_CPU_BAND_RECORDS");
++    g_cpu_band_records = bands && !strcmp(bands, "1");
+ }
+ 
+ bool ddraw_display_mode(uint32_t *w, uint32_t *h, uint32_t *bpp) {
+--- a/dx/tests/dx_tests.cpp
++++ b/dx/tests/dx_tests.cpp
+@@ -3059,6 +3059,86 @@
+     call_shim(tramp("KERNEL32.dll", "DeleteCriticalSection"), {cs});
+     CHECK_EQ(g_dirty_count, 0u); // every range closed with its lock
+     reset_ddraw_for_test();
++}
++
++// Software CPU snapshots must replay the exact final pixels, including holes,
++// repeated writes and writes discovered through an import. The
++// exact-span path remains required as soon as a D3D device exists.
++static void test_cpu_band_records() {
++    os_setenv("RECOMP_DDRAW_CPU_BAND_RECORDS", "1");
++    rec_reset();
++    const auto dd = rec_dd();
++    CHECK_EQ(call_method(dd, DD_SetDisplayMode, {640, 480, 16}), DD_OK);
++    const auto rt = make_offscreen_for_test(17, 11, 16);
++    CHECK(rt != 0);
++    auto *o = rec_obj(rt);
++    CHECK(o != nullptr);
++    if (!o) {
++        os_unsetenv("RECOMP_DDRAW_CPU_BAND_RECORDS");
++        return;
++    }
++    fill_for_test(rt, 0);
++    const auto desc = sc(0xa80);
++    gm_zero(desc, DDSD_SIZE);
++    wr32(desc + DDSD_OFF_dwSize, DDSD_SIZE);
++    const auto start = host_frame_record_count(host_frame_current());
++    CHECK_EQ(call_method(rt, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++    wr16(o->pixels + 2 * o->pitch + 2, 0x1234);
++    wr16(o->pixels + 8 * o->pitch + 30, 0xabcd);
++    CHECK_EQ(call_method(rt, S_Unlock, {0}), DD_OK);
++    const auto frame = host_frame_current();
++    CHECK_EQ(host_frame_record_count(frame), start + 1);
++    const auto *r = host_frame_record(frame, start);
++    CHECK(r != nullptr);
++    if (r) {
++        CHECK_EQ(r->dst_x, 0);
++        CHECK_EQ(r->dst_y, 2);
++        CHECK_EQ(r->w, 17);
++        CHECK_EQ(r->h, 7);
++        CHECK_EQ(r->cpu_bpp, 16);
++        for (int y = 0; y < r->h; ++y)
++            for (int x = 0; x < r->w; ++x) {
++                CHECK_EQ(r->coverage[y * r->w + x], 1);
++                CHECK_EQ(memcmp(r->cpu_pixels + y * r->cpu_pitch + x * 2,
++                                gm_ptr(o->pixels + (y + 2) * o->pitch + x * 2), 2),
++                         0);
++            }
++    }
++    // An idle lock emits nothing and does not retain a new snapshot.
++    CHECK_EQ(call_method(rt, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++    CHECK_EQ(call_method(rt, S_Unlock, {0}), DD_OK);
++    CHECK_EQ(host_frame_record_count(frame), start + 1);
++    // The earlier payload is immutable after later guest changes.
++    CHECK_EQ(call_method(rt, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++    wr16(o->pixels + 2 * o->pitch + 2, 0x9876);
++    CHECK_EQ(call_method(rt, S_Unlock, {0}), DD_OK);
++    if (r) {
++        CHECK_EQ(r->cpu_pixels[2], 0x34);
++        CHECK_EQ(r->cpu_pixels[3], 0x12);
++    }
++    // An import can write raw surface bytes without translated dirty tracking.
++    const auto imported = host_frame_record_count(frame);
++    CHECK_EQ(call_method(rt, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++    gm_ptr(o->pixels + 5 * o->pitch + 12)[0] = 0x55;
++    call_shim(tramp("KERNEL32.dll", "GetTickCount"), {});
++    CHECK_EQ(call_method(rt, S_Unlock, {0}), DD_OK);
++    CHECK_EQ(host_frame_record_count(frame), imported + 1);
++    const auto *ir = host_frame_record(frame, imported);
++    if (ir) {
++        CHECK_EQ(ir->dst_y, 5);
++        CHECK_EQ(ir->h, 1);
++        CHECK_EQ(ir->cpu_pixels[12], 0x55);
++    } else CHECK(false);
++    // Switching to a device immediately restores exact sparse spans.
++    ddraw_note_device(1);
++    const auto before = host_frame_record_count(frame);
++    CHECK_EQ(call_method(rt, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++    wr16(o->pixels + 3 * o->pitch + 4, 0x2222);
++    wr16(o->pixels + 7 * o->pitch + 20, 0x3333);
++    CHECK_EQ(call_method(rt, S_Unlock, {0}), DD_OK);
++    CHECK_EQ(host_frame_record_count(frame), before + 2);
++    os_unsetenv("RECOMP_DDRAW_CPU_BAND_RECORDS");
++    rec_reset();
+ }
+ 
+ static void test_lock_write_records() {
+@@ -14324,6 +14404,7 @@
+         {"offscreen flip", test_offscreen_flip_does_not_seal},
+         {"v4 unlock rect", test_v4_unlock_takes_a_rect},
+         {"lock write records", test_lock_write_records},
++        {"CPU band records", test_cpu_band_records},
+         {"lock clusters", test_lock_diff_partial_records_and_payload},
+         {"DC write diff", test_getdc_releasedc},
+         {"GDI primary blit", test_gdi_primary_blit},
