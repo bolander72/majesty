@@ -171,7 +171,7 @@ class AlchemistReleaseIntegrity(unittest.TestCase):
             storageId='majesty-alchemist-v1-campaign3', requiredRuntimeEnvironment=env,
             nativeMechanicsQualified=True, browserWorldSaveReloadQualified=True,
             browserSovereignActionsQualified=True, browserPhoenixSaveQualified=True,
-            originalCampaignEntryQualified=True, baseCampaignRecruitmentSaveReloadQualified=True, patches=[dict(path=name,sha256=digest,bytes=sizes[name],
+            originalCampaignEntryQualified=True, baseCampaignRecruitmentSaveReloadQualified=True, browserFogRevealQualified=True, patches=[dict(path=name,sha256=digest,bytes=sizes[name],
             url='https://raw.githubusercontent.com/bolander72/majesty/'+'a'*40+'/assets/content/'+name)
             for name,digest in bindings.items()])
         (root/'deploy/hosted-release.json').write_text(json.dumps({'engineSha256':'a'*64}))
@@ -182,7 +182,7 @@ class AlchemistReleaseIntegrity(unittest.TestCase):
         return root,content
 
     def test_requires_qualification_and_matching_engine(self):
-        for key in ['browserPhoenixSaveQualified','originalCampaignEntryQualified','baseCampaignRecruitmentSaveReloadQualified','engineSha256']:
+        for key in ['browserPhoenixSaveQualified','originalCampaignEntryQualified','baseCampaignRecruitmentSaveReloadQualified','browserFogRevealQualified','engineSha256']:
             with tempfile.TemporaryDirectory() as temp:
                 root,content=self.fixture(temp)
                 content[key]=False if key!='engineSha256' else 'b'*64

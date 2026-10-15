@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Declare original map callback entries for the Alchemist compatibility layer."""
+"""Declare original map selection and sight callback entries for Alchemist compatibility."""
 import argparse
 import hashlib
 import importlib.util
@@ -10,7 +10,7 @@ import tomllib
 _spec = importlib.util.spec_from_file_location('research_engine', Path(__file__).with_name('prepare-alchemist-research-engine.py'))
 _research = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_research)
-ENTRIES = (0x0043DFC0, 0x0043E250, 0x005B6670)
+ENTRIES = (0x0043DFC0, 0x0043E250, 0x005B6670, 0x0042EE50)
 BINDINGS = {
     # Original Select mode registration passes these hover/click callbacks.
     0x0043DFC0: bytes.fromhex('83ec1453555633f65789'),
@@ -19,6 +19,9 @@ BINDINGS = {
     0x005B6670: bytes.fromhex('8b515c33c083fa010f94c0c3'),
     # Original click predicate rejects every second-byte L actor, including ALC1.
     0x0043E400: bytes.fromhex('81fe004c0000'),
+    # Native sight-circle callback: descriptor second byte must be V or B.
+    0x0042EE50: bytes.fromhex('83ec3c53568b74244857'),
+    0x0042EE7C: bytes.fromhex('8b480481e100ff000081f900560000'),
 }
 
 def curate(text, exe):

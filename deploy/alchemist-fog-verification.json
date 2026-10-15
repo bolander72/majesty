@@ -1,0 +1,85 @@
+{
+  "format": "majesty-alchemist-fog-verification-v1",
+  "engineSha256": "22ecf6f2208eed016e83f16f463a6198da36ce3734bab4a183e35232df38b2b0",
+  "priorEngineSha256": "9022e4f3ec43ca3349b239b9174a456473675a4a802c4e1152d6b9eb80726319",
+  "contentStorageId": "majesty-alchemist-v1-campaign3",
+  "contentResourcesUnchanged": true,
+  "originalCallback": "0042ee50",
+  "legacyAcceptedDescriptorSecondBytes": [
+    "V",
+    "B"
+  ],
+  "authenticUnitId": "ALC1",
+  "authorSightRange": 260,
+  "temporaryDescriptorId": "AVC1",
+  "source": {
+    "native/community/fog_reveal_identity.h": "5e31e0f40a80d61bb2d01605adfaf2925e0b84a542eefec4bf4766beff158ae1",
+    "native/community/native_probe_plugin.cpp": "7cef7ea351c0bffdc70c937e3543be7fac1db8eafaa2c48c399b8b5d7cb62a33",
+    "scripts/prepare-alchemist-selection-engine.py": "83605c6b743d8e94b11a76178dd0f3053b135543bc6ceb6b74e7fc2599d8f570"
+  },
+  "nativeControl": {
+    "trial": 1613,
+    "callbacks": 11,
+    "allRevealDeltasZero": true
+  },
+  "nativeFixed": {
+    "trial": 1614,
+    "callbacks": 10,
+    "newlyRevealedCellDeltas": [
+      162,
+      16,
+      27,
+      11,
+      2
+    ],
+    "identitiesRestored": true,
+    "nativeExecutableWasPreviouslyOfficiallyBuilt": true,
+    "nativeInstructionBodiesAndAddressIndexesUnchanged": true,
+    "officiallyRegeneratedSymbols": true,
+    "generationOnlyNativeCompilationStoppedAfterMetadataVerification": true
+  },
+  "browserBuild": {
+    "officialTool": "tools/build.py",
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 1675.7,
+    "privateObservationCodeAbsent": true
+  },
+  "browser": {
+    "trial": 1619,
+    "profileIsolated": true,
+    "audioMuted": true,
+    "priorSaveSha256": "df5b2b3897a3550f72ce5a5e681dd596b54014492fb7155543aee00e6313c1b1",
+    "normalNativeSightCircleVisible": true,
+    "normalWorldClickCharacterCard": true,
+    "selectedHero": "Ameline Amberglass",
+    "ordinarySave": {
+      "bytes": 373915,
+      "sha256": "3ce671acb8dcdd534c029e7ffa72c4907d4b17bdb5064f22e73261f59de3fc90",
+      "realAlchemistUnitIds": [
+        1670,
+        1719
+      ],
+      "temporaryIdentityOccurrences": 0
+    },
+    "peakOwnedRssMiB": 2110.5,
+    "guardStopped": false,
+    "closedNormally": true
+  },
+  "freshBrowserReload": {
+    "trial": 1621,
+    "loadedExactGeneratedSave": true,
+    "worldContinuedIntoDay13": true,
+    "AlchemistsExploredFurther": true,
+    "exploredTerrainVisible": true,
+    "peakOwnedRssMiB": 2005.5,
+    "guardStopped": false,
+    "closedNormally": true
+  },
+  "limitations": [
+    "Focused exploration, selection and save/reload compatibility; prior alchemy mechanics qualifications are retained.",
+    "Input was the preserved level1000 test save; no test stat, movement or injury flags were enabled in the browser.",
+    "Multiplayer exploration-sharing behavior was preserved through the original player mask, but no new paired multiplayer trial was run."
+  ],
+  "manualRolloutOperations": "none"
+}

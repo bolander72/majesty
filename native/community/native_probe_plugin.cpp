@@ -11,6 +11,7 @@
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
+#include "fog_reveal_identity.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -833,6 +834,13 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (panelBridge && target == 0x0042ee50U) {
+        DispatchOps ops;
+        const auto unit = read(cpu->esp + 4);
+        require(MajestyCommunity::WithAlchemistFogReveal(ops, unit, [&] { next(inv, cpu); }),
+                "Alchemist fog descriptor identity lifetime");
+        return;
+    }
     // Gold HD reserves second-byte L for non-selectable legacy actors. The
     // community's ALC1 collides with that broad test. Scope the compatibility
     // identity to the original map predicates; restore before card dispatch
@@ -1601,7 +1609,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
                     "eligibility is unchanged. Private dispatch is explicitly opt-in.");
     if (panelBridge) {
         for (const auto address : {0x00466110U, 0x004652a0U, 0x0043dfc0U, 0x0043e250U, 0x0043ee80U,
-                                   0x005b6670U, 0x00418660U, 0x0043ddb0U, 0x0043de30U, 0x0043ded0U}) {
+                                   0x005b6670U, 0x00418660U, 0x0043ddb0U, 0x0043de30U, 0x0043ded0U,
+                                   0x0042ee50U}) {
             std::uint32_t id = 0;
             const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
                                                       POP_HOOK_NO_GAME_VIEW, nullptr, &id);

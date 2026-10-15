@@ -1,5 +1,11 @@
 # Changelog
 
+## Alchemist fog of war — October 15, 2026
+
+- Let the real community Alchemist pass the legacy sight-circle resource-ID check, so it reveals unexplored terrain using its current sight range and player ownership.
+- Preserve the original hero, character card, mechanics, saved identity and exploration. Apply the fix to existing saves without replacing characters or revealing the entire map.
+- Verify native old/fixed controls, browser exploration and selection, and an ordinary save/reload.
+
 ## Alchemist original-mission recruitment — October 14, 2026
 
 - Include the official expansion helper dependencies used by the community Alchemist in its script library, fixing the original-mission exit at first recruitment or Bazaar shopping.

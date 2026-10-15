@@ -5,6 +5,50 @@ Lab**, including its original animated Alchemist, three building stages, voices,
 reagent economy, research and combat/sovereign alchemy. Lost Trail, Wayfinder and
 Trail Lodge remain retired. Production still runs the original game.
 
+## Alchemist fog-of-war compatibility (October 15)
+
+Old's original sight-circle callback `0042ee50` accepts descriptor resource IDs
+only when their second byte is V or B. The genuine `ALC1` character fails that
+legacy test, even though its authored and saved SightRange is260. This explains
+an Alchemist walking across black terrain without revealing it.
+
+`native/community/fog_reveal_identity.h` admits that exact character/descriptor
+pair only during the synchronous original reveal callback. It restores the
+descriptor before returning and never changes the actor ID. The original engine
+still computes the circle, reads the current sight attribute, checks indoor/dead
+state, applies the owning player's reveal-sharing mask and stores exploration.
+Stock heroes, buildings and effects are unchanged. There is no per-frame world
+scan, fixed global reveal radius, map-wide reveal or new saved-game schema.
+
+The selection-engine preparation script also verifies the callback's original
+machine bytes and declares its entry. Official generation retained all native
+instruction bodies and address indexes; two generated files changed only a
+diagnostic function name. A copied, previously built native executable used the
+new officially generated symbol resource for isolated native controls. A fresh
+browser build compiled the adapter and official generated metadata through
+`tools/build.py`, with no manual edits to generated translations.
+
+On the same preserved Day12 Rat Scouts save, control1613 recorded11 Alchemist
+callbacks, all with zero newly revealed cells. Fixed1614 recorded10 callbacks,
+including reveal increases of162,16,27,11 and2 cells, with both real and
+descriptor IDs restored toALC1 afterward. It generated an ordinary GMP.
+Browser1619 loaded the original pre-fix save, displayed the native sight circle
+around the Alchemist, opened Ameline Amberglass's native character card, and
+saved normally. Its generated373915-byte GMP has SHA256
+`3ce671acb8dcdd534c029e7ffa72c4907d4b17bdb5064f22e73261f59de3fc90`;
+a stopped audit finds original ALC1 heroes1670/1719 and no temporary AVC1 bytes.
+The input is the existing level1000 test save; no new test statistic or movement
+flags are enabled in either browser run. This verifies compatibility, not balance.
+
+Fresh browser1621 reloaded that exact generated save, continued into Day13,
+and showed both Alchemists exploring further through newly revealed snow.
+Both owned browser sessions closed normally below the2.4GiB guard. See
+`deploy/alchemist-fog-verification.json` for source/build bindings and limits.
+
+The content collection remains `majesty-alchemist-v1-campaign3`: only the engine
+changes, and existing profiles and saved exploration remain in place. Save a
+running game before refreshing the page, then load it to use the new engine.
+
 ## Original campaign recruitment compatibility (October 14)
 
 Original Majesty quests do not load every Northern Expansion GPL helper that

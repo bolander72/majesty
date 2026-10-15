@@ -187,7 +187,7 @@ def install_alchemist_release(static):
     release = json.loads((ROOT / 'deploy/hosted-release.json').read_text())
     required = ['nativeMechanicsQualified', 'browserWorldSaveReloadQualified',
                 'browserSovereignActionsQualified', 'browserPhoenixSaveQualified',
-                'originalCampaignEntryQualified', 'baseCampaignRecruitmentSaveReloadQualified']
+                'originalCampaignEntryQualified', 'baseCampaignRecruitmentSaveReloadQualified', 'browserFogRevealQualified']
     if (content.get('format') != 'majesty-alchemist-content-release-v1'
             or content.get('engineSha256') != release['engineSha256']
             or content.get('storageId') != 'majesty-alchemist-v1-campaign3'

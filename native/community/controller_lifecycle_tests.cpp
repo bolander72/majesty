@@ -6,6 +6,7 @@
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
+#include "fog_reveal_identity.h"
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
@@ -91,6 +92,36 @@ struct ResearchOps : DispatchOps {
 };
 
 int main(int argc, char **argv) {
+    DispatchOps fogOps;
+    fogOps.memory = {{300 + 0x5c, 1},
+                     {300 + 0x60, 1670},
+                     {300 + 0x6c, 0x31434c41},
+                     {300 + 0x80, 400},
+                     {400 + 4, 0x31434c41}};
+    unsigned reveals = 0;
+    check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+        // The original V/B gate admits this descriptor while the real actor
+        // and every gameplay/saved identity remain Alchemist.
+        check((fogOps.read(400 + 4) & 0xff00) == 0x5600);
+        check(fogOps.read(300 + 0x6c) == 0x31434c41);
+        ++reveals;
+        check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] { ++reveals; }));
+        check(fogOps.read(400 + 4) == 0x31435641);
+    }));
+    check(reveals == 2 && fogOps.read(400 + 4) == 0x31434c41);
+    for (auto identity : {0x31485641U, 0x31504e57U, 0x31534c41U}) {
+        fogOps.memory[300 + 0x6c] = identity;
+        fogOps.memory[400 + 4] = identity;
+        check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+            check(fogOps.read(400 + 4) == identity); // stock heroes/effects untouched
+        }));
+    }
+    fogOps.memory[300 + 0x6c] = fogOps.memory[400 + 4] = 0x31434c41;
+    check(!MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+        fogOps.memory[300 + 0x60] = 1671; // reject recycled actors, restore descriptor
+    }));
+    check(fogOps.read(400 + 4) == 0x31434c41);
+
     DispatchOps selectionOps;
     selectionOps.memory = {{300 + 0x5c, 1},
                            {300 + 0x60, 915},
