@@ -1,0 +1,130 @@
+{
+  "format": "majesty-community-source-contract-v1",
+  "id": "phantoms-haunt",
+  "workshopItem": "3769947406",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3769947406",
+  "source": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-phantoms-haunt",
+    "commit": "fed7058cd342a5f9568f964cebdc8797ef6a82e2"
+  },
+  "managerSource": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+    "commit": "63a81840e0f9264067d7984ad0d2b39859fa1896"
+  },
+  "canonicalGuid": "{8c48289e-7c70-4426-8913-133f3544a182}",
+  "internalName": "CustomGuildPhantomsHaunt",
+  "definitionSha256": null,
+  "authoredIdentities": {
+    "heroes": [
+      "PHM1"
+    ],
+    "buildings": [
+      "PHG1",
+      "PHG2",
+      "PHG3"
+    ],
+    "sourcePanel": "AP07"
+  },
+  "runtimeFeatureCounts": {},
+  "manifestFilename": "CustomGuildPhantomsHaunt.mmxml",
+  "compiledGameplay": "Data/Phantom.bcd",
+  "requiredMedia": [
+    "Data/phantom_textdata.cam",
+    "Data/phantom_gpltext.cam",
+    "Data/phantom_miscdata.cam",
+    "Data/phantom_maindata.cam",
+    "Data/phantom_interfacedata.cam",
+    "Data/phantom_voices.cam",
+    "Data/phantom_sounddesc.cam"
+  ],
+  "fullPackageAcquired": true,
+  "mediaRedistribution": "Confirmed by Mike on 2026-10-16: Phantomstar permission covers both mods original artwork/audio in majesty.boland.co and the public GitHub asset repository, with creator acknowledgement. No blanket media relicensing inferred.",
+  "substituteStockContentAllowed": false,
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "workshopManifest": "3427765037297317583",
+  "workshopPackageFiles": {
+    "CustomGuildPhantomsHaunt.mmxml": {
+      "bytes": 1361,
+      "sha256": "6d958ba67c3c3334a4e13621616202b4675e120ee6cf353a0ffaf02d88dd1431"
+    },
+    "Data/Phantom.bcd": {
+      "bytes": 798273,
+      "sha256": "d8c5b84660a2a26907ab26034588443efe72a4fbbfdef5ca9180f1c3f0f20284"
+    },
+    "Data/phantom_actions.xml": {
+      "bytes": 4276,
+      "sha256": "2a20bd4a39afdb376d26422f9d21f7d38162dc804ff70e2899334d493d62a2c5"
+    },
+    "Data/phantom_gpltext.cam": {
+      "bytes": 99800,
+      "sha256": "138df3295db651c8e53110a81bb1698b1099cf74e538b9ed4b72a2d5da605e71"
+    },
+    "Data/phantom_interfacedata.cam": {
+      "bytes": 4596606,
+      "sha256": "3378188a3d80fd7ee1130f00092ac17ec633d6f8a1c6f65057844402a40631d7"
+    },
+    "Data/phantom_maindata.cam": {
+      "bytes": 7884186,
+      "sha256": "256af3875e5bfe9980e99b9355f3c8ade594d74c094bce02e0661b6509a5827b"
+    },
+    "Data/phantom_miscdata.cam": {
+      "bytes": 5908,
+      "sha256": "b6f3fcf798aed357a3437fd0e33a2ff23ef5efb4a1169afd8c246e905d0fb693"
+    },
+    "Data/phantom_overlays.xml": {
+      "bytes": 7934,
+      "sha256": "8bf8ed600f440732490f2418467f7ed2d68ec93996300ace1250ca2e5cef236f"
+    },
+    "Data/phantom_particles.xml": {
+      "bytes": 3451,
+      "sha256": "ada84c70707444f5243dad8b072f3ed49938d1dac7357a7ec6537200fe39d604"
+    },
+    "Data/phantom_projectiles.xml": {
+      "bytes": 1734,
+      "sha256": "f76b9eada8ec6846a615cd4c42f637be8b69b954cf1121932cd65a7e2fe89127"
+    },
+    "Data/phantom_sounddesc.cam": {
+      "bytes": 1190,
+      "sha256": "12650ca94e7c64d557086240f182f82e85d0e6a6ad43c3086f325bf4352a64a8"
+    },
+    "Data/phantom_sounds.xml": {
+      "bytes": 2173,
+      "sha256": "8e75597c6e729da8194c900329e98c28a4a52423555b38834f82279f302f6f9c"
+    },
+    "Data/phantom_textdata.cam": {
+      "bytes": 13311,
+      "sha256": "22962c0c14bd9afec6b77333c3722239d07972446b9350b1d228475926f36608"
+    },
+    "Data/phantom_units.xml": {
+      "bytes": 30540,
+      "sha256": "17d1b3480595f9b775a85f34efc9af32e194c8aefb2b86a62744b6559b8f5bc1"
+    },
+    "Data/phantom_voices.cam": {
+      "bytes": 1559392,
+      "sha256": "d0c5a764979590bb52b63f6748f05452d35b0d65a5ca93f9034056522262aa71"
+    }
+  },
+  "packageBytes": 15010135,
+  "packageInventorySha256": "4d802cc218c0e0ecd14e476deeb1f3c42a554d6c9bcdbad226189e235f58e83c",
+  "workshopDefinitionSha256": null,
+  "expectedArt": [
+    "PHM1Phantom",
+    "PHG1Phantom Guild",
+    "PHG2Phantom Guild L2",
+    "PHG3Phantom Guild L3"
+  ],
+  "expectedActorCosts": {
+    "PHM1": "700"
+  },
+  "gameplaySourceInWorkshop": false,
+  "integrationManagerSource": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+    "commit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+    "branch": "release/v0.3.10",
+    "scope": "Read-only creator source composition; browser runtime adaptation and gameplay remain unqualified"
+  },
+  "combinedGameplaySourcePrepared": true,
+  "combinedOriginalSdkCompilationQualified": true,
+  "sourcePreparationVerification": "../source-preparation-verification.json"
+}

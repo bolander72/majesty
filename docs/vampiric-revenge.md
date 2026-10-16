@@ -63,7 +63,9 @@ Both identified mods are by **Phantomstar**, the Alchemist Lab creator:
   Workshop edit says the Mod Manager removes that limitation. Browser support
   and compatibility with Alchemists still require independent verification.
 
-These are candidates, not installed browser content. Preserve their actual
-mechanics, art and credits when adapting them. The existing permission record
-is for Alchemist Lab; confirm the complete packages and redistribution scope
-before publishing another creator package. No creator was messaged here.
+Both full Workshop packages were acquired on October 16, 2026. Mike confirmed
+redistribution permission for both guilds' original artwork/audio, with creator
+acknowledgement. Their browser integration is in progress; neither is deployed
+yet. Preserve actual mechanics, art and credits. See
+[community guild integration](community-guild-integration.md) for the source
+and compatibility checkpoint. No creator was messaged here.

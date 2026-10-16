@@ -14,6 +14,24 @@ is pinned at `63a81840e0f9264067d7984ad0d2b39859fa1896`. Original MIT source
 notices are preserved in `content/community-mods/alchemist/LICENSE.source`
 and `third_party/majesty-mod-manager/LICENSE`.
 
+## Bards Hall and Phantoms Haunt
+
+**Phantomstar721** created [Bards Hall](https://steamcommunity.com/sharedfiles/filedetails/?id=3813128205)
+and [Phantoms Haunt](https://steamcommunity.com/sharedfiles/filedetails/?id=3769947406),
+including their original guild artwork, hero sprites, animations, portraits,
+effects, voices and gameplay. Browser integration is in progress; neither guild
+is qualified or deployed yet.
+
+Bards Hall voice credits, as listed by its creator: **Teatarouva (@serrizawa)**
+as Troubadour, **Jake (@jakewn)** as Spellsinger and **Char C (@chardoesva)**
+as Blade Dancer.
+
+Mike confirmed on October 16, 2026 that the creator's permission covers both
+mods' artwork/audio on majesty.boland.co and in the public asset repository,
+with acknowledgement. This permission does not relicense the original game or
+apply a blanket license to third-party media. Acquired Workshop versions and
+individual file hashes are recorded in each guild's source contract.
+
 ## Browser engine foundations
 
 The browser port builds on [veritr1x/majesty-recomp](https://github.com/veritr1x/majesty-recomp)

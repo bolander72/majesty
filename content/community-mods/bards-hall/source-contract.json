@@ -1,0 +1,315 @@
+{
+  "format": "majesty-community-source-contract-v1",
+  "id": "bards-hall",
+  "workshopItem": "3813128205",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3813128205",
+  "source": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-bards-hall",
+    "commit": "ee36792a9a8910141c1414b0408ba143f54f4893"
+  },
+  "managerSource": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+    "commit": "63a81840e0f9264067d7984ad0d2b39859fa1896"
+  },
+  "canonicalGuid": "{e277a34f-bfb6-54ec-bfec-565d735edc37}",
+  "internalName": "CustomGuildBards",
+  "definitionSha256": "798db1f5553b1df827b9dea8af1eb2266bcfc3b224fc4322f911d201e446dc1c",
+  "authoredIdentities": {
+    "heroes": [
+      "BDT1",
+      "BDS1",
+      "BDD1"
+    ],
+    "buildings": [
+      "BDG1",
+      "BDG2",
+      "BDG3"
+    ],
+    "panels": [
+      "CGBD",
+      "BDRC"
+    ]
+  },
+  "runtimeFeatureCounts": {
+    "manager.kingdom-research.v1": 1,
+    "manager.overlay-movement-scale.v1": 1,
+    "stock.activity-duration.v1": 3,
+    "stock.ap52-recruitment-panel.v1": 1,
+    "stock.ap78-info-row.v1": 23,
+    "stock.bazaar-potion-policy.v1": 3,
+    "stock.damage-contribution.v1": 1,
+    "stock.equipment.v1": 3,
+    "stock.gameplay-event-observer.v1": 3,
+    "stock.hero-quest-participant.v1": 3,
+    "stock.mx22-building-open-toggle.v3": 1,
+    "stock.name-generator.v1": 3,
+    "stock.native-timing.v1": 1,
+    "stock.projectile-interception.v1": 1,
+    "stock.source-context-dispatch.v1": 2,
+    "stock.spell-evaluation-equivalent.v1": 2,
+    "stock.spell-origin.v1": 1,
+    "stock.spell-policy-discovery.v1": 1,
+    "stock.spell-policy-provider.v1": 1,
+    "stock.typed-boolean-provider.v1": 3
+  },
+  "manifestFilename": "CustomGuildBards.mmxml",
+  "compiledGameplay": "Data/Bards.bcd",
+  "requiredMedia": [
+    "Data/bards_maindata.cam",
+    "Data/bards_interfacedata.cam",
+    "Data/bards_textdata.cam",
+    "Data/bards_gpltext.cam",
+    "Data/bards_miscdata.cam",
+    "Data/bards_voices.cam",
+    "Data/bards_sounddesc.cam"
+  ],
+  "fullPackageAcquired": true,
+  "mediaRedistribution": "Confirmed by Mike on 2026-10-16: Phantomstar permission covers both mods original artwork/audio in majesty.boland.co and the public GitHub asset repository, with creator acknowledgement. No blanket media relicensing inferred.",
+  "substituteStockContentAllowed": false,
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "workshopManifest": "3968691095026359591",
+  "workshopPackageFiles": {
+    "CustomGuildBards.mmxml": {
+      "bytes": 4197,
+      "sha256": "a38ab41ab881bcbb58dec0ff4396dbb9ef5505c11264cc2f50f9ddc83ceb3f13"
+    },
+    "Data/Bards.bcd": {
+      "bytes": 828773,
+      "sha256": "0ddc2241017dac45da1dc2eb09eb95d038ccefaa801cb55fe36955fd62ba4ba0"
+    },
+    "Data/bards_abilities.xml": {
+      "bytes": 17781,
+      "sha256": "7b27cb769e10fe8f0bbc8c591f68304201b98a6595f5e9cc6ba3e970bb751db8"
+    },
+    "Data/bards_gpltext.cam": {
+      "bytes": 99833,
+      "sha256": "a11eb545b87c3a62d26f7a2451854674ad021e3be7e7e6348e2070ed7fcb136d"
+    },
+    "Data/bards_interfacedata.cam": {
+      "bytes": 190237,
+      "sha256": "189d2f9bc5c66f14c6ba762574c8fdbb3d38d032e1da4ecf354f2ba245e4f95e"
+    },
+    "Data/bards_maindata.cam": {
+      "bytes": 10191337,
+      "sha256": "d27ab0274bfbc70413af72edbf4b14042cff74d207040517e2c3d74df1aa2cbc"
+    },
+    "Data/bards_miscdata.cam": {
+      "bytes": 5880,
+      "sha256": "71beb0afc7a51869c0deb44848e745f45f12dfbcfc3de0658e58acff3eceda44"
+    },
+    "Data/bards_sounddesc.cam": {
+      "bytes": 2976,
+      "sha256": "619f20fb63696b75f90bbd2ff6c72b748eb9c27b2de1a8d0dc52533c6c3b7ea7"
+    },
+    "Data/bards_sounds.xml": {
+      "bytes": 5732,
+      "sha256": "8e319c563bbc1814a8e9be35726b86a6ed08daba0bce93d655d8e0c4253f9656"
+    },
+    "Data/bards_textdata.cam": {
+      "bytes": 25228,
+      "sha256": "0f93b48522fdff1507cd47eea807bfc7bdd206f1785f8515d080fc8cf7d0f3af"
+    },
+    "Data/bards_units.xml": {
+      "bytes": 7022,
+      "sha256": "f71a1b8f8393001877eb4c4bc3cb5120e2e20b47b08d8a44bc68a37eeb02386c"
+    },
+    "Data/bards_voices.cam": {
+      "bytes": 3758018,
+      "sha256": "6b121ac9f3b5c2269f15cbf47260c1bd636f1b68af391aa543b5ca24b7631f8b"
+    },
+    "GPL/Bards_Arcane_Note.gpl": {
+      "bytes": 426,
+      "sha256": "b9dfe5aff842a34ed0b809f08357888a8bca342e2e74de5f684c7ec8237c3a5f"
+    },
+    "GPL/Bards_Baseline.gpl": {
+      "bytes": 2761,
+      "sha256": "8e700c38cb3152dddf9c644226cde1230f0684a2a520b7bdd162f592bd0933ba"
+    },
+    "GPL/Bards_Building_Data.dat": {
+      "bytes": 1406,
+      "sha256": "c955ae626c1bf752514e499c340f468814e8e480dd29d79f2cb1bf1ced213e02"
+    },
+    "GPL/Bards_Combat.gpl": {
+      "bytes": 7535,
+      "sha256": "3f79f816b15526ec3bb8df9c8f4a9b99270444e90a0adaf945f417a7489b5d9f"
+    },
+    "GPL/Bards_Combat_Position.gpl": {
+      "bytes": 4581,
+      "sha256": "e07126bd92c39ae70a8cbc1b409959fc3bbbccb7a393ad99b717f5034e903e2c"
+    },
+    "GPL/Bards_Countermelody.gpl": {
+      "bytes": 1007,
+      "sha256": "162fe9bf8baaa51dae6c77124a8d7d9ebef7da8c759a6e55e47ab26c373652c0"
+    },
+    "GPL/Bards_Countermelody_Stock.gpl": {
+      "bytes": 22281,
+      "sha256": "6dd24f8dcad43a8ce467d72c8c3a3913600ec5226d6481267dbd1fa556e5ff86"
+    },
+    "GPL/Bards_Damage_Contributions.gpl": {
+      "bytes": 2464,
+      "sha256": "395f92f3fb5d7482507b239da003ba77d6a3d5bc9947f5b411f108694cbd270f"
+    },
+    "GPL/Bards_Dancer.gpl": {
+      "bytes": 5163,
+      "sha256": "43a150ea1336d7366fb36b14eeb6dcb210db2ee17ebaedbaeee27f6182b3ecab"
+    },
+    "GPL/Bards_Dancer_Stock.gpl": {
+      "bytes": 6887,
+      "sha256": "79b6374902dd70796070b40aac0391c3ee5e0b69db4b8607b56c5b0e167fe23c"
+    },
+    "GPL/Bards_Dancer_Wander_Stock.gpl": {
+      "bytes": 714,
+      "sha256": "d6008472a3fcb87c3e43072229688f28a59072b738b95302ef34fc82ea4a8dc4"
+    },
+    "GPL/Bards_Deflect.gpl": {
+      "bytes": 2056,
+      "sha256": "0eac762c5fd56a0743fa7c24ca4246f839edd67b91417ac045950138f132a57c"
+    },
+    "GPL/Bards_Deflect_Stock.gpl": {
+      "bytes": 580,
+      "sha256": "ace3b9fa0a0de96fc1ac049310d1ad2458dbc06888ae8d287fc17270de272190"
+    },
+    "GPL/Bards_Effects.gpl": {
+      "bytes": 5930,
+      "sha256": "4ee96e7aaf407b524d76411e39032d2b690a9bb9a1fa9172dfe2bb7580ca90a1"
+    },
+    "GPL/Bards_Finale.gpl": {
+      "bytes": 9004,
+      "sha256": "130b423cee6228967426c7fd2293d779ca87b291dff4fa2891dabca767f8e827"
+    },
+    "GPL/Bards_Follow.gpl": {
+      "bytes": 5574,
+      "sha256": "e96ea10249ae539edd5b9a2e34d97a518c3040700b6dae3abafc8a95ff7a680d"
+    },
+    "GPL/Bards_Hall_Jobs.gpl": {
+      "bytes": 794,
+      "sha256": "3feea8429bbb0ef77b338df46e93a76e709e809490007cdf32085c3b19c4dd2c"
+    },
+    "GPL/Bards_Hall_Progression_Stock.gpl": {
+      "bytes": 3612,
+      "sha256": "6cb186be7ebbc5cc29e09b72fd7d0d9d77ac726d446f883d086d5890679fc0ca"
+    },
+    "GPL/Bards_Hall_Prototype.gpl": {
+      "bytes": 2064,
+      "sha256": "7b927e9e02881704bfe6c9acefb134a8ea8ce6b0527eb3fa6c2682f8568febc9"
+    },
+    "GPL/Bards_Hero_Capability.gpl": {
+      "bytes": 848,
+      "sha256": "2e4bece162fabdd4490b3ac1b3d3f627a7ad752373d9c92c736266f2a93d1fdc"
+    },
+    "GPL/Bards_Hero_Data.dat": {
+      "bytes": 2829,
+      "sha256": "abc08262141e56a85280cd9a862988c721960fbab84f7181df67ed279e966936"
+    },
+    "GPL/Bards_Hero_Evaluation.gpl": {
+      "bytes": 2919,
+      "sha256": "97020847f372be1e021d30b3228835a6098fb19ef2937b1c8a910be472924b24"
+    },
+    "GPL/Bards_Hero_Trees.gpl": {
+      "bytes": 4366,
+      "sha256": "1dc754f4451c3c89660d4bc35e86f94fc8d1f16af24135b76ace60acc5155486"
+    },
+    "GPL/Bards_Hiring.gpl": {
+      "bytes": 17533,
+      "sha256": "76a4e56360bbab37e17e3476a78c55cb970adf307eb03d719f3a80d7e89b167a"
+    },
+    "GPL/Bards_Hiring_Stock.gpl": {
+      "bytes": 18527,
+      "sha256": "30172a04b5081c6d295aeaeae3ce0fd3319c46565cbe8256a34d83c1846611d7"
+    },
+    "GPL/Bards_Hunt_Stock.gpl": {
+      "bytes": 3813,
+      "sha256": "b27e0c17de884f13586e46c3f20a5d54af335786510ff9d20789a6746c8150d4"
+    },
+    "GPL/Bards_Intent.gpl": {
+      "bytes": 163,
+      "sha256": "0b3fe351e1260c046710d0119856bd0a66b58ffe77dc999eb1894c509d35a39f"
+    },
+    "GPL/Bards_Prize_Duel.gpl": {
+      "bytes": 1262,
+      "sha256": "3340b7291755cc79e2a3e4d3f5470e1ae0a7e2c5b1e83d9bbc9ad664bcd70019"
+    },
+    "GPL/Bards_Rates.gpl": {
+      "bytes": 6755,
+      "sha256": "53dc1ed692c32761c468805b7c9b08a9e0b1cb6e117099562d7dec850251b6f4"
+    },
+    "GPL/Bards_Renown.gpl": {
+      "bytes": 11308,
+      "sha256": "59b87f2f4300c161810310924fa386cb48ac34e40966384c1b1e821995fd35c8"
+    },
+    "GPL/Bards_Renown_Stock.gpl": {
+      "bytes": 11398,
+      "sha256": "54ee5325d10d2825f95dd768895eafddc19ec84546b7ef996015370514896eae"
+    },
+    "GPL/Bards_Songs.gpl": {
+      "bytes": 16511,
+      "sha256": "f0875cf58479d074bb5840c27f196906b3d58407ccafa00d40d59fd5dde68f9f"
+    },
+    "GPL/Bards_Spell_Policy.gpl": {
+      "bytes": 443,
+      "sha256": "c505f3837d356bfc38ff1299c77c372f8106e7ceffe1031f1700026375689880"
+    },
+    "GPL/Bards_Spellsinger.gpl": {
+      "bytes": 6465,
+      "sha256": "9ee98d872cfa5469f62d3eeb847a7b0f6dfc47597541d957354e84b805ab7669"
+    },
+    "GPL/Bards_Street.gpl": {
+      "bytes": 14805,
+      "sha256": "6a8a13a8d38c21ee15be9a6a871d73e9ab661d97a671d9156e1bd28b01336e09"
+    },
+    "GPL/Bards_Support_Experience.gpl": {
+      "bytes": 2849,
+      "sha256": "b9d9e486daffa42414d3dc1d89f1188e578cd55166bebeac4f4665c0b3c9a0e8"
+    },
+    "GPL/Bards_Support_Hero_Prototype.gpl": {
+      "bytes": 4727,
+      "sha256": "5ee4f892e50965793729c06fd0b400ef56b60c829e8acd8ce90de1e5c484c3a8"
+    },
+    "GPL/Bards_Support_Stock.gpl": {
+      "bytes": 8156,
+      "sha256": "233a9ea6d95149410b5cd5eac358529d414436d015c5c66b24f44e1ff12574f6"
+    },
+    "GPL/Bards_Wander_Stock.gpl": {
+      "bytes": 724,
+      "sha256": "e6165409148ee94538a09541dd486a8bc94a19f81080081ea5d8140e73eb5a43"
+    },
+    "START HERE.txt": {
+      "bytes": 892,
+      "sha256": "9c76f84bd20315fadb43195b95253dd8a046ae67e956b61e70688312f18d4544"
+    },
+    "mod-definition.json": {
+      "bytes": 23983,
+      "sha256": "8b2ca464dc2c7a37920644a10b94c654d5e37cc0be239aa5f616d2e1f3447c49"
+    }
+  },
+  "packageBytes": 15383129,
+  "packageInventorySha256": "8a61292f55ff2ee43eb92664c5c2ad5545547043cffef19b63ec1f46095d2d79",
+  "workshopDefinitionSha256": "8b2ca464dc2c7a37920644a10b94c654d5e37cc0be239aa5f616d2e1f3447c49",
+  "publicSourceDifference": "Workshop includes six changed GPL sources, manifest and definition changes; full acquired GPL is authoritative for this integration. Public source remains pinned as a reference, not a byte-identical build.",
+  "expectedArt": [
+    "BDT1Troubadour",
+    "BDS1Spellsinger",
+    "BDD1Blade_Dancer",
+    "BDG1Bards Hall",
+    "BDG2Bards Hall",
+    "BDG3Bards Hall"
+  ],
+  "expectedActorCosts": {
+    "BDT1": "500",
+    "BDS1": "500",
+    "BDD1": "500",
+    "BDG1": "800",
+    "BDG2": "2500",
+    "BDG3": "3500"
+  },
+  "integrationManagerSource": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+    "commit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+    "branch": "release/v0.3.10",
+    "scope": "Read-only creator source composition; browser runtime adaptation and gameplay remain unqualified"
+  },
+  "combinedGameplaySourcePrepared": true,
+  "combinedOriginalSdkCompilationQualified": true,
+  "sourcePreparationVerification": "../source-preparation-verification.json"
+}
