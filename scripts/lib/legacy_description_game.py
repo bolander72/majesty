@@ -128,8 +128,11 @@ def chunk(payload, version):
     return struct.pack('<4sIII', b'SECD', len(payload), version, 0) + payload
 
 
-def encode_character(game, names, remap=None, attribute_ids=None):
+def encode_character(game, names, remap=None, attribute_ids=None, equipment_ids=None):
     remap, attribute_ids = remap or {}, attribute_ids or {}
+    equipment_ids = equipment_ids or {}
+    if set(equipment_ids) - {'AllowedWeapon', 'AllowedArmor'}:
+        raise ValueError('Unknown private equipment slot')
     fields(game, set(CHARACTER_FIELDS) | set(CHARACTER_IDS) |
            {'AttackRange', 'Flags', 'Attributes', 'AllowedWeapon', 'AllowedArmor', 'AllowedSpells'})
     payload = bytearray(108)
@@ -154,6 +157,14 @@ def encode_character(game, names, remap=None, attribute_ids=None):
             attrs.append((fourcc(attribute_ids[key]), number(element.get('Value'))))
     equipment = []
     for tag, mapping in [('AllowedWeapon', WEAPONS), ('AllowedArmor', ARMORS)]:
+        custom = equipment_ids.get(tag, {})
+        if len(custom) > 256:
+            raise ValueError('Oversized private equipment registry')
+        for name, identity in custom.items():
+            if (type(identity) is not int or not 0x800000 <= identity <= 0xffffff
+                    or name != f'MME_{identity:06X}' or name in mapping):
+                raise ValueError('Unbound private equipment identity')
+        mapping = {**mapping, **custom}
         element = game.find(tag)
         pairs = []
         if element is not None:

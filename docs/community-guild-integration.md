@@ -435,6 +435,78 @@ native presented-frame readiness gate and the actual Play Game/name/quest
 introduction/Freestyle/Beginner sequence. These were harness failures, not
 qualified guild gameplay or evidence of an application-crash fix.
 
+## Combined resource context and original media
+
+The source preparer now follows the creator's final description, potion, spell
+and projectile-observer composition before emitting GPL. Comparison with the
+preliminary1851 source exposed30 missing spell validation/cast wrappers plus
+`MM_SpecialSpellSuppressed`, and a corresponding check in the shared spell
+path. These preserve Countermelody suppression across Bards, Phantom and
+Alchemist special spells. The common source changed; the two edition-specific
+sources did not. The original SDK1920 compiled817 common definitions and85/13
+edition definitions, all matching their prepared source. Its common output is
+15,602,915 bytes, SHA256
+`9ae7e81810996e6bfc31f5383f5e2564b4d5c2a7c9425d3faf3263df304f493e`.
+
+The final source stage1923 and its legacy stage1930 reproduce those exact
+compiler input files and edition routes. Compiler1920 remains bound to the
+preserved1919 input receipt; metadata added for stronger package provenance
+did not change a source or route byte. Do not recompile unchanged GPL merely
+to replace that receipt. Earlier1860 bytecode lacks these wrappers and is not
+the final collection's gameplay library.
+
+Private output namespaces preserve the deployed Alchemist parent/child
+`CG01/CG02`. Bards uses`CGBD/CGBC`; Phantom uses`CGPH`. The creator's normal
+allocation order would assign Bards the existing Alchemist child ID. The
+adapter relocates derived controller records simultaneously while preserving
+the authored source IDs, logical keys and private SMNU bindings. Source-backed
+tests cover the collision and the integer/byte forms. MMCR/MMFR roundtrips
+pass; their production admission gates remain unchanged.
+
+`prepare-community-guild-media.py` now verifies all acquired package bytes,
+the recovered Phantom manifest/source-package binding, and original stock CAM
+ancestry, then runs the pinned creator's real art/audio composition. Native
+dataset order includes base-data loads declared by the expansion. Bounded
+named-resource reads avoid materializing unrelated stock voices or TILEs.
+Private stock archives are separate copies or COW clones, never hardlinks.
+
+Media1924 contains37,360,100 bytes across four archives: main art, interface
+art, original voices and sound descriptions. The creator's relocation resolved
+801 main and69 interface positional collisions, rewriting6350/151 IMAG
+references. Equipment binding uses the actual authored frames in the stock
+`INBw` presentation recipe. No replacement art or voices were invented. These
+are resource-composition checks, not an in-game visual or audio qualification.
+
+The native converter can now consume these source-bound final descriptions
+and media. Stage1928 encodes all118 units,32 actions and12 sound descriptions,
+with no pending conversion fields. It retains the final private dialogs and
+spell wrappers, preserves Alchemist`ABx1..3`, and combines Phantom inventory
+slots80..112 with the unchanged Phoenix Phial slot113. The three Bards
+instrument identities remain the creator's exact24-bit private values in
+the original integer equipment map, with explicit runtime-required metadata;
+they are not converted to stock weapons. Unregistered or malformed equipment
+identities still refuse conversion. PHIC/PHIR art references remain absent
+from the acquired and stock art; their inventory presentation still requires
+an actual use-path check.
+
+All49 focused Python tests pass without skips. Muted SDK compilation exited
+normally below91 MiB observed owned RSS; the largest media merge stayed below
+796 MiB. No owned engine/browser was launched in this preparation step. See
+`resource-context-verification.json` for exact source/artifact hashes.
+
+Read-only Old presenter analysis found constructor`004c0b60`, getter`004c0760`
+and native name insertion`004c1bc0`. Its four maps start at0/0x10/0x20/0x30,
+rather than the modern runtime's0/0x20/0x40/0x60. The getter uses a static
+singleton and registers teardown at process exit. Name resources are acquired
+through`004f2000`; the weapon name and icon paths are`004c1410/004c17c0`.
+These observations guide an Old-specific equipment adapter; they do not
+qualify its installation, resources, cleanup, shopping, combat or gameplay.
+
+Rollout: audited none for this source-only checkpoint. The new archives,
+bytecode and registry versions remain private; production assets, active
+collections, runtime gates and player profiles are unchanged. Final publication
+still requires the remaining native services and ordinary browser gameplay.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw
@@ -444,12 +516,8 @@ projectile behavior. Phantoms needs private upgrade/recruitment controls, undead
 interactions, spell effects and native descriptor conversion. Do not silently
 disable unsupported features or relabel stock actors.
 
-Before final packaging, compare the exact prepared GPL against the creator's
-full composition path, which supplies final descriptions, spell policy and
-source context to `prepare_gpl_bundle`. The preliminary1851/1861 preparation
-did not explicitly pass all of those final resource views; do not assume its
-bytecode already proves their final integration. Recompile through the original
-SDK only if the authoritative final source changes. The current compiled source
+Use the final resource-context source and compiled inputs described above,
+rather than preliminary1851/1861 or1860 bytecode. The current compiled source
 also calls ten native-only helpers for timing, movement and kingdom research;
 they still require Old implementations and ordinary gameplay verification.
 

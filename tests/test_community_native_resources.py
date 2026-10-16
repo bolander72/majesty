@@ -12,6 +12,34 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from lib import legacy_inventory_description as inventory
 from lib.legacy_description_sound import selection_sound, clone_selection_sound, sound_parts
 from lib.legacy_description_wire import encode_description_cam, cam_payloads
+from lib.legacy_description_game import encode_character
+
+
+class PrivateEquipmentWireTests(unittest.TestCase):
+    def game(self, weapon):
+        return ET.fromstring('<Game version="1"><AllowedWeapon value="' + weapon + '"/></Game>')
+
+    def test_private_type_uses_original_integer_map_without_stock_substitution(self):
+        registry = {'AllowedWeapon': {'MME_D82AF6': 0xD82AF6}}
+        private = encode_character(self.game('MME_D82AF6'), {}, equipment_ids=registry)
+        stock = encode_character(self.game('Staff'), {})
+        self.assertEqual(struct.unpack_from('<IIII', private, 132), (1, 1, 0, 0xD82AF6))
+        expected = bytearray(stock)
+        struct.pack_into('<I', expected, 144, 0xD82AF6)
+        self.assertEqual(private, expected)
+
+    def test_unregistered_family_remains_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'Unsupported equipment family'):
+            encode_character(self.game('MME_D82AF6'), {})
+
+    def test_private_identity_cannot_relabel_stock_or_overflow_native_range(self):
+        for registry in [{'AllowedWeapon': {'Staff': 0xD82AF6}},
+                         {'AllowedWeapon': {'MME_D82AF6': 8}},
+                         {'AllowedWeapon': {'MME_1000000': 0x1000000}},
+                         {'AllowedWeapon': {'MME_D82AF6': True}},
+                         {'UnknownSlot': {}}]:
+            with self.subTest(registry=registry), self.assertRaises(ValueError):
+                encode_character(self.game('Staff'), {}, equipment_ids=registry)
 
 
 class SelectionSoundTests(unittest.TestCase):

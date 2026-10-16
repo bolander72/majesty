@@ -68,7 +68,9 @@ def stock_fixture(game, output):
         manifest.write_bytes(raw.replace(original, normalized))
     elif raw.count(normalized) != 1:
         raise ValueError('Unreviewed stock manifest spelling')
-    return dict(inputs=inputs, manifestNormalization=record(manifest.read_bytes()),
+    from lib.community_guild_composition import complete_stock_fixture
+    archives = complete_stock_fixture(game, output)
+    return dict(inputs=inputs, camArchives=archives, manifestNormalization=record(manifest.read_bytes()),
                 reason='Only Windows-equivalent Bytecode.bcd spelling is normalized in the private fixture')
 
 
@@ -138,7 +140,7 @@ def prepare(args):
 
     from majesty_cam.package import load_package, load_mod_definition
     from majesty_cam.compose import (SelectedMod, inventory_package, discover_private_activity_texts,
-                                     prepare_gpl_bundle, ScopedSemanticResolution,
+                                     ScopedSemanticResolution,
                                      _parse_inventory_gpl_sources)
     from majesty_cam.gpl import DefinitionKind, parse_gpl
     from lib.community_guild_source_resolutions import resolve
@@ -159,8 +161,15 @@ def prepare(args):
     owned_resolutions = {item.key: ScopedSemanticResolution(item, frozenset(('alchemist', 'phantom')))
                          for text in resolutions.values() for item in parse_gpl(text).items}
     texts = discover_private_activity_texts(fixture, inventories)
-    bundle = prepare_gpl_bundle(fixture, inventories, private_activity_texts=texts,
-                                semantic_resolutions=owned_resolutions)
+    from lib.community_guild_composition import compose_views
+    bundle, resources, resource_contract = compose_views(fixture, inventories, texts, owned_resolutions)
+    resource_dir = args.out / 'resources'
+    resource_dir.mkdir()
+    for name, raw in resources.items():
+        (resource_dir / name).write_bytes(raw)
+    contract_raw = (json.dumps(resource_contract, indent=2) + '\n').encode()
+    (resource_dir / 'resolved-contracts.json').write_bytes(contract_raw)
+    resources['resolved-contracts.json'] = contract_raw
     sources = args.out / 'sources'
     files = {}
     for scope, result in bundle.outputs:
@@ -174,8 +183,15 @@ def prepare(args):
         managerCommit=MANAGER_COMMIT, phantomSourceCommit=PHANTOM_COMMIT,
         phantomSourceRecovery=record(recovery_raw),
         acquiredPhantomBytecodeEquivalenceQualified=False,
+        preparedPhantomFiles={path.relative_to(phantom).as_posix(): record(path.read_bytes())
+                              for path in sorted(phantom.rglob('*')) if path.is_file()},
         packages=preflights, alchemistPackageFiles=alchemist_inspection['files'],
         stockFixture=stock_inputs, files=files, privateActivityTexts=len(texts),
+        finalResourceContext=True, resourceFiles={name: record(raw) for name, raw in resources.items()},
+        compositionPolicy={name: record((ROOT / name).read_bytes()) for name in (
+            'scripts/prepare-community-guild-gpl.py', 'scripts/lib/community_guild_composition.py',
+            'scripts/lib/community_guild_source_resolutions.py')},
+        mediaMergeQualified=False,
         explicitSourceResolutions=sorted(resolutions), compiled=False,
         targetNativeABIQualified=False, browserPlayable=False, published=False)
     (args.out / 'source-stage.json').write_text(json.dumps(receipt, indent=2) + '\n')

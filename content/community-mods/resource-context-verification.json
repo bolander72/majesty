@@ -1,0 +1,394 @@
+{
+  "format": "majesty-community-final-resource-context-verification-v1",
+  "date": "2026-10-16",
+  "sourceFiles": {
+    "scripts/prepare-community-guild-gpl.py": {
+      "bytes": 11239,
+      "sha256": "aab032cb7adf7272a5d1627fbaf2466d9c01b3e7029a0a7f8a443d7eae8da943"
+    },
+    "scripts/lib/community_guild_composition.py": {
+      "bytes": 12074,
+      "sha256": "c0e61fcf0be59e4a5f98108c72c383686e59775ffb4df63e209248dbddd0d4a4"
+    },
+    "scripts/prepare-community-guild-media.py": {
+      "bytes": 7303,
+      "sha256": "8ec9d00a9f710091dbfe9e8236ddc0869f5b03f9ec7685f794c282632d43afc4"
+    },
+    "scripts/stage-community-guild-native-resources.py": {
+      "bytes": 18991,
+      "sha256": "8ad397a548141d6ab4fb28821549b2ba9a142165b495c20b7649743afd999542"
+    },
+    "scripts/lib/legacy_description_game.py": {
+      "bytes": 10693,
+      "sha256": "31d4b89ba5e34f1ad4936ee81c9ca07016cb4c6005a2a3821276b6c59ee41e73"
+    },
+    "tests/test_community_guild_composition.py": {
+      "bytes": 5285,
+      "sha256": "ed8281571bc7bd1cf0fcacb35f43212439425ac78b83ac8fc47f389964ce7006"
+    },
+    "tests/test_community_native_resources.py": {
+      "bytes": 7341,
+      "sha256": "4347f928a143f7effe7ed3b22513c4c891b37cdefcb392c3bdd0e33f253c895d"
+    }
+  },
+  "managerCommit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+  "preparedSource": {
+    "Any/Merged.dat": {
+      "bytes": 12085,
+      "sha256": "e5d10ef06b724c5d9a4f88b204a66d0ae5a868d7807a5a9acd9b7316fed95b6c"
+    },
+    "Any/Merged.gpl": {
+      "bytes": 464751,
+      "sha256": "52b729c080efbf01f9f3ef73991c837f21954831966b0706e6a99a5c23dbc37b"
+    },
+    "Majesty/Merged.gpl": {
+      "bytes": 21606,
+      "sha256": "82973ffd7c2ed673303cd3d5e497f9d0ce82da757c74ce3d412a91f145eef75f"
+    },
+    "MajestyExpansion/Merged.gpl": {
+      "bytes": 5183,
+      "sha256": "d726cf951d9787ab60de75ee253d834875328d9953adc0b286e91f31d307d275"
+    }
+  },
+  "resourceViews": {
+    "merged_textdata.cam": {
+      "bytes": 42322,
+      "sha256": "3795b289c1d533fae54ce392e1931296980c0713d8f4f5fac06620d080fcf15e"
+    },
+    "merged_gpltext.cam": {
+      "bytes": 79958,
+      "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+    },
+    "merged_miscdata.cam": {
+      "bytes": 5934,
+      "sha256": "79d7a83c1d0115a45007e8b1fda66db8cff131d52c70fb05754bc62bd7a32576"
+    },
+    "merged_descriptions.xml": {
+      "bytes": 107580,
+      "sha256": "6d718006cb58eae8673436e1b9ecca39fee786fa81381fbe962ff5247f2acc29"
+    },
+    "controllers.bin": {
+      "bytes": 1860,
+      "sha256": "4b779fe962818a242dc0334e920067ffe9e2c7950cacc3bff8e6cb24db77f78b"
+    },
+    "features.bin": {
+      "bytes": 3794,
+      "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+    },
+    "resolved-contracts.json": {
+      "bytes": 24213,
+      "sha256": "9b705c41edafa10844e54f8ca778fe11d968f58804ebec03d393b3f12d343368"
+    }
+  },
+  "compilerSourceBinding": {
+    "compiledStage": {
+      "bytes": 102019,
+      "sha256": "f71df820f6592e111c088e59df730ca080e8c0707ceaf179ad5fc19351d69374"
+    },
+    "finalSourceStage": {
+      "bytes": 97859,
+      "sha256": "c690db9bae08ed9d0468d86577963f3bc3b5520bc4eebf7888f0f14df60a703c"
+    },
+    "finalLegacyStage": {
+      "bytes": 105645,
+      "sha256": "95fb4804ad4751d3884a427ec809abdf39b6ad6813cc30e81bbafcea3776f339"
+    },
+    "exactCompilerInputFilesAndRoutesReproduced": true
+  },
+  "originalSdk": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 102019,
+      "sha256": "f71df820f6592e111c088e59df730ca080e8c0707ceaf179ad5fc19351d69374"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 15602915,
+        "sha256": "9ae7e81810996e6bfc31f5383f5e2564b4d5c2a7c9425d3faf3263df304f493e",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 817,
+        "compiledDefinitions": 817
+      },
+      "base": {
+        "bytes": 187130,
+        "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 85,
+        "compiledDefinitions": 85
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "elapsedSeconds": 25.85,
+    "peakRssMiB": 68.6,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "media": {
+    "files": {
+      "merged_audio.cam": {
+        "bytes": 6599396,
+        "sha256": "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24"
+      },
+      "merged_sounddesc.cam": {
+        "bytes": 6617,
+        "sha256": "e3f95fb7e08a1dbfe595230b8c372706f0087d84327f7d6a1f94730537e3f4c5"
+      },
+      "merged_interface.cam": {
+        "bytes": 8280128,
+        "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+      },
+      "merged_main.cam": {
+        "bytes": 22473959,
+        "sha256": "4bcffc1eab1fb859de364cabe044c4a9c96fe9532b359730632384a11defac15"
+      }
+    },
+    "requiredStockImages": [
+      "INBw",
+      "INTn",
+      "IX93"
+    ],
+    "artCollisions": {
+      "interface": {
+        "collisions": 69,
+        "imageRewrites": 151
+      },
+      "main": {
+        "collisions": 801,
+        "imageRewrites": 6350
+      }
+    }
+  },
+  "nativeResources": {
+    "files": {
+      "bards-hall-native-unittype.cam": {
+        "bytes": 8886,
+        "sha256": "e27533e1e0b0460dea8dacae08522178e4ab69a4db2d9b40292cf03efe5d4801"
+      },
+      "bards-hall-native-action.cam": {
+        "bytes": 3557,
+        "sha256": "393b317ae09870178d1e215a83adfb0d74866ea59b6d1f3fa583e87fcb443b51"
+      },
+      "bards-hall-native-sounddesc.cam": {
+        "bytes": 2976,
+        "sha256": "86cec7032b62b7826a05dddc616182b7203fba52f9faa486e5bf069f4d557d11"
+      },
+      "phantoms-haunt-native-unittype.cam": {
+        "bytes": 25685,
+        "sha256": "65967f3d05e432d7554ccab8f54cbcd94fa0911cc8cbd09826e0ca8fbc85a916"
+      },
+      "phantoms-haunt-native-action.cam": {
+        "bytes": 2146,
+        "sha256": "933aa33bad7564861353817fcdd75201c7df992a98c52a15e193534436a4756b"
+      },
+      "phantoms-haunt-native-sounddesc.cam": {
+        "bytes": 1378,
+        "sha256": "34f7f24188f9b899c862d0dd2ebc7ec1b55808f89db473ea83c780325fc7c1d9"
+      },
+      "shared-native-unittype.cam": {
+        "bytes": 8589,
+        "sha256": "8b735525bce88d76ee7ddf9a1aa55ba8639dab72aac5ab313ee6315e638e9683"
+      },
+      "shared-native-action.cam": {
+        "bytes": 3982,
+        "sha256": "72b7b209e72966fc3e70b37a0ccf0ba5ab72e9d0ece482c4f0eb3322c7f4fb92"
+      },
+      "shared-native-sounddesc.cam": {
+        "bytes": 2523,
+        "sha256": "eb3f6049907835d34b0db1bce031d4ee68123f60e1ed2117d3cfd8a23426610f"
+      },
+      "inventory-description-extensions.json": {
+        "bytes": 30725,
+        "sha256": "2e40958fcc7b9664ca294fbd94dbf52920e9c2194be921f53620f8566bcf6e06"
+      },
+      "native-title-bindings.json": {
+        "bytes": 5184,
+        "sha256": "bfdc71ef7c0004e224e3fb53f698ddec5db54fbeaaeba74cb8178150048dbd44"
+      }
+    },
+    "summaries": {
+      "bards-hall": {
+        "units": 31,
+        "actions": 12,
+        "sounds": 3,
+        "pending": [],
+        "imageReferencesAbsentFromGuildAndStockArt": []
+      },
+      "phantoms-haunt": {
+        "units": 61,
+        "actions": 7,
+        "sounds": 3,
+        "pending": [],
+        "imageReferencesAbsentFromGuildAndStockArt": [
+          "PHIC",
+          "PHIR"
+        ]
+      },
+      "shared": {
+        "units": 26,
+        "actions": 13,
+        "sounds": 6,
+        "pending": [],
+        "imageReferencesAbsentFromGuildAndStockArt": []
+      }
+    },
+    "inventoryMetadataCount": 34,
+    "numericInventorySlots": [
+      80,
+      113
+    ],
+    "privateEquipment": [
+      {
+        "equipment_id": 12244796,
+        "slot": 0,
+        "name_table": "BEN3"
+      },
+      {
+        "equipment_id": 14166774,
+        "slot": 0,
+        "name_table": "BEN1"
+      },
+      {
+        "equipment_id": 14635501,
+        "slot": 0,
+        "name_table": "BEN2"
+      }
+    ],
+    "privateEquipmentRuntimeRequired": true
+  },
+  "tests": {
+    "patterns": [
+      "test_community_guild*.py",
+      "test_community_native_resources.py",
+      "test_community_recruitment*.py",
+      "test_phantom_workshop_source.py",
+      "test_alchemist_inventory_description.py"
+    ],
+    "testsRun": 49,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "successful": true,
+    "elapsedSeconds": 0.92
+  },
+  "guardResults": {
+    "source": {
+      "startedAtUnix": 1792171955,
+      "terminal": true,
+      "peakOwnedRssMiB": 328.6,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "endedAtUnix": 1792171961
+    },
+    "sdk": {
+      "startedAtUnix": 1792171805,
+      "terminal": true,
+      "peakOwnedRssMiB": 90.1,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "endedAtUnix": 1792171832
+    },
+    "media": {
+      "startedAtUnix": 1792171972,
+      "terminal": true,
+      "peakOwnedRssMiB": 795.5,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "endedAtUnix": 1792171974
+    },
+    "nativeResources": {
+      "startedAtUnix": 1792172333,
+      "terminal": true,
+      "peakOwnedRssMiB": 0.4,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "endedAtUnix": 1792172334
+    }
+  },
+  "nativeEquipmentObservation": {
+    "qualification": "Read-only original listings; not a runtime adapter",
+    "getter": "004c0760",
+    "constructor": "004c0b60",
+    "nameInsertion": "004c1bc0",
+    "resourceAcquire": "004f2000",
+    "weaponName": "004c1410",
+    "weaponIcon": "004c17c0",
+    "mapOffsets": [
+      0,
+      16,
+      32,
+      48
+    ],
+    "lifetime": "Original static singleton with process-exit cleanup",
+    "listings": {
+      "004c0760.c": {
+        "bytes": 344,
+        "sha256": "29e1630a4cf67c1948d60efd16e4b7c7883c0221542fba2ea3f0afdba2e00e1e"
+      },
+      "004c0760.asm": {
+        "bytes": 350,
+        "sha256": "534e469f575cf7573680114f72e37e0c26a69c77f693789d8671864e0a2b935d"
+      },
+      "004c0b60.c": {
+        "bytes": 6446,
+        "sha256": "aa67d13d6ca255ae8d863d718c9f535850dcbd26f371540d77cc7603981462ed"
+      },
+      "004c0b60.asm": {
+        "bytes": 13821,
+        "sha256": "474a6856b349c372f19199a89e8dc4232da7daba19b09ecccd3074bd59d4e627"
+      },
+      "004c1bc0.c": {
+        "bytes": 1830,
+        "sha256": "1070b648c27c91228bdc8ee46c545d9aec269964e767460384eedf489c601bb3"
+      },
+      "004c1410.c": {
+        "bytes": 2766,
+        "sha256": "0a35d1a809e0764da1cb1984e40cda12b689ec278867d064d3868788e86b56f7"
+      },
+      "004c17c0.c": {
+        "bytes": 2470,
+        "sha256": "f2513e8acffd7bb6ceee10756c568ae3ceee1e1b2e2d7f27f008cb3dc0b27e63"
+      }
+    }
+  },
+  "remaining": [
+    "Old equipment presenter/runtime registration and lifecycle",
+    "Required native timing/reward/movement helpers",
+    "Source-backed guild research/hiring services and private Phantom controller",
+    "Actual native construction/recruitment/abilities/shared systems",
+    "Existing Alchemist saved VM continuation compatibility",
+    "Muted bounded browser gameplay and fresh save reload",
+    "Qualified production content publication"
+  ],
+  "rollout": "Audited none for source-only commit; private artifacts not installed",
+  "nativeGuildGameplayQualified": false,
+  "browserPlayable": false,
+  "productionChanged": false,
+  "published": false
+}

@@ -138,6 +138,69 @@ def stage(args):
                 if section.extension == b'WAVE':
                     original_waves.update(entry.name[:4] for entry in section.entries)
 
+    # Final composition changes spells, equipment names and private dialogs.
+    # Never substitute the uncomposed Workshop XML once those views exist.
+    context = getattr(args, 'resource_source', None)
+    media = getattr(args, 'media', None)
+    if bool(context) != bool(media):
+        raise ValueError('Final resource context and its source-bound media are required together')
+    preserved_identities = {}
+    equipment_ids, equipment_records = {}, []
+    context_proof = None
+    if context:
+        raw = (context / 'source-stage.json').read_bytes()
+        proof = json.loads(raw)
+        media_raw = (media / 'media-stage.json').read_bytes()
+        media_proof = json.loads(media_raw)
+        if (not proof.get('finalResourceContext') or proof.get('packages') != preflights
+                or media_proof.get('sourceStage') != digest(raw)
+                or media_proof.get('format') != 'majesty-community-creator-media-stage-v1'):
+            raise ValueError('Final descriptions/media belong to another source selection')
+        description_raw = (context / 'resources/merged_descriptions.xml').read_bytes()
+        if digest(description_raw) != proof['resourceFiles']['merged_descriptions.xml']:
+            raise ValueError('Final merged descriptions changed')
+        contract_raw = (context / 'resources/resolved-contracts.json').read_bytes()
+        if digest(contract_raw) != proof['resourceFiles']['resolved-contracts.json']:
+            raise ValueError('Final controller/equipment bindings changed')
+        equipment_records = json.loads(contract_raw)['features']['equipment']
+        for row in equipment_records:
+            identity, slot = row['equipment_id'], row['slot']
+            if (type(slot) is not int or slot not in (0, 1) or type(identity) is not int
+                    or not 0x800000 <= identity <= 0xffffff):
+                raise ValueError('Invalid native equipment slot')
+            tag = 'AllowedWeapon' if slot == 0 else 'AllowedArmor'
+            target = equipment_ids.setdefault(tag, {})
+            name = f'MME_{identity:06X}'
+            if name in target:
+                raise ValueError('Duplicate native equipment identity')
+            target[name] = identity
+        final = parse_descriptions(description_raw).index
+        for identity, records in by_mod.items():
+            if not records.keys() <= final.keys():
+                raise ValueError('Final descriptions lost an acquired definition')
+            by_mod[identity] = {key: final[key] for key in records}
+        by_mod['shared'] = {key: value for key, value in final.items() if key not in private}
+        private = dict(final)
+        for filename, expected in media_proof['files'].items():
+            if Path(filename).name != filename:
+                raise ValueError('Invalid composed media inventory')
+            path = media / filename
+            if path.is_symlink() or digest(path.read_bytes()) != expected:
+                raise ValueError('Composed media changed: ' + filename)
+            if path.suffix != '.cam':
+                continue
+            with path.open('rb') as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as payload:
+                index = inspection.PRIMITIVES.cam_index(payload)
+                original_images.update(key[:4].decode('ascii') for kind, key in index if kind == b'IMAG')
+                original_waves.update(key[:4] for kind, key in index if kind == b'WAVE')
+        merged_sounds = {key.decode('ascii'): value for (kind, key), value in cam_payloads(
+            (media / 'merged_sounddesc.cam').read_bytes()).items() if kind == b'DSND'}
+        used_sounds = set().union(*(set(rows) for rows in sounds.values()))
+        sounds['shared'] = {key: value for key, value in merged_sounds.items() if key not in used_sounds}
+        native.update({(b'DSND', key.encode('ascii')): value for key, value in merged_sounds.items()})
+        preserved_identities = {'ALB1': 'ABx1', 'ALB2': 'ABx2', 'ALB3': 'ABx3'}
+        context_proof = dict(sourceStage=digest(raw), mediaStage=digest(media_raw))
+
     # This exact complete selection contract matches native Tavern, Arena and
     # Graveyard descriptors. Preserve both acquired Phantom voice DSNDs verbatim.
     ph_sound = private['Sound', 'PH02'].to_element()
@@ -156,19 +219,22 @@ def stage(args):
         raise ValueError('Creator inventory slots differ from the reviewed 80..112 range')
     extensions = {name: plan_legacy_item(private['Unit', name].to_element(), modern, index, attr)
                   for name, index, attr in item_specs}
+    if context:
+        from lib.legacy_inventory_description import plan as plan_phial
+        extensions['PXF1'] = plan_phial(private['Unit', 'PXF1'].to_element(), modern)
     identities = {**ACTOR_IDS, **{name: plan['unit'] for name, plan in extensions.items()}}
     if set(identities.values()) & occupied or len(set(identities.values())) != len(identities):
         raise ValueError('Native item/actor identity is already occupied')
     combined = {**stock, **private}
     tables = helpers.name_tables(combined.values())
     for name, value in list(tables['Unit'].items()):
-        tables['Unit'][name] = identities.get(value, value)
+        tables['Unit'][name] = {**identities, **preserved_identities}.get(value, value)
     tables['Sound'] = {}
     helpers.native_names(tables['Sound'], native, b'DSND')
     helpers.native_names(tables['Movement'], native, b'DMOV')
     encoders = {'Character': encode_character, 'Building': encode_building, 'Overlay': encode_overlay}
     payloads, summaries, titles = {}, {}, {}
-    for identity, _, _ in packages:
+    for identity in by_mod:
         units, actions, pending, missing_images = {}, {}, [], set()
         for record in by_mod[identity].values():
             element = record.to_element()
@@ -182,12 +248,20 @@ def stage(args):
                         raise ValueError('No audited native engine encoder for ' + str(subtype))
                     game_part = None
                     if key in extensions:
-                        game_part = encode_legacy_item_game(element, tables['Action'], {}, extensions[key])
+                        if key == 'PXF1':
+                            from lib.legacy_inventory_description import encode_game as encode_phial
+                            game_part = encode_phial(element.find('Game'), tables['Action'], {}, extensions[key])
+                        else:
+                            game_part = encode_legacy_item_game(element, tables['Action'], {}, extensions[key])
                     elif subtype in encoders:
-                        game_part = encoders[subtype](element.find('Game'),
-                            tables['Action' if subtype == 'Character' else 'Unit'])
+                        names = tables['Action' if subtype == 'Character' else 'Unit']
+                        if subtype == 'Character':
+                            game_part = encode_character(element.find('Game'), names,
+                                                         equipment_ids=equipment_ids)
+                        else:
+                            game_part = encoders[subtype](element.find('Game'), names)
                     adapted = copy.deepcopy(element)
-                    target = identities.get(key, key)
+                    target = {**identities, **preserved_identities}.get(key, key)
                     adapted.set('ID', target)
                     units[target] = descriptor(adapted, tables, game_part)
                     if target != key:
@@ -212,7 +286,9 @@ def stage(args):
     payloads['native-title-bindings.json'] = (json.dumps(titles, indent=2) + '\n').encode()
     receipt = dict(format='majesty-community-native-resource-stage-v1',
         packages=preflights, sourceInputs=inputs, actorIdentities=ACTOR_IDS,
-        numericInventorySlots=[80, 112], inventoryMetadataCount=len(extensions),
+        finalResourceContext=context_proof, preservedAlchemistIdentities=preserved_identities,
+        numericInventorySlots=[80, 113 if context else 112], inventoryMetadataCount=len(extensions),
+        privateEquipment=equipment_records, privateEquipmentRuntimeRequired=bool(equipment_records),
         summaries=summaries, files={name: digest(raw) for name, raw in payloads.items()},
         privateTitlesNeedCollectionMerge=True, dependenciesNeedCollectionMerge=True,
         allRuntimeCapabilitiesQualified=False, nativeRuntimeQualified=False,
@@ -228,6 +304,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('bards-package', 'phantom-package', 'phantom-source', 'manager', 'game', 'out'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--resource-source', type=Path)
+    parser.add_argument('--media', type=Path)
     args = parser.parse_args()
     try:
         result = stage(args)
