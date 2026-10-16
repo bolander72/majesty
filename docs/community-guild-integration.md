@@ -507,6 +507,50 @@ bytecode and registry versions remain private; production assets, active
 collections, runtime gates and player profiles are unchanged. Final publication
 still requires the remaining native services and ordinary browser gameplay.
 
+## Original equipment registration
+
+`equipment_registration.h` now registers the creator's private equipment in
+Old's original four maps, through original guest insertion and STRT acquisition
+helpers. It validates the complete record set and checks all destinations
+before publishing values. Private IDs remain24-bit values; stock entries are
+never replaced. Original native maps own their inserted nodes and the original
+resource provider owns the name tables. No host pointer is stored in guest
+memory, and the constructor hook preserves its original return value.
+
+The controlled probe admits a separate source-bound MMFR file solely for the
+three equipment records. This is an explicit subsystem trial, not admission
+of the remaining MMFRv9 capabilities: normal MMFRv1/MMCRv20 gates are unchanged.
+The production content adapter still needs to connect the registration at its
+own normal load boundary.
+
+Official native test1933 compiled the adapter/plugin and passed its invalid
+identity, collision, resource-failure and map-offset checks with assertions
+enabled. Trial1935 then ran the actual Old executable in a fresh owned profile
+and a normal Beginner Random world. The original constructor, both native
+map insertion helpers, repeated singleton getter and STRT virtual methods
+retrieved all12 authored quality names:
+
+- Troubadour: Travel Lute, Fine Lute, Concert Lute, Masterwork Lute.
+- Spellsinger: Resonance Fork, Silver Resonator, Crystal Resonator, Harmonic Conductor.
+- Blade Dancer: Saber & Dagger, Balanced Blades, Duelist's Pair, Masterwork Blades.
+
+All three icon-map values retained the exact private identity. The trial exited
+normally, muted, below178 MiB observed owned RSS. Its captured world renders
+the normal stock Palace interface. No Bards or Phantom actor was installed or
+spawned in this probe, and no player save was used or written. This establishes
+real native registration and resource lookup, not hero-card icon rendering,
+equipment shopping/combat, multi-world lifetime or save/reload compatibility.
+See`equipment-registration-verification.json`.
+
+The preparatory1934 trial was deliberately stopped after file-open evidence
+showed it never consumed the added external dataset XML. Old consumes the
+embedded`DATA/XML1` native LoadData groups in`miscdata.cam`, rather than modern
+`MajestyDatasetDefinitions.xml`. The tracked probe preparer now appends owned
+CAM loads to those original native groups and preserves all earlier entries.
+Trial1935 actually opened the two added archives. Do not repeat the unused
+external-XML approach. Existing libraries, original game files, prior trial
+profiles and the production collection remain unchanged.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw

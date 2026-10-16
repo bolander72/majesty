@@ -10,6 +10,7 @@
 #include "research_descriptors.h"
 #include "research_activity.h"
 #include "gpl_attribute_bridge.h"
+#include "equipment_registration.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
@@ -72,6 +73,9 @@ struct TimedAction {
 bool controlledParty = false, controlledPartyApplied = false;
 bool controlledCommunityGpl = false, controlledCommunityGplApplied = false;
 bool controlledCommunityGplActive = false, controlledCommunityGplReload = false;
+bool controlledEquipment = false, controlledEquipmentApplied = false;
+MajestyRuntimeFeatures::Registry equipmentFeatures;
+std::uint32_t equipmentPresenter = 0;
 unsigned controlledEmptyLists = 0;
 std::uint32_t controlledLedgerAgent = 0;
 bool controlledStock = false, controlledStockApplied = false;
@@ -115,6 +119,36 @@ void next(PopHookInvocation *inv, pop_cpu_v1 *cpu) {
 void returned(pop_cpu_v1 *cpu, std::uint32_t value) {
     require(host->hook_return(host, cpu, value, 4) == POP_OK, "original ret4 discipline");
 }
+struct EquipmentOps {
+    std::uint32_t memory = 0;
+    EquipmentOps() {
+        require(host->guest_alloc(host, 64, &memory) == POP_OK, "equipment original call storage");
+    }
+    ~EquipmentOps() {
+        require(host->guest_free(host, memory) == POP_OK, "equipment original call release");
+    }
+    std::uint32_t read(std::uint32_t address) {
+        return ::read(address);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        ::write(address, value);
+    }
+    std::uint32_t nameSlot(std::uint32_t map, std::uint32_t id) {
+        write(memory, id);
+        return call(0x004c1bc0U, map, {memory});
+    }
+    std::uint32_t iconSlot(std::uint32_t map, std::uint32_t id) {
+        write(memory, id);
+        write(memory + 4, 0);
+        call(0x004c2960U, memory + 8, {memory, memory + 4});
+        call(0x004c2460U, map, {memory + 16, memory + 8});
+        const auto node = read(memory + 16);
+        return node ? node + 16 : 0;
+    }
+    std::uint32_t acquire(std::uint32_t table) {
+        return call(0x004f2000U, 0, {0, table});
+    }
+};
 struct DispatchOps {
     std::uint32_t read(std::uint32_t address) {
         return ::read(address);
@@ -830,6 +864,37 @@ std::string guestString(std::uint32_t p) {
     }
     return result;
 }
+void runControlledEquipment() {
+    const auto presenter = call(0x004c0760U, 0);
+    require(presenter == 0x006d8818U && presenter == equipmentPresenter,
+            "original equipment singleton construction and registration");
+    EquipmentOps ops;
+    for (const auto &record : equipmentFeatures.equipment) {
+        const auto name =
+            ops.nameSlot(presenter + (record.slot == 0 ? 0x10 : 0), record.equipmentId);
+        const auto icon =
+            ops.iconSlot(presenter + (record.slot == 0 ? 0x20 : 0x30), record.equipmentId);
+        const auto table = read(name);
+        require(table && read(icon) == record.equipmentId,
+                "original equipment map retains private type");
+        const auto count = call(read(read(table) + 0x24), table);
+        require(count >= 4 && count <= 16, "original equipment quality name count");
+        for (unsigned rank = 0; rank < count; ++rank) {
+            const auto text = call(0x004f2040U, 0, {table, 0xffffffffU, rank});
+            require(text != 0, "actual authored equipment quality name");
+            call(0x004e35f0U, ops.memory + 32, {text});
+            const auto value = guestString(ops.memory + 32);
+            call(0x004e3820U, ops.memory + 32);
+            require(!value.empty() && value.size() <= 80, "authored equipment name bound");
+            std::fprintf(stderr, "[community-equipment] id=%06x slot=%u rank=%u name=%s\n",
+                         record.equipmentId, record.slot, rank, value.c_str());
+        }
+    }
+    require(call(0x004c0760U, 0) == presenter, "original singleton repeated getter");
+    controlledEquipmentApplied = true;
+    host->log(host, "Controlled community equipment: original singleton maps and authored quality "
+                    "names passed.");
+}
 // Resolve an authored export before the original VM prepares its call frame.
 // Function objects carry both bytecode and local-variable models: replacing a
 // block at execution time would retain the wrong model and corrupt the frame.
@@ -958,6 +1023,17 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (controlledEquipment && target == 0x004c0b60U) {
+        next(inv, cpu);
+        const auto result = cpu->eax;
+        EquipmentOps ops;
+        require(MajestyCommunity::RegisterEquipment(ops, self, equipmentFeatures.equipment) ==
+                    MajestyCommunity::EquipmentRegistration::Installed,
+                "original private equipment registration");
+        equipmentPresenter = self;
+        cpu->eax = result;
+        return;
+    }
     if (panelBridge && target == 0x0042ee50U) {
         DispatchOps ops;
         const auto unit = read(cpu->esp + 4);
@@ -1170,7 +1246,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         return;
     }
-    if ((researchBridge || controlledCommunityGpl) && target == 0x005d9680U) {
+    if ((researchBridge || controlledCommunityGpl || controlledEquipment) &&
+        target == 0x005d9680U) {
         // Optional isolated test setup: use the already implemented ordinary
         // single-player cheat, never rewrite actor statistics or mod balance.
         const auto state = read(0x006d7670U);
@@ -1200,6 +1277,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (controlledEquipment && !controlledEquipmentApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledEquipment();
         if (controlledCommunityGpl && !controlledCommunityGplApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledCommunityGpl();
@@ -1689,6 +1769,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     controlledCommunityGplReload = communityTest && !std::strcmp(communityTest, "1894-reload");
     controlledCommunityGpl = attributeCompat && communityTest &&
                              (!std::strcmp(communityTest, "1894") || controlledCommunityGplReload);
+    const char *equipmentTest = std::getenv("RECOMP_COMMUNITY_TEST_EQUIPMENT");
+    controlledEquipment = equipmentTest && !std::strcmp(equipmentTest, "1932");
     const char *party = std::getenv("RECOMP_ALCHEMIST_TEST_PARTY_LEVELS");
     controlledParty = researchBridge && party && !std::strcmp(party, "1");
     const char *stock = std::getenv("RECOMP_ALCHEMIST_TEST_REAGENTS");
@@ -1714,6 +1796,19 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             "original MMFR parser");
     require(MajestyStockControllers::ParseRegistry(c.data(), c.size(), &recipes, &error),
             "original MMCR parser");
+    if (controlledEquipment) {
+        const auto raw = file("equipment-features.bin", 1024 * 1024);
+        require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(), &equipmentFeatures,
+                                                      &error) &&
+                    equipmentFeatures.equipment.size() == 3,
+                "controlled actual three-instrument feature registry");
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x004c0b60U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+    }
     if (host->guest_alloc(host, 256, &scratch) != POP_OK)
         return POP_E_RANGE;
     for (const auto a :
@@ -1754,7 +1849,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         }
         host->log(host, "Private research route enabled through original queue/update/event2009.");
     }
-    if (controlledCommunityGpl && !researchBridge) {
+    if ((controlledCommunityGpl || controlledEquipment) && !researchBridge) {
         std::uint32_t id = 0;
         const auto status = host->hook_install_ex(host, 0x005d9680U, 0, hook, POP_HOOK_WRAP,
                                                   POP_HOOK_NO_GAME_VIEW, nullptr, &id);
@@ -1850,5 +1945,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     controlledCommunityGplApplied = false;
     controlledLedgerAgent = 0;
     controlledEmptyLists = 0;
+    controlledEquipmentApplied = false;
+    equipmentPresenter = 0;
+    equipmentFeatures = {};
     return POP_OK;
 }

@@ -1,0 +1,213 @@
+{
+  "format": "majesty-community-old-equipment-registration-verification-v1",
+  "date": "2026-10-16",
+  "originalGuestSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "sourceFiles": {
+    "native/community/equipment_registration.h": {
+      "bytes": 2142,
+      "sha256": "4e4056bbdb55f53ec5bd3a730de56242c6411420b3cf54424080544ddbeacd5f"
+    },
+    "native/community/equipment_registration_tests.cpp": {
+      "bytes": 3047,
+      "sha256": "0ffd135f7083e86765dbd94c3dfef043d8022e35d4720bc787042b49ad295601"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 95986,
+      "sha256": "41eeb1ba69329712aa4cdd3efabd0de73a74c0c8219b818e2c10119139a98e6d"
+    },
+    "scripts/prepare-community-controller-fixture.py": {
+      "bytes": 8668,
+      "sha256": "04eefced001890507aaf0b62cce34c09f6962935a96a23d69b4e9960506dd1ef"
+    },
+    "scripts/prepare-community-equipment-probe.py": {
+      "bytes": 6690,
+      "sha256": "189742c08c70fcd66168c4b772dbe316e023513600e91f6c9ea145510409eb0c"
+    }
+  },
+  "officialNativeBuild": {
+    "startedAtUnix": 1792172755,
+    "terminal": true,
+    "peakOwnedRssMiB": 261.8,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "endedAtUnix": 1792172759
+  },
+  "assertionsEnabled": true,
+  "nativeEquipmentBoundaryTestsPassed": true,
+  "trial": {
+    "stage": {
+      "format": "majesty-community-native-equipment-probe-stage-v1",
+      "sourceStage": {
+        "bytes": 97859,
+        "sha256": "c690db9bae08ed9d0468d86577963f3bc3b5520bc4eebf7888f0f14df60a703c"
+      },
+      "mediaStage": {
+        "bytes": 260698,
+        "sha256": "e72a215d14252ebbc039c10cd41571588c291cdb7565ce665cf5e9b216ebfa27"
+      },
+      "gamePatches": {
+        "Data/miscdata.cam": {
+          "bytes": 10760,
+          "sha256": "3acdc253e0078dc1fd3965d3d1b2273d83cdfc0d961aa462268d58f837a69546"
+        },
+        "Data/community-equipment-gpltext.cam": {
+          "bytes": 79958,
+          "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+        },
+        "Data/community-equipment-interface.cam": {
+          "bytes": 8280128,
+          "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+        },
+        "DataMX/mx_miscdata.cam": {
+          "bytes": 18404,
+          "sha256": "c8756657133d1991c89a8fdce6561728a80b75a633276079f84a2fb86aa89d94"
+        },
+        "DataMX/community-equipment-gpltext.cam": {
+          "bytes": 79958,
+          "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+        },
+        "DataMX/community-equipment-interface.cam": {
+          "bytes": 8280128,
+          "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+        }
+      },
+      "module": {
+        "bytes": 390008,
+        "sha256": "54b93d44a2485d68d6d4d1df072290dd8258a8fb4ff201c5e398a3b9192b53d7"
+      },
+      "featureRegistry": {
+        "bytes": 3794,
+        "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+      },
+      "sources": {
+        "equipment_registration.h": {
+          "bytes": 2142,
+          "sha256": "4e4056bbdb55f53ec5bd3a730de56242c6411420b3cf54424080544ddbeacd5f"
+        },
+        "native_probe_plugin.cpp": {
+          "bytes": 95986,
+          "sha256": "41eeb1ba69329712aa4cdd3efabd0de73a74c0c8219b818e2c10119139a98e6d"
+        }
+      },
+      "freshOwnedProfile": true,
+      "newGuildActorsInstalled": false,
+      "ordinaryGuildGameplayQualified": false,
+      "browserPlayable": false,
+      "published": false
+    },
+    "result": {
+      "nativeExecutableSha256": "16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/alchemist1220-engine-build-qualified.json",
+      "startedAtUnix": 1792172942,
+      "deadlineSeconds": 115,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 177.2,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": null,
+      "endedAtUnix": 1792172993
+    },
+    "actualQualityNames": [
+      {
+        "equipmentId": 12244796,
+        "slot": 0,
+        "rank": 0,
+        "name": "Saber & Dagger"
+      },
+      {
+        "equipmentId": 12244796,
+        "slot": 0,
+        "rank": 1,
+        "name": "Balanced Blades"
+      },
+      {
+        "equipmentId": 12244796,
+        "slot": 0,
+        "rank": 2,
+        "name": "Duelist's Pair"
+      },
+      {
+        "equipmentId": 12244796,
+        "slot": 0,
+        "rank": 3,
+        "name": "Masterwork Blades"
+      },
+      {
+        "equipmentId": 14166774,
+        "slot": 0,
+        "rank": 0,
+        "name": "Travel Lute"
+      },
+      {
+        "equipmentId": 14166774,
+        "slot": 0,
+        "rank": 1,
+        "name": "Fine Lute"
+      },
+      {
+        "equipmentId": 14166774,
+        "slot": 0,
+        "rank": 2,
+        "name": "Concert Lute"
+      },
+      {
+        "equipmentId": 14166774,
+        "slot": 0,
+        "rank": 3,
+        "name": "Masterwork Lute"
+      },
+      {
+        "equipmentId": 14635501,
+        "slot": 0,
+        "rank": 0,
+        "name": "Resonance Fork"
+      },
+      {
+        "equipmentId": 14635501,
+        "slot": 0,
+        "rank": 1,
+        "name": "Silver Resonator"
+      },
+      {
+        "equipmentId": 14635501,
+        "slot": 0,
+        "rank": 2,
+        "name": "Crystal Resonator"
+      },
+      {
+        "equipmentId": 14635501,
+        "slot": 0,
+        "rank": 3,
+        "name": "Harmonic Conductor"
+      }
+    ],
+    "equipmentArchiveFileOpens": 8,
+    "worldScreenshot": {
+      "bytes": 700227,
+      "sha256": "7feb48f1f0600f211aafd816b9f7805018946af99ab9bb017ceb3fb56b779bbe"
+    }
+  },
+  "earlierHarnessFailure": {
+    "trial": "community1934",
+    "intentionalStop": true,
+    "reason": "External dataset XML not consumed by Old; corrected native DATA/XML1 LoadData CAM lists",
+    "exitCode": -15,
+    "guardStopped": false
+  },
+  "productionAdmissionGatesRelaxed": false,
+  "newGuildActorsInstalled": false,
+  "ordinaryGuildGameplayQualified": false,
+  "heroEquipmentRenderingQualified": false,
+  "shoppingCombatQualified": false,
+  "multiWorldLifetimeQualified": false,
+  "browserPlayable": false,
+  "productionChanged": false,
+  "published": false,
+  "rollout": "Audited none; private native plugin and preparation scripts only"
+}
