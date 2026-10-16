@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-native-table-verification-v1",
   "date": "2026-10-16",
-  "stage": "community1993-native-tables/native-tables-stage.json",
+  "stage": "community1999-native-tables/native-tables-stage.json",
   "baseRelease": {
     "bytes": 10503,
     "sha256": "946ad3d16e906d384ede026c92b45e22df4673a9a5829dbd2ac81236bfe058a9"
@@ -12,8 +12,8 @@
       "sha256": "86914f5a8d063c53e90eabb1ad84afcf336ae49c1613075b22b11847785f3247"
     },
     "scripts/prepare-community-native-tables.py": {
-      "bytes": 10727,
-      "sha256": "c3f3af1945866cf02b78d87af0a69f4a9bd695c7dc57773a70bc42ec87c1d336"
+      "bytes": 11898,
+      "sha256": "e3c85c3400029da0530987097d4a90b1a5668de08be7e66a855c7b2edb806202"
     },
     "tests/test_community_native_tables.py": {
       "bytes": 7704,
@@ -31,7 +31,8 @@
         "privatePhantomNameReference": true,
         "stockNameTablesNotOverridden": true,
         "originalInventoryPositionsPreserved": true,
-        "buildingStageLabelsVerified": true
+        "buildingStageLabelsVerified": true,
+        "existingDemoXmlAndOtherMiscPayloadsByteIdentical": true
       },
       {
         "group": "DataMX",
@@ -41,12 +42,15 @@
         "privatePhantomNameReference": true,
         "stockNameTablesNotOverridden": true,
         "originalInventoryPositionsPreserved": true,
-        "buildingStageLabelsVerified": true
+        "buildingStageLabelsVerified": true,
+        "existingDemoXmlAndOtherMiscPayloadsByteIdentical": true
       }
     ],
     "guildGameplayQualified": false,
     "browserPlayable": false,
-    "published": false
+    "published": false,
+    "stage": "community1999-native-tables/native-tables-stage.json",
+    "effectiveReleaseFiles": 36
   },
   "focusedPythonTests": {
     "patterns": [
@@ -86,8 +90,8 @@
       "sha256": "5b3069151d6fc83791f43849855cf5ef046a29754e6e3f9a89175a152122c640"
     },
     "Data/miscdata.cam": {
-      "bytes": 10363,
-      "sha256": "ffc07790e570f67f4d161977779881c023f10e8a81b1e0e8965127b8c8a2fa01"
+      "bytes": 10605,
+      "sha256": "0fe805420f844df84326e7c8ef42088e6274292eca82b624900091709d5beb00"
     },
     "DataMX/mx_Unittype.cam": {
       "bytes": 102644,
@@ -110,8 +114,8 @@
       "sha256": "693bc741d266d252ee43351596d32c8898af8b6e33cc9722433fdd11b449fa48"
     },
     "DataMX/mx_miscdata.cam": {
-      "bytes": 17426,
-      "sha256": "733b2d3f1a494ed08d762f278b534a0059b4a20f2e18ead84ad85490fb9e1e4e"
+      "bytes": 17892,
+      "sha256": "86c7db703b9ffdf6d3484a992be4add8fbe37b0883b243825e613ff6d7269ccc"
     },
     "community-name-bindings.bin": {
       "bytes": 36,
@@ -132,5 +136,11 @@
   "fullCollectionBuilt": false,
   "ordinaryGuildGameplayQualified": false,
   "browserPlayable": false,
-  "published": false
+  "published": false,
+  "baseDemoRelease": {
+    "bytes": 12514,
+    "sha256": "de917a9fa038dc2515de550c87c87f4d66a8e1d766fe9408511bf8808978a953"
+  },
+  "verifiedEffectiveReleaseFiles": 36,
+  "existingDemoXmlAndOtherMiscPayloadsPreserved": true
 }

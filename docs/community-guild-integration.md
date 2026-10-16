@@ -677,7 +677,8 @@ gameplay, full Alchemist coexistence or final1920/browser compatibility.
 See `guild-services-verification.json` for separate build and trial scope.
 
 `prepare-community-native-tables.py` now stages13 private outputs for both
-editions, starting with all25 exact qualified Alchemist files. It merges
+editions, starting with the36 verified effective deployed files from the
+qualified Alchemist and Vampiric Revenge overlays. It merges
 native unit/action/sound catalogs, canonical title aliases, authored building
 prerequisites and text/UI tables. Existing Alchemy Lab stage labels and all
 original inventory positions remain intact. It does not activate load groups.
@@ -699,6 +700,12 @@ wrapper are explicit exceptions; other occupied names/IDs refuse replacement.
 Both real-edition table audits passed, as did66 focused Python tests with no
 skips. These are resource/coexistence checks, not in-game UI or mechanics
 qualification. See `native-table-verification.json`.
+
+The effective demo overlay is mandatory: staging whole miscdata.cam from an
+earlier Alchemist-only baseline would discard the existing XQD3 load entries
+on later installation. Native table stage1999 retains both demo XML1 payloads
+and every other non-BDEP misc payload byte-for-byte; only the prerequisites
+change. Stage1993 is preserved as an earlier Alchemist-only resource draft.
 
 Rollout/manual-data audit: none required for this source checkpoint. The
 audit covered native registry admission, saved-state ownership, immutable

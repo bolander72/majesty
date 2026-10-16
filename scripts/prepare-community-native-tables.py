@@ -35,12 +35,31 @@ def prepare(args):
         raise ValueError('Preserve earlier collections; choose a fresh output')
     release_raw = resident(ROOT / 'deploy/alchemist-release.json')
     release = json.loads(release_raw)
-    # Start with the exact currently qualified Alchemist resource collection.
-    # Demo/campaign overlay activation is a separate, later collection operation.
-    for item in release['patches']:
+    demo_raw = resident(ROOT / 'deploy/vampiric-revenge-release.json')
+    demo = json.loads(demo_raw)
+    if demo.get('storageId') != 'majesty-alchemist-demo-v1' or demo.get('nativeId') != 'XQD3':
+        raise ValueError('Require the current qualified demo collection')
+    # Start with the effective deployed collection, including its demo overlay.
+    # Merging against the earlier Lab alone would silently lose XQD3's XML
+    # load entries when the complete miscdata.cam is installed later.
+    effective = {item['path'].casefold(): item for item in release['patches']}
+    effective.update({item['path'].casefold(): item for item in demo['patches']})
+    baseline = {}
+    for key, item in effective.items():
         if Path(item['path']).is_absolute() or '..' in Path(item['path']).parts:
             raise ValueError('Unsafe release path')
-        resident(args.game / item['path'], {k: item[k] for k in ['bytes', 'sha256']})
+        expected = {k: item[k] for k in ['bytes', 'sha256']}
+        for folder in [args.demo, args.game]:
+            path = folder / item['path']
+            if path.is_file() and not getattr(path.stat(), 'st_flags', 0) & 0x40000000:
+                if digest(resident(path)) == expected:
+                    baseline[key] = path
+                    break
+        if key not in baseline:
+            raise ValueError('Missing qualified collection input: ' + item['path'])
+
+    def input_file(name):
+        return baseline.get(name.casefold(), args.game / name)
     source_raw = resident(args.source / 'source-stage.json')
     source = json.loads(source_raw)
     native_raw = resident(args.native / 'native-resource-stage.json')
@@ -77,7 +96,7 @@ def prepare(args):
                                          source['resourceFiles'][name]))
     # Expansion text archives are deltas; UNTN still comes from base data.
     base_titles = next(parse_strt(e.data) for s in read_cam(resident(
-        args.game / 'Data/textdata.cam')).sections if s.extension == b'STRT'
+        input_file('Data/textdata.cam'))).sections if s.extension == b'STRT'
         for e in s.entries if e.name[:4] == b'UNTN')
     changes, proof = {}, {}
     for directory, prefix in [('Data', ''), ('DataMX', 'mx_')]:
@@ -85,7 +104,7 @@ def prepare(args):
             matches = [p for p in (args.game / directory).iterdir() if p.name.casefold() == name.casefold()]
             if len(matches) != 1:
                 raise ValueError('Missing or ambiguous native table: ' + name)
-            return matches[0].name, read_cam(resident(matches[0]))
+            return matches[0].name, read_cam(resident(input_file(directory + '/' + matches[0].name)))
         owned_units = read_cam(resident(args.game / directory / 'Alchemist-native-units.cam'))
         owned_actions = read_cam(resident(args.game / directory / 'Alchemist-native-actions.cam'))
         owned_sounds = read_cam(resident(args.game / directory / 'alchemist_sounddesc.cam'))
@@ -157,7 +176,8 @@ def prepare(args):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(raw)
     result = dict(format='majesty-community-native-tables-stage-v1',
-        baseRelease=digest(release_raw), sourceStage=digest(source_raw), nativeStage=digest(native_raw),
+        baseRelease=digest(release_raw), baseDemoRelease=digest(demo_raw),
+        verifiedEffectiveBaseFiles=len(baseline), sourceStage=digest(source_raw), nativeStage=digest(native_raw),
         files={k:digest(v) for k,v in changes.items()}, catalogs=proof,
         phantomNames=dict(sourceGenerator='NM11', nativeGenerator='NMPH',
             sourceTables=['HN41', 'HN42'], nativeTables=['HNP0', 'HNP1'],
@@ -167,6 +187,7 @@ def prepare(args):
         preservesAlchemyLevelLabels=True, prerequisitesMerged=True,
         authoredStockHelpOverrides=['h011', 'h013', 'h018', 'h021', 'h022'],
         originalLoadGroupsUnchanged=True, needsLoadGroupActivation=True,
+        existingDemoLoadGroupsPreserved=True,
         needsNameRuntimeBinding=True, needsNativeControllerAudit=['CGPH', 'AP78'],
         guildGameplayQualified=False, browserPlayable=False, published=False)
     (args.out / 'native-tables-stage.json').write_text(json.dumps(result, indent=2) + '\n')
@@ -175,7 +196,7 @@ def prepare(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ['game', 'source', 'native', 'out']:
+    for name in ['game', 'demo', 'source', 'native', 'out']:
         parser.add_argument('--' + name, type=Path, required=True)
     args = parser.parse_args()
     try:
