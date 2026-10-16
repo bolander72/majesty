@@ -1,6 +1,7 @@
 // Private live-guest qualification through the official mod API; not a public
 // content build.
 #include "RuntimeFeatureRegistry.h"
+#include "shared_function_routes.h"
 #include "controller_lifecycle.h"
 #include "controller_dispatch.h"
 #include "name_registration.h"
@@ -1565,25 +1566,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     const char *shared = std::getenv("RECOMP_ALCHEMIST_SHARED_FUNCTIONS");
     sharedFunctions = shared && !std::strcmp(shared, "1");
     if (sharedFunctions) {
-        const auto raw = file("shared-overrides.tsv", 32768);
-        std::istringstream input(std::string(raw.begin(), raw.end()));
-        std::string line;
-        require(bool(std::getline(input, line)) && line == "majesty-alchemist-shared-gpl-v1",
-                "shared function route version");
-        while (std::getline(input, line)) {
-            const auto tab = line.find('\t');
-            require(tab != std::string::npos && tab > 0 && tab < 101,
-                    "shared function route shape");
-            const auto name = line.substr(0, tab), alias = line.substr(tab + 1);
-            require(alias == "MJA_" + name && alias.size() < 128 &&
-                        name.find_first_not_of(
-                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789") ==
-                            std::string::npos &&
-                        sharedAliases.emplace(folded(name), alias).second,
-                    "shared function route identity");
-        }
-        require(!sharedAliases.empty() && sharedAliases.size() <= 128,
-                "shared function route bound");
+        const auto raw = file("shared-overrides.tsv", 65536);
+        require(MajestyCommunity::ParseSharedFunctionRoutes(std::string(raw.begin(), raw.end()),
+                                                            sharedAliases),
+                "shared function route format/identity/bound");
     }
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
@@ -1608,9 +1594,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 method "
                     "eligibility is unchanged. Private dispatch is explicitly opt-in.");
     if (panelBridge) {
-        for (const auto address : {0x00466110U, 0x004652a0U, 0x0043dfc0U, 0x0043e250U, 0x0043ee80U,
-                                   0x005b6670U, 0x00418660U, 0x0043ddb0U, 0x0043de30U, 0x0043ded0U,
-                                   0x0042ee50U}) {
+        for (const auto address :
+             {0x00466110U, 0x004652a0U, 0x0043dfc0U, 0x0043e250U, 0x0043ee80U, 0x005b6670U,
+              0x00418660U, 0x0043ddb0U, 0x0043de30U, 0x0043ded0U, 0x0042ee50U}) {
             std::uint32_t id = 0;
             const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
                                                       POP_HOOK_NO_GAME_VIEW, nullptr, &id);

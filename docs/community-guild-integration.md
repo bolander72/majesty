@@ -210,6 +210,59 @@ bindings against the complete stock/private namespace during collection merge,
 and verify existing Alchemist saves separately. See
 `content/community-mods/native-recruitment-verification.json`.
 
+## Legacy script loading and original recruitment module
+
+`scripts/prepare-community-guild-legacy-functions.py` binds every input to the
+prepared source and pinned official SDK. It adds source-identical `MJC_`
+exports for stock-name collisions only:102 common,28 base and5 expansion.
+Every original export, body, DAT and private function remains unchanged.
+Private helpers are not needlessly duplicated. Separate edition route files
+contain130 and107 entries; the two scoped `give_exp` implementations stay
+separate.
+
+The original SDK compiled this private ABI stage in25.96 seconds, with64.5 MiB
+observed compiler RSS and884 total definitions. The source-file hashes in the
+final1861 preparation exactly match the1860 compiler input. These exports
+prepare the existing lookup-time redirect, which selects the correct original
+function object before the VM creates a frame. They are not execution proof.
+
+| Compiled ABI output | Bytes | Definitions | SHA256 |
+| --- | ---: | ---: | --- |
+| common | 14367967 | 786 | `f6450d27483439c758f99eedcc4f7475a7d056d8bc62ec8c776048232b31d48f` |
+| base | 187130 | 85 | `6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0` |
+| expansion | 27612 | 13 | `9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa` |
+
+`shared_function_routes.h` and the first-party probe now recognize the separate
+`majesty-community-shared-gpl-v2` format, bounded at256 entries/64 KiB. The
+existing `MJA_` Alchemist v1 format retains its128-entry/32 KiB limits. Refused
+files never partially publish a map. Native tests pass against both actual
+edition maps and the actual current Alchemist file, including duplicate,
+malformed, prefix, NUL and limit refusals. The existing Alchemist controller
+suite and native probe compilation also pass. The runtime's MMCRv20 guard
+remains in place; this does not enable unimplemented v21 guild features.
+
+`scripts/prepare-community-recruitment-engine.py` verifies the complete pinned
+executable, AP52 vtable and eight original entry prefixes before extending only
+an owned private configuration's translation entries. It reproduces the exact
+private1865 module input. The official translator's `--as-module community_ap52`
+with `--only 00465510 00465ac0 0047e680 0047e8f0 0047e9c0 0047f270 0047f3e0 0047f530`
+translated all eight routines plus three required alternate entries at353.8 MiB
+observed RSS. The generated source is untouched and private. The module then
+compiled successfully through official `tools/test.py` at135.9 MiB peak owned
+RSS; no game launched.
+
+The original AP52 command is RET4 and delegates native recruitment index2 from
+`0x1388`, index1 from `0x1389`, and index0 through the generic `0x1F48` handler.
+Its tooltip is RET12 and its event method RET16. The single-choice presenter
+is `00465510`; native title/quote helpers are `004652a0`/`00465410`. The creator's
+Windows machine-code presenter clones cannot be executed directly by WASM;
+those private presenter adaptations and their lifecycle still need integration.
+Preserve the original queue/upgrade methods and stock UI rather than replacing
+them with simulated recruitment. The Old secondary-container flag is
+`controller+0x20`, verified in original `0047a760`; the modern creator layout
+uses `+0x30`, which must not be copied into the36-byte Old object. See `legacy-abi-verification.json` for the
+qualification boundary. All34 focused Python tests pass without skips.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw

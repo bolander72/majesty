@@ -1,0 +1,142 @@
+{
+  "format": "majesty-community-legacy-abi-stage-v1",
+  "sourceStageFiles": {
+    "Any/Merged.dat": {
+      "bytes": 12085,
+      "sha256": "e5d10ef06b724c5d9a4f88b204a66d0ae5a868d7807a5a9acd9b7316fed95b6c"
+    },
+    "Any/Merged.gpl": {
+      "bytes": 456586,
+      "sha256": "f198e299a2591136309fe15274436c2d2ac99d868e4216a88cdbace4142ffe97"
+    },
+    "Majesty/Merged.gpl": {
+      "bytes": 21606,
+      "sha256": "82973ffd7c2ed673303cd3d5e497f9d0ce82da757c74ce3d412a91f145eef75f"
+    },
+    "MajestyExpansion/Merged.gpl": {
+      "bytes": 5183,
+      "sha256": "d726cf951d9787ab60de75ee253d834875328d9953adc0b286e91f31d307d275"
+    },
+    "Any/ZZ_LegacyAliases.gpl": {
+      "bytes": 134515,
+      "sha256": "c7fe7ca2eb2fabc70279d8ed89b1665a2b37e6cbe523064d0dce661edbf4e812"
+    },
+    "Majesty/ZZ_LegacyAliases.gpl": {
+      "bytes": 19382,
+      "sha256": "aa835c6c3ec82a967bfb787481c93fedd52f9e3a03e9f5d3a27e44fda5adbf18"
+    },
+    "MajestyExpansion/ZZ_LegacyAliases.gpl": {
+      "bytes": 3720,
+      "sha256": "9055f22c0fee1cbd4bd97ca4a7a60aa699dfa07a63630404e8ad4b67e6b38381"
+    }
+  },
+  "sourceExportsAndBodiesPreserved": true,
+  "aliasesOnlyForStockCollisions": true,
+  "aliasCounts": {
+    "Any": 102,
+    "Majesty": 28,
+    "MajestyExpansion": 5
+  },
+  "routeCounts": {
+    "Majesty": 130,
+    "MajestyExpansion": 107
+  },
+  "routeFiles": {
+    "Majesty": {
+      "bytes": 4918,
+      "sha256": "5aec69a65629d13d11f4754f47fc87cf7d621b7bd333bf699ebc352dac317491"
+    },
+    "MajestyExpansion": {
+      "bytes": 4064,
+      "sha256": "4099b76779102ad8a85792540d7c7fb3683af7a10515fdf6698a97b945c7d980"
+    }
+  },
+  "originalSdkCompilation": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 95935,
+      "sha256": "3b4ae3468033f9947713f5e65ce2126b55a6c541663df43aa52853063745c9a4"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 14367967,
+        "sha256": "f6450d27483439c758f99eedcc4f7475a7d056d8bc62ec8c776048232b31d48f",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 786,
+        "compiledDefinitions": 786
+      },
+      "base": {
+        "bytes": 187130,
+        "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 85,
+        "compiledDefinitions": 85
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "elapsedSeconds": 25.96,
+    "peakRssMiB": 64.5,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "legacyRouteFormatPreserved": true,
+  "legacyRouteLimit": 128,
+  "newRouteLimit": 256,
+  "nativeRouteFixture": {
+    "exitCode": 0,
+    "peakOwnedRssMiB": 135.9,
+    "gameLaunched": false
+  },
+  "originalAlchemistControllerRegression": {
+    "exitCode": 0,
+    "peakOwnedRssMiB": 217.3,
+    "gameLaunched": false
+  },
+  "originalRecruitmentTranslation": {
+    "functionsTranslated": 8,
+    "declaredEntries": [
+      "00465510",
+      "00465ac0",
+      "0047e680",
+      "0047e8f0",
+      "0047e9c0",
+      "0047f270",
+      "0047f3e0",
+      "0047f530"
+    ],
+    "functionTableEntries": 11,
+    "includesThreeTranslatorAlternateEntries": true,
+    "exitCode": 0,
+    "peakRssMiB": 353.8,
+    "officialNativeModuleCompiled": true,
+    "generatedSourceEdited": false,
+    "sourceFiles": {
+      "chunk_000.c": "f8c136b9a905eb883f6155fc8cb324b821264812e970373c2d858a410430ced0",
+      "table.c": "475dd95a706eeaae738463538a999a465bcb69185606e0dcb36ca2b41855c665",
+      "funcs.h": "467ffe1dc3f9d7bf0ceff3002a6109d665251cdbd22ffaf8363dfe8b39127222"
+    }
+  },
+  "focusedPythonTestsPassed": 34,
+  "focusedPythonTestsSkipped": 0,
+  "firstPartyMMCRv21RuntimeEnabled": false,
+  "originalFunctionLookupRedirectLifecycleUnchanged": true,
+  "nativeGameplayQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "scope": "Original SDK compilation, route decoding and native module build only. Original VM linking/execution, AP52 presenter adaptation, guild gameplay and save/reload remain unqualified."
+}
