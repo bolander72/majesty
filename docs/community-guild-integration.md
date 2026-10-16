@@ -256,7 +256,8 @@ The original AP52 command is RET4 and delegates native recruitment index2 from
 Its tooltip is RET12 and its event method RET16. The single-choice presenter
 is `00465510`; native title/quote helpers are `004652a0`/`00465410`. The creator's
 Windows machine-code presenter clones cannot be executed directly by WASM;
-those private presenter adaptations and their lifecycle still need integration.
+those private presenter adaptations and their lifecycle are implemented below,
+but still need source-backed gameplay services and live-world integration.
 Preserve the original queue/upgrade methods and stock UI rather than replacing
 them with simulated recruitment. The Old secondary-container flag is
 `controller+0x20`, verified in original `0047a760`; the modern creator layout
@@ -291,8 +292,8 @@ unaligned/out-of-range/overlapping blocks and replacement allocations. Host
 function pointers remain typed host data. The unloadable build bundle leaves
 live bridge installation disabled. The `RefreshAll` bridge calls each literal
 presenter sequentially through the existing guest-call boundary and the same
-building context. Parent/child ownership and research/input guards are still
-an integration task; this bank alone does not enable a guild.
+building context. The instance owner below supplies parent/child ownership and
+research/input guards; this bank alone does not enable a guild.
 
 Official native fixtures compile all four modules and execute their actual
 translated instructions with explicit refusing native-service fixtures. They
@@ -324,6 +325,55 @@ It records exact source hashes, constructor redirection and symbol renaming,
 then creates the official `community_private_template_tests` and
 `community_private_template_execution_tests` targets. Test bodies are not
 replacements for the game's external services.
+
+## Private AP52 instance ownership
+
+`recruitment_panel_owner.h` and `recruitment_panel_runtime.cpp` now bind the
+literal presenters to the Old controller lifecycle. Both parent and child
+use the original AP52 factory, with all17 native slots retained. Each captured
+instance gets a private68-byte vtable overriding only destruction, setup,
+tooltip, command, event, refresh and count entries. Stock vtables are unchanged.
+Seven process-lifetime heap bridges retain the native RET4/RET12/RET16 ABI;
+an unloadable configuration refuses activation. The constructor wrapper restores
+the caller's private dialog argument after the original factory returns.
+
+The binding requires an explicit private dialog/building-family association.
+It resolves the actor through original`00481ec0`, rather than interpreting
+controller context`+18` as a pointer. Generation, window/context, actor identity
+and family checks prevent old panels from acting on recycled objects. Child
+setup writes only Old`+20`; the modern`+30` location is not touched.
+
+Parent recruiting rows and hotkeys stay suppressed. A child admits the original
+three paid recruitment commands, native footer tracking, Back and the authored
+hiring controls. Its hidden repair/upgrades/utilities cannot acquire input.
+An active research reservation blocks recruitment commands/tooltips and the
+raw recruit presenters, preventing research timing from being interpreted as a
+produced-hero order. MaxGuildMembers notifications refresh the installed guarded
+slots, as in the creator's runtime. Back uses the child's own resolved actor;
+deleting a parent does not clear child ownership.
+
+The scalar destructor restores the full original table and retires ownership
+before calling native teardown, then releases only its private table. The
+content adapter must call`majesty_reset_recruitment_panels` before original
+world disposal while guest allocations are still valid. Registered code bridge
+storage remains allocated for the process lifetime.
+
+Activation requires every research-state, research-command, hiring and extra
+presentation service callback. No default callback disables a declared feature.
+Those source-backed services, the final namespace/resource collection and the
+production loader connection are still pending. This does not relax the
+existing MMCRv20 production gate or activate Bards or Phantom content.
+
+Official native ownership tests use the actual acquired MMCRv21 and the table
+extracted from the pinned Old executable. They verify private instance capture,
+actor recycling, parent/child independence, hidden input, research exclusion,
+capacity updates, teardown and disposal. A second target links the real runtime
+owner to all four actual generated presenter modules and executes factory/setup,
+command and tooltip stack discipline, event refresh/count dispatch, destruction
+and reset. Its external game services, research/hiring callbacks, allocator and
+callback bookkeeping are explicit test fixtures. They do not establish live
+orders, gold deductions, abilities, UI rendering, save compatibility or SEH.
+See`recruitment-owner-verification.json` for exact source and result bindings.
 
 ## Remaining qualification
 

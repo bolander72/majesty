@@ -8,6 +8,12 @@
 #include <cstdlib>
 #include <map>
 #include <vector>
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+#include "recruitment_panel_runtime.h"
+#include "runtime/memory.h"
+#include <fstream>
+#include <iterator>
+#endif
 
 namespace {
 constexpr std::uint32_t controller = HEAP_BASE + 0x1000, window = HEAP_BASE + 0x2000;
@@ -20,6 +26,12 @@ std::map<std::uint32_t, std::uint32_t> visible, numbers;
 std::vector<unsigned> indices;
 unsigned callbacks = 0, baseSetups = 0, baseEvents = 0, progressMessages = 0;
 bool complete = false, busy = false;
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+bool research = false;
+unsigned nativeOrders = 0, ownerExtras = 0, disabledRows = 0, nativeDestructions = 0;
+std::uint32_t nextHeap = HEAP_BASE + 0x10000;
+std::map<std::uint32_t, std::uint32_t> allocated;
+#endif
 const char *phase = "initialization";
 
 void check(bool value) {
@@ -101,11 +113,30 @@ void recomp_frame_changed(X86 *, std::uint32_t, std::uint32_t, std::uint32_t) {
 }
 void recomp_call(X86 *cpu, std::uint32_t target) {
     const auto sp = cpu->r[R_ESP];
-    if (!published.empty() && target >= published[0]->base && target < published[0]->end) {
-        const auto *module = published[0];
-        check((target - module->base) % 16 == 0);
-        module->base_ptrs[(target - module->base) / 16](cpu);
-    } else if (target == 0x00481ec0) {
+    for (const auto *module : published) {
+        if (target >= module->base && target < module->end) {
+            check((target - module->base) % 16 == 0);
+            module->base_ptrs[(target - module->base) / 16](cpu);
+            return;
+        }
+    }
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+    if (target == 0x0047f3e0) {
+        check(cpu->r[R_ECX] == controller && rd32(sp + 4) == 0x1389);
+        ++nativeOrders;
+        returned(cpu, 1, 901);
+        return;
+    }
+    if (target == 0x0047e650) {
+        check(cpu->r[R_ECX] == controller && rd32(sp + 4) == 1);
+        check(rd32(controller) == HEAP_BASE + 0x6000);
+        ++nativeDestructions;
+        wr32(controller, 0);
+        returned(cpu, 1, controller);
+        return;
+    }
+#endif
+    if (target == 0x00481ec0) {
         check(cpu->r[R_ECX] == controller);
         returned(cpu, 0, unit);
     } else if (target == 0x005a1c40) {
@@ -125,13 +156,23 @@ void recomp_call(X86 *cpu, std::uint32_t target) {
         check(cpu->r[R_ECX] == window && !rd32(sp + 12));
         numbers[rd32(sp + 4)] = rd32(sp + 8);
         returned(cpu, 3);
-    } else if (target == countCall) {
+    } else if (target == countCall || target == 0x0047f640) {
         const auto index = rd32(sp + 4);
         check(cpu->r[R_ECX] == controller && index < 3);
         indices.push_back(index);
         returned(cpu, 1, index + 2);
     } else if (target == messageCall) {
-        check(cpu->r[R_ECX] == window && rd32(sp + 4) == 0x1f56);
+        check(cpu->r[R_ECX] == window);
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+        if (rd32(sp + 8) == 0x0a) {
+            check(MajestyCommunity::RecruitmentIndex(rd32(sp + 4)) < 3 && rd32(sp + 12) == 1 &&
+                  !rd32(sp + 16));
+            ++disabledRows;
+            returned(cpu, 4);
+            return;
+        }
+#endif
+        check(rd32(sp + 4) == 0x1f56);
         ++progressMessages;
         returned(cpu, 4);
     } else if (target == 0x00465aa0) {
@@ -171,7 +212,114 @@ std::uint32_t guest_call(X86 *cpu, std::uint32_t target, const std::uint32_t *ar
     return cpu->r[R_EAX];
 }
 
-int main() {
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+std::uint32_t heap_alloc(std::uint32_t bytes, bool, std::uint32_t align) {
+    check(align == 16 && (bytes == 68 || bytes == 7 * 16));
+    const auto result = nextHeap;
+    nextHeap += (bytes + 15) & ~15U;
+    check(allocated.emplace(result, bytes).second);
+    return result;
+}
+bool heap_free(std::uint32_t address) {
+    return allocated.erase(address) == 1;
+}
+extern "C" void fn_004ca4f0(X86 *cpu) {
+    check(rd32(cpu->r[R_ESP] + 4) == 0x32355041 && rd32(cpu->r[R_ESP] + 8) == window &&
+          rd32(cpu->r[R_ESP] + 12) == 915);
+    const auto table = HEAP_BASE + 0x6000;
+    for (unsigned i = 0; i < MajestyCommunity::PrivateControllerDispatch::recruitmentVtable.size();
+         ++i)
+        wr32(table + i * 4, MajestyCommunity::PrivateControllerDispatch::recruitmentVtable[i]);
+    wr32(controller, table);
+    wr32(controller + 0x14, window);
+    wr32(controller + 0x18, 915);
+    wr32(controller + 0x20, 0);
+    returned(cpu, 3, controller);
+}
+void runOwnerFixture(const char *registryPath) {
+    using namespace MajestyCommunity;
+    phase = "real-owner-bridge-ABI";
+    std::ifstream stream(registryPath, std::ios::binary);
+    check(bool(stream));
+    const std::vector<unsigned char> bytes{(std::istreambuf_iterator<char>(stream)), {}};
+    MajestyStockControllers::Registry registry;
+    std::string error;
+    check(MajestyStockControllers::ParseRegistry(bytes.data(), bytes.size(), &registry, &error));
+    check(registry.privateRecruitments.size() == 1);
+    const auto &recipe = registry.privateRecruitments[0];
+    RecruitmentPanelServices services{
+        [](X86 *, std::uint32_t value) {
+            check(value == unit);
+            return research;
+        },
+        [](X86 *, const RecruitmentPanelSession *, std::uint32_t) { return false; },
+        [](X86 *, const RecruitmentPanelSession *, std::uint32_t) { return 0U; },
+        [](X86 *, const RecruitmentPanelSession *) { ++ownerExtras; }};
+    const RecruitmentPanelBinding binding{recipe.parentDialogId, 0x744241};
+    check(!majesty_configure_recruitment_panels(&registry, &binding, 1, nullptr));
+    check(majesty_configure_recruitment_panels(&registry, &binding, 1, &services));
+    check(!majesty_configure_recruitment_panels(&registry, &binding, 1, &services));
+    const auto descriptor = HEAP_BASE + 0x8000;
+    wr32(unit + 0x80, descriptor);
+    wr32(descriptor + 4, 0x31744241);
+    const auto open = [&](std::uint32_t dialog) {
+        auto cpu = entry({dialog, window, 915});
+        check(majesty_recruitment_dialog_factory(&cpu));
+        checkExit(cpu, 3);
+        check(cpu.r[R_EAX] == controller && rd32(stack + 4) == dialog);
+    };
+    const auto invoke = [&](unsigned slot, std::initializer_list<std::uint32_t> args = {}) {
+        auto cpu = entry();
+        const auto result = guest_call(&cpu, rd32(rd32(controller) + slot * 4), args.begin(),
+                                       static_cast<int>(args.size()));
+        check(cpu.r[R_ESP] == stack && cpu.fs_base == TEB_BASE && rd32(TEB_BASE) == 0xffffffff);
+        check(cpu.r[R_EBX] == 101 && cpu.r[R_ESI] == 103 && cpu.r[R_EDI] == 104);
+        return result;
+    };
+    open(recipe.parentDialogId);
+    check(published.size() == 2 && allocated.size() == 2);
+    invoke(1);
+    check(ownerExtras == 1 && rd32(controller + 0x20) == 0);
+    visible.clear();
+    invoke(13);
+    check(visible.size() == 8 && visible[0x1389] == 0 && !nativeOrders);
+    check(invoke(3, {0x1389}) == 0 && !nativeOrders);
+    indices.clear();
+    invoke(8, {11, 22, 0x00425041, 44});
+    check(indices == std::vector<unsigned>({1, 2, 0}));
+    check(invoke(0, {1}) == controller && allocated.size() == 1 && nativeDestructions == 1);
+    open(recipe.childDialogId);
+    check(allocated.size() == 2);
+    invoke(1);
+    check(rd32(controller + 0x20) == 1);
+    research = true;
+    invoke(13);
+    check(disabledRows == 3 && !nativeOrders);
+    check(invoke(3, {0x1389}) == 0 && !nativeOrders);
+    check(invoke(2, {0x1389, 77, 88}) == 0);
+    research = false;
+    complete = false;
+    invoke(13); // actual three generated construction presenters through owner
+    check(visible[0x1f48] == 0 && visible[0x1389] == 0 && visible[0x1388] == 0);
+    check(invoke(3, {0x1389}) == 901 && nativeOrders == 1);
+    indices.clear();
+    invoke(16);
+    check(indices.empty());
+    check(invoke(0, {1}) == controller && allocated.size() == 1 && nativeDestructions == 2);
+    open(recipe.parentDialogId);
+    auto resetCpu = entry();
+    majesty_reset_recruitment_panels(&resetCpu);
+    check(rd32(controller) == HEAP_BASE + 0x6000 && allocated.size() == 1);
+    // Only the registered process-lifetime owner bridge allocation remains.
+    check(allocated.begin()->second == 7 * 16);
+}
+#endif
+
+int main(int argc, char **argv) {
+#if !defined(RECOMP_TEST_RECRUITMENT_OWNER)
+    (void)argc;
+    (void)argv;
+#endif
     check(majesty_private_templates_ready() && published.empty());
     g_mem = static_cast<std::uint8_t *>(std::calloc(GUEST_SIZE, 1));
     check(g_mem && majesty_install_private_template_bridges(HEAP_BASE));
@@ -234,6 +382,10 @@ int main() {
         checkExit(cpu, 4);
     }
     check(baseEvents == 5 && callbacks >= 14);
+#if defined(RECOMP_TEST_RECRUITMENT_OWNER)
+    check(argc == 2);
+    runOwnerFixture(argv[1]);
+#endif
     std::free(g_mem);
     g_mem = nullptr;
     return 0;

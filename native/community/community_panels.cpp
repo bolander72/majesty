@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#if defined(RECOMP_COMMUNITY_RECRUITMENT_OWNER)
+#include "recruitment_panel_runtime.h"
+#endif
 
 extern "C" void fn_004ca4f0(X86 *);
 extern "C" void fn_00465f00(X86 *);
@@ -113,6 +116,10 @@ void present_meter(X86 *cpu, std::uint32_t controller, std::uint64_t generation)
 } // namespace
 
 extern "C" void majesty_community_dialog_factory(X86 *cpu) {
+#if defined(RECOMP_COMMUNITY_RECRUITMENT_OWNER)
+    if (majesty_recruitment_dialog_factory(cpu))
+        return;
+#endif
     if (!enabled()) {
         fn_004ca4f0(cpu);
         return;

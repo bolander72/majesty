@@ -10,6 +10,40 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def add_owner_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_library(community_recruitment_runtime_compile OBJECT
+  ${RECOMP_GAME_DIR}/source/native/community/recruitment_panel_runtime.cpp
+  ${RECOMP_GAME_DIR}/source/native/community/community_panels.cpp)
+target_include_directories(community_recruitment_runtime_compile PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_recruitment_runtime_compile PRIVATE cxx_std_17)
+target_compile_definitions(community_recruitment_runtime_compile PRIVATE
+  RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME=1 RECOMP_COMMUNITY_RECRUITMENT_OWNER=1
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_recruitment_runtime_compile PRIVATE ${POP_WARN_STRICT})
+add_executable(community_recruitment_owner_tests
+  ${RECOMP_GAME_DIR}/source/native/community/recruitment_panel_owner_tests.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
+target_include_directories(community_recruitment_owner_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_recruitment_owner_tests PRIVATE cxx_std_17)
+target_compile_definitions(community_recruitment_owner_tests PRIVATE
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_recruitment_owner_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_recruitment_owner_tests)
+add_dependencies(community_recruitment_owner_tests community_recruitment_runtime_compile)
+add_test(NAME community_recruitment_owner_tests COMMAND community_recruitment_owner_tests
+  ${RECOMP_GAME_DIR}/controllers.bin ${RECOMP_GAME_DIR}/ap52-table.bin)
+set_tests_properties(community_recruitment_owner_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
 def add_execution_fixture(output, generated):
     """Execute real translated bodies with explicit refusing service fixtures."""
     returns = set()
@@ -41,6 +75,32 @@ set_tests_properties(community_private_template_execution_tests PROPERTIES LABEL
 ''')
         for name in generated:
             cmake.write(f'target_sources(community_private_template_execution_tests PRIVATE $<TARGET_OBJECTS:community_template_{name}>)\n')
+
+
+def add_runtime_execution_fixture(output, generated):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_recruitment_runtime_execution_tests
+  ${RECOMP_GAME_DIR}/source/native/community/private_template_bank.cpp
+  ${RECOMP_GAME_DIR}/source/native/community/recruitment_panel_runtime.cpp
+  ${RECOMP_GAME_DIR}/source/native/community/private_template_execution_tests.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
+target_include_directories(community_recruitment_runtime_execution_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community ${RECOMP_GAME_DIR}/tests
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_recruitment_runtime_execution_tests PRIVATE cxx_std_17)
+target_compile_definitions(community_recruitment_runtime_execution_tests PRIVATE
+  RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME=1 RECOMP_TEST_RECRUITMENT_OWNER=1
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_recruitment_runtime_execution_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_recruitment_runtime_execution_tests)
+add_test(NAME community_recruitment_runtime_execution_tests
+  COMMAND community_recruitment_runtime_execution_tests ${RECOMP_GAME_DIR}/controllers.bin)
+set_tests_properties(community_recruitment_runtime_execution_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+        for name in generated:
+            cmake.write(f'target_sources(community_recruitment_runtime_execution_tests PRIVATE $<TARGET_OBJECTS:community_template_{name}>)\n')
 
 
 def prepare(args):
@@ -121,6 +181,8 @@ set_tests_properties(community_private_template_tests PROPERTIES LABELS nogame T
     with (args.out / 'tests/CMakeLists.txt').open('a') as target:
         target.write('\n'.join(cmake))
     add_execution_fixture(args.out, generated)
+    add_runtime_execution_fixture(args.out, generated)
+    add_owner_fixture(args.out)
     receipt = dict(format='majesty-private-presenter-native-fixture-v1',
         templateStageSha256=hashlib.sha256(stage_raw).hexdigest(), modules=bindings,
         generatedSourcesEdited=False, templateConstructorsMustUsePrivateCollector=True,
