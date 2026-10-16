@@ -11,7 +11,7 @@ majesty_configure_guild_gameplay(const MajestyStockControllers::Registry *,
 // UI caches only; call before original world disposal. No saved gameplay lives here.
 extern "C" void majesty_reset_guild_gameplay();
 
-// Guest-address entries for the process-lived core plugin: factory RET12,
+// Registered import gateways for the process-lived core plugin: factory RET16,
 // original research execution RET8, completion cdecl, and pre-disposal reset.
 // An unloadable module never exposes these entries.
 extern "C" std::uint32_t majesty_guild_process_bridge(unsigned);

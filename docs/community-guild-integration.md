@@ -713,14 +713,104 @@ private staging and the unchanged deployment descriptors. New collection
 activation and publication remain part of the pending implementation and
 gameplay qualification; they have not been performed by these preparers.
 
+## Final private native collection and names
+
+`prepare-community-native-candidate.py` assembles a separate owned game tree
+from the 36 effective Alchemist/demo files, final native tables from stage1999,
+authentic composed media from stage1924 and original SDK bytecode from trial1920. It validates
+all actual SDK source inputs against legacy source1930 rather than accepting
+only a compiler receipt. It preserves the original quests and continuation
+exports. Private file changes never write through the original game links.
+
+The loader merges native text/widgets into the original text archives, retaining
+stock names and demo resources. It mounts the final common and matching base or
+Northern library before the prior Alchemist compatibility library. The old
+seven Alchemist media overrides are replaced by their composed equivalents;
+the adapted native sound catalog is retained. Edition aliases share targets,
+with missing aliases falling back to the original VM. Actual edition-specific
+execution and old Alchemist save compatibility still require qualification.
+
+The process core now binds the final collection's MJC routes and MNB1 name
+mapping, checks the original research registry inputs, and registers NM18,
+NMBD, NMBS, NMBT and private NMPH through the original name-generator lifecycle.
+Native engine2006 accepted this collection in fresh owned profiles; its original
+world can save and reload. All five registrations were observed in ordinary
+startup, with stock NM11 preserved. The source-bound instruments also register
+through the original equipment constructor; this does not yet qualify shopping
+or combat. CGPH is adapted to the original AP10 factory while retaining the
+private window and actual Haunt identity; its ordinary building interaction
+still needs a live check.
+
+The official guild-services native test passed, including truncated/corrupt name
+mapping refusal and preservation of output on invalid input. The official
+one-job native link passed. Repeated saved-world entry exposed one incorrect
+adapter guard: original004f6710 accepts a null name-resource provider and
+resolves it through0054c3c0, but registration refused that legitimate default.
+The adapter now passes the value unchanged to the original constructor. The
+official native name-registration test covers both explicit and default
+providers, plus the existing collision/allocation/construction refusal cases.
+These native trials remain explicitly limited by
+the older bootstrap's disabled Alchemist panel/research bridges, described
+above. No new guild collection has been published or enabled on the website.
+
+Native trial2042 performed ordinary paid Bards construction after removing one
+stock Warriors Guild through its native demolition confirmation in a disposable
+profile. The first Hall cost800; the next listed price became1600. Its authentic
+teal-roofed artwork rendered, and the original Day1 GMP contains one live ABt1
+with GPL title `Bards_Hall`,300/300 HP and the completed flag. The generated
+365544-byte save is SHA256
+`7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176`.
+No cheats, actor fixtures or save edits produced that Hall. This proves
+construction and serialization. Trials2061/2077 additionally restored this exact
+world and opened the authentic parent card; recruitment remained unqualified.
+
+Selecting the Hall in trial2040 exposed the next boundary: the mod API rejects
+private RecompModule addresses, accepting original symbols and registered
+import trampolines. Source now forwards the four process-lived services through
+registered game-owned import gateways to their private module bodies. Each
+receives the actual guest CPU and uses a separate scratch stack; the mod API's
+public-symbol admission remains unchanged. Factory/research are stdcall; the
+completion gateway retains cdecl cleanup. Live controller qualification is
+pending. Live entry then exposed two assumptions that the earlier refusing
+fixture did not establish: the factory takes four stack arguments and returns
+with RET16, and its third argument is the actual unit pointer. Original00481b70
+stores that unit's ID at controller+1c and a separate global context token at+18.
+Ownership now checks the real unit/ID/family and caches the context token
+separately. The execution fixture preserves a nonzero fourth argument and
+checks all16 cleanup bytes. The private module gateway keeps the kit's original
+symbol admission intact. Trial2077 then proved a callback-boundary error:
+factory entry executed, but the generated original RET reached the enclosing
+`guest_call` sentinel and jumped past ownership capture. The adapter now calls
+the original through a separate process-lived entry with its own nested callback,
+attaches the owner, then returns with the original four-argument convention.
+The execution fixture now uses real nested setjmp/longjmp semantics, rather
+than a callback-return counter that let host statements after RET run.
+Research execution/completion use the same nested-original convention so native
+RET cannot skip reservation cancellation, visual refresh or `ResearchFlight`
+restoration. Ordinary research qualification remains pending.
+See `native-collection-verification.json` for separate scopes.
+
+Trial2088 verifies the corrected ordinary recruitment path. The native parent
+opens CGBC, charges500 gold per recruitment, and returns to the parent with
+one Blade Dancer, one Spellsinger and one Troubadour. The ordinary Day2 GMP is
+391089 bytes, SHA256
+`a87fc6396a42ad0a120bea6bdc97159f26392577e3dc3e6c7ecb9c6ae2d192e3`.
+A read-only actor audit finds completed Hall561 and living heroes585/603/627,
+with original GPL titles and native aliases AVt1/AVu1/AVv1. Their HP are31,13,14;
+all three are outside buildings and belong to player0. No cheats or actor/save
+fixtures were used. Trial2096 restores that exact save in a fresh profile and opens the native
+Members list: Riley the Gallant (level4,37/37HP), Morgan Chimeweaver
+(level2,13/13HP) and Linden Wanderwell (level1,14/14HP) all appear with their
+original portraits. Direct character cards and full mechanics remain separate
+checks; the browser collection is still inactive.
+
 ## Remaining qualification
 
 Activate the final compiled gameplay, required features and private tables in
-the pinned DirectDraw runtime. Register the source-bound name generators,
-complete load groups and edition-specific MJC routes, preserve prior Alchemist
-continuations, and audit CGPH/Old AP10 and AP78 before activation. In particular,
+the pinned DirectDraw runtime. Verify the final edition-specific MJC bodies and preserved Alchemist
+continuations, and audit CGPH/Old AP10 and AP78 in ordinary gameplay. In particular,
 Bards needs live verification of its three-choice AP52 recruitment,
-equipment, hiring/activity lifecycle, Chronicles research, XP observers and
+equipment, hiring/activity lifecycle, Chronicles research and
 projectile behavior. Phantoms needs private upgrade/recruitment controls, undead
 interactions, spell effects and native descriptor conversion. Do not silently
 disable unsupported features or relabel stock actors.
@@ -728,7 +818,11 @@ disable unsupported features or relabel stock actors.
 Use the final resource-context source and compiled inputs described above,
 rather than preliminary1851/1861 or1860 bytecode. The current compiled source
 also calls ten native-only helpers for timing, movement and kingdom research;
-all ten now have Old implementations. Eight have positive original-VM helper
+all ten now have Old implementations. The acquired source already applies
+Chronicles gold/XP bonuses in `give_gold` and each edition's `give_exp` GPL
+wrappers; preserve and verify those bodies rather than adding duplicate native
+award hooks. Research visual restoration at completion, ownership changes and
+world reload still requires its original native event integration. Eight have positive original-VM helper
 checks; the two research queries have original-VM refusal controls and positive
 unit fixtures. Actual guild/research/save and browser verification remain required.
 

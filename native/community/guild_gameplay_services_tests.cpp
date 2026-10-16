@@ -1,4 +1,5 @@
 #include "guild_gameplay_services.h"
+#include "community_names.h"
 #include <cassert>
 #include <map>
 #include <stdexcept>
@@ -74,6 +75,29 @@ struct Ops {
 };
 int main() {
     using namespace MajestyCommunity;
+    MajestyRuntimeFeatures::Registry sourceNames;
+    for (const auto id : {0x38314d4eU, 0x44424d4eU, 0x53424d4eU, 0x54424d4eU})
+        sourceNames.nameGenerators.push_back({id, {1, 2, 3, 4}});
+    const unsigned char alias[] = "MNB1\1\0\0\0\1\0\0\0NM11NMPHHNP0HNP1HN43HN44";
+    std::vector<MajestyRuntimeFeatures::NameGeneratorRecord> names;
+    assert(CommunityNameRecords(sourceNames, alias, sizeof(alias) - 1, names));
+    assert(names.size() == 5 && names.back().generatorId == 0x48504d4eU &&
+           names.back().namePartIds[0] == 0x30504e48U &&
+           names.back().namePartIds[2] == 0x33344e48U);
+    for (unsigned n = 0; n < 36; ++n) {
+        assert(!CommunityNameRecords(sourceNames, alias, n, names));
+        assert(names.size() == 5); // Invalid input never leaves partial registration records.
+    }
+    auto invalid = std::vector<unsigned char>(alias, alias + 36);
+    invalid[16] = 'X';
+    assert(!CommunityNameRecords(sourceNames, invalid.data(), invalid.size(), names));
+    invalid.assign(alias, alias + 36);
+    invalid[32] = 'X';
+    assert(!CommunityNameRecords(sourceNames, invalid.data(), invalid.size(), names));
+    sourceNames.nameGenerators.pop_back();
+    assert(!CommunityNameRecords(sourceNames, alias, 36, names));
+    sourceNames.nameGenerators.push_back(sourceNames.nameGenerators.front());
+    assert(!CommunityNameRecords(sourceNames, alias, 36, names));
     MajestyStockControllers::Registry recipes;
     MajestyStockControllers::PrivateRecruitmentRecord recipe{};
     recipe.parentDialogId = 100;

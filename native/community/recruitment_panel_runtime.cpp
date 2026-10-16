@@ -15,8 +15,17 @@ const RecruitmentPanelServices *services = nullptr;
 RecruitmentPanelOwner *owner = nullptr;
 std::map<std::uint32_t, std::uint32_t> families;
 std::array<std::uint32_t, recruitmentPanelEntryCount> addresses{};
-std::array<std::uint8_t, recruitmentPanelEntryCount> hooked{};
+std::array<std::uint8_t, recruitmentPanelEntryCount + 1> hooked{};
 bool installed = false;
+bool traceUi = false;
+// Calling the generated factory directly would RET to the caller's callback
+// sentinel and longjmp past ownership capture. Give it a nested callback frame
+// through a separate process-lived entry; the original hook is not re-entered.
+constexpr unsigned bridgeCount = recruitmentPanelEntryCount + 1;
+std::array<std::uint32_t, bridgeCount> moduleAddresses{};
+void originalFactory(X86 *cpu) {
+    fn_004ca4f0(cpu);
+}
 
 [[noreturn]] void fail(const char *reason) {
     std::fprintf(stderr, "[community-recruitment] refused: %s\n", reason);
@@ -126,6 +135,21 @@ template <RecruitmentPanelEntry Entry> void invoke(X86 *cpu) {
     const auto self = cpu->r[R_ECX];
     const auto sp = cpu->r[R_ESP];
     require(owner->find(self).recipe != nullptr, "private panel lost ownership");
+    const auto session = owner->find(self);
+    static unsigned reports = 0;
+    if (traceUi && reports < 32 &&
+        (Entry == RecruitmentPanelEntry::Setup || Entry == RecruitmentPanelEntry::Control ||
+         !owner->alive(ops, session))) {
+        ++reports;
+        std::fprintf(
+            stderr,
+            "[community-panel-entry] entry=%u controller=%08x alive=%u argument=%u table=%08x/%08x "
+            "window=%08x/%08x token=%08x/%08x unit=%08x/%08x id=%u/%u\n",
+            static_cast<unsigned>(Entry), self, static_cast<unsigned>(owner->alive(ops, session)),
+            Entry == RecruitmentPanelEntry::Control ? read(sp + 4) : 0U, read(self), session.table,
+            read(self + 0x14), session.window, read(self + 0x18), session.context, ops.unit(self),
+            session.unit, read(session.unit + 0x60), session.identity);
+    }
     if constexpr (Entry == RecruitmentPanelEntry::Destroy) {
         returned(cpu, 1, owner->destroy(ops, self, read(sp + 4)));
     } else if constexpr (Entry == RecruitmentPanelEntry::Setup) {
@@ -146,22 +170,22 @@ template <RecruitmentPanelEntry Entry> void invoke(X86 *cpu) {
         returned(cpu, 0);
     }
 }
-void (*const bodies[recruitmentPanelEntryCount])(X86 *) = {
+void (*const bodies[bridgeCount])(X86 *) = {
     invoke<RecruitmentPanelEntry::Destroy>, invoke<RecruitmentPanelEntry::Setup>,
     invoke<RecruitmentPanelEntry::Tooltip>, invoke<RecruitmentPanelEntry::Control>,
     invoke<RecruitmentPanelEntry::Event>,   invoke<RecruitmentPanelEntry::Refresh>,
-    invoke<RecruitmentPanelEntry::Counts>};
+    invoke<RecruitmentPanelEntry::Counts>,  originalFactory};
 void hookedBody(X86 *cpu, std::uint32_t index) {
-    require(index < recruitmentPanelEntryCount, "private bridge index");
+    require(index < bridgeCount, "private bridge index");
     bodies[index](cpu);
 }
-RecompHookFn hooks[recruitmentPanelEntryCount] = {hookedBody, hookedBody, hookedBody, hookedBody,
-                                                  hookedBody, hookedBody, hookedBody};
+RecompHookFn hooks[bridgeCount] = {hookedBody, hookedBody, hookedBody, hookedBody,
+                                   hookedBody, hookedBody, hookedBody, hookedBody};
 [[maybe_unused]] RecompModule bridges{"majesty_recruitment_panel_owners",
                                       0,
                                       0,
-                                      addresses.data(),
-                                      recruitmentPanelEntryCount,
+                                      moduleAddresses.data(),
+                                      bridgeCount,
                                       bodies,
                                       hooks,
                                       hooked.data(),
@@ -186,13 +210,15 @@ bool ensureBridges() {
             return false;
         }
     }
-    const auto base = heap_alloc(recruitmentPanelEntryCount * 16, true);
+    const auto base = heap_alloc(bridgeCount * 16, true);
     if (!base)
         return false;
+    for (unsigned i = 0; i < bridgeCount; ++i)
+        moduleAddresses[i] = base + i * 16;
     for (unsigned i = 0; i < recruitmentPanelEntryCount; ++i)
-        addresses[i] = base + i * 16;
+        addresses[i] = moduleAddresses[i];
     bridges.base = base;
-    bridges.end = base + recruitmentPanelEntryCount * 16;
+    bridges.end = base + bridgeCount * 16;
     recomp_module_register(&bridges);
     installed = true;
     return true;
@@ -224,6 +250,9 @@ majesty_configure_recruitment_panels(const MajestyStockControllers::Registry *re
             !checked.emplace(binding.parentDialogId, binding.buildingFamily).second)
             return false;
     }
+    traceUi = std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI") != nullptr;
+    if (traceUi)
+        std::fprintf(stderr, "[community-panel-trace] configured=1 records=%u\n", count);
     families = std::move(checked);
     recipes = registry;
     services = callbacks;
@@ -242,17 +271,37 @@ extern "C" bool majesty_recruitment_dialog_factory(X86 *cpu) {
         return false;
     require(ensureBridges(), "process-lifetime presenter installation");
     const auto window = read(args + 4), context = read(args + 8);
-    wr32(args, selected);
-    fn_004ca4f0(cpu);
-    wr32(args, requested);
+    const std::uint32_t factoryArgs[] = {selected, window, context, read(args + 12)};
+    cpu->r[R_EAX] = guest_call(cpu, moduleAddresses[recruitmentPanelEntryCount], factoryArgs, 4);
     const auto *recipe = recipes->FindPrivateRecruitmentByParent(requested);
     if (!recipe)
         recipe = recipes->FindPrivateRecruitmentByChild(requested);
     require(recipe != nullptr, "private factory recipe");
     Ops ops{cpu};
-    require(owner->attach(ops, cpu->r[R_EAX], requested, window, context,
-                          families.at(recipe->parentDialogId), addresses),
-            "native AP52 capture and actor association");
+    if (!owner->attach(ops, cpu->r[R_EAX], requested, window, context,
+                       families.at(recipe->parentDialogId), addresses)) {
+        const auto controller = cpu->r[R_EAX];
+        std::fprintf(stderr,
+                     "[community-recruitment] capture controller=%08x window=%08x "
+                     "unit-argument=%08x family=%06x\n",
+                     controller, window, context, families.at(recipe->parentDialogId));
+        if (ops.valid(controller, 36))
+            std::fprintf(stderr,
+                         "[community-recruitment] native vtable=%08x window=%08x world-token=%08x "
+                         "unit-id=%u\n",
+                         ops.read(controller), ops.read(controller + 0x14),
+                         ops.read(controller + 0x18), ops.read(controller + 0x1c));
+        fail("native AP52 capture and actor association");
+    }
+    if (traceUi) {
+        const auto session = owner->find(cpu->r[R_EAX]);
+        std::fprintf(stderr,
+                     "[community-panel-attached] controller=%08x dialog=%08x table=%08x "
+                     "original=%08x unit=%08x id=%u token=%08x\n",
+                     session.controller, session.dialog, session.table, session.original,
+                     session.unit, session.identity, session.context);
+    }
+    returned(cpu, 4, cpu->r[R_EAX]);
     return true;
 }
 

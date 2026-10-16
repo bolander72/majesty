@@ -5,8 +5,10 @@
 #include "template_return_addresses.h"
 #include <algorithm>
 #include <cstdio>
+#include <csetjmp>
 #include <cstdlib>
 #include <map>
+#include <memory>
 #include <vector>
 #if defined(RECOMP_TEST_RECRUITMENT_OWNER)
 #include "recruitment_panel_runtime.h"
@@ -33,6 +35,7 @@ std::uint32_t nextHeap = HEAP_BASE + 0x10000;
 std::map<std::uint32_t, std::uint32_t> allocated;
 #endif
 const char *phase = "initialization";
+std::vector<std::jmp_buf *> callbackFrames;
 
 void check(bool value) {
     if (!value)
@@ -104,6 +107,8 @@ std::int32_t recomp_module_lookup(std::uint32_t) {
 void recomp_callback_return(X86 *cpu) {
     check(cpu->eip == GUEST_RETURN_SENTINEL);
     ++callbacks;
+    if (!callbackFrames.empty())
+        std::longjmp(*callbackFrames.back(), 1);
 }
 void recomp_watch_hit(std::uint32_t, std::uint32_t, std::uint64_t) {
     std::abort();
@@ -205,7 +210,11 @@ std::uint32_t guest_call(X86 *cpu, std::uint32_t target, const std::uint32_t *ar
     }
     cpu->r[R_ESP] -= 4;
     wr32(cpu->r[R_ESP], GUEST_RETURN_SENTINEL);
-    recomp_call(cpu, target);
+    std::jmp_buf frame;
+    callbackFrames.push_back(&frame);
+    if (!setjmp(frame))
+        recomp_call(cpu, target);
+    callbackFrames.pop_back();
     check(cpu->r[R_ESP] == savedEsp && cpu->eip == GUEST_RETURN_SENTINEL);
     cpu->r[R_ESP] = savedEsp;
     cpu->eip = savedEip;
@@ -214,7 +223,7 @@ std::uint32_t guest_call(X86 *cpu, std::uint32_t target, const std::uint32_t *ar
 
 #if defined(RECOMP_TEST_RECRUITMENT_OWNER)
 std::uint32_t heap_alloc(std::uint32_t bytes, bool, std::uint32_t align) {
-    check(align == 16 && (bytes == 68 || bytes == 7 * 16));
+    check(align == 16 && (bytes == 68 || bytes == 8 * 16));
     const auto result = nextHeap;
     nextHeap += (bytes + 15) & ~15U;
     check(allocated.emplace(result, bytes).second);
@@ -225,16 +234,17 @@ bool heap_free(std::uint32_t address) {
 }
 extern "C" void fn_004ca4f0(X86 *cpu) {
     check(rd32(cpu->r[R_ESP] + 4) == 0x32355041 && rd32(cpu->r[R_ESP] + 8) == window &&
-          rd32(cpu->r[R_ESP] + 12) == 915);
+          rd32(cpu->r[R_ESP] + 12) == unit && rd32(cpu->r[R_ESP] + 16) == 0x5a55);
     const auto table = HEAP_BASE + 0x6000;
     for (unsigned i = 0; i < MajestyCommunity::PrivateControllerDispatch::recruitmentVtable.size();
          ++i)
         wr32(table + i * 4, MajestyCommunity::PrivateControllerDispatch::recruitmentVtable[i]);
     wr32(controller, table);
     wr32(controller + 0x14, window);
-    wr32(controller + 0x18, 915);
+    wr32(controller + 0x18, 0x714008);
+    wr32(controller + 0x1c, rd32(unit + 0x60));
     wr32(controller + 0x20, 0);
-    returned(cpu, 3, controller);
+    returned(cpu, 4, controller);
 }
 void runOwnerFixture(const char *registryPath) {
     using namespace MajestyCommunity;
@@ -261,12 +271,21 @@ void runOwnerFixture(const char *registryPath) {
     check(!majesty_configure_recruitment_panels(&registry, &binding, 1, &services));
     const auto descriptor = HEAP_BASE + 0x8000;
     wr32(unit + 0x80, descriptor);
+    wr32(unit + 0x6c, 0x31744241);
     wr32(descriptor + 4, 0x31744241);
     const auto open = [&](std::uint32_t dialog) {
-        auto cpu = entry({dialog, window, 915});
-        check(majesty_recruitment_dialog_factory(&cpu));
-        checkExit(cpu, 3);
-        check(cpu.r[R_EAX] == controller && rd32(stack + 4) == dialog);
+        // Keep the CPU outside setjmp's automatic storage: its registers are
+        // mutated by the original factory before longjmp returns here.
+        auto cpu = std::make_unique<X86>(entry({dialog, window, unit, 0x5a55}));
+        std::jmp_buf frame;
+        callbackFrames.push_back(&frame);
+        if (!setjmp(frame)) {
+            majesty_recruitment_dialog_factory(cpu.get());
+            check(false); // Native RET must unwind to this callback boundary.
+        }
+        callbackFrames.pop_back();
+        checkExit(*cpu, 4);
+        check(cpu->r[R_EAX] == controller && rd32(stack + 4) == dialog);
     };
     const auto invoke = [&](unsigned slot, std::initializer_list<std::uint32_t> args = {}) {
         auto cpu = entry();
@@ -311,7 +330,7 @@ void runOwnerFixture(const char *registryPath) {
     majesty_reset_recruitment_panels(&resetCpu);
     check(rd32(controller) == HEAP_BASE + 0x6000 && allocated.size() == 1);
     // Only the registered process-lifetime owner bridge allocation remains.
-    check(allocated.begin()->second == 7 * 16);
+    check(allocated.begin()->second == 8 * 16);
 }
 #endif
 

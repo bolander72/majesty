@@ -45,6 +45,30 @@ def prepare(args):
     if (research_stage['sourceStage'] != source_digest or
             digest_file(args.controllers) != source['resourceFiles']['controllers.bin']):
         raise ValueError('Source and research/controller bindings differ')
+    if (digest_file(args.research / 'research-features.bin') != research_stage['featureRegistry'] or
+            digest_file(args.research / 'research-bindings.bin') != research_stage['bindings'] or
+            research_stage['featureRegistry'] != source['resourceFiles']['features.bin']):
+        raise ValueError('Original research helper files changed')
+    tables = json.loads((args.tables / 'native-tables-stage.json').read_text())
+    names = args.tables / 'community-name-bindings.bin'
+    if (tables['sourceStage'] != source_digest or
+            digest_file(names) != tables['files']['community-name-bindings.bin']):
+        raise ValueError('Native name bindings differ from source-bound collection')
+    collection = json.loads((args.collection / 'candidate.json').read_text())
+    if (collection['sourceStage'] != source_digest or collection['tablesStage'] != digest_file(
+            args.tables / 'native-tables-stage.json')):
+        raise ValueError('Process core and native collection differ')
+    if not isinstance(collection.get('files'), dict) or not collection['files']:
+        raise ValueError('Require a bound final private collection')
+    for name, expected in collection['files'].items():
+        path = Path(name)
+        if path.is_absolute() or '..' in path.parts or '\\' in name:
+            raise ValueError('Unsafe private collection path')
+        if digest_file(args.collection / 'game' / path) != expected:
+            raise ValueError('Private collection game file changed: ' + name)
+    routes = args.collection / 'runtime/shared-overrides.tsv'
+    if digest_file(routes) != collection['runtimeFiles']['shared-overrides.tsv']:
+        raise ValueError('Final edition route bindings changed')
     config_raw = (args.game / 'game.toml').read_bytes()
     config = tomllib.loads(config_raw.decode())
     if config['game']['sha256'] != PIN or digest_file(args.game / config['game']['developer_exe'])['sha256'] != PIN:
@@ -136,7 +160,9 @@ def prepare(args):
     shutil.copyfile(args.seed_mod / 'mod.toml', core / 'mod.toml')
     for name in ['features.bin','controllers.bin','shared-overrides.tsv']:
         shutil.copyfile(args.seed_mod / name, core / name)
+    shutil.copyfile(routes, core / 'shared-overrides.tsv')
     shutil.copyfile(args.controllers, core / 'community-controllers.bin')
+    shutil.copyfile(names, core / 'community-name-bindings.bin')
     for name in ['research-features.bin','research-bindings.bin']:
         shutil.copyfile(args.research / name, core / name)
     # Same bound registry supplies the declared timing and equipment subsystems.
@@ -160,7 +186,16 @@ def prepare(args):
     for name in dict.fromkeys(weak):
         if not re.fullmatch(r'[A-Za-z0-9]+', name): raise ValueError('Invalid original weak framework')
         cmake.append('target_link_options(pop_smoke PRIVATE "LINKER:-weak_framework,' + name + '")')
-    cmake += ['target_link_libraries(pop_smoke PRIVATE m pthread)']
+    cmake += ['target_link_libraries(pop_smoke PRIVATE m pthread)',
+        'add_executable(community_name_registration_tests ' + quoted(native / 'name_registration_tests.cpp') +
+        ' ' + quoted(vendor / 'RuntimeFeatureRegistry.cpp') + ')',
+        'target_include_directories(community_name_registration_tests PRIVATE ' + quoted(native) + ' ' + quoted(vendor) + ')',
+        'target_compile_features(community_name_registration_tests PRIVATE cxx_std_17)',
+        'target_compile_options(community_name_registration_tests PRIVATE ${POP_WARN_STRICT})',
+        'pop_optimize(community_name_registration_tests 1)',
+        'pop_test_binary(community_name_registration_tests)',
+        'add_test(NAME community_name_registration_tests COMMAND community_name_registration_tests ' + quoted(core / 'features.bin') + ')',
+        'set_tests_properties(community_name_registration_tests PROPERTIES LABELS nogame TIMEOUT 15)']
     (tests / 'CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
     receipt = dict(format='majesty-community-process-core-engine-stage-v1', originalProducer=digest_file(args.producer),
         originalHost=digest_file(exe), originalGuestSha256=PIN, originalObjects=source_inputs,
@@ -174,7 +209,7 @@ def prepare(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ['game','build','producer','fixture','seed-mod','controllers','research','source','out']:
+    for name in ['game','build','producer','fixture','seed-mod','controllers','research','source','tables','collection','out']:
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--generated', action='append', required=True)
     args = parser.parse_args()

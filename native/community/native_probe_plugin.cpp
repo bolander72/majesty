@@ -5,6 +5,7 @@
 #include "controller_lifecycle.h"
 #include "controller_dispatch.h"
 #include "name_registration.h"
+#include "community_names.h"
 #include "pop_mod_api.h"
 #include "resource_meter.h"
 #include "research_descriptors.h"
@@ -103,6 +104,7 @@ MajestyCommunity::ResearchInFlight researchFlight;
 MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
 std::map<std::uint32_t, MajestyCommunity::ResearchQuery> researchQueryFunctions;
 bool communityProcess = false;
+std::vector<MajestyRuntimeFeatures::NameGeneratorRecord> communityNames;
 std::uint32_t communityResearchEntry = 0;
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
 MajestyStockControllers::Registry communityRecipes;
@@ -1590,13 +1592,29 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
     if (communityProcess && target == 0x004ca4f0U) {
         const auto args = cpu->esp + 4, requested = read(args);
+        static unsigned factoryReports = 0;
+        if (std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI") && factoryReports++ < 24)
+            std::fprintf(stderr,
+                         "[community-factory] requested=%08x window=%08x unit=%08x flags=%08x\n",
+                         requested, read(args + 4), read(args + 8), read(args + 12));
+        if (requested == 0x48504743U) { // source-bound CGPH, modern AP07 -> Old AP10
+            write(args, 0x30315041U);
+            next(inv, cpu);
+            write(args, requested);
+            require(cpu->eax != 0, "original Phantom guild controller");
+            const auto unit = call(0x00481ec0U, cpu->eax);
+            require(unit && (read(unit + 0x6c) & 0xffffffU) == 0x00754241U,
+                    "private Phantom window retains its actual Haunt");
+            return;
+        }
         if (communityRecipes.FindPrivateRecruitmentByParent(requested) ||
             communityRecipes.FindPrivateRecruitmentByChild(requested)) {
             const auto entry = majesty_guild_process_bridge(0);
             require(entry != 0, "process-lived private factory entry");
-            const auto result = call(entry, self, {requested, read(args + 4), read(args + 8)});
-            require(host->hook_return(host, cpu, result, 12) == POP_OK,
-                    "original private factory RET12");
+            const auto result =
+                call(entry, self, {requested, read(args + 4), read(args + 8), read(args + 12)});
+            require(host->hook_return(host, cpu, result, 16) == POP_OK,
+                    "original private factory RET16");
             return;
         }
     }
@@ -1614,7 +1632,7 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         }
     }
 #endif
-    if (controlledEquipment && target == 0x004c0b60U) {
+    if ((controlledEquipment || communityProcess) && target == 0x004c0b60U) {
         next(inv, cpu);
         const auto result = cpu->eax;
         EquipmentOps ops;
@@ -2309,11 +2327,19 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         NameOps ops;
         const auto context = call(0x004ba7e0U, 0);
-        for (const auto &r : features.nameGenerators)
-            require(MajestyCommunity::RegisterNames(ops, self, read(context + 0x160), r) ==
-                        MajestyCommunity::Registration::Installed,
-                    "native NM18 registration");
-        host->log(host, "Alchemist NM18 installed through original generator lifecycle.");
+        for (const auto &r : communityProcess ? communityNames : features.nameGenerators) {
+            const auto result =
+                MajestyCommunity::RegisterNames(ops, self, read(context + 0x160), r);
+            if (result != MajestyCommunity::Registration::Installed)
+                std::fprintf(
+                    stderr, "[community-names] id=%08x status=%u registry=%08x resources=%08x\n",
+                    r.generatorId, static_cast<unsigned>(result), self, read(context + 0x160));
+            require(result == MajestyCommunity::Registration::Installed,
+                    "source-bound native name registration");
+        }
+        host->log(host, communityProcess
+                            ? "All five community name generators installed; stock NM11 preserved."
+                            : "Alchemist NM18 installed through original generator lifecycle.");
         return;
     }
     if (target == 0x004ca4f0U) {
@@ -2512,6 +2538,21 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
 #else
         require(researchQueryHelpers && spellTimingHelpers && majesty_private_templates_ready(),
                 "complete source-backed core prerequisites");
+        const auto names = file("community-name-bindings.bin", 36);
+        require(MajestyCommunity::CommunityNameRecords(researchQueryFeatures, names.data(),
+                                                       names.size(), communityNames),
+                "source-bound community names and private Phantom alias");
+        if (!controlledEquipment) {
+            equipmentFeatures = researchQueryFeatures;
+            require(equipmentFeatures.equipment.size() == 3,
+                    "source-bound instruments for ordinary guild play");
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, 0x004c0b60U, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
         const auto raw =
             file("community-controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
         require(raw.size() >= 8 && raw[4] == 21 && !raw[5] && !raw[6] && !raw[7] &&
@@ -2532,8 +2573,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         // Original4ac2f0 is a data-discovered block in this qualified image,
         // not a hookable entry. The creator wraps the original research vtable
         // slot instead. Store a process-lived guest bridge, never a host pointer.
-        communityResearchEntry = majesty_guild_process_bridge(1);
-        require(communityResearchEntry != 0, "process-lived original research dispatcher");
+        require(majesty_guild_process_bridge(1) != 0, "process-lived original research dispatcher");
         // Commit the slot only after all requested hooks install successfully.
 #endif
     }
@@ -2663,6 +2703,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     }
     if (communityProcess) {
         require(read(0x00682f58U) == 0x004ac2f0U, "original research slot before activation");
+        communityResearchEntry = majesty_guild_process_bridge(1);
         write(0x00682f58U, communityResearchEntry);
         host->log(host, "Process-lived community guild services, original AP52 templates and "
                         "research dispatcher installed; paid guild play is not yet qualified.");
@@ -2713,6 +2754,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     researchQueryFunctions.clear();
     researchBindings.clear();
     researchQueryFeatures = {};
+    communityNames.clear();
     researchFlight = {};
     controlledResearchQueryApplied = false;
     return POP_OK;

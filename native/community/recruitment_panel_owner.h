@@ -72,7 +72,7 @@ class RecruitmentPanelOwner {
     }
     template <class Ops>
     bool attach(Ops &ops, std::uint32_t controller, std::uint32_t dialog, std::uint32_t window,
-                std::uint32_t context, std::uint32_t expectedFamily,
+                std::uint32_t expectedUnit, std::uint32_t expectedFamily,
                 const std::array<std::uint32_t, recruitmentPanelEntryCount> &bridges) {
         const auto *recipe = registry.FindPrivateRecruitmentByParent(dialog);
         const bool child = recipe == nullptr;
@@ -80,8 +80,8 @@ class RecruitmentPanelOwner {
             recipe = registry.FindPrivateRecruitmentByChild(dialog);
         // These literal presenters were translated with the acquired Bards
         // third-price binding. Refuse a new recipe until separately prepared.
-        if (!recipe || recipe->thirdPriceControlId != 29441 || !controller || !window || !context ||
-            !expectedFamily || expectedFamily > 0xffffffU ||
+        if (!recipe || recipe->thirdPriceControlId != 29441 || !controller || !window ||
+            !expectedUnit || !expectedFamily || expectedFamily > 0xffffffU ||
             generation == std::numeric_limits<std::uint64_t>::max() || sessions.count(controller) ||
             !ops.valid(controller, 36))
             return false;
@@ -89,15 +89,20 @@ class RecruitmentPanelOwner {
             if (!address)
                 return false;
         const auto original = ops.read(controller);
-        if (!original || !ops.valid(original, 68) || ops.read(controller + 0x14) != window ||
-            ops.read(controller + 0x18) != context)
+        if (!original || !ops.valid(original, 68) || ops.read(controller + 0x14) != window)
             return false;
         for (unsigned i = 0; i < PrivateControllerDispatch::recruitmentVtable.size(); ++i)
             if (ops.read(original + i * 4) != PrivateControllerDispatch::recruitmentVtable[i])
                 return false;
         const auto unit = ops.unit(controller);
-        if (!unit || !ops.valid(unit, 0x84) || !ops.read(unit + 0x60))
+        // Old00481b70 takes a unit pointer as its third argument. It stores
+        // that unit's identity at+1c; +18 is the current world's opaque token,
+        // not the factory argument or the unit ID. Keep those owners distinct.
+        if (!unit || unit != expectedUnit || !ops.valid(unit, 0x84) || !ops.read(unit + 0x60) ||
+            ops.read(controller + 0x1c) != ops.read(unit + 0x60) ||
+            (ops.read(unit + 0x6c) & 0xffffffU) != expectedFamily)
             return false;
+        const auto context = ops.read(controller + 0x18);
         const auto descriptor = ops.read(unit + 0x80);
         if (!descriptor || !ops.valid(descriptor, 8) ||
             (ops.read(descriptor + 4) & 0xffffffU) != expectedFamily)

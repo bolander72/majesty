@@ -82,6 +82,11 @@ int main(int argc, char **argv) {
     check(ops.memory[300] == 400 && ops.destroyed == 0 && ops.constructed == 1);
     check(MajestyCommunity::RegisterNames(ops, 100, 200, record) == Registration::Collision);
     check(ops.constructed == 1);
+    Ops defaultProvider;
+    defaultProvider.expectedResources = 0;
+    check(MajestyCommunity::RegisterNames(defaultProvider, 100, 0, record) ==
+          Registration::Installed);
+    check(defaultProvider.memory[500] == 700 && defaultProvider.constructed == 1);
     Ops notReady;
     notReady.isReady = false;
     check(MajestyCommunity::RegisterNames(notReady, 100, 200, record) == Registration::NotReady);

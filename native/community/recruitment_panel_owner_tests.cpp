@@ -111,7 +111,8 @@ struct Ops {
     void makeController(std::uint32_t controller) {
         write(controller, 2000);
         write(controller + 0x14, controller + 1000);
-        write(controller + 0x18, 915); // opaque ID, deliberately not a unit pointer
+        write(controller + 0x18, 0x714008); // world token, not factory unit or unit ID
+        write(controller + 0x1c, read(5000 + 0x60));
         write(controller + 0x20, 0);
         write(controller + 0x30, 0xabcdef); // would corrupt adjacent data in Old
         units[controller] = 5000;
@@ -143,6 +144,7 @@ int main(int argc, char **argv) {
     }
     ops.write(5000, 6000);
     ops.write(5000 + 0x60, 915);
+    ops.write(5000 + 0x6c, 0x31744241);
     ops.write(5000 + 0x80, 7000);
     ops.write(7000, 0);
     ops.write(7000 + 4, 0x31744241); // ABt1
@@ -151,10 +153,14 @@ int main(int argc, char **argv) {
     const std::array<std::uint32_t, recruitmentPanelEntryCount> bridges = {8000, 8016, 8032, 8048,
                                                                            8064, 8080, 8096};
     const auto attach = [&](std::uint32_t controller, std::uint32_t dialog) {
-        return owner.attach(ops, controller, dialog, controller + 1000, 915, 0x744241, bridges);
+        return owner.attach(ops, controller, dialog, controller + 1000, 5000, 0x744241, bridges);
     };
-    check(!owner.attach(ops, 100, recipe.parentDialogId, 1100, 915, 0x754241, bridges));
+    check(!owner.attach(ops, 100, recipe.parentDialogId, 1100, 5000, 0x754241, bridges));
     check(!ops.allocations);
+    check(!owner.attach(ops, 100, recipe.parentDialogId, 1100, 915, 0x744241, bridges));
+    ops.memory[100 + 0x1c] = 916;
+    check(!attach(100, recipe.parentDialogId) && !ops.allocations);
+    ops.memory[100 + 0x1c] = 915;
     // Refuse any wrong native class before creating private ownership.
     ops.memory[2000 + 16 * 4] ^= 1;
     check(!attach(100, recipe.parentDialogId) && !ops.allocations);

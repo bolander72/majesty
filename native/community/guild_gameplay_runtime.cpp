@@ -3,6 +3,7 @@
 #include "kingdom_research_descriptors.h"
 #include "runtime/guest.h"
 #include "runtime/memory.h"
+#include "runtime/imports.h"
 #include <cstdio>
 #include <cstdlib>
 #include <initializer_list>
@@ -189,9 +190,26 @@ void returned(X86 *cpu, unsigned count, std::uint32_t value = 0) {
     recomp_return(cpu);
 }
 void factoryBody(X86 *cpu) {
-    if (!majesty_recruitment_dialog_factory(cpu))
+    const bool trace = std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI") != nullptr;
+    if (trace)
+        std::fprintf(stderr, "[community-factory-body] requested=%08x stack=%08x\n",
+                     rd32(cpu->r[R_ESP] + 4), cpu->r[R_ESP]);
+    const bool handled = majesty_recruitment_dialog_factory(cpu);
+    if (!handled)
         fn_004ca4f0(cpu);
+    if (trace)
+        std::fprintf(stderr, "[community-factory-body] handled=%u result=%08x\n",
+                     static_cast<unsigned>(handled), cpu->r[R_EAX]);
 }
+constexpr unsigned processBridgeCount = 6;
+std::array<std::uint32_t, processBridgeCount> addresses{};
+void originalExecute(X86 *cpu) {
+    fn_004ac2f0(cpu);
+}
+void originalComplete(X86 *cpu) {
+    fn_004abf70(cpu);
+}
+
 void executeBody(X86 *cpu) {
     Ops ops(cpu);
     const auto unit = ops.read(cpu->r[R_ESP] + 4), command = ops.read(cpu->r[R_ESP] + 8);
@@ -208,20 +226,24 @@ void executeBody(X86 *cpu) {
         return;
     }
     ops.prepareResearch();
-    ResearchFlight scope(*flight, unit, command);
-    const auto status = ops.scalar(r->record.CallbackSymbol(), unit, 1);
-    ops.require(status <= 3, "saved research reservation status");
-    if (status != 0) {
-        returned(cpu, 2);
-        return;
+    std::uint32_t result = 0;
+    {
+        ResearchFlight scope(*flight, unit, command);
+        const auto status = ops.scalar(r->record.CallbackSymbol(), unit, 1);
+        ops.require(status <= 3, "saved research reservation status");
+        if (status == 0) {
+            // The original RET must unwind a nested guest_call, not this
+            // body's callback: otherwise it skips cancellation and the saved
+            // ResearchFlight restoration. Only Old executes/payment/queue.
+            const std::uint32_t args[] = {unit, command};
+            result = guest_call(cpu, addresses[4], args, 2);
+            if (!ops.hasOrder(unit, command)) {
+                const auto canceled = ops.scalar(r->record.CallbackSymbol(), unit, 3);
+                ops.require(canceled <= 3, "saved refused research reservation cancellation");
+            }
+        }
     }
-    // Original Old execution alone checks/pays gold, notifies and installs
-    // saved4005. Preserve its return registers and original packed tuple.
-    fn_004ac2f0(cpu);
-    if (!ops.hasOrder(unit, command)) {
-        const auto canceled = ops.scalar(r->record.CallbackSymbol(), unit, 3);
-        ops.require(canceled <= 3, "saved refused research reservation cancellation");
-    }
+    returned(cpu, 2, result);
 }
 void completeBody(X86 *cpu) {
     Ops ops(cpu);
@@ -233,45 +255,78 @@ void completeBody(X86 *cpu) {
         return;
     }
     ops.prepareResearch();
-    ResearchFlight scope(*flight, unit, command);
-    fn_004abf70(cpu);
-    if (reason == 2) {
-        ops.require(ops.attribute(unit, 0x2c425041U) != command &&
-                        ops.scalar(r->record.CallbackSymbol(), unit, 2) == 1,
-                    "original completion retired the saved reservation");
-    } else if (reason == 1) {
-        ops.require(ops.scalar(r->record.CallbackSymbol(), unit, 3) <= 3,
-                    "saved canceled research reservation");
-        ops.setAttribute(unit, 0x2c425041U, 0);
-        ops.setAttribute(unit, 0x0d425041U, 0);
+    std::uint32_t result;
+    {
+        ResearchFlight scope(*flight, unit, command);
+        std::uint32_t args[5];
+        for (unsigned i = 0; i < 5; ++i)
+            args[i] = ops.read(cpu->r[R_ESP] + 4 + i * 4);
+        result = guest_call(cpu, addresses[5], args, 5);
+        if (reason == 2) {
+            ops.require(ops.attribute(unit, 0x2c425041U) != command &&
+                            ops.scalar(r->record.CallbackSymbol(), unit, 2) == 1,
+                        "original completion retired the saved reservation");
+        } else if (reason == 1) {
+            ops.require(ops.scalar(r->record.CallbackSymbol(), unit, 3) <= 3,
+                        "saved canceled research reservation");
+            ops.setAttribute(unit, 0x2c425041U, 0);
+            ops.setAttribute(unit, 0x0d425041U, 0);
+        }
+        majesty_refresh_recruitment_for_unit(cpu, unit);
     }
-    majesty_refresh_recruitment_for_unit(cpu, unit);
+    returned(cpu, 0, result); // Original completion is cdecl; caller owns5args.
 }
 void resetBody(X86 *cpu) {
     majesty_reset_recruitment_panels(cpu);
     gameplay->reset();
     returned(cpu, 0);
 }
-std::array<std::uint32_t, 4> addresses{};
-std::array<std::uint8_t, 4> hooked{};
-void (*const bodies[4])(X86 *) = {factoryBody, executeBody, completeBody, resetBody};
+std::array<std::uint8_t, processBridgeCount> hooked{};
+void (*const bodies[processBridgeCount])(X86 *) = {factoryBody, executeBody,     completeBody,
+                                                   resetBody,   originalExecute, originalComplete};
 void hookedBody(X86 *cpu, std::uint32_t index) {
-    if (index >= 4)
+    if (index >= processBridgeCount)
         fail("process bridge index");
     bodies[index](cpu);
 }
-RecompHookFn hooks[4] = {hookedBody, hookedBody, hookedBody, hookedBody};
+RecompHookFn hooks[processBridgeCount] = {hookedBody, hookedBody, hookedBody,
+                                          hookedBody, hookedBody, hookedBody};
 RecompModule bridges{"majesty_guild_gameplay",
                      0,
                      0,
                      addresses.data(),
-                     4,
+                     processBridgeCount,
                      bodies,
                      hooks,
                      hooked.data(),
                      nullptr,
                      0,
                      nullptr};
+// The mod API accepts original entries and registered import trampolines,
+// not private RecompModule addresses. Forward through a process-lived import
+// gateway, using its actual X86 context; never reconstruct a CPU from the mod
+// snapshot or relax the kit's public-symbol boundary.
+std::array<std::uint32_t, 4> gateways{};
+constexpr unsigned argumentCounts[4] = {4, 2, 5, 0};
+constexpr unsigned cleanupCounts[4] = {4, 2, 0, 0}; // completion is cdecl
+constexpr const char *gatewayNames[4] = {"GuildFactory", "ResearchExecute", "ResearchComplete",
+                                         "WorldReset"};
+template <unsigned Index> void gateway(X86 *cpu) {
+    if (!cpu || cpu->r[R_ESP] < 1024 || !gm_valid(cpu->r[R_ESP], 4 + argumentCounts[Index] * 4))
+        fail("process gateway stack");
+    std::uint32_t args[5]{};
+    for (unsigned i = 0; i < argumentCounts[Index]; ++i)
+        args[i] = rd32(cpu->r[R_ESP] + 4 + i * 4);
+    X86 extra = *cpu;
+    extra.r[R_ESP] -= 512;
+    if (Index == 0 && std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI"))
+        std::fprintf(stderr,
+                     "[community-factory-gateway] private=%08x requested=%08x window=%08x "
+                     "unit=%08x flags=%08x\n",
+                     addresses[Index], args[0], args[1], args[2], args[3]);
+    cpu->r[R_EAX] = guest_call(&extra, addresses[Index], args, argumentCounts[Index]);
+}
+void (*const gatewayBodies[4])(X86 *) = {gateway<0>, gateway<1>, gateway<2>, gateway<3>};
 bool installed = false;
 #endif
 } // namespace
@@ -301,16 +356,29 @@ extern "C" std::uint32_t majesty_guild_process_bridge(unsigned index) {
     if (!gameplay || !flight || index >= 4)
         return 0;
     if (!installed) {
-        const auto base = heap_alloc(64, true);
+        const auto base = heap_alloc(processBridgeCount * 16, true);
         if (!base)
             fail("process bridge allocation");
-        for (unsigned i = 0; i < 4; ++i)
+        for (unsigned i = 0; i < processBridgeCount; ++i)
             addresses[i] = base + i * 16;
         bridges.base = base;
-        bridges.end = base + 64;
+        bridges.end = base + processBridgeCount * 16;
         recomp_module_register(&bridges);
+        for (unsigned i = 0; i < 4; ++i) {
+            if (imports_trampoline_for("MajestyCommunityCore", gatewayNames[i]))
+                fail("process gateway name collision");
+            gateways[i] =
+                imports_alloc_trampoline("MajestyCommunityCore", gatewayNames[i], gatewayBodies[i],
+                                         static_cast<std::uint8_t>(cleanupCounts[i]));
+            if (!gateways[i] || !imports_describe(gateways[i]) ||
+                imports_argc(gateways[i]) != cleanupCounts[i])
+                fail("process gateway registration");
+        }
         installed = true;
     }
-    return addresses[index];
+    if (index == 0 && std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI"))
+        std::fprintf(stderr, "[community-factory-route] import=%08x description=%s private=%08x\n",
+                     gateways[index], imports_describe(gateways[index]), addresses[index]);
+    return gateways[index];
 #endif
 }

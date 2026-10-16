@@ -16,7 +16,9 @@ enum class Registration {
 template <class Ops, class Record>
 Registration RegisterNames(Ops &ops, std::uint32_t registry, std::uint32_t resources,
                            const Record &record) {
-    if (!ops.ready(registry) || !resources)
+    // Original004f6710 explicitly resolves a null provider through0054c3c0.
+    // A fresh saved-world load can legitimately use that default provider.
+    if (!ops.ready(registry))
         return Registration::NotReady;
     const auto stockSlot = ops.slot(registry, 0x37314d4eU); // stock NM17
     const auto stock = stockSlot ? ops.read(stockSlot) : 0U;
