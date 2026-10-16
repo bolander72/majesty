@@ -235,6 +235,65 @@ def install_alchemist_release(static):
     return content
 
 
+def install_vampiric_revenge_release(static):
+    """Add the original demo in a new collection; retain all older game data."""
+    descriptor = ROOT / 'deploy/vampiric-revenge-release.json'
+    if not descriptor.exists():
+        return
+    content = json.loads(descriptor.read_text())
+    proof = json.loads((ROOT / 'deploy/vampiric-revenge-verification.json').read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    if (content.get('format') != 'majesty-vampiric-revenge-release-v1' or
+            content.get('engineSha256') != engine or proof.get('engineSha256') != engine or
+            content.get('storageId') != 'majesty-alchemist-demo-v1' or
+            content.get('canonicalGuid') != '{504D4156-0000-0000-0000-000000000000}' or
+            proof.get('canonicalGuid') != content.get('canonicalGuid') or
+            content.get('nativeId') != 'XQD3' or any(proof.get(key) is not True for key in [
+                'originalTemplateBodyPreserved', 'originalScriptsUnmodified',
+                'browserNativeSelectionQualified', 'browserWorldSaveReloadQualified',
+                'browserOriginalDemoRestrictionsQualified', 'browserProgressQualified',
+                'browserRootAutomaticImportQualified', 'sameOriginalSaveProfileQualified'])):
+        raise ValueError('Require the original browser-qualified demo mission')
+    for name, expected in content.get('sourceSha256', {}).items():
+        if name not in ('VampiricRevengeBridge.gpl', 'VampiricRevengeBridge.gplproj') or hashlib.sha256(
+                (ROOT / 'content/vampiric-revenge' / name).read_bytes()).hexdigest() != expected:
+            raise ValueError('Demo bridge source differs from original SDK compilation')
+    if len(content.get('sourceSha256', {})) != 2:
+        raise ValueError('Missing demo bridge source bindings')
+    if proof.get('originalCompiler', {}).get('sourceSha256') != content['sourceSha256']:
+        raise ValueError('Demo compiler proof does not match the released source')
+    module = (ROOT / 'web/content/vampiric-revenge-files.mjs').read_text()
+    def binding(name):
+        return json.loads(module.split('export const ' + name + ' = Object.freeze(', 1)[1].split(');', 1)[0])
+    files, sizes = binding('VAMPIRIC_FILES'), binding('VAMPIRIC_SIZES')
+    patches = content.get('patches', [])
+    if len(patches) != len(files) or len({p['path'] for p in patches}) != len(files):
+        raise ValueError('Missing or duplicate original demo resources')
+    for patch in patches:
+        if (files.get(patch['path']) != patch.get('sha256') or
+                sizes.get(patch['path']) != patch.get('bytes') or
+                not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Demo resources differ from verified browser bindings')
+    overlay = proof.get('overlay', {})
+    if len(overlay) != 14 or any(
+            files.get(name) != record.get('sha256') or sizes.get(name) != record.get('bytes')
+            for name, record in overlay.items()):
+        raise ValueError('Demo resources differ from the browser-qualified overlay')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-alchemist-demo-v1'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    games = [game for game in games if game['id'] != 'majesty-alchemist-demo-v1']
+    original['defaultContentStorageId'] = 'majesty-alchemist-demo-v1'
+    games.append({**original, 'id': 'majesty-alchemist-demo-v1',
+                  'title': 'Majesty: Alchemist Lab and Vampiric Revenge'})
+    games[-1].pop('defaultContentStorageId', None)
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+
+
 def install_cpu_snapshot_release(static):
     """Enable the complete-image renderer only for its qualified engine."""
     descriptor = ROOT / 'deploy/cpu-snapshot-release.json'
@@ -418,6 +477,7 @@ def build(destination=None):
     install_content_v2_release(static)
     retire_custom_content(static)
     install_alchemist_release(static)
+    install_vampiric_revenge_release(static)
     install_cpu_snapshot_release(static)
     enable_native_cursor(static)
     for page in static.rglob('index.html'):

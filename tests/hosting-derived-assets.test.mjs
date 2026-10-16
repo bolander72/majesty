@@ -5,10 +5,24 @@ import {derivedDescriptor, buildDerivedFiles} from '../web/hosting/derived-asset
 import {WAYFINDER_FILES} from '../web/content/edition-session.mjs';
 import {hashBlob} from '../web/world/content-hash.mjs';
 import {LOST_TRAIL_FILES} from '../web/content/lost-trail-files.mjs';
+import {VAMPIRIC_FILES, VAMPIRIC_SIZES, VAMPIRIC_STORAGE_ID} from '../web/content/vampiric-revenge-files.mjs';
 
 const patches = Object.entries(WAYFINDER_FILES).map(([path, sha256]) => ({path, sha256, bytes: 10,
   url: 'https://example.public.blob.vercel-storage.com/' + path}));
 const descriptor = {format: 'majesty-automatic-assets-v1', games: {'majesty-wayfinder': {baseId: 'majesty', patches}}};
+
+test('original demo requires the complete pinned community and mission collection', () => {
+  const recipe = {baseId: 'majesty', patches: Object.entries(VAMPIRIC_FILES).map(([path, sha256]) =>
+    ({path, sha256, bytes: VAMPIRIC_SIZES[path],
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + path}))};
+  const plan = {format: descriptor.format, games: {[VAMPIRIC_STORAGE_ID]: recipe}};
+  assert.equal(derivedDescriptor(plan, VAMPIRIC_STORAGE_ID).contentSet, 'vampiric-revenge-v1');
+  for (const change of [r => r.patches.pop(), r => r.patches[0].bytes++,
+    r => {r.patches[0].sha256 = '0'.repeat(64);}, r => {r.baseId = 'majesty-alchemist-v1-campaign3';}]) {
+    const bad = structuredClone(plan); change(bad.games[VAMPIRIC_STORAGE_ID]);
+    assert.throws(() => derivedDescriptor(bad, VAMPIRIC_STORAGE_ID));
+  }
+});
 
 test('only the exact four qualified resources can be overlaid', () => {
   assert.equal(derivedDescriptor(descriptor, 'majesty-wayfinder').patches.length, 4);

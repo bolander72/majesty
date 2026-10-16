@@ -1,5 +1,11 @@
 # Changelog
 
+## Original Vampiric Revenge demo — October 15, 2026
+
+- Expose Cyberlore's original demo quest through an unused native campaign slot, with its original map, briefing, objectives, events and building restrictions.
+- Retain stock missions, the Alchemist pack, existing player profiles and prior game-data collections. Reuse the native bonus medallion with its hover animation and transparent map edges.
+- Verify browser selection, world creation, an ordinary save, fresh-runtime reload and continued play into Day2. A complete victory playthrough has not been repeated.
+
 ## Faster kingdom scrolling and memory copies — October 15, 2026
 
 - Find exact changed-row edges without scanning the unused interior; batch safe REP MOVS copies while preserving x86 overlap, flags, dirty bounds and watchpoints.

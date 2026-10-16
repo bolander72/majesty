@@ -67,3 +67,12 @@ test('failed Alchemist preparation cannot launch a partial collection', async ()
     ensureAssets: async () => {throw Error('Incomplete content');}}), /Incomplete content/);
   assert.ok(closed);
 });
+
+test('demo collection keeps the original Majesty save profile identity', async () => {
+  const contentId = 'majesty-alchemist-demo-v1';
+  const result = await prepareRootPlayer({search: '?profile=existing-player', openClient: async () => ({
+    games: [{id: 'majesty', defaultContentStorageId: contentId}, {id: contentId}],
+    status: async () => ({status: {state: 'ready'}}), close() {},
+  }), ensureAssets: async id => assert.equal(id, contentId)});
+  assert.deepEqual(result, [{id: 'majesty', contentStorageId: contentId}]);
+});

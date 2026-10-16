@@ -1,0 +1,8 @@
+// Legacy selector bridge to the original Cyberlore demo initializer.
+// Original VAMPIRIC_REVENGE logic and terrain remain untouched.
+Function DOWNLOADABLE_QUEST_3 ()
+declare
+    agent AIRootAgent;
+begin
+    $VAMPIRIC_REVENGE ();
+end
