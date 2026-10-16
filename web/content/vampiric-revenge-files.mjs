@@ -92,4 +92,3 @@ export const VAMPIRIC_REPLACEMENTS = Object.freeze({
   "DataMX/mx_miscdata.cam": "14adacc16a0340f14cf951d933cf10b9bb08b770d189e8591660aebebfac3fb3",
   "DataMX/mx_textdata.cam": "60ab851f56c563025ad8db0814436c50c34594ee396e27ab77c057e4b47e0b1f"
 });
-

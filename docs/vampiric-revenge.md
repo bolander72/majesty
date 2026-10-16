@@ -42,7 +42,7 @@ See `deploy/vampiric-revenge-verification.json` for scope and resource bounds.
 Browser1810 additionally verified automatic preparation from the cached original
 game using the clean Git-built root and commit-pinned resource URLs. It restored
 the same original GMP under Majesty's existing profile identity. The preserved
-Day2 save is365871bytes, SHA256
+Day2 save is 365871 bytes, SHA256
 `6a1cd483c646237c2cd6f65c79c86c46eaba0629d7dae3828fbdc817225aed66`.
 
 ## Community guilds to evaluate next
