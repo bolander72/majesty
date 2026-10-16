@@ -1,0 +1,213 @@
+{
+  "format": "majesty-community-old-spell-timing-verification-v1",
+  "date": "2026-10-16",
+  "originalGuestSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "sourceFiles": {
+    "gpl_integer_helpers.h": {
+      "bytes": 3692,
+      "sha256": "3eedf5219a765f4fca91275ab41968b2542cf43b371cc2eb5f146b401a8e3063"
+    },
+    "gpl_base_timing_helpers.h": {
+      "bytes": 2135,
+      "sha256": "7427be0035fd614dfbb185730cecd78aad6f02b35d0758ad60547fc2522b0ed0"
+    },
+    "gpl_spell_timing_helpers.h": {
+      "bytes": 3827,
+      "sha256": "2d2daaced44fb4ccc37c767e9eb42979afe6948ef2b39a47aa515a58bc19838d"
+    },
+    "native_probe_plugin.cpp": {
+      "bytes": 120336,
+      "sha256": "673d5b9f6616e7258996437629487bbf0521e6a784b152b056963a0638e3f119"
+    }
+  },
+  "officialBuild": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_integer_helpers_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792176005,
+    "terminal": true,
+    "peakOwnedRssMiB": 360.7,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 44791,
+    "endedAtUnix": 1792176008
+  },
+  "nativeBoundaryAssertions": 42,
+  "trial": {
+    "format": "majesty-community-native-spell-timing-probe-v1",
+    "sourceStage": {
+      "bytes": 97859,
+      "sha256": "c690db9bae08ed9d0468d86577963f3bc3b5520bc4eebf7888f0f14df60a703c"
+    },
+    "mediaStage": {
+      "bytes": 260698,
+      "sha256": "e72a215d14252ebbc039c10cd41571588c291cdb7565ce665cf5e9b216ebfa27"
+    },
+    "gamePatches": {
+      "Data/miscdata.cam": {
+        "bytes": 10916,
+        "sha256": "b2689318d906b62aad0931740ffdaa59651b644d258b23edaf6cacbe681bbb83"
+      },
+      "Data/community-equipment-gpltext.cam": {
+        "bytes": 79958,
+        "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+      },
+      "Data/community-equipment-interface.cam": {
+        "bytes": 8280128,
+        "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+      },
+      "DataMX/mx_miscdata.cam": {
+        "bytes": 18768,
+        "sha256": "b5e9fab4cb53bde608a61cccadb0ad79e3c16cfb9ff97b0842bbee58f4841e70"
+      },
+      "DataMX/community-equipment-gpltext.cam": {
+        "bytes": 79958,
+        "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+      },
+      "DataMX/community-equipment-interface.cam": {
+        "bytes": 8280128,
+        "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+      },
+      "Data/community-timing-descriptions.cam": {
+        "bytes": 600,
+        "sha256": "a7f22fd6db641f7f543dbec4d0d92efd4d7c377d098eafe708525f68e1bec77b"
+      },
+      "DataMX/community-timing-descriptions.cam": {
+        "bytes": 600,
+        "sha256": "a7f22fd6db641f7f543dbec4d0d92efd4d7c377d098eafe708525f68e1bec77b"
+      }
+    },
+    "module": {
+      "bytes": 468600,
+      "sha256": "9501ab954edb6bd9dfad4a95438e8b41dbb7ad4d8de9d3798cbcc189796ecac1"
+    },
+    "featureRegistry": {
+      "bytes": 3794,
+      "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+    },
+    "sources": {
+      "gpl_integer_helpers.h": {
+        "bytes": 3692,
+        "sha256": "3eedf5219a765f4fca91275ab41968b2542cf43b371cc2eb5f146b401a8e3063"
+      },
+      "gpl_base_timing_helpers.h": {
+        "bytes": 2135,
+        "sha256": "7427be0035fd614dfbb185730cecd78aad6f02b35d0758ad60547fc2522b0ed0"
+      },
+      "gpl_spell_timing_helpers.h": {
+        "bytes": 3827,
+        "sha256": "2d2daaced44fb4ccc37c767e9eb42979afe6948ef2b39a47aa515a58bc19838d"
+      },
+      "native_probe_plugin.cpp": {
+        "bytes": 120336,
+        "sha256": "673d5b9f6616e7258996437629487bbf0521e6a784b152b056963a0638e3f119"
+      }
+    },
+    "freshOwnedProfile": true,
+    "newGuildActorsInstalled": false,
+    "ordinaryGuildGameplayQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "nativeResourceStage": {
+      "bytes": 9289,
+      "sha256": "f77538ad6e1cb37cd46030c926ac29473b6cd1cbae16b6f6e5cb5033daea9329"
+    },
+    "authoredDescriptionIds": [
+      "BMA1",
+      "BME1"
+    ],
+    "equipmentRuntimeEnabled": false,
+    "controlledSetup": "Original LearnSpell and CreateEffector; no cast, save or guild actor",
+    "timingFeatureRegistry": {
+      "bytes": 3794,
+      "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+    }
+  },
+  "result": {
+    "nativeExecutableSha256": "16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031",
+    "nativeBuild": "/Users/mike/.local/share/majesty-work/alchemist1220-engine-build-qualified.json",
+    "startedAtUnix": 1792176021,
+    "deadlineSeconds": 115,
+    "rssCeilingMiB": 1024,
+    "peakRssMiB": 166.5,
+    "stopReason": null,
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "audioMuted": true,
+    "freshOwnedProfile": true,
+    "inputSave": null,
+    "ownedNativePid": 45049,
+    "endedAtUnix": 1792176072
+  },
+  "functions": [
+    "MM_CommitSpellCooldown",
+    "MM_EffectorRemaining"
+  ],
+  "originalLearnSpellCreatedNode": true,
+  "singlyLinkedLayout": {
+    "characterVtable": "0068098c",
+    "headOffset": "154",
+    "tailOffset": "158",
+    "countOffset": "15c",
+    "nodeNextOffset": "0",
+    "nodeActionOffset": "4",
+    "nodeStartedOffset": "8",
+    "nodeTimeoutOffset": "c",
+    "availabilityOffset": "10"
+  },
+  "cooldownMilliseconds": 6000,
+  "availabilityUnchanged": true,
+  "spellCast": false,
+  "actualEffectorTimeoutMilliseconds": 100000,
+  "actualEffectorAccessor": "005b4570",
+  "actualOrderAccessor": "005b2e10",
+  "negativeControls": [
+    "missing action returns-1",
+    "undeclared stock action returns-4",
+    "null owner returns-1",
+    "Palace owner returns-3",
+    "unlearned declared spell returns0 without adding it",
+    "absent declared effect returns0"
+  ],
+  "unitBoundaryControls": [
+    "clock wrap, expiry, indefinite effect and unsupported order",
+    "cooldown preserves ID/availability and writes timeout before clock",
+    "malformed owner/list/timeout and undeclared descriptors"
+  ],
+  "earlierControlledFailures": [
+    {
+      "trial": 1951,
+      "exitCode": 6,
+      "guardStopped": false,
+      "reason": "Harness expected big-endian FourCC; native definitions use little endian. Corrected expectation only."
+    },
+    {
+      "trial": 1953,
+      "exitCode": 6,
+      "guardStopped": false,
+      "reason": "Harness expected a worker on first world update. Wait for a real owned character within existing deadline."
+    }
+  ],
+  "productionAdmissionGatesRelaxed": false,
+  "actualAuthoredModifierApplicationQualified": false,
+  "actualExpiryCallbackQualified": false,
+  "saveReloadQualified": false,
+  "ordinaryGuildGameplayQualified": false,
+  "finalCombinedLibraryQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "productionChanged": false,
+  "rollout": "Audited none; private unsaved native subsystem probe only"
+}

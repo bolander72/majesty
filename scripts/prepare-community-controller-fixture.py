@@ -43,6 +43,7 @@ add_test(NAME community_gpl_attribute_tests COMMAND community_gpl_attribute_test
 set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIMEOUT 15)
 ''')
     add_equipment_fixture(output)
+    add_integer_fixture(output)
 
 
 def add_equipment_fixture(output):
@@ -57,6 +58,23 @@ pop_test_binary(community_equipment_tests)
 add_dependencies(community_equipment_tests community_gpl_probe)
 add_test(NAME community_equipment_tests COMMAND community_equipment_tests)
 set_tests_properties(community_equipment_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
+def add_integer_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_integer_helpers_tests
+  ${RECOMP_GAME_DIR}/source/native/community/gpl_integer_helpers_tests.cpp)
+target_include_directories(community_integer_helpers_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_integer_helpers_tests PRIVATE cxx_std_17)
+target_compile_options(community_integer_helpers_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_integer_helpers_tests)
+add_dependencies(community_integer_helpers_tests community_gpl_probe)
+add_test(NAME community_integer_helpers_tests COMMAND community_integer_helpers_tests)
+set_tests_properties(community_integer_helpers_tests PROPERTIES LABELS nogame TIMEOUT 15)
 ''')
 
 

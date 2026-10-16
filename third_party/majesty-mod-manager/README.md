@@ -17,3 +17,9 @@ It does not make the browser runtime support the capabilities it encodes.
 The original description codec and potion/typed-provider composers are also
 used to apply the acquired Alchemist package's declared source policies.
 Generated stock/mod source remains private; it is not vendored here.
+
+The unmodified portable `NativeTiming.h` and `EarnedRewards.h` come from the
+creator's release commit`b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`.
+Their source hashes are recorded in
+`content/community-mods/integer-helper-source.json`. The Old adapter uses
+their actual clock-wrap, overflow-cap and fractional-carry arithmetic.

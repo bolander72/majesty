@@ -11,6 +11,9 @@
 #include "research_activity.h"
 #include "gpl_attribute_bridge.h"
 #include "equipment_registration.h"
+#include "gpl_integer_helpers.h"
+#include "gpl_base_timing_helpers.h"
+#include "gpl_spell_timing_helpers.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
@@ -76,6 +79,14 @@ bool controlledCommunityGplActive = false, controlledCommunityGplReload = false;
 bool controlledEquipment = false, controlledEquipmentApplied = false;
 MajestyRuntimeFeatures::Registry equipmentFeatures;
 std::uint32_t equipmentPresenter = 0;
+bool integerHelpers = false, controlledIntegers = false, controlledIntegersApplied = false;
+std::map<std::uint32_t, MajestyCommunity::IntegerHelper> integerFunctions;
+bool baseTimingHelpers = false, controlledBaseTiming = false, controlledBaseTimingApplied = false;
+std::map<std::uint32_t, MajestyCommunity::BaseTimingHelper> baseTimingFunctions;
+bool spellTimingHelpers = false, controlledSpellTiming = false,
+     controlledSpellTimingApplied = false;
+MajestyRuntimeFeatures::Registry timingFeatures;
+std::map<std::uint32_t, MajestyCommunity::SpellTimingHelper> spellTimingFunctions;
 unsigned controlledEmptyLists = 0;
 std::uint32_t controlledLedgerAgent = 0;
 bool controlledStock = false, controlledStockApplied = false;
@@ -970,6 +981,309 @@ struct AttributeOps {
         return ::call(address, self, args);
     }
 };
+struct IntegerOps : AttributeOps {
+    std::uint32_t integer(std::uint32_t value) {
+        return valueRef(value, 0x28);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        ::write(address, value);
+    }
+    std::uint32_t now() {
+        return ::read(0x0071c6a8U);
+    }
+};
+struct BaseTimingOps : IntegerOps {
+    std::uint32_t unit(std::uint32_t value) {
+        const auto reference = valueRef(value, 0x5c);
+        if (!valid(reference, 16))
+            return 0;
+        std::uint32_t temporary = 0;
+        require(host->guest_alloc(host, 16, &temporary) == POP_OK,
+                "temporary native agent reference");
+        for (unsigned i = 0; i < 16; i += 4)
+            write(temporary + i, 0);
+        write(temporary + 8, read(reference + 8));
+        const auto result = call(0x00625ce0U, temporary, {});
+        require(host->guest_free(host, temporary) == POP_OK, "temporary agent reference release");
+        return result;
+    }
+    std::uint32_t action(std::uint32_t value) {
+        const auto string = valueRef(value, 0x30);
+        if (!valid(string, 12) || !read(string + 8) || read(string + 8) > 128)
+            return 0;
+        const auto catalog = ::read(0x0071c6bcU);
+        return catalog ? call(0x0059c060U, catalog, {read(string)}) : 0;
+    }
+};
+struct SpellTimingOps : BaseTimingOps {
+    std::uint32_t timingDescription(std::uint32_t value, bool spell, int &status) {
+        status = MajestyNativeTiming::kInvalid;
+        const auto string = valueRef(value, 0x30);
+        if (!valid(string, 12) || !read(string + 8) || read(string + 8) > 128)
+            return 0;
+        const auto catalog = read(spell ? 0x0071c6bcU : 0x0071c6c8U);
+        const auto description = catalog ? call(0x0059c060U, catalog, {read(string)}) : 0;
+        if (!description || !valid(description, 8))
+            return 0;
+        const auto &ids = spell ? timingFeatures.timingSpellIds : timingFeatures.timingEffectorIds;
+        if (!std::binary_search(ids.begin(), ids.end(), read(description + 4))) {
+            status = MajestyNativeTiming::kUndeclared;
+            return 0;
+        }
+        return description;
+    }
+};
+std::vector<std::uint32_t> evaluateBuiltinIntegers(const char *symbol,
+                                                   std::initializer_list<std::uint32_t> arguments) {
+    const auto length = std::strlen(symbol);
+    require(length && length < 64 && arguments.size() <= 3, "native integer test signature");
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 256, &memory) == POP_OK, "native integer evaluator storage");
+    for (unsigned i = 0; i <= length; ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, symbol[i]) == POP_OK,
+                "native integer evaluator symbol");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && read(binding + 20) == 0x005a9600U && integerFunctions.count(binding),
+            "actual registered native integer binding");
+    call(0x00629bf0U, evaluator);
+    for (const auto argument : arguments)
+        call(0x00629a40U, evaluator, {argument});
+    call(0x00629c40U, evaluator);
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end >= begin && end - begin == (arguments.size() + 1) * 4,
+            "actual native integer result and mutable argument span");
+    IntegerOps ops;
+    std::vector<std::uint32_t> values;
+    for (unsigned i = 0; i < arguments.size() + 1; ++i) {
+        const auto value = read(read(begin + i * 4));
+        require(value && read(value + 4) == 1, "actual native integer value tag");
+        const auto storage = ops.integer(value);
+        require(ops.valid(storage, 4), "actual native integer storage");
+        values.push_back(read(storage));
+    }
+    require(call(0x00629c10U, evaluator) == values[0], "original native integer result accessor");
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "native integer evaluator release");
+    std::fprintf(stderr, "[community-integer] symbol=%s result=%u arguments=%u", symbol, values[0],
+                 static_cast<unsigned>(arguments.size()));
+    for (unsigned i = 1; i < values.size(); ++i)
+        std::fprintf(stderr, " argument%u=%u", i, values[i]);
+    std::fprintf(stderr, "\n");
+    return values;
+}
+void runControlledIntegers() {
+    const auto clock = evaluateBuiltinIntegers("MM_SimulationTime", {});
+    require(clock[0] == read(0x0071c6a8U), "raw original simulation clock bits");
+    require(evaluateBuiltinIntegers("MM_SimulationElapsed", {clock[0] - 123})[0] == 123,
+            "original clock elapsed interval");
+    require(evaluateBuiltinIntegers("MM_SimulationElapsed", {})[0] == 0xffffffffU,
+            "missing elapsed input retains authored invalid result");
+    require(evaluateBuiltinIntegers("MM_KR_CapAdd", {0x7ffffffeU, 500})[0] == 0x7fffffffU,
+            "native earned-value overflow cap");
+    require(evaluateBuiltinIntegers("MM_KR_CapAdd", {17, 0xffffffffU})[0] == 17,
+            "native negative bonus guard");
+    const auto award = evaluateBuiltinIntegers("MM_KR_AwardBonus", {7, 15, 95});
+    require(award[0] == 2 && award[3] == 0, "authored native award and in/out carry");
+    const auto nextAward = evaluateBuiltinIntegers("MM_KR_AwardBonus", {7, 15, award[3]});
+    require(nextAward[0] == 1 && nextAward[3] == 5, "authored next award fractional carry");
+    const auto invalid = evaluateBuiltinIntegers("MM_KR_AwardBonus", {7, 15, 100});
+    require(invalid[0] == 0 && invalid[3] == 100, "invalid native carry is preserved");
+    const auto maximum = evaluateBuiltinIntegers("MM_KR_AwardBonus", {0x7fffffffU, 100, 99});
+    require(maximum[0] == 0x7fffffffU && maximum[3] == 99, "full native integer earned range");
+    controlledIntegersApplied = true;
+    host->log(host, "Controlled community integer helpers: original clock, cap, bonus and mutable "
+                    "carry passed.");
+}
+std::uint32_t evaluateBuiltinBaseTiming(const char *symbol, const char *name, std::uint32_t unit,
+                                        bool agentArgument) {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK, "base timing evaluator storage");
+    const auto putText = [&](std::uint32_t destination, const char *text) {
+        const auto length = std::strlen(text);
+        require(length < 128, "base timing text bound");
+        for (unsigned i = 0; i <= length; ++i)
+            require(host->guest_write_u8(host, destination + i, text[i]) == POP_OK,
+                    "base timing text write");
+    };
+    putText(memory + 128, symbol);
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && baseTimingFunctions.count(binding) && read(binding + 20) == 0x005a9600U,
+            "actual native base timing binding");
+    call(0x00629bf0U, evaluator);
+    if (agentArgument) {
+        call(0x00629a20U, evaluator, {unit});
+    } else {
+        putText(memory + 256, name);
+        call(0x004e3520U, memory + 80, {memory + 256});
+        const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+        const auto value = call(0x0062a810U, pool, {3});
+        require(value && read(value + 4) == 3, "original typed string value allocation");
+        const auto string = valueRef(value, 0x30);
+        call(0x004e4180U, string, {memory + 80});
+        call(0x004e3820U, memory + 80);
+        // Native Any-value append takes ownership, exactly as its original
+        // list overload does. It also rebuilds the native argument references.
+        call(0x00636bf0U, evaluator + 8, {value});
+    }
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end >= begin && end - begin == 8 &&
+                read(read(read(begin + 4)) + 4) == (agentArgument ? 5U : 3U),
+            "original typed timing input reference");
+    call(0x00629c40U, evaluator);
+    const auto result = call(0x00629c10U, evaluator);
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "base timing evaluator release");
+    std::fprintf(stderr, "[community-base-timing] symbol=%s result=%u input-kind=%s\n", symbol,
+                 result, agentArgument ? "agent" : "string");
+    return result;
+}
+std::uint32_t evaluateSpellTiming(const char *symbol, const char *name, std::uint32_t unit,
+                                  std::uint32_t setupHandler = 0, std::uint32_t duration = 0) {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK, "spell timing evaluator storage");
+    const auto putText = [&](std::uint32_t destination, const char *text) {
+        const auto length = std::strlen(text);
+        require(length < 128, "spell timing text bound");
+        for (unsigned i = 0; i <= length; ++i)
+            require(host->guest_write_u8(host, destination + i, text[i]) == POP_OK,
+                    "spell timing text write");
+    };
+    putText(memory + 128, symbol);
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && read(binding + 20) == (setupHandler ? setupHandler : 0x005a9600U) &&
+                (setupHandler || spellTimingFunctions.count(binding)),
+            "original spell timing/setup function identity");
+    call(0x00629bf0U, evaluator);
+    call(0x00629a20U, evaluator, {unit});
+    putText(memory + 256, name);
+    call(0x004e3520U, memory + 80, {memory + 256});
+    const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+    const auto value = call(0x0062a810U, pool, {3});
+    require(value && read(value + 4) == 3, "original spell timing string value");
+    call(0x004e4180U, valueRef(value, 0x30), {memory + 80});
+    call(0x004e3820U, memory + 80);
+    call(0x00636bf0U, evaluator + 8, {value});
+    if (duration)
+        call(0x00629a40U, evaluator, {duration});
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end >= begin && end - begin == (duration ? 16U : 12U) &&
+                read(read(read(begin + 4)) + 4) == 5 && read(read(read(begin + 8)) + 4) == 3,
+            "original spell timing typed inputs");
+    call(0x00629c40U, evaluator);
+    const auto result = setupHandler ? 0 : call(0x00629c10U, evaluator);
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "spell timing evaluator release");
+    std::fprintf(stderr, "[community-spell-timing] symbol=%s name=%s result=%u\n", symbol, name,
+                 result);
+    return result;
+}
+void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
+    const char *spell = "Bards_March", *effect = "Bards_March_Legacy_Icon";
+    require(read(worker) == 0x0068098cU, "actual original game character worker");
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", "Missing_Community_Spell", worker) ==
+                0xffffffffU,
+            "missing spell rejected");
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", "basic_attack", worker) == 0xfffffffcU,
+            "undeclared action rejected");
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", spell, 0) == 0xffffffffU,
+            "null spell owner rejected");
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", spell, palace) == 0xfffffffdU,
+            "building spell owner unsupported");
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", spell, worker) == 0,
+            "unlearned authored spell left unchanged");
+    evaluateSpellTiming("LearnSpell", spell, worker, 0x004229f0U);
+    const auto head = read(worker + 0x154), node = read(head);
+    require(node && read(node + 4) == 0x31414d42U && read(worker + 0x15c) == 1,
+            "original LearnSpell created authored singly linked spell node");
+    std::uint8_t available = 0, afterAvailable = 0;
+    require(host->guest_read_u8(host, node + 0x10, &available) == POP_OK,
+            "original learned spell availability");
+    const auto now = read(0x0071c6a8U);
+    require(evaluateSpellTiming("MM_CommitSpellCooldown", spell, worker) == 1 &&
+                read(node + 0x0c) == 6000 && read(node + 8) == now,
+            "authored spell cooldown committed without casting");
+    require(host->guest_read_u8(host, node + 0x10, &afterAvailable) == POP_OK &&
+                available == afterAvailable,
+            "original learned availability preserved");
+    require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 0,
+            "declared absent effect has zero remaining");
+    // Controlled lifetime exceeds this bounded unsaved trial. This tests native
+    // timer discovery, not authored application/reversal of March modifiers.
+    evaluateSpellTiming("CreateEffector", effect, worker, 0x005a9640U, 100000);
+    require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 100000,
+            "original created effect reports its actual timeout order");
+    controlledSpellTimingApplied = true;
+    host->log(host, "Controlled community spell timing: original learned cooldown, availability "
+                    "and actual effect timeout passed.");
+}
+void runControlledBaseTiming() {
+    const auto manager = call(0x00415b40U, 0), player = read(manager + 0x24);
+    const auto palace = call(0x00418b50U, manager, {player});
+    require(palace != 0, "actual player Palace for movement control");
+    const auto first = read(palace + 0x60), world = read(0x0071c68cU);
+    std::uint32_t moving = 0;
+    for (unsigned offset = 1; offset <= 1024 && !moving; ++offset) {
+        const auto unit = call(0x005a10d0U, read(world + 4), {first + offset});
+        if (!unit || read(unit) != 0x0068098cU || read(unit + 0x70) != read(palace + 0x70) ||
+            read(read(unit) + 0x158) != 0x00430770U)
+            continue;
+        const auto description = read(unit + 0x44);
+        if (!description || read(description + 8) != 1)
+            continue;
+        const auto engine = read(description + 0x14);
+        if (engine && read(engine) == 0x0068b250U && read(engine + 0x0c) > 0)
+            moving = unit;
+    }
+    // World-ready can precede the native worker-spawn tick. Wait within the
+    // existing owned trial deadline; do not assume the first update has one.
+    if (!moving)
+        return;
+    const char actionName[] = "basic_attack";
+    std::uint32_t name = 0;
+    require(host->guest_alloc(host, sizeof(actionName), &name) == POP_OK,
+            "original action comparison name");
+    for (unsigned i = 0; i < sizeof(actionName); ++i)
+        require(host->guest_write_u8(host, name + i, actionName[i]) == POP_OK,
+                "original action comparison text");
+    const auto action = call(0x0059c060U, read(0x0071c6bcU), {name});
+    require(action != 0, "actual loaded stock basic attack");
+    const auto expected = call(0x005a1ae0U, 0, {action});
+    require(host->guest_free(host, name) == POP_OK, "action comparison name release");
+    require(evaluateBuiltinBaseTiming("MM_ActionBasePeriod", actionName, 0, false) == expected &&
+                expected > 0,
+            "native action period equals original getter");
+    require(evaluateBuiltinBaseTiming("MM_ActionBasePeriod", "Missing_Community_Action_Control", 0,
+                                      false) == 0xffffffffU,
+            "missing action retains invalid result");
+
+    const auto period = call(0x005a1a30U, moving);
+    require(evaluateBuiltinBaseTiming("MM_UnitMovementBasePeriod", nullptr, moving, true) ==
+                    period &&
+                period > 0,
+            "native movement period equals original getter");
+    require(evaluateBuiltinBaseTiming("MM_UnitMovementBasePeriod", nullptr, 0, true) == 0xffffffffU,
+            "null agent movement remains invalid");
+    require(evaluateBuiltinBaseTiming("MM_UnitMovementBasePeriod", nullptr, palace, true) ==
+                0xfffffffdU,
+            "building without supported movement remains unsupported");
+    if (controlledSpellTiming && !controlledSpellTimingApplied)
+        runControlledSpellTiming(moving, palace);
+    controlledBaseTimingApplied = true;
+    host->log(host, "Controlled community base timing: original action/worker getters and negative "
+                    "controls passed.");
+}
 void addAttribute(std::uint32_t context) {
     AttributeOps ops;
     MajestyCommunity::AttributeEvidence evidence;
@@ -1020,6 +1334,56 @@ void registerAttributes() {
     attributeFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
     require(attributeFunction && read(attributeFunction + 20) == 0x005a9600U,
             "AddAttribute registered dispatch identity");
+    if (integerHelpers) {
+        integerFunctions.clear();
+        using Kind = MajestyCommunity::IntegerHelper;
+        for (const auto &entry : std::vector<std::pair<const char *, Kind>>{
+                 {"MM_SimulationTime", Kind::SimulationTime},
+                 {"MM_SimulationElapsed", Kind::SimulationElapsed},
+                 {"MM_KR_CapAdd", Kind::CapAdd},
+                 {"MM_KR_AwardBonus", Kind::AwardBonus}}) {
+            prepareName(entry.first);
+            call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 1, 0, 0});
+            require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 1,
+                    "community native integer return declaration");
+            const auto function = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+            require(function && read(function + 20) == 0x005a9600U &&
+                        integerFunctions.emplace(function, entry.second).second,
+                    "community integer function-scoped dispatch identity");
+        }
+    }
+    if (baseTimingHelpers) {
+        baseTimingFunctions.clear();
+        using Kind = MajestyCommunity::BaseTimingHelper;
+        for (const auto &entry : std::vector<std::pair<const char *, Kind>>{
+                 {"MM_ActionBasePeriod", Kind::Action},
+                 {"MM_UnitMovementBasePeriod", Kind::Movement}}) {
+            prepareName(entry.first);
+            call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 1, 0, 0});
+            require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 1,
+                    "native base timing integer return type");
+            const auto function = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+            require(function && read(function + 20) == 0x005a9600U &&
+                        baseTimingFunctions.emplace(function, entry.second).second,
+                    "native base timing function identity");
+        }
+    }
+    if (spellTimingHelpers) {
+        spellTimingFunctions.clear();
+        using Kind = MajestyCommunity::SpellTimingHelper;
+        for (const auto &entry :
+             std::vector<std::pair<const char *, Kind>>{{"MM_EffectorRemaining", Kind::Remaining},
+                                                        {"MM_CommitSpellCooldown", Kind::Commit}}) {
+            prepareName(entry.first);
+            call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 1, 0, 0});
+            require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 1,
+                    "native spell timing integer return type");
+            const auto function = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+            require(function && read(function + 20) == 0x005a9600U &&
+                        spellTimingFunctions.emplace(function, entry.second).second,
+                    "native spell timing function identity");
+        }
+    }
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
@@ -1246,7 +1610,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         return;
     }
-    if ((researchBridge || controlledCommunityGpl || controlledEquipment) &&
+    if ((researchBridge || controlledCommunityGpl || controlledEquipment || controlledIntegers ||
+         controlledBaseTiming) &&
         target == 0x005d9680U) {
         // Optional isolated test setup: use the already implemented ordinary
         // single-player cheat, never rewrite actor statistics or mod balance.
@@ -1277,6 +1642,12 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (controlledIntegers && !controlledIntegersApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledIntegers();
+        if (controlledBaseTiming && !controlledBaseTimingApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledBaseTiming();
         if (controlledEquipment && !controlledEquipmentApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledEquipment();
@@ -1590,6 +1961,33 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     // Read the original function object's string and operator arguments;
     // continue every call unchanged, including the guest's failure path.
     if (target == 0x006381b0U) {
+        const auto spellTiming = spellTimingFunctions.find(self);
+        if (spellTimingHelpers && spellTiming != spellTimingFunctions.end()) {
+            SpellTimingOps ops;
+            require(MajestyCommunity::ExecuteSpellTimingHelper(ops, spellTiming->second,
+                                                               read(cpu->esp + 4) + 0x14),
+                    "valid native spell timing arguments");
+            returned(cpu, 0);
+            return;
+        }
+        const auto timing = baseTimingFunctions.find(self);
+        if (baseTimingHelpers && timing != baseTimingFunctions.end()) {
+            BaseTimingOps ops;
+            require(MajestyCommunity::ExecuteBaseTimingHelper(ops, timing->second,
+                                                              read(cpu->esp + 4) + 0x14),
+                    "native base timing argument/reference contract");
+            returned(cpu, 0);
+            return;
+        }
+        const auto integer = integerFunctions.find(self);
+        if (integerHelpers && integer != integerFunctions.end()) {
+            IntegerOps ops;
+            require(MajestyCommunity::ExecuteIntegerHelper(ops, integer->second,
+                                                           read(cpu->esp + 4) + 0x14),
+                    "community native integer argument/reference contract");
+            returned(cpu, 0);
+            return;
+        }
         if (attributeCompat && self == attributeFunction) {
             addAttribute(read(cpu->esp + 4) + 0x14);
             returned(cpu, 0);
@@ -1755,6 +2153,29 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     traceCombat = combat && !std::strcmp(combat, "1");
     const char *attributes = std::getenv("RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT");
     attributeCompat = attributes && !std::strcmp(attributes, "1");
+    const char *integers = std::getenv("RECOMP_COMMUNITY_INTEGER_HELPERS");
+    integerHelpers = integers && !std::strcmp(integers, "1");
+    require(!integerHelpers || attributeCompat,
+            "integer helpers require original registration bridge");
+    const char *integerTest = std::getenv("RECOMP_COMMUNITY_TEST_INTEGER_GPL");
+    controlledIntegers = integerHelpers && integerTest && !std::strcmp(integerTest, "1938");
+    const char *timing = std::getenv("RECOMP_COMMUNITY_BASE_TIMING_HELPERS");
+    baseTimingHelpers = timing && !std::strcmp(timing, "1");
+    require(!baseTimingHelpers || integerHelpers,
+            "base timing helpers require checked integer bridge");
+    const char *spellTiming = std::getenv("RECOMP_COMMUNITY_SPELL_TIMING_HELPERS");
+    spellTimingHelpers = spellTiming && !std::strcmp(spellTiming, "1");
+    require(!spellTimingHelpers || integerHelpers,
+            "spell timing helpers require original attribute registration");
+    const char *spellTimingTest = std::getenv("RECOMP_COMMUNITY_TEST_SPELL_TIMING_GPL");
+    controlledSpellTiming =
+        spellTimingHelpers && spellTimingTest && !std::strcmp(spellTimingTest, "1948");
+
+    const char *baseTimingTest = std::getenv("RECOMP_COMMUNITY_TEST_BASE_TIMING_GPL");
+    controlledBaseTiming =
+        baseTimingHelpers && baseTimingTest && !std::strcmp(baseTimingTest, "1941");
+    require(!controlledSpellTiming || controlledBaseTiming,
+            "controlled spell timing requires the actual worker timing trial");
     const char *panels = std::getenv("RECOMP_ALCHEMIST_PANEL_BRIDGE");
     panelBridge = panels && !std::strcmp(panels, "1");
     const char *research = std::getenv("RECOMP_ALCHEMIST_RESEARCH_BRIDGE");
@@ -1796,6 +2217,13 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             "original MMFR parser");
     require(MajestyStockControllers::ParseRegistry(c.data(), c.size(), &recipes, &error),
             "original MMCR parser");
+    if (spellTimingHelpers) {
+        const auto raw = file("timing-features.bin", 1024 * 1024);
+        require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(), &timingFeatures,
+                                                      &error) &&
+                    timingFeatures.nativeTiming,
+                "private source-bound native timing declaration");
+    }
     if (controlledEquipment) {
         const auto raw = file("equipment-features.bin", 1024 * 1024);
         require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(), &equipmentFeatures,
@@ -1849,7 +2277,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         }
         host->log(host, "Private research route enabled through original queue/update/event2009.");
     }
-    if ((controlledCommunityGpl || controlledEquipment) && !researchBridge) {
+    if ((controlledCommunityGpl || controlledEquipment || controlledIntegers ||
+         controlledBaseTiming) &&
+        !researchBridge) {
         std::uint32_t id = 0;
         const auto status = host->hook_install_ex(host, 0x005d9680U, 0, hook, POP_HOOK_WRAP,
                                                   POP_HOOK_NO_GAME_VIEW, nullptr, &id);
@@ -1948,5 +2378,12 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     controlledEquipmentApplied = false;
     equipmentPresenter = 0;
     equipmentFeatures = {};
+    integerFunctions.clear();
+    controlledIntegersApplied = false;
+    baseTimingFunctions.clear();
+    controlledBaseTimingApplied = false;
+    spellTimingFunctions.clear();
+    timingFeatures = {};
+    controlledSpellTimingApplied = false;
     return POP_OK;
 }

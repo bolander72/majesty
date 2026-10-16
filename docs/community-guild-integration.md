@@ -551,6 +551,57 @@ Trial1935 actually opened the two added archives. Do not repeat the unused
 external-XML approach. Existing libraries, original game files, prior trial
 profiles and the production collection remain unchanged.
 
+## Native timing and reward helpers
+
+Six native-only GPL helpers now execute through Old's original function
+registry and VM argument frames: simulation time/elapsed, earned bonus/cap,
+action base period and movement base period. They retain the creator's exact
+unsigned clock wrapping, saturation and mutable fractional carry behavior.
+The two arithmetic headers are unmodified MIT source from release b7b36f17.
+Registration dispatches only the exact six registered function objects;
+NullFunction and all other native calls remain unchanged.
+
+Official native boundary tests and trial1945 passed. Fourteen original-VM
+cases covered arithmetic, missing inputs and native action/worker comparisons
+(1100 and90), plus unsupported building and null-agent controls. The native
+trial exited normally, muted, at164 MiB peak observed owned RSS. The clock was
+not changed. Trial1943 was deliberately stopped after the comparison harness
+used the wrong calling convention; the corrected getter call passed1945.
+
+This is helper-boundary verification with the older1860 co-loaded library,
+not final1920 replacement, ordinary guild play, saves, or browser qualification.
+At that checkpoint four helpers remained: effect expiry, spell cooldown and
+kingdom research eligibility/orders. The spell helpers are covered below.
+Normal MMFRv1/MMCRv20 admission remains unchanged.
+See `native-helper-verification.json` for bound sources, build and trial.
+
+## Original spell cooldown and effect timing
+
+Two more helpers now use Old's original actor, descriptor and order objects.
+`MM_CommitSpellCooldown` walks Old's singly linked learned-spell list, writes
+the authored timeout before the native clock, and preserves availability and
+all other fields. It neither learns nor casts a spell. `MM_EffectorRemaining`
+uses the original effect/order accessors and checks the timeout-order kind and
+completion message before applying the creator's unsigned remaining-time math.
+Only names present in the source-bound timing declarations are admitted.
+
+Official build1956 passed42 native boundary assertions. Muted trial1957 used
+two actual native Bards descriptions, BMA1/BME1. Original LearnSpell created the
+record; the helper committed its6000ms cooldown while preserving availability.
+Original CreateEffector created a100000ms timeout, which the helper retrieved
+through the real order. Missing/undeclared names, null/unsupported actors,
+unlearned spells and absent effects returned the authored refusal values.
+The trial exited normally at166.5 MiB observed owned RSS with no guard stop.
+All49 focused Python tests also pass without skips.
+
+This controlled probe made no save and did not cast March, apply its modifiers,
+exercise its expiry callback or install a guild. It retains the older1860
+co-loaded GPL library. Ordinary paid guild play, the final1920 library,
+original-save compatibility and browser qualification remain pending. The
+initial1951/1953 trial processes exited6 on harness assertions (identifier
+encoding and worker-spawn readiness); the corrected setup passed1957.
+See `spell-timing-verification.json`. Production gates remain MMFRv1/MMCRv20.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw
@@ -563,7 +614,8 @@ disable unsupported features or relabel stock actors.
 Use the final resource-context source and compiled inputs described above,
 rather than preliminary1851/1861 or1860 bytecode. The current compiled source
 also calls ten native-only helpers for timing, movement and kingdom research;
-they still require Old implementations and ordinary gameplay verification.
+eight now have Old implementations and native boundary verification; the remaining
+two and ordinary gameplay verification are still required.
 
 Require ordinary paid construction/recruitment, distinctive mechanics,
 selection/fog reveal, UI states, original saves and fresh reloads in bounded,

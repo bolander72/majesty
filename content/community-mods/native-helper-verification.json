@@ -1,0 +1,141 @@
+{
+  "format": "majesty-community-six-native-helper-verification-v1",
+  "date": "2026-10-16",
+  "originalGuestSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "sourceFiles": {
+    "native/community/gpl_integer_helpers.h": {
+      "bytes": 3692,
+      "sha256": "3eedf5219a765f4fca91275ab41968b2542cf43b371cc2eb5f146b401a8e3063"
+    },
+    "native/community/gpl_base_timing_helpers.h": {
+      "bytes": 2135,
+      "sha256": "7427be0035fd614dfbb185730cecd78aad6f02b35d0758ad60547fc2522b0ed0"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 111343,
+      "sha256": "b130a14db78c5fc8aef78866270dd99b4b32c35145bd89159e9665702c622647"
+    },
+    "third_party/majesty-mod-manager/runtime/NativeTiming.h": {
+      "bytes": 940,
+      "sha256": "3df8db0a1f852b317b3326b1168d7d545f15cf200b815321ab522a460e859bcc"
+    },
+    "third_party/majesty-mod-manager/runtime/EarnedRewards.h": {
+      "bytes": 823,
+      "sha256": "755d58129f47dcdd2fdfed657ac93ef5182940cbafb2eb69c6f6b94a59ea8d27"
+    }
+  },
+  "officialBuild": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_integer_helpers_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792174987,
+    "terminal": true,
+    "peakOwnedRssMiB": 185.8,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 38495,
+    "endedAtUnix": 1792174990
+  },
+  "trial": {
+    "format": "majesty-community-native-base-timing-probe-v1",
+    "module": {
+      "bytes": 435208,
+      "sha256": "29e43a35f72f83770c0c6b248f8d163825ade7e1e1064789323caedfe08954af"
+    },
+    "sourceFiles": {
+      "native/community/gpl_integer_helpers.h": {
+        "bytes": 3692,
+        "sha256": "3eedf5219a765f4fca91275ab41968b2542cf43b371cc2eb5f146b401a8e3063"
+      },
+      "native/community/gpl_base_timing_helpers.h": {
+        "bytes": 2135,
+        "sha256": "7427be0035fd614dfbb185730cecd78aad6f02b35d0758ad60547fc2522b0ed0"
+      },
+      "native/community/native_probe_plugin.cpp": {
+        "bytes": 111343,
+        "sha256": "b130a14db78c5fc8aef78866270dd99b4b32c35145bd89159e9665702c622647"
+      },
+      "third_party/majesty-mod-manager/runtime/NativeTiming.h": {
+        "bytes": 940,
+        "sha256": "3df8db0a1f852b317b3326b1168d7d545f15cf200b815321ab522a460e859bcc"
+      },
+      "third_party/majesty-mod-manager/runtime/EarnedRewards.h": {
+        "bytes": 823,
+        "sha256": "755d58129f47dcdd2fdfed657ac93ef5182940cbafb2eb69c6f6b94a59ea8d27"
+      }
+    },
+    "freshOwnedProfile": true,
+    "inputSave": null,
+    "game": "/Users/mike/.local/share/majesty-work/community1896-original-GPL-probe/game",
+    "originalClockUnmodifiedByProbe": true,
+    "newGuildActorsInstalled": false,
+    "ordinaryGuildGameplayQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "comparisonActionGetterABI": "005a1ae0 takes descriptor as stack argument, RET4; movement getter005a1a30 uses ECX"
+  },
+  "result": {
+    "nativeExecutableSha256": "16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031",
+    "nativeBuild": "/Users/mike/.local/share/majesty-work/alchemist1220-engine-build-qualified.json",
+    "startedAtUnix": 1792175085,
+    "deadlineSeconds": 115,
+    "rssCeilingMiB": 1024,
+    "peakRssMiB": 164.0,
+    "stopReason": null,
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "audioMuted": true,
+    "freshOwnedProfile": true,
+    "inputSave": null,
+    "ownedNativePid": 38832,
+    "endedAtUnix": 1792175136
+  },
+  "functions": [
+    "MM_SimulationTime",
+    "MM_SimulationElapsed",
+    "MM_KR_CapAdd",
+    "MM_KR_AwardBonus",
+    "MM_ActionBasePeriod",
+    "MM_UnitMovementBasePeriod"
+  ],
+  "liveCases": 14,
+  "arithmeticBoundaryAssertions": true,
+  "originalComparisonPeriods": {
+    "basic_attack": 1100,
+    "workerMovement": 90
+  },
+  "originalClockUnmodified": true,
+  "scopedFunctionIdentity": true,
+  "globalNullFunctionUnmodified": true,
+  "productionAdmissionGatesRelaxed": false,
+  "ordinaryGuildGameplayQualified": false,
+  "finalCombinedLibraryQualified": false,
+  "saveReloadQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "productionChanged": false,
+  "limitations": [
+    "Uses private older1860 co-loaded common GPL; not final1920 library or full guild installation.",
+    "No Bards/Phantom actors or saved games exercised.",
+    "Multi-world and browser qualification remain pending."
+  ],
+  "earlierHarnessCorrection": {
+    "trial": "community1943",
+    "exitCode": -15,
+    "intentionalStop": true,
+    "guardStopped": false,
+    "reason": "Comparison getter005a1ae0 requires stack descriptor/RET4; corrected and rerun1945"
+  }
+}
