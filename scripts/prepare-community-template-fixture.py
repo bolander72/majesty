@@ -103,6 +103,49 @@ set_tests_properties(community_recruitment_runtime_execution_tests PROPERTIES LA
             cmake.write(f'target_sources(community_recruitment_runtime_execution_tests PRIVATE $<TARGET_OBJECTS:community_template_{name}>)\n')
 
 
+def add_gameplay_services_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_library(community_guild_gameplay_compile OBJECT
+  ${RECOMP_GAME_DIR}/source/native/community/guild_gameplay_runtime.cpp)
+target_include_directories(community_guild_gameplay_compile PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_guild_gameplay_compile PRIVATE cxx_std_17)
+target_compile_definitions(community_guild_gameplay_compile PRIVATE
+  RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME=1
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_guild_gameplay_compile PRIVATE ${POP_WARN_STRICT})
+add_dependencies(community_guild_gameplay_compile community_recruitment_runtime_compile)
+add_library(community_guild_core_compile OBJECT
+  ${RECOMP_GAME_DIR}/source/native/community/native_probe_plugin.cpp)
+target_include_directories(community_guild_core_compile PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT}/mods ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_guild_core_compile PRIVATE cxx_std_17)
+target_compile_definitions(community_guild_core_compile PRIVATE
+  RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME=1
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_guild_core_compile PRIVATE ${POP_WARN_STRICT})
+add_executable(community_guild_gameplay_services_tests
+  ${RECOMP_GAME_DIR}/source/native/community/guild_gameplay_services_tests.cpp)
+target_include_directories(community_guild_gameplay_services_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime
+  ${POP_ROOT} ${POP_ROOT}/runtime)
+target_compile_features(community_guild_gameplay_services_tests PRIVATE cxx_std_17)
+target_compile_definitions(community_guild_gameplay_services_tests PRIVATE
+  GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})
+target_compile_options(community_guild_gameplay_services_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_guild_gameplay_services_tests)
+add_dependencies(community_guild_gameplay_services_tests community_guild_gameplay_compile community_guild_core_compile)
+add_test(NAME community_guild_gameplay_services_tests COMMAND community_guild_gameplay_services_tests)
+set_tests_properties(community_guild_gameplay_services_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
 def prepare(args):
     stage_raw = (args.templates / 'template-stage.json').read_bytes()
     stage = json.loads(stage_raw)
@@ -183,6 +226,7 @@ set_tests_properties(community_private_template_tests PROPERTIES LABELS nogame T
     add_execution_fixture(args.out, generated)
     add_runtime_execution_fixture(args.out, generated)
     add_owner_fixture(args.out)
+    add_gameplay_services_fixture(args.out)
     receipt = dict(format='majesty-private-presenter-native-fixture-v1',
         templateStageSha256=hashlib.sha256(stage_raw).hexdigest(), modules=bindings,
         generatedSourcesEdited=False, templateConstructorsMustUsePrivateCollector=True,

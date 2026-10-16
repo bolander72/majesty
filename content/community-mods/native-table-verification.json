@@ -1,0 +1,136 @@
+{
+  "format": "majesty-community-native-table-verification-v1",
+  "date": "2026-10-16",
+  "stage": "community1993-native-tables/native-tables-stage.json",
+  "baseRelease": {
+    "bytes": 10503,
+    "sha256": "946ad3d16e906d384ede026c92b45e22df4673a9a5829dbd2ac81236bfe058a9"
+  },
+  "sourceFiles": {
+    "scripts/lib/community_native_tables.py": {
+      "bytes": 7105,
+      "sha256": "86914f5a8d063c53e90eabb1ad84afcf336ae49c1613075b22b11847785f3247"
+    },
+    "scripts/prepare-community-native-tables.py": {
+      "bytes": 10727,
+      "sha256": "c3f3af1945866cf02b78d87af0a69f4a9bd695c7dc57773a70bc42ec87c1d336"
+    },
+    "tests/test_community_native_tables.py": {
+      "bytes": 7704,
+      "sha256": "13f8c27b82938b49ddb0e01c6f50b038cb1ecdefe215dc6bf1e810c77b46a32d"
+    }
+  },
+  "coexistenceAudit": {
+    "format": "majesty-community-native-table-coexistence-v1",
+    "checks": [
+      {
+        "group": "Data",
+        "stockTempleSoundUnchanged": true,
+        "troubadourVoicePhasesUnchanged": true,
+        "actualTroubadourVoiceBinding": true,
+        "privatePhantomNameReference": true,
+        "stockNameTablesNotOverridden": true,
+        "originalInventoryPositionsPreserved": true,
+        "buildingStageLabelsVerified": true
+      },
+      {
+        "group": "DataMX",
+        "stockTempleSoundUnchanged": true,
+        "troubadourVoicePhasesUnchanged": true,
+        "actualTroubadourVoiceBinding": true,
+        "privatePhantomNameReference": true,
+        "stockNameTablesNotOverridden": true,
+        "originalInventoryPositionsPreserved": true,
+        "buildingStageLabelsVerified": true
+      }
+    ],
+    "guildGameplayQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "focusedPythonTests": {
+    "patterns": [
+      "test_community_guild*.py",
+      "test_community_native_resources.py",
+      "test_community_native_tables.py",
+      "test_community_recruitment*.py",
+      "test_community_research*.py",
+      "test_phantom_workshop_source.py",
+      "test_alchemist_inventory_description.py"
+    ],
+    "testsRun": 66,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "successful": true
+  },
+  "outputs": {
+    "Data/unittype.cam": {
+      "bytes": 191611,
+      "sha256": "dad06f738f0e71bc3f528f05d4953caf4d9c3156e1b94cbd9adacaec208f0048"
+    },
+    "Data/action.cam": {
+      "bytes": 31268,
+      "sha256": "9fa9210deb37a9fe40643125f8f2df1dafb09c36133c1b5b09e7e7ae81a620c0"
+    },
+    "Data/sounddesc.cam": {
+      "bytes": 114824,
+      "sha256": "4b981c10f415ca9fccc5510c73c2d1b10aeb1acb181c9bddb9616107244279ae"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 43340,
+      "sha256": "bb205a93cbb7e46f3edd4393352897807d59daa567b551c619476fc43e4c24c4"
+    },
+    "Data/Community-gpltext.cam": {
+      "bytes": 79958,
+      "sha256": "5b3069151d6fc83791f43849855cf5ef046a29754e6e3f9a89175a152122c640"
+    },
+    "Data/miscdata.cam": {
+      "bytes": 10363,
+      "sha256": "ffc07790e570f67f4d161977779881c023f10e8a81b1e0e8965127b8c8a2fa01"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 102644,
+      "sha256": "acda26fc5b35ec80f9e8de39bf99ba174517a13df115fb6bd5538acaeaf916f2"
+    },
+    "DataMX/mx_action.cam": {
+      "bytes": 20558,
+      "sha256": "2488afeaf0f6fcd51852bf6f2590bace6838824e0868ed95de87126fc27af8f0"
+    },
+    "DataMX/mx_sounddesc.cam": {
+      "bytes": 70732,
+      "sha256": "5a5ce56cc553c3c0f06e33e2010230cc709c35315fd000297af5033e78ce85eb"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 43340,
+      "sha256": "71ade0c1d8d0c073773f1e5f160510ae647bfcb96e38355caaac7584262d9aff"
+    },
+    "DataMX/Community-gpltext.cam": {
+      "bytes": 79382,
+      "sha256": "693bc741d266d252ee43351596d32c8898af8b6e33cc9722433fdd11b449fa48"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17426,
+      "sha256": "733b2d3f1a494ed08d762f278b534a0059b4a20f2e18ead84ad85490fb9e1e4e"
+    },
+    "community-name-bindings.bin": {
+      "bytes": 36,
+      "sha256": "795fd90daa2980f06a8a9af0ddba1614590c092bf63cabd95d45660903c24cdd"
+    }
+  },
+  "preservesAll25QualifiedAlchemyInputFiles": true,
+  "authoredStockHelpChanges": [
+    "h011",
+    "h013",
+    "h018",
+    "h021",
+    "h022"
+  ],
+  "nativeTablesStaged": true,
+  "loadGroupsActivated": false,
+  "privatePhantomNameGeneratorRegistered": false,
+  "fullCollectionBuilt": false,
+  "ordinaryGuildGameplayQualified": false,
+  "browserPlayable": false,
+  "published": false
+}

@@ -28,3 +28,7 @@ extern "C" bool majesty_recruitment_dialog_factory(X86 *);
 // Required before original world disposal, on the guest execution baton.
 // This retires UI ownership only; registered bridge storage is process-lived.
 extern "C" void majesty_reset_recruitment_panels(X86 *);
+
+// Refresh surviving owned panels after original research completion. Sessions
+// are snapshotted because native notifications may close or replace a panel.
+extern "C" void majesty_refresh_recruitment_for_unit(X86 *, std::uint32_t);

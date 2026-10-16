@@ -645,10 +645,74 @@ observed in original state; its entry was not separately traced. See
 `research-descriptor-verification.json`. This does not qualify paid research,
 full modifier application, original saves or browser play.
 
+## Live process core and collection tables
+
+The four AP52 services now have concrete Old-engine implementations: busy
+research, paid command submission, authored hiring toggles and UI extras.
+They call the original GPL evaluator, AP99 affordability/submission routines,
+native UI methods and saved4005 orders. Research reserves/cancels/commits the
+authored saved ledger around the original executor and completion callback.
+No host purchase state substitutes for the ledger or native order.
+
+The process-lifetime core includes the four original private template modules
+and a four-entry guest bridge for factory, research execution, completion and
+world disposal. Old004ac2f0 is a data-discovered internal block, so its hook
+API correctly refuses wrapping it. The adapter guards original vtable slot
+00682f58, commits the process-lived guest bridge after hook installation and
+retains the original body for other families. Generated symbol metadata and
+translations remain unchanged. UI-only caches reset before original teardown.
+
+`prepare-community-process-engine.py` links exact qualified original native
+objects with this new game-owned core through the official build tool. It
+binds every reused object/archive, original symbols, source and generated
+module to hashes. Native1992 accepted core initialization, entered an original
+world, passed the existing controlled helpers and exited normally at186.3 MiB
+observed peak RSS. It used a fresh owned profile and dummy audio.
+
+That bootstrap explicitly disabled the legacy Alchemist panel/research
+bridges: this older native archive classifies the later fog-reveal entry
+0042ee50 as unhookable. It also retained the older1860 probe library and no
+new guild actors. It does **not** establish actual AP52 factory use, paid guild
+gameplay, full Alchemist coexistence or final1920/browser compatibility.
+See `guild-services-verification.json` for separate build and trial scope.
+
+`prepare-community-native-tables.py` now stages13 private outputs for both
+editions, starting with all25 exact qualified Alchemist files. It merges
+native unit/action/sound catalogs, canonical title aliases, authored building
+prerequisites and text/UI tables. Existing Alchemy Lab stage labels and all
+original inventory positions remain intact. It does not activate load groups.
+
+This merge caught two genuine collisions before gameplay activation:
+
+- Phantom's original NM11/HN41/HN42 names would replace stock name fragments.
+  Its native descriptor now references private NMPH; its exact first two
+  tables move to HNP0/HNP1, retaining original HN43/HN44 suffix references.
+  The stage emits source-bound `community-name-bindings.bin`; runtime
+  registration is still required.
+- Troubadour's BT01 voice conflicts with the original FervisTemple descriptor.
+  Only its DSND identity and hero default-sound reference move to BTV1. Its
+  original phase parameters and waveform references stay byte-identical, and
+  both original temple sound payloads remain unchanged.
+
+The creator's five stock hero help changes and Meteor Storm suppression
+wrapper are explicit exceptions; other occupied names/IDs refuse replacement.
+Both real-edition table audits passed, as did66 focused Python tests with no
+skips. These are resource/coexistence checks, not in-game UI or mechanics
+qualification. See `native-table-verification.json`.
+
+Rollout/manual-data audit: none required for this source checkpoint. The
+audit covered native registry admission, saved-state ownership, immutable
+private staging and the unchanged deployment descriptors. New collection
+activation and publication remain part of the pending implementation and
+gameplay qualification; they have not been performed by these preparers.
+
 ## Remaining qualification
 
-Adapt the compiled gameplay and required features to the pinned DirectDraw
-runtime. In particular, Bards needs its three-choice AP52 recruitment,
+Activate the final compiled gameplay, required features and private tables in
+the pinned DirectDraw runtime. Register the source-bound name generators,
+complete load groups and edition-specific MJC routes, preserve prior Alchemist
+continuations, and audit CGPH/Old AP10 and AP78 before activation. In particular,
+Bards needs live verification of its three-choice AP52 recruitment,
 equipment, hiring/activity lifecycle, Chronicles research, XP observers and
 projectile behavior. Phantoms needs private upgrade/recruitment controls, undead
 interactions, spell effects and native descriptor conversion. Do not silently

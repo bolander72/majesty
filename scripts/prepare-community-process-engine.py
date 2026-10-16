@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Link a private process-lived guild core with qualified original native objects."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import shutil
+import struct
+import sys
+import tomllib
+
+ROOT = Path(__file__).resolve().parents[1]
+PIN = '654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542'
+
+
+def digest_file(path):
+    if not path.is_file() or getattr(path.stat(), 'st_flags', 0) & 0x40000000:
+        raise ValueError('Require a resident input: ' + str(path))
+    h = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            h.update(chunk)
+    return dict(bytes=path.stat().st_size, sha256=h.hexdigest())
+
+
+def quoted(value):
+    value = str(value)
+    if any(c in value for c in ['"', '\n', '\r', ';', '$']):
+        raise ValueError('Unsupported CMake input path')
+    return '"' + value + '"'
+
+
+def prepare(args):
+    if args.out.exists() or args.out.is_symlink():
+        raise ValueError('Preserve earlier engines; choose a fresh output')
+    producer = json.loads(args.producer.read_text())
+    exe = args.game / 'build/recomp/pop_smoke'
+    if not producer.get('nativeBuildQualified') or digest_file(exe)['sha256'] != producer['nativeExecutableSha256']:
+        raise ValueError('Original native host producer is not qualified')
+    source_raw = (args.source / 'source-stage.json').read_bytes()
+    source = json.loads(source_raw)
+    research_stage = json.loads((args.research / 'research-binding-stage.json').read_text())
+    source_digest = dict(bytes=len(source_raw), sha256=hashlib.sha256(source_raw).hexdigest())
+    if (research_stage['sourceStage'] != source_digest or
+            digest_file(args.controllers) != source['resourceFiles']['controllers.bin']):
+        raise ValueError('Source and research/controller bindings differ')
+    config_raw = (args.game / 'game.toml').read_bytes()
+    config = tomllib.loads(config_raw.decode())
+    if config['game']['sha256'] != PIN or digest_file(args.game / config['game']['developer_exe'])['sha256'] != PIN:
+        raise ValueError('Require the pinned original executable')
+    ninja = (args.build / 'build.ninja').read_text()
+    marker = 'build ' + str(exe) + ': CXX_EXECUTABLE_LINKER__pop_smoke_Release '
+    start = ninja.index(marker)
+    block = ninja[start:ninja.index('\n\n', start)]
+    inputs = block.splitlines()[0][len(marker):].split(' | ', 1)[0].split()
+    if not inputs or any(not p.endswith('.o') or '$' in p for p in inputs):
+        raise ValueError('Unsupported original native link-object rule')
+    objects = [(args.build / p).resolve() for p in inputs]
+    link = re.search(r'^  LINK_LIBRARIES = (.+)$', block, re.M).group(1).split()
+    libraries, frameworks, weak = [], [], []
+    i = 0
+    while i < len(link):
+        token = link[i]
+        if token == '-framework':
+            frameworks.append(link[i + 1]); i += 2
+        elif token == '-Xlinker' and link[i + 1] == '-force_load' and link[i + 2] == '-Xlinker':
+            i += 3 # The following archive is admitted and force-loaded below.
+        elif token == '-Xlinker' and link[i + 1] == '-weak_framework' and link[i + 2] == '-Xlinker':
+            weak.append(link[i + 3]); i += 4
+        elif token.endswith('.a'):
+            libraries.append((args.build / token).resolve()); i += 1
+        elif token in ['-lm', '-lpthread']:
+            i += 1
+        else:
+            raise ValueError('Unreviewed native link input: ' + token)
+    original = args.build / 'lib/librecomp_gen.a'
+    if original.resolve() not in libraries:
+        raise ValueError('Original translated archive missing')
+    source_inputs = {str(p): digest_file(p) for p in dict.fromkeys([*objects, *libraries])}
+    symbols = args.game / 'build/recomp/symbols.json'
+    source_inputs[str(symbols)] = digest_file(symbols)
+    fixture = json.loads((args.fixture / 'private-template-fixture.json').read_text())
+    generated = {}
+    for item in args.generated:
+        name, sep, folder = item.partition('=')
+        if not sep or name in generated or name not in fixture['modules']:
+            raise ValueError('Unexpected private template module')
+        generated[name] = Path(folder).resolve()
+    if generated.keys() != fixture['modules'].keys():
+        raise ValueError('Require all four original private modules')
+    module_cmake = []
+    for name, folder in generated.items():
+        binding = fixture['modules'][name]
+        for filename, expected in binding['generatedFilesSha256'].items():
+            path = folder / filename
+            if path.is_symlink() or digest_file(path)['sha256'] != expected:
+                raise ValueError('Private translated source changed')
+        definitions = binding['compileDefinitions']
+        if 'recomp_module_register=majesty_collect_private_template' not in definitions:
+            raise ValueError('Private constructors must not register original PE addresses')
+        module_cmake += [f'add_library(community_template_{name} OBJECT {quoted(folder / "chunk_000.c")} {quoted(folder / "table.c")})',
+            f'target_include_directories(community_template_{name} PRIVATE {quoted(folder)} ${{POP_ROOT}}/runtime ${{CMAKE_BINARY_DIR}}/generated)',
+            f'target_compile_definitions(community_template_{name} PRIVATE ' + ' '.join(definitions) +
+            ' GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})',
+            f'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_{name}>)']
+    args.out.mkdir(parents=True)
+    (args.out / 'game.toml').write_bytes(config_raw)
+    shutil.copyfile(args.game / 'globals.toml', args.out / 'globals.toml')
+    native_config = config['translate'].get('native', {})
+    for name in [native_config.get('header', ''), *native_config.get('sources', [])]:
+        if name:
+            digest_file(args.game / name)
+            (args.out / name).symlink_to((args.game / name).resolve())
+    for name in ['kit', 'analysis', 'original']:
+        (args.out / name).symlink_to((args.game / name).resolve(), target_is_directory=True)
+    # An empty native-generation directory prevents accidental regeneration or
+    # duplicate compilation; this consumer links the exact qualified objects.
+    (args.out / 'build/recomp').mkdir(parents=True)
+    shutil.copyfile(symbols, args.out / 'build/recomp/symbols.json')
+    (args.out / 'source').symlink_to(ROOT, target_is_directory=True)
+    core = args.out / 'mods/core/community-guilds'
+    support = core / 'support'
+    support.mkdir(parents=True)
+    native = ROOT / 'native/community'
+    shutil.copyfile(native / 'native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
+    for path in native.glob('*.h'):
+        shutil.copyfile(path, support / path.name)
+    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp']:
+        shutil.copyfile(native / name, support / name)
+    vendor = ROOT / 'third_party/majesty-mod-manager/runtime'
+    for path in vendor.glob('*.h'):
+        shutil.copyfile(path, support / path.name)
+    for name in ['StockControllerRegistry.cpp', 'RuntimeFeatureRegistry.cpp']:
+        shutil.copyfile(vendor / name, support / name)
+    shutil.copyfile(args.seed_mod / 'mod.toml', core / 'mod.toml')
+    for name in ['features.bin','controllers.bin','shared-overrides.tsv']:
+        shutil.copyfile(args.seed_mod / name, core / name)
+    shutil.copyfile(args.controllers, core / 'community-controllers.bin')
+    for name in ['research-features.bin','research-bindings.bin']:
+        shutil.copyfile(args.research / name, core / name)
+    # Same bound registry supplies the declared timing and equipment subsystems.
+    for name in ['timing-features.bin','equipment-features.bin']:
+        shutil.copyfile(args.research / 'research-features.bin', core / name)
+    (args.out / 'mods/CMakeLists.txt').write_text('# Private engine is linked by the game-owned native fixture.\n')
+    tests = args.out / 'tests'; tests.mkdir()
+    cmake = ['if(TARGET pop_smoke)', '  message(FATAL_ERROR "Unexpected second native host; preserve original objects")', 'endif()',
+        'add_executable(pop_smoke\n  ' + '\n  '.join(quoted(p) for p in objects) + '\n)',
+        'set_target_properties(pop_smoke PROPERTIES LINKER_LANGUAGE CXX)',
+        'pop_builtin_mods(pop_smoke RESOURCES ${POP_OUT})',
+        'target_include_directories(pop_smoke_mod_alchemist_native_probe PRIVATE ${POP_ROOT} ${POP_ROOT}/runtime)',
+        'target_compile_definitions(pop_smoke_mod_alchemist_native_probe PRIVATE RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME=1)',
+        *module_cmake]
+    for library in libraries:
+        encoded = '"$<LINK_LIBRARY:WHOLE_ARCHIVE,' + quoted(library)[1:-1] + '>"' if library == original.resolve() else quoted(library)
+        cmake.append('target_link_libraries(pop_smoke PRIVATE ' + encoded + ')')
+    for name in dict.fromkeys(frameworks):
+        if not re.fullmatch(r'[A-Za-z0-9]+', name): raise ValueError('Invalid original framework')
+        cmake.append('target_link_libraries(pop_smoke PRIVATE "-framework ' + name + '")')
+    for name in dict.fromkeys(weak):
+        if not re.fullmatch(r'[A-Za-z0-9]+', name): raise ValueError('Invalid original weak framework')
+        cmake.append('target_link_options(pop_smoke PRIVATE "LINKER:-weak_framework,' + name + '")')
+    cmake += ['target_link_libraries(pop_smoke PRIVATE m pthread)']
+    (tests / 'CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
+    receipt = dict(format='majesty-community-process-core-engine-stage-v1', originalProducer=digest_file(args.producer),
+        originalHost=digest_file(exe), originalGuestSha256=PIN, originalObjects=source_inputs,
+        gameConfig=digest_file(args.out / 'game.toml'), privateTemplates=fixture,
+        sourceFiles={p.relative_to(core).as_posix():digest_file(p) for p in core.rglob('*') if p.is_file()},
+        generatedSourcesEdited=False, originalObjectsReused=True, processLifetimeCore=True,
+        nativeLinked=False, liveGameplayQualified=False, browserPlayable=False, published=False)
+    (args.out / 'process-engine-stage.json').write_text(json.dumps(receipt, indent=2) + '\n')
+    return receipt
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ['game','build','producer','fixture','seed-mod','controllers','research','source','out']:
+        parser.add_argument('--' + name, required=True, type=Path)
+    parser.add_argument('--generated', action='append', required=True)
+    args = parser.parse_args()
+    try:
+        prepare(args)
+    except (ValueError, OSError, KeyError, StopIteration) as error:
+        parser.exit(1, f'Process engine preparation refused: {error}\n')
+    print('Private process core staged from qualified original native objects; not yet linked or playable')
+
+
+if __name__ == '__main__':
+    main()

@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <limits>
 #include <map>
+#include <vector>
 
 namespace MajestyCommunity {
 enum class RecruitmentPanelEntry : unsigned {
@@ -48,6 +49,13 @@ class RecruitmentPanelOwner {
     RecruitmentPanelSession find(std::uint32_t controller) const {
         const auto found = sessions.find(controller);
         return found == sessions.end() ? RecruitmentPanelSession{} : found->second;
+    }
+    std::vector<RecruitmentPanelSession> forUnit(std::uint32_t unit) const {
+        std::vector<RecruitmentPanelSession> result;
+        for (const auto &entry : sessions)
+            if (entry.second.unit == unit)
+                result.push_back(entry.second);
+        return result;
     }
     template <class Ops> bool alive(Ops &ops, const RecruitmentPanelSession &s) const {
         const auto current = find(s.controller);

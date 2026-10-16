@@ -15,6 +15,9 @@
 #include "gpl_base_timing_helpers.h"
 #include "gpl_spell_timing_helpers.h"
 #include "gpl_research_helpers.h"
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+#include "guild_gameplay_runtime.h"
+#endif
 #include "kingdom_research_descriptors.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
@@ -99,6 +102,21 @@ std::vector<MajestyCommunity::ResearchBinding> researchBindings;
 MajestyCommunity::ResearchInFlight researchFlight;
 MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
 std::map<std::uint32_t, MajestyCommunity::ResearchQuery> researchQueryFunctions;
+bool communityProcess = false;
+std::uint32_t communityResearchEntry = 0;
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+MajestyStockControllers::Registry communityRecipes;
+std::uint32_t read(std::uint32_t);
+bool privateResearch(std::uint32_t unit, std::uint32_t command) {
+    if (!unit)
+        return false;
+    for (const auto &binding : researchBindings)
+        if (binding.nativeFamily == (read(unit + 0x6c) & 0xffffffU) &&
+            binding.record.actionControlId == command)
+            return true;
+    return false;
+}
+#endif
 unsigned controlledEmptyLists = 0;
 std::uint32_t controlledLedgerAgent = 0;
 bool controlledStock = false, controlledStockApplied = false;
@@ -1569,6 +1587,33 @@ void registerAttributes() {
 }
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+    if (communityProcess && target == 0x004ca4f0U) {
+        const auto args = cpu->esp + 4, requested = read(args);
+        if (communityRecipes.FindPrivateRecruitmentByParent(requested) ||
+            communityRecipes.FindPrivateRecruitmentByChild(requested)) {
+            const auto entry = majesty_guild_process_bridge(0);
+            require(entry != 0, "process-lived private factory entry");
+            const auto result = call(entry, self, {requested, read(args + 4), read(args + 8)});
+            require(host->hook_return(host, cpu, result, 12) == POP_OK,
+                    "original private factory RET12");
+            return;
+        }
+    }
+    if (communityProcess && target == 0x004abf70U) {
+        const auto unit = read(cpu->esp + 8);
+        if (privateResearch(unit, unit ? call(0x005a1c40U, unit, {0x2c425041U, 0}) : 0)) {
+            const auto entry = majesty_guild_process_bridge(2);
+            require(entry != 0, "process-lived native research completion");
+            const auto result = call(entry, self,
+                                     {read(cpu->esp + 4), unit, read(cpu->esp + 12),
+                                      read(cpu->esp + 16), read(cpu->esp + 20)});
+            require(host->hook_return(host, cpu, result, 0) == POP_OK,
+                    "original research completion cdecl");
+            return;
+        }
+    }
+#endif
     if (controlledEquipment && target == 0x004c0b60U) {
         next(inv, cpu);
         const auto result = cpu->eax;
@@ -1611,7 +1656,14 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         return;
     }
-    if ((researchBridge || sharedFunctions) && target == 0x00628e60U) {
+    if ((researchBridge || sharedFunctions || communityProcess) && target == 0x00628e60U) {
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+        if (communityProcess) {
+            const auto entry = majesty_guild_process_bridge(3);
+            require(entry != 0, "process-lived panel reset before original world disposal");
+            call(entry, 0);
+        }
+#endif
         sharedResolved.clear();
         targetOwner = {};
         targetExecution = {};
@@ -2451,6 +2503,40 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             return status;
         hooks.push_back(id);
     }
+    const char *processGuilds = std::getenv("RECOMP_COMMUNITY_PROCESS_GUILDS");
+    communityProcess = processGuilds && !std::strcmp(processGuilds, "1");
+    if (communityProcess) {
+#if !defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+        require(false,
+                "private guilds require a process-lifetime builtin, not an unloadable plugin");
+#else
+        require(researchQueryHelpers && spellTimingHelpers && majesty_private_templates_ready(),
+                "complete source-backed core prerequisites");
+        const auto raw =
+            file("community-controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
+        require(raw.size() >= 8 && raw[4] == 21 && !raw[5] && !raw[6] && !raw[7] &&
+                    MajestyStockControllers::ParseRegistry(raw.data(), raw.size(),
+                                                           &communityRecipes, &error) &&
+                    communityRecipes.privateRecruitments.size() == 1 &&
+                    researchBindings.size() == 1,
+                "source-bound acquired private recruitment registry");
+        const auto *services =
+            majesty_configure_guild_gameplay(&communityRecipes, &researchBindings, &researchFlight);
+        const MajestyCommunity::RecruitmentPanelBinding binding{
+            communityRecipes.privateRecruitments.front().parentDialogId,
+            researchBindings.front().nativeFamily};
+        require(services &&
+                    majesty_configure_recruitment_panels(&communityRecipes, &binding, 1, services),
+                "four real private guild services and original AP52 owner");
+        require(read(0x00682f58U) == 0x004ac2f0U, "original Old research execution dispatch slot");
+        // Original4ac2f0 is a data-discovered block in this qualified image,
+        // not a hookable entry. The creator wraps the original research vtable
+        // slot instead. Store a process-lived guest bridge, never a host pointer.
+        communityResearchEntry = majesty_guild_process_bridge(1);
+        require(communityResearchEntry != 0, "process-lived original research dispatcher");
+        // Commit the slot only after all requested hooks install successfully.
+#endif
+    }
     if (host->guest_alloc(host, 256, &scratch) != POP_OK)
         return POP_E_RANGE;
     for (const auto a :
@@ -2509,7 +2595,17 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             return status;
         hooks.push_back(id);
     }
-    if (sharedFunctions && !researchBridge) {
+    if (communityProcess && !researchBridge) {
+        require(read(0x006c2028U) == 0x2009U && read(0x006c202cU) == 0x004abf70U,
+                "original community research completion dispatch");
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x004abf70U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+    }
+    if ((sharedFunctions || communityProcess) && !researchBridge) {
         std::uint32_t id = 0;
         const auto status = host->hook_install_ex(host, 0x00628e60U, 0, hook, POP_HOOK_WRAP,
                                                   POP_HOOK_NO_GAME_VIEW, nullptr, &id);
@@ -2565,9 +2661,21 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             hooks.push_back(id);
         }
     }
+    if (communityProcess) {
+        require(read(0x00682f58U) == 0x004ac2f0U, "original research slot before activation");
+        write(0x00682f58U, communityResearchEntry);
+        host->log(host, "Process-lived community guild services, original AP52 templates and "
+                        "research dispatcher installed; paid guild play is not yet qualified.");
+    }
     return POP_OK;
 }
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
+    if (communityResearchEntry) {
+        require(read(0x00682f58U) == communityResearchEntry,
+                "process research dispatcher still owns its original slot");
+        write(0x00682f58U, 0x004ac2f0U);
+        communityResearchEntry = 0;
+    }
     DispatchOps ops;
     privateDispatch.clear(ops);
     for (const auto id : hooks)

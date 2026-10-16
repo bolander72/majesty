@@ -262,3 +262,19 @@ extern "C" void majesty_reset_recruitment_panels(X86 *cpu) {
         owner->clear(ops);
     }
 }
+
+extern "C" void majesty_refresh_recruitment_for_unit(X86 *cpu, std::uint32_t unit) {
+    if (!owner)
+        return;
+    Ops ops{cpu};
+    for (const auto &session : owner->forUnit(unit)) {
+        if (!owner->alive(ops, session))
+            continue;
+        owner->refresh(ops, session.controller);
+        if (!owner->alive(ops, session))
+            continue;
+        owner->counts(ops, session.controller);
+        if (owner->alive(ops, session))
+            ops.extras(session);
+    }
+}
