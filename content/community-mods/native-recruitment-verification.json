@@ -1,0 +1,65 @@
+{
+  "format": "majesty-community-recruitment-native-fixture-v1",
+  "executableSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "vtableAddress": "00682050",
+  "vtableSha256": "116ab671abc4e384150bb2c6c007af7227bb33176e071a938d714236830bed29",
+  "vtableEntries": [
+    "0047e650",
+    "0047f1b0",
+    "0047f270",
+    "0047f3e0",
+    "004641f0",
+    "00464200",
+    "0047c7b0",
+    "0047c480",
+    "0047f530",
+    "0047c060",
+    "0047c4e0",
+    "00464630",
+    "004646e0",
+    "0047e9c0",
+    "0047f640",
+    "004654e0",
+    "0047e680"
+  ],
+  "registrySha256": "5087186afe2c2aa724dd72168fe45934a1b55cc6c183118483fa5b8432a04d0d",
+  "gameLaunched": false,
+  "originalFilesUnchanged": true,
+  "runtimeHooksEnabled": false,
+  "browserPlayable": false,
+  "registryFixtureOnly": true,
+  "finalCollectionDialogRelocationsQualified": false,
+  "checks": [
+    "Real three-guild creator MMCRv21 decoded by unchanged vendored parser",
+    "All17 Old AP52 vtable entries independently matched to hash-pinned executable",
+    "Private68-byte table preserves every original slot except command/event bridges",
+    "Each altered stock vtable slot refused before allocation",
+    "Allocation failure, duplicate installation and stale generation teardown refused",
+    "Parent hidden recruitment and child hidden utility hotkeys refused",
+    "Three original command/index bindings and research exclusion retained",
+    "Separate AP69 Alchemist regression target passed"
+  ],
+  "sourceFiles": {
+    "native/community/controller_dispatch.h": "d382fa59938a92ba762242b0a2da4da345e33a01bb0e100bd19374f89c3675d2",
+    "native/community/recruitment_commands.h": "f59dc87cb8336eb097103678b2d163af7b21584860cc945d1054c10d26ccbb70",
+    "native/community/recruitment_commands_tests.cpp": "a14760cef7931485f735223515176473d61ee7d104ca49774a7feabbdda1ba16",
+    "scripts/prepare-community-controller-fixture.py": "7f1e64d3e859df60598375b042e8ab67b5ccd5e680f7ff0ded6780ad2d03e8b3"
+  },
+  "nativeSuites": {
+    "community_recruitment_tests": {
+      "terminal": true,
+      "peakOwnedRssMiB": 188.1,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0
+    },
+    "community_controller_lifecycle_tests": {
+      "terminal": true,
+      "peakOwnedRssMiB": 180.4,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0
+    }
+  },
+  "scope": "Private native input/lifetime primitives only. Three-choice presenters, constructor integration, orders, gameplay, collection resources and save/reload remain unqualified."
+}

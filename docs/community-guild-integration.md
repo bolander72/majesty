@@ -45,11 +45,26 @@ The earlier `main` commit does not. This release source is used read-only;
 the installed browser's existing Alchemist registries are unchanged.
 
 Phantoms Haunt's downloaded package contains compiled gameplay but no GPL
-source. Its pinned creator builder's `write_gpl_sources` generated the four
-original GPL/DAT inputs against the original SDK. These were added only to a
-private copy's source manifest for composition. Original media, compiled
-package, Steam download and installed game remain unchanged. Source-to-bytecode
-equivalence for the acquired Phantom BCD remains unqualified.
+source. Its public builder emits200 definitions, while the acquired binary
+contains202. Independent SDK reference compilation confirmed the missing
+`Phantom_Hero` prototype and `Guild_Title` function. The acquired artifact also
+has later kiting defaults, two nested melee attribute-existence guards and a
+Priestess assignment result local that avoids returning inside `foreach`.
+
+`scripts/lib/phantom_workshop_source.py` recovers those deltas from pinned
+public/SDK inputs. The private original-compiler recovery compares all164 named
+instruction records against the acquired binary outside offsets identified by
+independent257/514-line shifts. Its prototype's typed signature and all38 DAT
+records match exactly. See `phantoms-haunt/source-recovery-verification.json`.
+The compiled function symbol/value tables differ: this is instruction/data
+correspondence, **not byte-identical compilation or native gameplay proof**.
+The earlier200-definition public-source candidate must not be used as the
+published gameplay baseline.
+
+The source preparer reproduces the bound recovery before shared composition and
+adds its prototype source to the private manifest. It refuses any recovered
+file that differs from the observed source hashes. Original media, downloaded
+BCD, Steam files and installed game remain unchanged.
 
 ## Shared gameplay preparation
 
@@ -73,12 +88,12 @@ the restricted/unrestricted recruitment pools, changed confidence constants,
 changed Haunt queries and hidden extra side effects. Unexpected source changes
 are rejected for review.
 
-Private preparation `community1825-combined-manager-source-stage` contains:
+Current private preparation `community1847-recovered-combined-source` contains:
 
 | Scope/file | Bytes | SHA256 |
 | --- | ---: | --- |
-| Any/Merged.dat | 12039 | `2bc9e78169ecdc9a898520ee54fe13649beb6e32d94ee9594582aefce94b69e0` |
-| Any/Merged.gpl | 451701 | `9fa6fc628ab29abbba1ea900e8d9c509051cd97eeab3af22386998558ec3ef51` |
+| Any/Merged.dat | 12085 | `e5d10ef06b724c5d9a4f88b204a66d0ae5a868d7807a5a9acd9b7316fed95b6c` |
+| Any/Merged.gpl | 456586 | `f198e299a2591136309fe15274436c2d2ac99d868e4216a88cdbace4142ffe97` |
 | Majesty/Merged.gpl | 21606 | `82973ffd7c2ed673303cd3d5e497f9d0ce82da757c74ce3d412a91f145eef75f` |
 | MajestyExpansion/Merged.gpl | 5183 | `d726cf951d9787ab60de75ee253d834875328d9953adc0b286e91f31d307d275` |
 
@@ -99,20 +114,22 @@ no missing or additional definitions.
 
 | Output | Bytes | Definitions | SHA256 |
 | --- | ---: | ---: | --- |
-| common.bcd | 13375114 | 683 | `c9721fa2d236149b5d9d05bdad78a7e49632fdbb1d9b71c7a3ff94b1e10401fd` |
+| common.bcd | 13535721 | 684 | `c0547c8663e3591f33c2415417f605b3a16c9c89a89ed36755fb124a669b861b` |
 | base.bcd | 108586 | 57 | `0ff27dca0792e93edf589aa66e2936a38cfef74f711d4e7dec46afcc73d9a29b` |
 | expansion.bcd | 16812 | 8 | `2e9247f9f84b0cafdb34fa2f7d3ff93bcc43d3c729ea45ad2a7a7963c6926084` |
 
-Muted, guarded browser SDK trial1826 produced these exact hashes at 1745.2 MiB
+The earlier public-source baseline compiled in muted, guarded browser SDK
+trial1826 at1745.2 MiB
 peak owned RSS. Its chunked export reached the existing input cutoff; the
 incomplete local copy is unqualified and must not be used. A fresh isolated
 prefix using the installed game's `wine32on64` ran the same original compiler
 and produced byte-identical complete outputs, independently validating that
 handoff without another browser launch.
 
-The tracked `scripts/compile-community-guild-gpl.py` then reproduced all three
-hashes and all 748 definitions in 14.05 seconds at 64.8 MiB observed peak owned
-RSS. It validates prepared source hashes and the original compiler, creates a
+The tracked `scripts/compile-community-guild-gpl.py` independently reproduced the
+earlier baseline, then compiled the recovered current source in trial1848:
+all749 definitions in15.56 seconds at64.7 MiB observed peak owned RSS. It
+validates prepared source hashes and the original compiler, creates a
 fresh owned Wine prefix, enforces a 2048 MiB/180-second guard and shuts down only
 that prefix's server. Use `--source` for the preparation output, `--compiler`
 for the original SDK executable, `--manager` for the pinned creator checkout,
@@ -120,10 +137,78 @@ for the original SDK executable, `--manager` for the pinned creator checkout,
 `--out`. Player profiles are never opened. Prefer this qualified compiler path
 for subsequent source changes on this machine.
 
-A private native description probe also encoded all 31 Bards unit descriptors
-with the existing audited XML encoders. Phantom conversion currently leaves its
-33 inventory-item descriptors and guild sound binding pending. Those are actual
-mechanics/resources to implement, not content that may be silently dropped.
+## Native resource conversion
+
+`scripts/stage-community-guild-native-resources.py` now emits private resources
+from both exact acquired packages, with no descriptor-format omissions:
+
+| Guild | Unit/item descriptions | Actions | Sounds |
+| --- | ---: | ---: | ---: |
+| Bards Hall | 31 | 12 | 3 |
+| Phantoms Haunt | 61 | 7 | 3 |
+
+Hero/building descriptor identities use unused native V/B families, allowing
+the original classifiers to recognize custom actors. The exact mapping is
+frozen in each source contract. It preserves original names, scripts, artwork
+IDs and canonical GUIDs, and refuses stock/art collisions and retired IDs.
+
+All33 Phantom numeric inventory slots80..112 retain their exact `INV+index`
+representation, full item names, flag bits and source-bound named metadata.
+Named metadata stays in an explicit sidecar rather than being truncated or
+inserted into the wrong legacy map. The existing Phial slot113 and its encoder
+guard remain unchanged; both actual Alchemist inventory regression tests pass.
+Runtime handling, equipment UI and persistence of the new items remain pending.
+
+The missing `PH02` guild-selection description is encoded from its actual XML
+and exact stock selection layout, referencing original `PHGS` audio. Six stock
+selection descriptions reproduce byte-for-byte. Both acquired Phantom voice
+descriptions remain verbatim, including their variable-length wave phases.
+
+Stock image lookup reads only validated CAM directories through read-only
+mapping, avoiding loading hundreds of MiB of TILE data. Bards' stock `DRA2`
+reference resolves. The acquired Phantom XML references inventory images `PHIC`
+and `PHIR` absent from both supplied and stock archives; track their actual
+runtime/UI use before qualification. Do not replace them with invented art or
+claim their binding verified. Private titles/dependencies still require a
+complete collection merge. No new resources are installed or published.
+
+Twenty-nine focused tests pass, including the actual Alchemist regression,
+sound policy preservation, numeric-item metadata tampering and recovery shape
+refusals. This does not establish native/WASM gameplay qualification.
+
+## Private native recruitment primitives
+
+The unchanged vendored controller parser already supports MMCRv21. The current
+Alchemist runtime's explicit version guard still admits only its qualified v20
+registry; this checkpoint does not broaden that runtime guard.
+
+`native/community/controller_dispatch.h` now supports a separate 68-byte,
+17-slot private AP52 table. All entries are checked against the pinned Old
+executable at `00682050`; the existing 44-byte AP69 path retains its contract.
+Only the command/event bridges change in the private table. Stock classes,
+presenters, destructors and vtables remain untouched.
+
+`recruitment_commands.h` preserves the creator's three command/index bindings,
+blocks hidden parent recruitment and child utilities, permits child Back/footer
+controls, and blocks recruitment during research. The real creator registry
+also binds the child hiring controls. These are tested input/lifetime
+primitives; the AP52 presenter and constructor integration are still pending.
+
+The official `tools/test.py --native-test community_recruitment_tests` passes
+against the real three-guild MMCRv21 and an independently extracted pinned
+vtable. Allocation failures, altered layouts, stale teardown and stock-table
+preservation are exercised. The separate existing
+`community_controller_lifecycle_tests` also passes, including the Alchemist
+AP69 path. Observed peak owned RSS was188.1 and180.4 MiB respectively, below
+the2048 MiB guards. No game or browser launched.
+
+Use `scripts/prepare-community-controller-fixture.py` with `--game` pointing to
+the prepared native game view, `--controllers` to an actual creator MMCRv21 and
+a fresh `--out`; it records the official focused-test command. This fixture's
+dialog allocations are **not** a final collection relocation map. Generate
+bindings against the complete stock/private namespace during collection merge,
+and verify existing Alchemist saves separately. See
+`content/community-mods/native-recruitment-verification.json`.
 
 ## Remaining qualification
 

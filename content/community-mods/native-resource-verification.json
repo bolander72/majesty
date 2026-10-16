@@ -1,0 +1,89 @@
+{
+  "format": "majesty-community-native-resource-stage-v1",
+  "actorIdentities": {
+    "BDT1": "AVt1",
+    "BDS1": "AVu1",
+    "BDD1": "AVv1",
+    "BDG1": "ABt1",
+    "BDG2": "ABt2",
+    "BDG3": "ABt3",
+    "PHM1": "AVp1",
+    "PHG1": "ABu1",
+    "PHG2": "ABu2",
+    "PHG3": "ABu3"
+  },
+  "numericInventorySlots": [
+    80,
+    112
+  ],
+  "inventoryMetadataCount": 33,
+  "summaries": {
+    "bards-hall": {
+      "units": 31,
+      "actions": 12,
+      "sounds": 3,
+      "pending": [],
+      "imageReferencesAbsentFromGuildAndStockArt": []
+    },
+    "phantoms-haunt": {
+      "units": 61,
+      "actions": 7,
+      "sounds": 3,
+      "pending": [],
+      "imageReferencesAbsentFromGuildAndStockArt": [
+        "PHIC",
+        "PHIR"
+      ]
+    }
+  },
+  "files": {
+    "bards-hall-native-unittype.cam": {
+      "bytes": 8886,
+      "sha256": "43101c8688d5558a5e0f659504f3d2e04cc9631f277c94a1fad314e09e3f0bf2"
+    },
+    "bards-hall-native-action.cam": {
+      "bytes": 3342,
+      "sha256": "e4607e2705dd31800d1da12aadba5259caaa14488d24494ddfa0df045e65e041"
+    },
+    "bards-hall-native-sounddesc.cam": {
+      "bytes": 2976,
+      "sha256": "86cec7032b62b7826a05dddc616182b7203fba52f9faa486e5bf069f4d557d11"
+    },
+    "phantoms-haunt-native-unittype.cam": {
+      "bytes": 25685,
+      "sha256": "a86729d502e51548c5e43fc10852d207d64d80e49321617250259811f0e7e863"
+    },
+    "phantoms-haunt-native-action.cam": {
+      "bytes": 1942,
+      "sha256": "89613c13855cec3690ab04c6761a2a193aecbb79bf054d9740ef48cd17befbb0"
+    },
+    "phantoms-haunt-native-sounddesc.cam": {
+      "bytes": 1378,
+      "sha256": "34f7f24188f9b899c862d0dd2ebc7ec1b55808f89db473ea83c780325fc7c1d9"
+    },
+    "inventory-description-extensions.json": {
+      "bytes": 29887,
+      "sha256": "a2fa4bf0d35e05d7fd139d8d710668f6533a7e3eb2a9ce8861b187f76f272db2"
+    },
+    "native-title-bindings.json": {
+      "bytes": 4844,
+      "sha256": "253fd0ad429fcacd5e971697488e07cbbf7c46f322f333cd1eee4280f33ee5c9"
+    }
+  },
+  "privateTitlesNeedCollectionMerge": true,
+  "dependenciesNeedCollectionMerge": true,
+  "allRuntimeCapabilitiesQualified": false,
+  "nativeRuntimeQualified": false,
+  "browserPlayable": false,
+  "installed": false,
+  "published": false,
+  "stockSelectionSoundsExactRoundTrips": [
+    "BP01",
+    "BP12",
+    "BP18",
+    "CK01",
+    "CK02",
+    "CK04"
+  ],
+  "actualAlchemistInventoryRegressionTestsPassed": 2
+}

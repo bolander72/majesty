@@ -77,6 +77,7 @@ def prepare(args):
         raise ValueError('Preserve existing staging output; choose another directory')
     verified_git(args.manager, MANAGER_COMMIT)
     verified_git(args.phantom_source, PHANTOM_COMMIT)
+    sys.path.insert(0, str(args.manager / 'src'))
     inspector = module('community_guild_preflight', ROOT / 'scripts/inspect-community-guild-package.py')
     preflights = {}
     for identity, path in [('bards-hall', args.bards_package), ('phantoms-haunt', args.phantom_package)]:
@@ -98,17 +99,43 @@ def prepare(args):
     builder = module('community_phantom_creator_builder',
                      args.phantom_source / 'src/build_phantom_guild.py')
     builder.write_gpl_sources(fixture, gpl)
+    # The acquired binary contains later authored fixes absent from public git.
+    # Recover only the instruction/data-correspondent source deltas; preserve
+    # this distinction from native/runtime qualification in the receipt.
+    from majesty_cam.gpl import DefinitionKind
+    from lib.phantom_workshop_source import recover
+    helpers = module('community_recovery_stock_sources', ROOT / 'scripts/compose-alchemist-gameplay.py')
+    stock = {}
+    for project in helpers.PROJECTS:
+        for source in helpers.project_sources(fixture, 'SDK/OriginalQuests/' + project, {}):
+            stock.update((item.key, item) for item in source.items)
+    recovered = recover((gpl / 'Phantom.gpl').read_text(), (gpl / 'Phantom_Hero_Data.dat').read_text(),
+        stock[DefinitionKind.PROTOTYPE, 'hero'].text,
+        stock[DefinitionKind.FUNCTION, 'guild_title'].text, (gpl / 'Phantom.gplproj').read_text())
+    recovery_path = ROOT / 'content/community-mods/phantoms-haunt/source-recovery-verification.json'
+    recovery_raw = recovery_path.read_bytes()
+    recovery = json.loads(recovery_raw)
+    if (recovery.get('format') != 'majesty-phantom-workshop-source-recovery-v1'
+            or record((args.phantom_package / 'Data/Phantom.bcd').read_bytes())
+            != recovery.get('originalWorkshopBytecode')):
+        raise ValueError('Phantom recovery belongs to another acquired artifact')
+    for name, raw in recovered.items():
+        if record(raw) != recovery['recoveredSourceFiles'].get(name):
+            raise ValueError('Phantom recovery differs from instruction/data observation: ' + name)
+        (gpl / name).write_bytes(raw)
+    for name, expected in recovery['recoveredSourceFiles'].items():
+        if record((gpl / name).read_bytes()) != expected:
+            raise ValueError('Recovered Phantom source inventory differs: ' + name)
     manifest = phantom / 'CustomGuildPhantomsHaunt.mmxml'
     root = ET.fromstring(manifest.read_bytes())
     loads = root.findall('.//Load/GPL')
     if len(loads) != 1 or list(loads[0]) != loads[0].findall('Target'):
         raise ValueError('Unexpected Phantom source handoff')
     for name in ('Phantom_Building_Data.dat', 'Phantom_Hero_Data.dat',
-                 'Phantom_Items_Data.dat', 'Phantom.gpl'):
+                 'Phantom_Items_Data.dat', 'Phantom.gpl', 'Phantom_Hero_Prototype.gpl'):
         ET.SubElement(loads[0], 'Source').text = 'GPL\\' + name
     manifest.write_bytes(ET.tostring(root, encoding='utf-8', xml_declaration=True))
 
-    sys.path.insert(0, str(args.manager / 'src'))
     from majesty_cam.package import load_package, load_mod_definition
     from majesty_cam.compose import (SelectedMod, inventory_package, discover_private_activity_texts,
                                      prepare_gpl_bundle, ScopedSemanticResolution,
@@ -145,6 +172,8 @@ def prepare(args):
             files[f'{scope}/{name}'] = record(raw)
     receipt = dict(format='majesty-community-combined-creator-gpl-stage-v1',
         managerCommit=MANAGER_COMMIT, phantomSourceCommit=PHANTOM_COMMIT,
+        phantomSourceRecovery=record(recovery_raw),
+        acquiredPhantomBytecodeEquivalenceQualified=False,
         packages=preflights, alchemistPackageFiles=alchemist_inspection['files'],
         stockFixture=stock_inputs, files=files, privateActivityTexts=len(texts),
         explicitSourceResolutions=sorted(resolutions), compiled=False,

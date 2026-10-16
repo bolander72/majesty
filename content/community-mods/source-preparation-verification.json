@@ -2,17 +2,17 @@
   "format": "majesty-community-original-sdk-compile-v1",
   "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
   "sourceStage": {
-    "bytes": 87959,
-    "sha256": "347eb70fda5c7cf204fee9497a58d82e047c53add0a4bba82895b828230a0d26"
+    "bytes": 88149,
+    "sha256": "a4da27eb8370f3ae12b4624b93a6f9c3bfc768e3bbc1deeb36596c7ddab4b376"
   },
   "outputs": {
     "common": {
-      "bytes": 13375114,
-      "sha256": "c9721fa2d236149b5d9d05bdad78a7e49632fdbb1d9b71c7a3ff94b1e10401fd",
+      "bytes": 13535721,
+      "sha256": "c0547c8663e3591f33c2415417f605b3a16c9c89a89ed36755fb124a669b861b",
       "exitCode": 0,
       "headerValid": true,
-      "sourceDefinitions": 683,
-      "compiledDefinitions": 683
+      "sourceDefinitions": 684,
+      "compiledDefinitions": 684
     },
     "base": {
       "bytes": 108586,
@@ -31,8 +31,8 @@
       "compiledDefinitions": 8
     }
   },
-  "elapsedSeconds": 14.05,
-  "peakRssMiB": 64.8,
+  "elapsedSeconds": 15.56,
+  "peakRssMiB": 64.7,
   "compiled": true,
   "compilerSourceDefinitionsQualified": true,
   "compiledBytesExportedQualified": true,
@@ -40,19 +40,8 @@
   "nativeRuntimeQualified": false,
   "browserPlayable": false,
   "published": false,
-  "matchesIndependentBrowserSdkHashes": true,
-  "focusedSourceTestsPassed": 14,
-  "nativeDescriptionProbe": {
-    "bards-hall": {
-      "converted": 31,
-      "pending": 0,
-      "nativeIdentityAdaptationApplied": false
-    },
-    "phantoms-haunt": {
-      "converted": 25,
-      "pendingInventory": 33,
-      "pendingGuildSoundBinding": true,
-      "nativeIdentityAdaptationApplied": false
-    }
-  }
+  "focusedTestsPassed": 29,
+  "phantomRecoveryVerification": "phantoms-haunt/source-recovery-verification.json",
+  "nativeResourceVerification": "native-resource-verification.json",
+  "scope": "Prepared/recovered source and original SDK compilation only. Native/WASM gameplay, save/reload and full binary equivalence are not qualified."
 }

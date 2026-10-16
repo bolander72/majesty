@@ -108,7 +108,7 @@ def encode_unit_cam(descriptions):
 
 def encode_description_cam(descriptions, kind):
     """Pack DUNT resources using the original 20-byte prototype filename field."""
-    if kind not in (b'DUNT', b'DACT'):
+    if kind not in (b'DUNT', b'DACT', b'DSND'):
         raise ValueError('Unsupported native description archive kind')
     if not descriptions or len(descriptions) > 1024:
         raise ValueError('Invalid native description archive count')
@@ -123,9 +123,12 @@ def encode_description_cam(descriptions, kind):
         raw = descriptions[key]
         if kind == b'DUNT':
             parts = unit_parts(raw)
-        else:
+        elif kind == b'DACT':
             from .legacy_description_action import action_parts
             parts = action_parts(raw)
+        else:
+            from .legacy_description_sound import sound_parts
+            parts = sound_parts(raw)
         head = unpack_chunk(parts[0], b'HEAD')[3]
         if head[:4] != key_bytes:
             raise ValueError('Description header/archive identity disagreement')

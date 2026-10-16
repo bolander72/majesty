@@ -126,5 +126,14 @@
   },
   "combinedGameplaySourcePrepared": true,
   "combinedOriginalSdkCompilationQualified": true,
-  "sourcePreparationVerification": "../source-preparation-verification.json"
+  "sourcePreparationVerification": "../source-preparation-verification.json",
+  "nativeActorIdentityMap": {
+    "PHM1": "AVp1",
+    "PHG1": "ABu1",
+    "PHG2": "ABu2",
+    "PHG3": "ABu3"
+  },
+  "nativeIdentityScope": "Private unused V/B-family descriptor IDs; original names, gameplay, image IDs and canonical GUID unchanged. Runtime/UI/save compatibility unqualified.",
+  "sourceRecoveryVerification": "source-recovery-verification.json",
+  "publicSourceDifference": "The acquired compiled Phantom has202 definitions; public builder emits200, omitting its private Hero prototype and guild lookup. Instruction/data-correspondent recovery also restores kiting defaults, nested safe melee attribute guards and the Priestess foreach result. Whole-binary and native runtime equivalence remain unqualified."
 }
