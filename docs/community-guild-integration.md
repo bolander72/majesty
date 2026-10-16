@@ -263,6 +263,68 @@ them with simulated recruitment. The Old secondary-container flag is
 uses `+0x30`, which must not be copied into the36-byte Old object. See `legacy-abi-verification.json` for the
 qualification boundary. All34 focused Python tests pass without skips.
 
+## Private stock presenter port
+
+The private presenter copies now compile using the original translator's
+existing guarded instruction-patch input. No generated C or executable is
+edited. `prepare-community-recruitment-templates.py` verifies the original image,
+six function byte ranges, all five indexed lookup/title operands, eleven exact
+control operands and the tooltip command before preparing three recruitment
+variants and one common module. The final1882 source exactly reproduces the
+1870 inputs used for translation.
+
+The three variants retain the literal original presenter/tooltip bodies and
+native queue, formatting and price lookups. Their changes bind indices0/1/2 to
+commands`1F48`/`1389`/`1388` and price controls`1752`/`1F51`/`7301`. Common code
+retains native counters and base setup/events; only private availability and
+Call-to-Arms behavior changes, matching the creator's private-controller design.
+
+Generated constructors are redirected into a typed private template bank, and
+all raw function symbols are renamed. Native object-symbol audits show no
+reference to global `recomp_module_register` and no unprefixed stock `fn_`
+exports in those eight generated objects. The patched copies must never be
+registered at original PE addresses: that could affect stock guilds.
+
+A process-lifetime builtin can allocate160 guest bytes, hold the scheduler
+baton and install ten separately addressed native bridges. The bank rejects
+unaligned/out-of-range/overlapping blocks and replacement allocations. Host
+function pointers remain typed host data. The unloadable build bundle leaves
+live bridge installation disabled. The `RefreshAll` bridge calls each literal
+presenter sequentially through the existing guest-call boundary and the same
+building context. Parent/child ownership and research/input guards are still
+an integration task; this bank alone does not enable a guild.
+
+Official native fixtures compile all four modules and execute their actual
+translated instructions with explicit refusing native-service fixtures. They
+pass construction/pending-queue visibility for all three bindings, indexed
+counters, common setup/event forwarding, shared-progress refreshes and register/
+stack/FS restoration. The first execution fixture lacked the event's required
+refresh/count vtable entries; supplying those real private bridge entries fixed
+the fixture. There was no running game or player-save failure.
+
+Observed translation peaks were368.5–369.9 MiB, below1536 MiB guards. Final bank
+and translated-execution tests peaked50.5 and88.8 MiB, below2048 MiB guards.
+The external service/callback bookkeeping in these fixtures is controlled test
+code. Live callback/SEH behavior, idle captions/prices, tooltips, paid orders and
+all gameplay remain unqualified. See `private-presenters-verification.json`.
+
+The creator's `bards_recruitment_panel.py` documents a live-traced index order:
+Blade Dancer0, Spellsinger1, Troubadour2. The visual order is Troubadour,
+Spellsinger, Blade Dancer. The earlier private alias mapping reversed the first
+and third native type order. Current resource staging1881 corrects it to
+`BDD1→AVt1`, `BDS1→AVu1`, `BDT1→AVv1`, preserving original FourCC ordering and
+unaltered source art/names. A focused guard refuses a reorder. The earlier1849
+resource candidate is superseded; no affected characters or saves were public.
+Actual Old paid recruitment still must verify each binding. All39 focused
+Python tests pass without skips.
+
+For reproducibility, use `prepare-community-template-fixture.py` with the
+prepared template stage and all four successful original-translator outputs.
+It records exact source hashes, constructor redirection and symbol renaming,
+then creates the official `community_private_template_tests` and
+`community_private_template_execution_tests` targets. Test bodies are not
+replacements for the game's external services.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw

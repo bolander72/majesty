@@ -313,12 +313,36 @@
   "combinedOriginalSdkCompilationQualified": true,
   "sourcePreparationVerification": "../source-preparation-verification.json",
   "nativeActorIdentityMap": {
-    "BDT1": "AVt1",
+    "BDT1": "AVv1",
     "BDS1": "AVu1",
-    "BDD1": "AVv1",
+    "BDD1": "AVt1",
     "BDG1": "ABt1",
     "BDG2": "ABt2",
     "BDG3": "ABt3"
   },
-  "nativeIdentityScope": "Private unused V/B-family descriptor IDs; original names, gameplay, image IDs and canonical GUID unchanged. Runtime/UI/save compatibility unqualified."
+  "nativeIdentityScope": "Private unused V/B-family descriptor IDs; original names, gameplay, image IDs and canonical GUID unchanged. Runtime/UI/save compatibility unqualified.",
+  "nativeRecruitmentIndexContract": [
+    {
+      "index": 0,
+      "sourceActor": "BDD1",
+      "nativeActor": "AVt1",
+      "title": "Blade_Dancer",
+      "command": 8008
+    },
+    {
+      "index": 1,
+      "sourceActor": "BDS1",
+      "nativeActor": "AVu1",
+      "title": "Spellsinger",
+      "command": 5001
+    },
+    {
+      "index": 2,
+      "sourceActor": "BDT1",
+      "nativeActor": "AVv1",
+      "title": "Troubadour",
+      "command": 5000
+    }
+  ],
+  "nativeRecruitmentIndexEvidence": "Creator src/bards_recruitment_panel.py ROWS records live-traced indices, with visual order Troubadour/Spellsinger/Blade Dancer; private IDs preserve original FourCC sort order. Actual Old recruitment still requires live verification."
 }

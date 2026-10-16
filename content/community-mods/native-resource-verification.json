@@ -1,9 +1,9 @@
 {
   "format": "majesty-community-native-resource-stage-v1",
   "actorIdentities": {
-    "BDT1": "AVt1",
+    "BDT1": "AVv1",
     "BDS1": "AVu1",
-    "BDD1": "AVv1",
+    "BDD1": "AVt1",
     "BDG1": "ABt1",
     "BDG2": "ABt2",
     "BDG3": "ABt3",
@@ -39,7 +39,7 @@
   "files": {
     "bards-hall-native-unittype.cam": {
       "bytes": 8886,
-      "sha256": "43101c8688d5558a5e0f659504f3d2e04cc9631f277c94a1fad314e09e3f0bf2"
+      "sha256": "148f8c12894c12f166ac1fd2e3b5e1a7d5212e21f2b27664818132fa51bb61f7"
     },
     "bards-hall-native-action.cam": {
       "bytes": 3342,
@@ -67,7 +67,7 @@
     },
     "native-title-bindings.json": {
       "bytes": 4844,
-      "sha256": "253fd0ad429fcacd5e971697488e07cbbf7c46f322f333cd1eee4280f33ee5c9"
+      "sha256": "ddad5e14b00eaa7948bcad54883c66c1859bf93d2001a60af20b931948a8671e"
     }
   },
   "privateTitlesNeedCollectionMerge": true,
@@ -85,5 +85,17 @@
     "CK02",
     "CK04"
   ],
-  "actualAlchemistInventoryRegressionTestsPassed": 2
+  "actualAlchemistInventoryRegressionTestsPassed": 2,
+  "nativeRecruitmentIndexOrderPreserved": true,
+  "supersedesPrivateResourceStage": "community1849-native-resources (Bards hero index order was not preserved)",
+  "sourceRecruitmentIndexOrder": [
+    "BDD1",
+    "BDS1",
+    "BDT1"
+  ],
+  "nativeRecruitmentIndexOrder": [
+    "AVt1",
+    "AVu1",
+    "AVv1"
+  ]
 }

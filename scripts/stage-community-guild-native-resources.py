@@ -22,7 +22,9 @@ from lib.legacy_inventory_description import plan_legacy_item, encode_legacy_ite
 
 # Empty native V/B-family slots: custom names, scripts and artwork remain the
 # acquired originals. Existing Alchemist identities and retired IDs stay intact.
-ACTOR_IDS = {'BDT1': 'AVt1', 'BDS1': 'AVu1', 'BDD1': 'AVv1',
+# Preserve the original sorted native Produces order: BDD1, BDS1, BDT1.
+# The creator's traced UI maps index0 Dancer, index1 Spellsinger, index2 Troubadour.
+ACTOR_IDS = {'BDT1': 'AVv1', 'BDS1': 'AVu1', 'BDD1': 'AVt1',
              'BDG1': 'ABt1', 'BDG2': 'ABt2', 'BDG3': 'ABt3',
              'PHM1': 'AVp1', 'PHG1': 'ABu1', 'PHG2': 'ABu2', 'PHG3': 'ABu3'}
 RESERVED = {'ALC1', 'ABx1', 'ABx2', 'ABx3', 'AVz1', 'ABs1', 'ABs2', 'ABs3'}
@@ -38,6 +40,14 @@ def module(name, path):
 
 def digest(raw):
     return dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+
+
+def verify_hero_order(heroes, identities):
+    source = sorted(heroes, key=lambda key: int.from_bytes(key.encode('ascii'), 'little'))
+    target = sorted(heroes, key=lambda key: int.from_bytes(identities[key].encode('ascii'), 'little'))
+    if source != target:
+        raise ValueError('Native actor aliases change the original recruitment index order')
+    return source
 
 
 def stage(args):
@@ -59,6 +69,7 @@ def stage(args):
                                 + contract['authoredIdentities']['buildings'])}
         if owned != declared:
             raise ValueError('Native actor identities differ from the declared source contract')
+        verify_hero_order(contract['authoredIdentities']['heroes'], owned)
     guest = inspection.PRIMITIVES.read(args.game, 'MajestyHD - Old.exe')
     if digest(guest)['sha256'] != '654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542':
         raise ValueError('Native layouts require pinned MajestyHD - Old.exe')
