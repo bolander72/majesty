@@ -172,13 +172,25 @@ def prepare(args):
     resources['resolved-contracts.json'] = contract_raw
     sources = args.out / 'sources'
     files = {}
+    activity_root_compatibility = []
+    from lib.community_activity_reentrancy import restore_activity_root
     for scope, result in bundle.outputs:
         folder = sources / scope
         folder.mkdir(parents=True)
         for name, text in result.source_set.files.items():
+            if scope == 'Any' and name == 'Merged.gpl':
+                original = text.encode('cp1252')
+                text = restore_activity_root(text)
+                activity_root_compatibility.append(dict(file=scope + '/' + name,
+                    before=record(original), after=record(text.encode('cp1252')),
+                    function='MM_AD_Change',
+                    change='Reacquire named kingdom root after cancellation callback',
+                    callbackOrderPreserved=True, gameplayLedgersAndTimingPreserved=True))
             raw = text.encode('cp1252')
             (folder / name).write_bytes(raw)
             files[f'{scope}/{name}'] = record(raw)
+    if len(activity_root_compatibility) != 1:
+        raise ValueError('Missing the original activity dispatcher compatibility pass')
     receipt = dict(format='majesty-community-combined-creator-gpl-stage-v1',
         managerCommit=MANAGER_COMMIT, phantomSourceCommit=PHANTOM_COMMIT,
         phantomSourceRecovery=record(recovery_raw),
@@ -188,9 +200,11 @@ def prepare(args):
         packages=preflights, alchemistPackageFiles=alchemist_inspection['files'],
         stockFixture=stock_inputs, files=files, privateActivityTexts=len(texts),
         finalResourceContext=True, resourceFiles={name: record(raw) for name, raw in resources.items()},
+        activityRootReentrancyCompatibility=activity_root_compatibility,
         compositionPolicy={name: record((ROOT / name).read_bytes()) for name in (
             'scripts/prepare-community-guild-gpl.py', 'scripts/lib/community_guild_composition.py',
-            'scripts/lib/community_guild_source_resolutions.py')},
+            'scripts/lib/community_guild_source_resolutions.py',
+            'scripts/lib/community_activity_reentrancy.py')},
         mediaMergeQualified=False,
         explicitSourceResolutions=sorted(resolutions), compiled=False,
         targetNativeABIQualified=False, browserPlayable=False, published=False)

@@ -196,7 +196,12 @@
     "nativeBardsParentSaveReloadCycle": true,
     "nativeBardsRecruitmentChild": true,
     "nativeBardsRecruitmentSave": true,
-    "nativeBardsFreshHeroReload": true
+    "nativeBardsFreshHeroReload": true,
+    "nativeBardsAllThreeCharacterCards": true,
+    "nativeBardsPaidTier2": true,
+    "nativeBardsPaidTier3": true,
+    "nativeBardsEpicChroniclesSaved": true,
+    "nativeBardsEpicChroniclesFreshReload": false
   },
   "limits": [
     "Bootstrap uses older original native archive: Alchemist panel/research bridges disabled because fog entry remains unhookable in that archive. This is not a release configuration.",
@@ -204,7 +209,8 @@
     "Chronicles gold/XP are source GPL wrappers, not missing native award observers; native visual ownership/world-ready events remain pending.",
     "The earlier three-argument factory fixture was insufficient. Original PE returns RET16; native2056 used RET12 and corrupted the caller. Current source and execution fixture preserve all four arguments and16-byte cleanup.",
     "Trials2061/2077 parent cards opened but Recruit was inert: direct generated factory RET skipped owner attachment. Trial2088 corrects it and saves all three paid living heroes. Full mechanisms, fresh hero reload and browser remain unqualified.",
-    "Research execution/completion now use nested original callbacks and exit ResearchFlight before native RET; Official native2098 link passes; live research checks remain pending."
+    "Research execution/completion now use nested original callbacks and exit ResearchFlight before native RET; Official native2098 link passes; live research checks remain pending.",
+    "Unpatched common1920 fails nested street-show cancellation after upgrade3. Current candidate2130/common2126 reacquires the root after cancellation; exact native2135 replay passes and saves. Advanced mechanics, Haunt and full browser/Alchemy qualification remain pending."
   ],
   "paidBardsConstruction": {
     "trial": {
@@ -616,5 +622,113 @@
     "errors": 0,
     "skips": 0,
     "passed": true
+  },
+  "currentPrivateCandidate": {
+    "path": "/Users/mike/.local/share/majesty-work/community2130-reentrant-native-candidate/candidate.json",
+    "sha256": "f3615f4e5d49fd97c93820aced9867c2dedf0f0730ca52aee12938846e0113c5",
+    "replacesCandidate2028CommonOnly": true,
+    "runtimeResourcesIdentical": true
+  },
+  "bardsTier3AndResearch": {
+    "trial": {
+      "nativeExecutableSha256": "ed08e75e070302759d2f00d8091da73e8823f2a400fda123291e2c6f9556f738",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2132-source-bound-engine-reuse.json",
+      "startedAtUnix": 1792188039,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 183.7,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d",
+        "bytes": 399441
+      },
+      "ownedNativePid": 97767,
+      "endedAtUnix": 1792188176
+    },
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 5 Days.GMP",
+      "bytes": 393874,
+      "sha256": "12b973434c66f748d8ce3fdbccc3874e066e45b4df280e747dacc85b4d4f8547",
+      "profile": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/run.json",
+      "inputSha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d"
+    },
+    "actors": [
+      {
+        "id": 561,
+        "description": "ABt3",
+        "owner": 0,
+        "hp": 700,
+        "maxhp": 700,
+        "completed": 1,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 672,
+          "y": 3264
+        },
+        "title": "Bards_Hall",
+        "type": "building"
+      },
+      {
+        "id": 585,
+        "description": "AVt1",
+        "owner": 0,
+        "hp": 17,
+        "maxhp": 51,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 432,
+          "y": 783
+        },
+        "title": "Blade_Dancer",
+        "type": "hero"
+      },
+      {
+        "id": 603,
+        "description": "AVu1",
+        "owner": 0,
+        "hp": 10,
+        "maxhp": 17,
+        "live": true,
+        "parent": 561,
+        "mapPosition": null,
+        "title": "Spellsinger",
+        "type": "hero"
+      },
+      {
+        "id": 627,
+        "description": "AVv1",
+        "owner": 0,
+        "hp": 25,
+        "maxhp": 25,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 464,
+          "y": 968
+        },
+        "title": "Troubadour",
+        "type": "hero"
+      }
+    ],
+    "upgradeCosts": [
+      2500,
+      3500
+    ],
+    "researchCost": 3000,
+    "researchDonePlayers": [
+      0
+    ],
+    "researchPendingCount": 0,
+    "researchAvailableHallAgent": 36,
+    "freshReloadQualified": false,
+    "activityReentrancyProof": "content/community-mods/activity-reentrancy-verification.json",
+    "fullBenefitsAndLifecycleQualified": false
   }
 }

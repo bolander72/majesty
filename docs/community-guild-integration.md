@@ -804,14 +804,48 @@ Members list: Riley the Gallant (level4,37/37HP), Morgan Chimeweaver
 original portraits. Direct character cards and full mechanics remain separate
 checks; the browser collection is still inactive.
 
+Native trial2106 also opened all three original hero cards, completed the paid
+2500-gold level2 upgrade (500HP), and saved it normally. Trial2135 completes the
+3500-gold level3 upgrade (700HP) and the3000-gold Epic Chronicles research.
+Its original Day5 GMP is393874 bytes, SHA256
+`12b973434c66f748d8ce3fdbccc3874e066e45b4df280e747dacc85b4d4f8547`.
+The save retains all three living heroes, the completed ABt3 Hall, player0 in
+the research done list and an empty pending list. The available list names the
+actual Hall agent36. Research benefit controls and rebuild/ownership event
+restoration remain separate checks.
+
+### Activity cancellation compatibility
+
+The first level3 trials exited with3765269347 (`GplException`). A bounded
+observer in2123 traced street-show cancellation re-entering `MM_AD_Change`,
+then the outer `MM_AD_StopIfEmpty` reading `MM_ActivityTicking_v1` from agent-1.
+The outer function used its local Root after a callback capable of re-entering
+that same function. Preparation now replaces only its post-callback
+`$MM_AD_StopIfEmpty(Root);` with `$MM_AD_StopIfEmpty($MM_AD_Root());`.
+Refreshing the named kingdom root protects that lookup without changing the
+committed ledger, callback order, timing, rewards or public function names.
+The compatibility pass refuses changed signatures and callback/return flow.
+
+Original SDK trial2126 recompiled all817 common and85/13 edition definitions.
+Only common bytecode changed (12bytes); base/expansion bytecode and every
+resource/runtime registry remain byte-identical. Private candidate2130 changes
+only the common BCD in Data and DataMX. Native2135 replays the exact failing
+Day3 input and input script with the same native engine; its observer witnessed
+nested cancellation and the outer dispatcher returning normally. The entire
+run then completed with exit0,183.7MiB peak RSS and the original Day5 save.
+Saved activity busy/ticking/running flags are false and its record list is empty.
+See `activity-reentrancy-verification.json` for the scoped proof. The new
+collection remains private while the remaining gameplay/browser checks run.
+
 ## Remaining qualification
 
 Activate the final compiled gameplay, required features and private tables in
 the pinned DirectDraw runtime. Verify the final edition-specific MJC bodies and preserved Alchemist
 continuations, and audit CGPH/Old AP10 and AP78 in ordinary gameplay. In particular,
-Bards needs live verification of its three-choice AP52 recruitment,
-equipment, hiring/activity lifecycle, Chronicles research and
-projectile behavior. Phantoms needs private upgrade/recruitment controls, undead
+Bards still needs equipment/shopping, advanced combat and projectile checks,
+hiring controls, Chronicles benefit/negative controls and lifecycle restoration.
+Its three-choice recruitment, all original cards, paid upgrades through level3,
+research completion and original progress saves have native evidence above. Phantoms needs private upgrade/recruitment controls, undead
 interactions, spell effects and native descriptor conversion. Do not silently
 disable unsupported features or relabel stock actors.
 
