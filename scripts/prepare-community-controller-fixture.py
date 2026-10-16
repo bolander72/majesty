@@ -44,6 +44,8 @@ set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIME
 ''')
     add_equipment_fixture(output)
     add_integer_fixture(output)
+    add_research_query_fixture(output)
+    add_kingdom_descriptor_fixture(output)
 
 
 def add_equipment_fixture(output):
@@ -75,6 +77,40 @@ pop_test_binary(community_integer_helpers_tests)
 add_dependencies(community_integer_helpers_tests community_gpl_probe)
 add_test(NAME community_integer_helpers_tests COMMAND community_integer_helpers_tests)
 set_tests_properties(community_integer_helpers_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
+def add_research_query_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_research_query_tests
+  ${RECOMP_GAME_DIR}/source/native/community/gpl_research_helpers_tests.cpp)
+target_include_directories(community_research_query_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_research_query_tests PRIVATE cxx_std_17)
+target_compile_options(community_research_query_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_research_query_tests)
+add_dependencies(community_research_query_tests community_gpl_probe)
+add_test(NAME community_research_query_tests COMMAND community_research_query_tests)
+set_tests_properties(community_research_query_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
+def add_kingdom_descriptor_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_kingdom_research_descriptors_tests
+  ${RECOMP_GAME_DIR}/source/native/community/kingdom_research_descriptors_tests.cpp)
+target_include_directories(community_kingdom_research_descriptors_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_kingdom_research_descriptors_tests PRIVATE cxx_std_17)
+target_compile_options(community_kingdom_research_descriptors_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_kingdom_research_descriptors_tests)
+add_dependencies(community_kingdom_research_descriptors_tests community_gpl_probe)
+add_test(NAME community_kingdom_research_descriptors_tests COMMAND community_kingdom_research_descriptors_tests)
+set_tests_properties(community_kingdom_research_descriptors_tests PROPERTIES LABELS nogame TIMEOUT 15)
 ''')
 
 

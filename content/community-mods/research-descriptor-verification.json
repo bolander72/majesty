@@ -1,0 +1,264 @@
+{
+  "format": "majesty-community-research-descriptor-agentref-verification-v1",
+  "date": "2026-10-16",
+  "sourceStage": {
+    "format": "majesty-community-native-spell-timing-probe-v1",
+    "sourceStage": {
+      "bytes": 97859,
+      "sha256": "c690db9bae08ed9d0468d86577963f3bc3b5520bc4eebf7888f0f14df60a703c"
+    },
+    "mediaStage": {
+      "bytes": 260698,
+      "sha256": "e72a215d14252ebbc039c10cd41571588c291cdb7565ce665cf5e9b216ebfa27"
+    },
+    "gamePatches": {
+      "Data/miscdata.cam": {
+        "bytes": 10916,
+        "sha256": "b2689318d906b62aad0931740ffdaa59651b644d258b23edaf6cacbe681bbb83"
+      },
+      "Data/community-equipment-gpltext.cam": {
+        "bytes": 79958,
+        "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+      },
+      "Data/community-equipment-interface.cam": {
+        "bytes": 8280128,
+        "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+      },
+      "DataMX/mx_miscdata.cam": {
+        "bytes": 18768,
+        "sha256": "b5e9fab4cb53bde608a61cccadb0ad79e3c16cfb9ff97b0842bbee58f4841e70"
+      },
+      "DataMX/community-equipment-gpltext.cam": {
+        "bytes": 79958,
+        "sha256": "8af021980158b01dd071f9ffe754a02d18755f66395cd6650eb9250fb71cfa75"
+      },
+      "DataMX/community-equipment-interface.cam": {
+        "bytes": 8280128,
+        "sha256": "f91f150b3c74245765868b2572b81474085d7cb347857765b933e4b34a1f60cb"
+      },
+      "Data/community-timing-descriptions.cam": {
+        "bytes": 600,
+        "sha256": "a7f22fd6db641f7f543dbec4d0d92efd4d7c377d098eafe708525f68e1bec77b"
+      },
+      "DataMX/community-timing-descriptions.cam": {
+        "bytes": 600,
+        "sha256": "a7f22fd6db641f7f543dbec4d0d92efd4d7c377d098eafe708525f68e1bec77b"
+      }
+    },
+    "module": {
+      "bytes": 509784,
+      "sha256": "5cb789a952bf7e53acb1ed17d6e08ede8bc6113cd56baa5e299d869e5f078fc5"
+    },
+    "featureRegistry": {
+      "bytes": 3794,
+      "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+    },
+    "sources": {
+      "gpl_attribute_bridge.h": {
+        "bytes": 4619,
+        "sha256": "3c159f34d7973dd491022d2995cd321031cbd2f3fc0b5c68d1118b7c64783caf"
+      },
+      "gpl_integer_helpers.h": {
+        "bytes": 3692,
+        "sha256": "3eedf5219a765f4fca91275ab41968b2542cf43b371cc2eb5f146b401a8e3063"
+      },
+      "gpl_base_timing_helpers.h": {
+        "bytes": 2135,
+        "sha256": "7427be0035fd614dfbb185730cecd78aad6f02b35d0758ad60547fc2522b0ed0"
+      },
+      "gpl_spell_timing_helpers.h": {
+        "bytes": 3827,
+        "sha256": "2d2daaced44fb4ccc37c767e9eb42979afe6948ef2b39a47aa515a58bc19838d"
+      },
+      "native_probe_plugin.cpp": {
+        "bytes": 133421,
+        "sha256": "762bc26f6a1bc4c7e37f3acb9560edea0392f892e128aee23877f477e11907c8"
+      },
+      "gpl_research_helpers.h": {
+        "bytes": 5345,
+        "sha256": "bc5dae6a6d15ffb11948d971da071616d7b9e51c38b0149547f45f3c2c240c36"
+      },
+      "kingdom_research_descriptors.h": {
+        "bytes": 2886,
+        "sha256": "f603c9c4ee281e229f4b621ce909bf07087af075dbfdf989fe3424abb75f7e4e"
+      }
+    },
+    "freshOwnedProfile": true,
+    "newGuildActorsInstalled": false,
+    "ordinaryGuildGameplayQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "nativeResourceStage": {
+      "bytes": 9289,
+      "sha256": "f77538ad6e1cb37cd46030c926ac29473b6cd1cbae16b6f6e5cb5033daea9329"
+    },
+    "authoredDescriptionIds": [
+      "BMA1",
+      "BME1"
+    ],
+    "equipmentRuntimeEnabled": false,
+    "controlledSetup": "Original LearnSpell and CreateEffector; no cast, save or guild actor",
+    "timingFeatureRegistry": {
+      "bytes": 3794,
+      "sha256": "127e8138f8479b96a8d0b86a7e8a94ace92949b853027a5cce21a47ce025a251"
+    },
+    "researchBindingStage": {
+      "bytes": 845,
+      "sha256": "9faa7c56fad6fcccd888ee08f51261739f834dc346ba9193d2009fa28421110d"
+    }
+  },
+  "officialBuilds": [
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_research_query_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792176380,
+      "terminal": true,
+      "peakOwnedRssMiB": 341.9,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 48069,
+      "endedAtUnix": 1792176383
+    },
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_kingdom_research_descriptors_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792176527,
+      "terminal": true,
+      "peakOwnedRssMiB": 351.7,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 48917,
+      "endedAtUnix": 1792176530
+    },
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_gpl_attribute_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792176899,
+      "terminal": true,
+      "peakOwnedRssMiB": 340.2,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 51284,
+      "endedAtUnix": 1792176903
+    }
+  ],
+  "nativeResult": {
+    "nativeExecutableSha256": "16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031",
+    "nativeBuild": "/Users/mike/.local/share/majesty-work/alchemist1220-engine-build-qualified.json",
+    "startedAtUnix": 1792176915,
+    "deadlineSeconds": 115,
+    "rssCeilingMiB": 1024,
+    "peakRssMiB": 168.0,
+    "stopReason": null,
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "audioMuted": true,
+    "freshOwnedProfile": true,
+    "inputSave": null,
+    "ownedNativePid": 51458,
+    "endedAtUnix": 1792176979
+  },
+  "nativeRegistry": {
+    "command": 29472,
+    "templateControl": 5020,
+    "level": 3,
+    "price": 3000,
+    "completionAttribute": "da878b2c",
+    "nativeTime": 10000,
+    "nativeNotification": 202,
+    "originalGetterMatched": true,
+    "originalTemplatePreserved": true,
+    "repeatedRegistrationIdempotent": true
+  },
+  "agentReference": {
+    "originalPoolType": 5,
+    "originalVirtualAssignment": true,
+    "ownedValueDistinctFromArgument": true,
+    "liveAgentIdentityCopied": true,
+    "conditionalLiteralCallSitesInFinalSource": 14,
+    "allNineNativePoolGrowthSettingsUnchanged": true,
+    "originalNullIdentity": "ffffffff",
+    "cleanupStateObserved": true,
+    "callbackEntryDirectlyTraced": false,
+    "originalEffectorAbsentAfterNativeTime": true,
+    "controlledInitialTimeout": 8000,
+    "zeroModifierSetup": true,
+    "saveReloadQualified": false
+  },
+  "queryHelperBoundaryAssertions": 28,
+  "descriptorBoundaryAssertions": 12,
+  "queryOriginalVMRefusalCases": 6,
+  "positiveGuildQueryQualified": false,
+  "positiveSavedResearchOrderQualified": false,
+  "researchOrdersCreated": false,
+  "earlierFailure": {
+    "trial": 1965,
+    "nativeExitCode": 1,
+    "guestExitCode": 3221225477,
+    "faultReturn": "004218b3",
+    "observation": "Native AdjustAttribute tried to read an untyped modifier after controlled BME1 creation without its application state",
+    "correctedSetup": "Original AddAttribute creates zero modifier state and native agentref before original CreateEffector; later owned value is NullAgent and effect absent in normal exit1971",
+    "productionRegressionEstablished": false
+  },
+  "pythonTests": {
+    "patterns": [
+      "test_community_guild*.py",
+      "test_community_native_resources.py",
+      "test_community_recruitment*.py",
+      "test_community_research*.py",
+      "test_phantom_workshop_source.py",
+      "test_alchemist_inventory_description.py"
+    ],
+    "testsRun": 53,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "successful": true
+  },
+  "productionAdmissionGatesRelaxed": false,
+  "ordinaryGuildGameplayQualified": false,
+  "finalCombinedLibraryQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "productionChanged": false,
+  "rollout": "Audited none; source and isolated native subsystem only"
+}

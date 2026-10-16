@@ -377,8 +377,9 @@ See`recruitment-owner-verification.json` for exact source and result bindings.
 
 ## Original VM attributes and saved kingdom ledgers
 
-The complete compiled source uses39 integer,21 boolean,10 function and seven
-list `AddAttribute` declarations. The previous Alchemist bridge always read an
+The initial declaration-focused audit found39 integer,21 boolean,10 function
+and seven list `AddAttribute` declarations. A later audit also found conditional
+agent-reference calls, covered below. The previous Alchemist bridge always read an
 initializer and admitted only initialized scalars. All seven authored lists use
 the three-argument form. They back Renown contributors, street audiences,
 activity records and the Chronicles kingdom ledger. Reading a fourth argument
@@ -386,9 +387,8 @@ would leave the original argument span and allocating a scalar would change
 the creator's mechanics.
 
 `gpl_attribute_bridge.h` now checks the original external-call reference span
-before reading required values or an optional initializer. It supports exactly
-the four declared types, retaining the native pool's typed allocation and
-virtual assignment. Without an initializer it calls the native Reset method,
+before reading required values or an optional initializer. It supports those four types and native agent-reference tag5, retaining the
+native pool's typed allocation and virtual assignment. Without an initializer it calls the native Reset method,
 including the list clear that releases recycled elements. The original agent
 attribute map owns each resulting value and its serialization. Existing
 attributes remain unchanged. Native growth settings are checked, and missing
@@ -602,6 +602,49 @@ initial1951/1953 trial processes exited6 on harness assertions (identifier
 encoding and worker-spawn readiness); the corrected setup passed1957.
 See `spell-timing-verification.json`. Production gates remain MMFRv1/MMCRv20.
 
+## Kingdom research queries and native descriptors
+
+The remaining research helpers now preserve the creator's query contract.
+`MM_KR_Eligible` checks the declared building family, native level and original
+completion/construction attributes. `MM_KR_Order` checks the original saved
+4005 order and current research command, with a scoped reentrant call guard;
+it does not enqueue or pay for research. Old's kind field is at6c, rather than
+the modern7c. A separate source-bound MJR1 file explicitly binds BDG to private
+ABt while preserving the authored feature registry and all three levels.
+
+Native trial1963 passed the original VM binding/refusal controls on a stock
+Palace and null actors, leaving Palace activity unchanged. Positive Bards
+eligibility and saved-order checks still require the actual guild. Official
+query boundary tests cover those positive/negative branches and nested guards;
+these fixtures do not establish paid gameplay. See `research-query-verification.json`.
+
+`KingdomResearchDescriptors` uses the original AP99 map and a clone of the
+creator's declared stock template. It preserves the native timing/notification
+words and sets the actual level, price and private completion mirror. It
+refuses collisions and changed registrations, and repeated registration is
+idempotent. Native1968 retrieved Epic Chronicles through the original getter:
+level3,3000 gold, completionda878b2c, stock time10000, notification202. That
+muted probe exited normally at176.9 MiB. It neither installed a guild nor
+submitted research. Ordinary orders, completion, saved ledger and visuals
+remain required.
+
+The broader source audit also found14 literal conditional `agentref` attribute
+creations missing from the earlier declaration-focused audit. The original
+AddAttribute adapter now admits native tag5 and uses the original pool,
+assignment/reset and saved agent map. The missing-symbol type10 remains refused.
+Actual native1968 copied a live agent identity into a separate owned value;
+agent-reference save/reload still needs the guild gameplay checks.
+
+Combined native1971 also passed original creation of the owned agent-reference
+state, the8-second controlled effect, later native NullAgent state and absent
+effect, with no cleanup fault. Its normal exit peaked at168 MiB. The prior1965
+controlled setup omitted the state expected by the authored cleanup and exited
+with a native AdjustAttribute access violation;1971 initializes zero modifiers
+through original AddAttribute before CreateEffector. The callback's result was
+observed in original state; its entry was not separately traced. See
+`research-descriptor-verification.json`. This does not qualify paid research,
+full modifier application, original saves or browser play.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw
@@ -614,8 +657,9 @@ disable unsupported features or relabel stock actors.
 Use the final resource-context source and compiled inputs described above,
 rather than preliminary1851/1861 or1860 bytecode. The current compiled source
 also calls ten native-only helpers for timing, movement and kingdom research;
-eight now have Old implementations and native boundary verification; the remaining
-two and ordinary gameplay verification are still required.
+all ten now have Old implementations. Eight have positive original-VM helper
+checks; the two research queries have original-VM refusal controls and positive
+unit fixtures. Actual guild/research/save and browser verification remain required.
 
 Require ordinary paid construction/recruitment, distinctive mechanics,
 selection/fog reveal, UI states, original saves and fresh reloads in bounded,

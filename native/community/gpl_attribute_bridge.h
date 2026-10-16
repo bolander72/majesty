@@ -39,13 +39,16 @@ struct AttributeEvidence {
     unsigned arguments = 0;
 };
 
-// Supports the four types actually used by the complete three-guild source.
+// Includes conditional agent-reference attributes used by Bards support,
+// hiring and prepared spell-origin tracking, as well as scalar/list state.
 // No missing-symbol type10 or invented list representation reaches the pool.
 inline std::uint32_t AuthoredAttributeType(const std::string &name) {
     if (name == "integer")
         return 1;
     if (name == "list")
         return 4;
+    if (name == "agentref")
+        return 5;
     if (name == "boolean")
         return 6;
     return name == "function" ? 8 : 0;

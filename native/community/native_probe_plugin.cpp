@@ -14,6 +14,8 @@
 #include "gpl_integer_helpers.h"
 #include "gpl_base_timing_helpers.h"
 #include "gpl_spell_timing_helpers.h"
+#include "gpl_research_helpers.h"
+#include "kingdom_research_descriptors.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
@@ -85,8 +87,18 @@ bool baseTimingHelpers = false, controlledBaseTiming = false, controlledBaseTimi
 std::map<std::uint32_t, MajestyCommunity::BaseTimingHelper> baseTimingFunctions;
 bool spellTimingHelpers = false, controlledSpellTiming = false,
      controlledSpellTimingApplied = false;
+bool controlledSpellExpiryApplied = false;
+std::uint32_t controlledSpellUnit = 0, controlledSpellIdentity = 0, controlledSpellStarted = 0,
+              controlledSpellSourceValue = 0;
 MajestyRuntimeFeatures::Registry timingFeatures;
 std::map<std::uint32_t, MajestyCommunity::SpellTimingHelper> spellTimingFunctions;
+bool researchQueryHelpers = false, controlledResearchQuery = false,
+     controlledResearchQueryApplied = false;
+MajestyRuntimeFeatures::Registry researchQueryFeatures;
+std::vector<MajestyCommunity::ResearchBinding> researchBindings;
+MajestyCommunity::ResearchInFlight researchFlight;
+MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
+std::map<std::uint32_t, MajestyCommunity::ResearchQuery> researchQueryFunctions;
 unsigned controlledEmptyLists = 0;
 std::uint32_t controlledLedgerAgent = 0;
 bool controlledStock = false, controlledStockApplied = false;
@@ -1033,6 +1045,11 @@ struct SpellTimingOps : BaseTimingOps {
         return description;
     }
 };
+struct ResearchQueryOps : BaseTimingOps {
+    std::uint32_t attribute(std::uint32_t unit, std::uint32_t id) {
+        return call(0x005a1c40U, unit, {id, 0});
+    }
+};
 std::vector<std::uint32_t> evaluateBuiltinIntegers(const char *symbol,
                                                    std::initializer_list<std::uint32_t> arguments) {
     const auto length = std::strlen(symbol);
@@ -1189,6 +1206,147 @@ std::uint32_t evaluateSpellTiming(const char *symbol, const char *name, std::uin
                  result);
     return result;
 }
+std::uint32_t evaluateResearchQuery(const char *symbol, std::uint32_t unit, std::uint32_t command) {
+    std::uint32_t memory = 0;
+    const auto length = std::strlen(symbol);
+    require(length < 64 && host->guest_alloc(host, 256, &memory) == POP_OK,
+            "research query evaluator storage");
+    for (unsigned i = 0; i <= length; ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, symbol[i]) == POP_OK,
+                "research query symbol");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && researchQueryFunctions.count(binding) && read(binding + 20) == 0x005a9600U,
+            "original research query binding");
+    call(0x00629bf0U, evaluator);
+    call(0x00629a20U, evaluator, {unit});
+    call(0x00629a40U, evaluator, {command});
+    call(0x00629c40U, evaluator);
+    const auto result = call(0x00629c10U, evaluator);
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "research query evaluator release");
+    std::fprintf(stderr, "[community-research-query] symbol=%s command=%u result=%u\n", symbol,
+                 command, result);
+    return result;
+}
+void runControlledResearchQuery(std::uint32_t palace) {
+    require(researchBindings.size() == 1 && researchBindings.front().record.requiredLevel == 3 &&
+                researchBindings.front().nativeFamily == 0x00744241U,
+            "source-bound original Bards family research relocation");
+    const auto command = researchBindings.front().record.actionControlId;
+    ActivityOps activity;
+    const auto before = activity.capture(palace);
+    for (const char *symbol : {"MM_KR_Eligible", "MM_KR_Order"}) {
+        require(evaluateResearchQuery(symbol, palace, command) == 0,
+                "stock Palace does not acquire Bards research");
+        require(evaluateResearchQuery(symbol, 0, command) == 0,
+                "null actor does not acquire Bards research");
+        require(evaluateResearchQuery(symbol, palace, 0xffffffffU) == 0,
+                "invalid signed command refused");
+    }
+    const auto after = activity.capture(palace);
+    require(before.command == after.command && before.startedAt == after.startedAt &&
+                before.duration == after.duration,
+            "research query does not enqueue or edit activity");
+    ResearchOps descriptors;
+    if (!(read(0x006d81e0U) & 255))
+        call(0x004736a0U, 0);
+    const auto &record = researchQueryFeatures.kingdomResearch.front();
+    const auto source = descriptors.lookup(record.descriptorTemplateControlId);
+    require(source && !descriptors.lookup(command),
+            "original research template and vacant private slot");
+    const auto originalTime = read(source), originalNotification = read(source + 12);
+    require(kingdomResearchDescriptors.prepare(descriptors, researchQueryFeatures.kingdomResearch),
+            "original kingdom research descriptor registration");
+    const auto descriptor = descriptors.lookup(command);
+    require(descriptor && call(0x00474480U, 0, {command}) == descriptor &&
+                read(descriptor) == originalTime && read(descriptor + 12) == originalNotification &&
+                read(descriptor + 4) == record.requiredLevel &&
+                read(descriptor + 8) == record.price &&
+                read(descriptor + 16) == record.completionAttribute,
+            "original lookup retrieves actual Chronicles level price completion and stock timing");
+    require(descriptors.lookup(record.descriptorTemplateControlId) == source &&
+                read(source) == originalTime && read(source + 12) == originalNotification &&
+                kingdomResearchDescriptors.prepare(descriptors,
+                                                   researchQueryFeatures.kingdomResearch) &&
+                descriptors.lookup(command) == descriptor,
+            "stock template preserved and repeated registration idempotent");
+    std::fprintf(stderr,
+                 "[community-research-descriptor] command=%u template=%u level=%u price=%u "
+                 "completion=%08x native-time=%u notification=%u\n",
+                 command, record.descriptorTemplateControlId, read(descriptor + 4),
+                 read(descriptor + 8), read(descriptor + 16), originalTime, originalNotification);
+    controlledResearchQueryApplied = true;
+    host->log(host, "Controlled community research queries: original VM bindings, family isolation "
+                    "and unchanged Palace activity passed; positive guild/order tests pending.");
+}
+std::uint32_t addControlledNativeAttribute(std::uint32_t unit, const char *name, bool agent) {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK, "controlled attribute evaluator");
+    const auto putText = [&](std::uint32_t destination, const char *text) {
+        const auto length = std::strlen(text);
+        require(length < 128, "controlled attribute text bound");
+        for (unsigned i = 0; i <= length; ++i)
+            require(host->guest_write_u8(host, destination + i, text[i]) == POP_OK,
+                    "controlled attribute text write");
+    };
+    putText(memory + 128, "AddAttribute");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    require(read(evaluator + 4) == attributeFunction, "actual original AddAttribute binding");
+    call(0x00629bf0U, evaluator);
+    call(0x00629a20U, evaluator, {unit});
+    const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+    for (const char *text : {name, agent ? "agentref" : "integer"}) {
+        putText(memory + 256, text);
+        call(0x004e3520U, memory + 80, {memory + 256});
+        const auto value = call(0x0062a810U, pool, {3});
+        require(value && read(value + 4) == 3, "controlled attribute original string allocation");
+        call(0x004e4180U, valueRef(value, 0x30), {memory + 80});
+        call(0x004e3820U, memory + 80);
+        call(0x00636bf0U, evaluator + 8, {value});
+    }
+    call(agent ? 0x00629a20U : 0x00629a40U, evaluator, {agent ? unit : 0});
+    call(0x00629c40U, evaluator);
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end - begin == 20, "actual controlled attribute arity");
+    const auto agentValue = read(read(begin + 4)), input = read(read(begin + 16));
+    const auto nativeAgent = call(0x006255e0U, valueRef(agentValue, 0x5c));
+    const auto attributeName = valueRef(read(read(begin + 8)), 0x30);
+    const auto owned = call(0x006263d0U, nativeAgent, {attributeName});
+    require(owned && owned != input && read(owned + 4) == (agent ? 5U : 1U),
+            "original agent owns a separately allocated typed attribute");
+    if (agent) {
+        const auto originalRef = valueRef(input, 0x5c), copyRef = valueRef(owned, 0x5c);
+        require(read(originalRef + 8) && read(copyRef + 8) == read(originalRef + 8),
+                "original VM assignment copied the live agent identity");
+    } else {
+        require(read(valueRef(owned, 0x28)) == 0, "controlled zero modifier initializer");
+    }
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "controlled attribute evaluator release");
+    return owned;
+}
+void checkControlledSpellExpiry() {
+    if (!controlledSpellUnit || read(0x0071c6a8U) - controlledSpellStarted < 8500)
+        return;
+    require(read(controlledSpellUnit + 0x60) == controlledSpellIdentity,
+            "controlled expiry still owns the original actor");
+    require(evaluateSpellTiming("MM_EffectorRemaining", "Bards_March_Legacy_Icon",
+                                controlledSpellUnit) == 0,
+            "original expired effect is absent");
+    require(read(controlledSpellSourceValue + 4) == 5 &&
+                read(valueRef(controlledSpellSourceValue, 0x5c) + 8) == 0xffffffffU,
+            "authored End callback cleared original owned agent reference");
+    controlledSpellExpiryApplied = true;
+    host->log(host, "Controlled community spell expiry: original authored End callback cleared "
+                    "owned agentref and expired effect is absent.");
+}
 void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
     const char *spell = "Bards_March", *effect = "Bards_March_Legacy_Icon";
     require(read(worker) == 0x0068098cU, "actual original game character worker");
@@ -1219,10 +1377,17 @@ void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
             "original learned availability preserved");
     require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 0,
             "declared absent effect has zero remaining");
-    // Controlled lifetime exceeds this bounded unsaved trial. This tests native
-    // timer discovery, not authored application/reversal of March modifiers.
-    evaluateSpellTiming("CreateEffector", effect, worker, 0x005a9640U, 100000);
-    require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 100000,
+    // Create the state normally supplied by March application before asking
+    // the original engine to own the effect and run its authored End callback.
+    // Zero modifiers keep this controlled setup from changing worker rates.
+    addControlledNativeAttribute(worker, "BardsMarchMoveDelta", false);
+    addControlledNativeAttribute(worker, "BardsMarchActionDelta", false);
+    controlledSpellSourceValue = addControlledNativeAttribute(worker, "BardsMarchSource", true);
+    controlledSpellUnit = worker;
+    controlledSpellIdentity = read(worker + 0x60);
+    controlledSpellStarted = read(0x0071c6a8U);
+    evaluateSpellTiming("CreateEffector", effect, worker, 0x005a9640U, 8000);
+    require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 8000,
             "original created effect reports its actual timeout order");
     controlledSpellTimingApplied = true;
     host->log(host, "Controlled community spell timing: original learned cooldown, availability "
@@ -1280,6 +1445,8 @@ void runControlledBaseTiming() {
             "building without supported movement remains unsupported");
     if (controlledSpellTiming && !controlledSpellTimingApplied)
         runControlledSpellTiming(moving, palace);
+    if (controlledResearchQuery && !controlledResearchQueryApplied)
+        runControlledResearchQuery(palace);
     controlledBaseTimingApplied = true;
     host->log(host, "Controlled community base timing: original action/worker getters and negative "
                     "controls passed.");
@@ -1382,6 +1549,21 @@ void registerAttributes() {
             require(function && read(function + 20) == 0x005a9600U &&
                         spellTimingFunctions.emplace(function, entry.second).second,
                     "native spell timing function identity");
+        }
+    }
+    if (researchQueryHelpers) {
+        researchQueryFunctions.clear();
+        using Kind = MajestyCommunity::ResearchQuery;
+        for (const auto &entry : std::vector<std::pair<const char *, Kind>>{
+                 {"MM_KR_Order", Kind::Order}, {"MM_KR_Eligible", Kind::Eligible}}) {
+            prepareName(entry.first);
+            call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 1, 0, 0});
+            require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 1,
+                    "original research query return declaration");
+            const auto function = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+            require(function && read(function + 20) == 0x005a9600U &&
+                        researchQueryFunctions.emplace(function, entry.second).second,
+                    "original research query dispatch identity");
         }
     }
 }
@@ -1648,6 +1830,10 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (controlledBaseTiming && !controlledBaseTimingApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledBaseTiming();
+        if (controlledSpellTiming && controlledSpellTimingApplied &&
+            !controlledSpellExpiryApplied && state && (read(state) == 3 || read(state) == 7) &&
+            !read(state + 4))
+            checkControlledSpellExpiry();
         if (controlledEquipment && !controlledEquipmentApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledEquipment();
@@ -1961,6 +2147,16 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     // Read the original function object's string and operator arguments;
     // continue every call unchanged, including the guest's failure path.
     if (target == 0x006381b0U) {
+        const auto researchQuery = researchQueryFunctions.find(self);
+        if (researchQueryHelpers && researchQuery != researchQueryFunctions.end()) {
+            ResearchQueryOps ops;
+            require(MajestyCommunity::ExecuteResearchQuery(ops, researchBindings, researchFlight,
+                                                           researchQuery->second,
+                                                           read(cpu->esp + 4) + 0x14),
+                    "original research query argument/order accessor contract");
+            returned(cpu, 0);
+            return;
+        }
         const auto spellTiming = spellTimingFunctions.find(self);
         if (spellTimingHelpers && spellTiming != spellTimingFunctions.end()) {
             SpellTimingOps ops;
@@ -2176,6 +2372,15 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         baseTimingHelpers && baseTimingTest && !std::strcmp(baseTimingTest, "1941");
     require(!controlledSpellTiming || controlledBaseTiming,
             "controlled spell timing requires the actual worker timing trial");
+    const char *researchQueries = std::getenv("RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS");
+    researchQueryHelpers = researchQueries && !std::strcmp(researchQueries, "1");
+    require(!researchQueryHelpers || integerHelpers,
+            "research queries require original native attribute registration");
+    const char *researchQueryTest = std::getenv("RECOMP_COMMUNITY_TEST_RESEARCH_QUERY_GPL");
+    controlledResearchQuery =
+        researchQueryHelpers && researchQueryTest && !std::strcmp(researchQueryTest, "1960");
+    require(!controlledResearchQuery || controlledBaseTiming,
+            "controlled research queries require bounded original world setup");
     const char *panels = std::getenv("RECOMP_ALCHEMIST_PANEL_BRIDGE");
     panelBridge = panels && !std::strcmp(panels, "1");
     const char *research = std::getenv("RECOMP_ALCHEMIST_RESEARCH_BRIDGE");
@@ -2217,6 +2422,15 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             "original MMFR parser");
     require(MajestyStockControllers::ParseRegistry(c.data(), c.size(), &recipes, &error),
             "original MMCR parser");
+    if (researchQueryHelpers) {
+        const auto raw = file("research-features.bin", 1024 * 1024);
+        const auto bindings = file("research-bindings.bin", 8 + 64 * 24);
+        require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(),
+                                                      &researchQueryFeatures, &error) &&
+                    MajestyCommunity::ParseResearchBindings(
+                        bindings.data(), bindings.size(), researchQueryFeatures, researchBindings),
+                "source-bound original research family relocation");
+    }
     if (spellTimingHelpers) {
         const auto raw = file("timing-features.bin", 1024 * 1024);
         require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(), &timingFeatures,
@@ -2385,5 +2599,13 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     spellTimingFunctions.clear();
     timingFeatures = {};
     controlledSpellTimingApplied = false;
+    controlledSpellExpiryApplied = false;
+    controlledSpellUnit = controlledSpellIdentity = controlledSpellStarted = 0;
+    controlledSpellSourceValue = 0;
+    researchQueryFunctions.clear();
+    researchBindings.clear();
+    researchQueryFeatures = {};
+    researchFlight = {};
+    controlledResearchQueryApplied = false;
     return POP_OK;
 }

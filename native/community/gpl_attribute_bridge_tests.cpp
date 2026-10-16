@@ -103,13 +103,17 @@ int main() {
     check(InstallAuthoredAttribute(emptyList, 100) == AttributeInstall::AlreadyExists);
     check(emptyList.allocations == 1);
     for (const auto &row : std::map<std::string, std::uint32_t>{
-             {"integer", 1}, {"list", 4}, {"boolean", 6}, {"function", 8}}) {
+             {"integer", 1}, {"list", 4}, {"agentref", 5}, {"boolean", 6}, {"function", 8}}) {
         Ops initialized(5, row.second);
         initialized.typeName = row.first;
         check(InstallAuthoredAttribute(initialized, 100) == AttributeInstall::Added);
         check(initialized.copies == 1 && !initialized.resets);
         check(initialized.attributes.at(1200) != 1400);
     }
+    Ops nullAgent(4, 5);
+    nullAgent.typeName = "agentref";
+    check(InstallAuthoredAttribute(nullAgent, 100) == AttributeInstall::Added);
+    check(nullAgent.resets == 1 && !nullAgent.copies);
     for (auto end : {200U, 212U, 217U, 224U, 196U, 0xffffffffU}) {
         Ops malformed(4, 4);
         malformed.memory[108] = end;

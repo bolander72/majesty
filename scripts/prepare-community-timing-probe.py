@@ -65,8 +65,26 @@ def prepare(args):
     (mod / 'timing-features.bin').write_bytes(feature_raw)
     receipt['timingFeatureRegistry'] = digest(feature_raw)
     receipt['sources'] = {name: digest((ROOT / 'native/community' / name).read_bytes()) for name in (
-        'gpl_integer_helpers.h', 'gpl_base_timing_helpers.h', 'gpl_spell_timing_helpers.h',
+        'gpl_attribute_bridge.h', 'gpl_integer_helpers.h', 'gpl_base_timing_helpers.h',
+        'gpl_spell_timing_helpers.h',
         'native_probe_plugin.cpp')}
+    if args.research_bindings is not None:
+        stage_raw = (args.research_bindings / 'research-binding-stage.json').read_bytes()
+        binding_stage = json.loads(stage_raw)
+        if (binding_stage['sourceStage'] != digest((args.source / 'source-stage.json').read_bytes()) or
+                binding_stage['nativeResourceStage'] != digest(resources_raw)):
+            raise ValueError('Research bindings do not match native/source context')
+        for name, expected in [('research-bindings.bin', binding_stage['bindings']),
+                               ('research-features.bin', binding_stage['featureRegistry'])]:
+            raw = (args.research_bindings / name).read_bytes()
+            if digest(raw) != expected:
+                raise ValueError('Research binding input changed')
+            (mod / name).write_bytes(raw)
+        receipt['researchBindingStage'] = digest(stage_raw)
+        receipt['sources']['gpl_research_helpers.h'] = digest(
+            (ROOT / 'native/community/gpl_research_helpers.h').read_bytes())
+        receipt['sources']['kingdom_research_descriptors.h'] = digest(
+            (ROOT / 'native/community/kingdom_research_descriptors.h').read_bytes())
     (args.out / 'probe-stage.json').write_text(json.dumps(receipt, indent=2) + '\n')
     return receipt
 
@@ -75,6 +93,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ['game', 'source', 'media', 'resources', 'module', 'seed-mod', 'profile-seed', 'out']:
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--research-bindings', type=Path)
     args = parser.parse_args()
     try:
         receipt = prepare(args)
