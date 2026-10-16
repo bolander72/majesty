@@ -9,6 +9,7 @@
 #include "resource_meter.h"
 #include "research_descriptors.h"
 #include "research_activity.h"
+#include "gpl_attribute_bridge.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
 #include "map_selection_identity.h"
@@ -69,6 +70,10 @@ struct TimedAction {
     std::uint32_t unit = 0, control = 0, started = 0, duration = 0;
 } timedAction;
 bool controlledParty = false, controlledPartyApplied = false;
+bool controlledCommunityGpl = false, controlledCommunityGplApplied = false;
+bool controlledCommunityGplActive = false, controlledCommunityGplReload = false;
+unsigned controlledEmptyLists = 0;
+std::uint32_t controlledLedgerAgent = 0;
 bool controlledStock = false, controlledStockApplied = false;
 bool controlledDeath = false, controlledDeathApplied = false;
 std::uint32_t controlledDeathUnit = 0, controlledDeathClock = 0, controlledDeathDelay = 0;
@@ -425,6 +430,131 @@ void invokeSourceTarget(const TargetExecution &execution) {
     call(0x006299b0U, memory + 32);
     require(host->guest_free(host, memory) == POP_OK, "source-target native call release");
 }
+
+// Original Old GPL scalar call wrapper. Preserve its actual function binding,
+// argument/result references, typed values and normal-return cleanup.
+bool evaluateScalar(const std::string &symbol, std::uint32_t unit, std::int32_t operation,
+                    std::uint32_t &result) {
+    if (symbol.empty() || symbol.size() > 120 || !unit)
+        return false;
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 256, &memory) == POP_OK, "GPL scalar native storage");
+    for (unsigned i = 0; i <= symbol.size(); ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, symbol[i]) == POP_OK,
+                "GPL scalar symbol");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    bool valid = binding && read(binding + 20) == 0x0061e4c0U;
+    if (valid) {
+        call(0x00629bf0U, evaluator);
+        call(0x00629a20U, evaluator, {unit});
+        call(0x00629a40U, evaluator, {static_cast<std::uint32_t>(operation)});
+        call(0x00629c40U, evaluator);
+        const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+        valid = begin && end >= begin && end - begin >= 4 && end - begin <= 64;
+        if (valid) {
+            const auto reference = read(begin), value = reference ? read(reference) : 0;
+            valid = value && read(value + 4) == 1;
+            if (valid)
+                result = call(0x00629c10U, evaluator);
+        }
+    }
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "GPL scalar native release");
+    return valid;
+}
+
+std::uint32_t evaluateAgentResult(const std::string &symbol) {
+    require(!symbol.empty() && symbol.size() <= 120, "GPL agent result symbol");
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 256, &memory) == POP_OK, "GPL agent result native storage");
+    for (unsigned i = 0; i <= symbol.size(); ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, symbol[i]) == POP_OK,
+                "GPL agent result symbol write");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && read(binding + 20) == 0x0061e4c0U, "GPL agent result interpreted binding");
+    // The stock constructor starts with integer result zero. Use its own
+    // drain/append/rebuild methods to supply a typed NullAgent return slot.
+    call(0x00637780U, evaluator + 8);
+    call(0x006362a0U, evaluator + 8, {0});
+    call(0x00637e10U, evaluator + 0x1c, {evaluator + 8});
+    call(0x00629c40U, evaluator);
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end >= begin && end - begin >= 4 && end - begin <= 64,
+            "GPL agent result span");
+    const auto reference = read(begin), value = reference ? read(reference) : 0;
+    require(value && read(value + 4) == 5, "GPL agent result native tag");
+    const auto agentReference = call(read(read(value) + 0x5c), value);
+    const auto result = call(0x006255e0U, agentReference);
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "GPL agent result native release");
+    return result;
+}
+
+void runControlledCommunityGpl() {
+    const auto manager = call(0x00415b40U, 0), player = read(manager + 0x24);
+    const auto palace = call(0x00418b50U, manager, {player});
+    if (!palace || !read(palace + 0x60))
+        return;
+    controlledCommunityGplApplied = true;
+    controlledCommunityGplActive = true;
+    controlledEmptyLists = 0;
+    controlledLedgerAgent = 0;
+    const std::string status = "MM_KR_61f71999deb595c08a9e9fd4ad74ab25";
+    for (const auto &test : std::vector<std::pair<std::string, std::pair<std::int32_t, unsigned>>>{
+             {status, {3, 3}},
+             {status, {3, 3}},
+             {"MM_Toggle_Bards_Hiring_Closed", {-1, 0}},
+             {"MM_Toggle_Bards_Hiring_Closed", {1, 1}},
+             {"MM_Toggle_Bards_Hiring_Closed", {-1, 1}},
+             {"MM_Toggle_Bards_Hiring_Closed", {0, 0}}}) {
+        std::uint32_t result = 0xffffffff;
+        require(evaluateScalar(test.first, palace, test.second.first, result),
+                "controlled original authored GPL scalar binding/result");
+        std::fprintf(stderr,
+                     "[community-gpl-control] symbol=%s operation=%d result=%u expected=%u\n",
+                     test.first.c_str(), test.second.first, result, test.second.second);
+        require(result == test.second.second, "controlled authored GPL scalar result");
+    }
+    controlledCommunityGplActive = false;
+    const auto root = evaluateAgentResult(status + "_Root");
+    require(root && controlledEmptyLists == (controlledCommunityGplReload ? 0U : 3U) &&
+                (controlledCommunityGplReload || root == controlledLedgerAgent),
+            "authored native ledger creation or original saved ledger restoration");
+    controlledLedgerAgent = root;
+    std::vector<std::uint32_t> lists;
+    for (const char *suffix : {"_done", "_pending", "_available"}) {
+        const auto key = status + suffix;
+        std::uint32_t storage = 0;
+        require(host->guest_alloc(host, 256, &storage) == POP_OK, "ledger check native text");
+        for (unsigned i = 0; i <= key.size(); ++i)
+            require(host->guest_write_u8(host, storage + 128 + i, key[i]) == POP_OK,
+                    "ledger check key");
+        call(0x004e3520U, storage, {storage + 128});
+        const auto value = call(0x006263d0U, controlledLedgerAgent, {storage});
+        require(value && read(value + 4) == 4 && !read(value + 0x10) &&
+                    std::find(lists.begin(), lists.end(), value) == lists.end(),
+                "native research ledger owns three distinct empty lists");
+        lists.push_back(value);
+        std::fprintf(stderr, "[community-gpl-control] native-list=%s type=4 size=0 distinct=1\n",
+                     key.c_str());
+        call(0x004e3820U, storage);
+        require(host->guest_free(host, storage) == POP_OK, "ledger check native release");
+    }
+    host->log(host, controlledCommunityGplReload
+                        ? "Controlled community GPL: original save restored native research lists "
+                          "and hiring state."
+                        : "Controlled community GPL: native empty research ledgers and saved "
+                          "hiring toggle passed.");
+}
+
 void setupControlledStock(std::uint32_t controller) {
     if (!controlledStock || controlledStockApplied)
         return;
@@ -754,51 +884,44 @@ bool sharedFunctionLookup(pop_cpu_v1 *cpu, PopHookInvocation *inv) {
 std::uint32_t valueRef(std::uint32_t value, std::uint32_t offset) {
     return call(read(read(value) + offset), value);
 }
-void addAttribute(std::uint32_t context) {
-    // Native external-call arguments are references to GPL values. Resolve
-    // the real agent and use its original attribute map, not a host sidecar.
-    const auto value = [context](unsigned index) {
-        return read(read(read(context + 4) + index * 4));
-    };
-    const auto agent = call(0x006255e0U, valueRef(value(1), 0x5c));
-    require(agent != 0, "AddAttribute live agent");
-    const auto name = valueRef(value(2), 0x30);
-    const auto typeName = guestString(valueRef(value(3), 0x30));
-    const auto input = value(4), type = read(input + 4);
-    require((typeName == "boolean" && type == 6) || (typeName == "integer" && type == 1) ||
-                (typeName == "function" && type == 8),
-            "AddAttribute authored type agreement");
-    if (call(0x00626440U, agent, {name}) & 0xff)
-        return;
-    const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
-    std::uint32_t growthBefore[9];
-    for (unsigned i = 0; i < 9; ++i)
-        growthBefore[i] = read(pool + 0xa4 + i * 4);
-    if (traceRecruitment)
-        std::fprintf(stderr,
-                     "[alchemist-pool-trace] attribute-before name=%s pool=%08x growth=%u\n",
-                     guestString(name).c_str(), pool, read(pool + 0xbc));
-    const auto copy = call(0x0062a810U, pool, {type});
-    require(copy && read(copy + 4) == type, "AddAttribute original typed allocation");
-    // Original list-copy path 00639ac0..00639ada allocates by type then
-    // copies through virtual +18. Attribute insertion 006261c0 copies the
-    // key and takes the value pointer; the original saver owns both.
-    call(read(read(copy) + 0x18), copy, {input});
-    if (!(call(0x006261c0U, agent, {name, copy}) & 0xff)) {
-        call(0x0062aa20U, pool, {copy});
-        require(false, "AddAttribute original insertion refused");
+struct AttributeOps {
+    bool valid(std::uint32_t address, std::uint32_t bytes) {
+        std::uint32_t ignored = 0;
+        return address && bytes >= 4 && address <= UINT32_MAX - bytes &&
+               host->guest_read_u32(host, address, &ignored) == POP_OK &&
+               host->guest_read_u32(host, address + bytes - 4, &ignored) == POP_OK;
     }
-    require(call(0x006263d0U, agent, {name}) == copy,
-            "AddAttribute original map owns independent value");
-    for (unsigned i = 0; i < 9; ++i)
-        require(read(pool + 0xa4 + i * 4) == growthBefore[i],
-                "AddAttribute preserves native pool growth settings");
-    std::fprintf(stderr, "[alchemist-attributes] installed name=%s type=%u\n",
-                 guestString(name).c_str(), type);
-    if (traceRecruitment)
-        std::fprintf(stderr, "[alchemist-pool-trace] attribute-after name=%s pool=%08x growth=%u\n",
-                     guestString(name).c_str(), pool, read(pool + 0xbc));
+    std::uint32_t read(std::uint32_t address) {
+        return ::read(address);
+    }
+    std::uint32_t reference(std::uint32_t value, std::uint32_t offset) {
+        return valueRef(value, offset);
+    }
+    std::string text(std::uint32_t address) {
+        return guestString(address);
+    }
+    std::uint32_t call(std::uint32_t address, std::uint32_t self,
+                       std::initializer_list<std::uint32_t> args) {
+        return ::call(address, self, args);
+    }
+};
+void addAttribute(std::uint32_t context) {
+    AttributeOps ops;
+    MajestyCommunity::AttributeEvidence evidence;
+    const auto installed = MajestyCommunity::InstallAuthoredAttribute(ops, context, &evidence);
+    if (controlledCommunityGplActive && installed == MajestyCommunity::AttributeInstall::Added &&
+        evidence.type == 4) {
+        require(evidence.arguments == 3 &&
+                    (!controlledLedgerAgent || controlledLedgerAgent == evidence.agent),
+                "controlled authored list declaration and root ownership");
+        controlledLedgerAgent = evidence.agent;
+        ++controlledEmptyLists;
+    }
+    require(installed == MajestyCommunity::AttributeInstall::Added ||
+                installed == MajestyCommunity::AttributeInstall::AlreadyExists,
+            "authored AddAttribute native argument/type/pool/map contract");
 }
+
 void registerAttributes() {
     const auto prepareName = [](const char *name) {
         const auto length = std::strlen(name);
@@ -879,6 +1002,10 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         researchController = 0;
         researchControllerGeneration = 0;
         controlledPartyApplied = false;
+        controlledCommunityGplApplied = false;
+        controlledCommunityGplActive = false;
+        controlledEmptyLists = 0;
+        controlledLedgerAgent = 0;
         controlledStockApplied = false;
         controlledDeathApplied = false;
         controlledDeathUnit = 0;
@@ -1043,7 +1170,7 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         return;
     }
-    if (researchBridge && target == 0x005d9680U) {
+    if ((researchBridge || controlledCommunityGpl) && target == 0x005d9680U) {
         // Optional isolated test setup: use the already implemented ordinary
         // single-player cheat, never rewrite actor statistics or mod balance.
         const auto state = read(0x006d7670U);
@@ -1073,6 +1200,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (controlledCommunityGpl && !controlledCommunityGplApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledCommunityGpl();
         if (controlledTarget && !controlledTargetApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4)) {
             const auto world = read(0x0071c68cU), manager = world ? read(world + 4) : 0;
@@ -1555,6 +1685,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     targetBridge = actionBridge && targets && !std::strcmp(targets, "1");
     const char *targetTest = std::getenv("RECOMP_ALCHEMIST_TEST_TARGET_COMMAND");
     controlledTarget = targetBridge && targetTest && !std::strcmp(targetTest, "1797");
+    const char *communityTest = std::getenv("RECOMP_COMMUNITY_TEST_SCALAR_GPL");
+    controlledCommunityGplReload = communityTest && !std::strcmp(communityTest, "1894-reload");
+    controlledCommunityGpl = attributeCompat && communityTest &&
+                             (!std::strcmp(communityTest, "1894") || controlledCommunityGplReload);
     const char *party = std::getenv("RECOMP_ALCHEMIST_TEST_PARTY_LEVELS");
     controlledParty = researchBridge && party && !std::strcmp(party, "1");
     const char *stock = std::getenv("RECOMP_ALCHEMIST_TEST_REAGENTS");
@@ -1619,6 +1753,14 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             hooks.push_back(id);
         }
         host->log(host, "Private research route enabled through original queue/update/event2009.");
+    }
+    if (controlledCommunityGpl && !researchBridge) {
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x005d9680U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
     }
     if (controlledDeath) {
         std::uint32_t id = 0;
@@ -1704,5 +1846,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
         host->guest_free(host, scratch);
     scratch = 0;
     attributeFunction = 0;
+    controlledCommunityGplActive = false;
+    controlledCommunityGplApplied = false;
+    controlledLedgerAgent = 0;
+    controlledEmptyLists = 0;
     return POP_OK;
 }

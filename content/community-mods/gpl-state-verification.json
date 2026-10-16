@@ -1,0 +1,224 @@
+{
+  "format": "majesty-community-native-gpl-state-verification-v1",
+  "date": "2026-10-16",
+  "sourceFiles": {
+    "native/community/gpl_attribute_bridge.h": {
+      "bytes": 4500,
+      "sha256": "31a53d0f911d5ab0a5263347b43cef5738e800d868efdae1ea14430a4aefae10"
+    },
+    "native/community/gpl_attribute_bridge_tests.cpp": {
+      "bytes": 5516,
+      "sha256": "e823786f2e09e15612094de250b2ffdafe58c688a0e27493568642d104ddb1d7"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 91287,
+      "sha256": "f6b2d1bd2d30761a1842a7e4e4ca3341683372e8acd68149a11f4a678ba6879a"
+    },
+    "scripts/prepare-community-controller-fixture.py": {
+      "bytes": 7867,
+      "sha256": "c04fa5f026d551f8b559a83465f1c88102b9f13da4dccbfb539d59fcd261b36c"
+    }
+  },
+  "originalGuestSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "nativeEngineSha256": "16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031",
+  "commonBytecode": {
+    "bytes": 14367967,
+    "sha256": "f6450d27483439c758f99eedcc4f7475a7d056d8bc62ec8c776048232b31d48f"
+  },
+  "authoredAttributeDeclarations": {
+    "integer": 39,
+    "boolean": 21,
+    "function": 10,
+    "list": 7
+  },
+  "types": {
+    "integer": 1,
+    "list": 4,
+    "boolean": 6,
+    "function": 8,
+    "nativeStringArguments": 3,
+    "nativeAgentArguments": 5
+  },
+  "nativeCallEntries": {
+    "constructEvaluator": "00629910",
+    "destroyEvaluator": "006299b0",
+    "appendUnit": "00629a20",
+    "appendInteger": "00629a40",
+    "prepareIntegerResult": "00629bf0",
+    "integerResult": "00629c10",
+    "execute": "00629c40",
+    "drain": "00637780",
+    "appendNullAgent": "006362a0",
+    "rebuildReferences": "00637e10"
+  },
+  "unitBoundaryTest": {
+    "terminal": true,
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 166.6,
+    "rssCeilingMiB": 2048
+  },
+  "nativeTrials": {
+    "community1905-native-ledger-save": {
+      "exitCode": 0,
+      "terminal": true,
+      "stopReason": null,
+      "peakOwnedRssMiB": 172.7,
+      "rssCeilingMiB": 1024,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "sourceSha256": {
+        "gpl_attribute_bridge.h": "31a53d0f911d5ab0a5263347b43cef5738e800d868efdae1ea14430a4aefae10",
+        "native_probe_plugin.cpp": "f6b2d1bd2d30761a1842a7e4e4ca3341683372e8acd68149a11f4a678ba6879a"
+      },
+      "nativeModuleSha256": "a0d2cb62ffd5455d4ad4e3b722ea9b213482b507aa008033b4ed2df789f48f0a",
+      "logSha256": "b477a239cc634cfc31df7aa8cc21425775c47fc529ec6d094072f8dfb3eb9a51",
+      "callbacks": [
+        {
+          "symbol": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25",
+          "operation": 3,
+          "result": 3
+        },
+        {
+          "symbol": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25",
+          "operation": 3,
+          "result": 3
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": -1,
+          "result": 0
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": 1,
+          "result": 1
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": -1,
+          "result": 1
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": 0,
+          "result": 0
+        }
+      ],
+      "originalLists": 3,
+      "newListDeclarationsRequired": 3
+    },
+    "community1907-native-ledger-reload": {
+      "exitCode": 0,
+      "terminal": true,
+      "stopReason": null,
+      "peakOwnedRssMiB": 170.0,
+      "rssCeilingMiB": 1024,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "sourceSha256": {
+        "gpl_attribute_bridge.h": "31a53d0f911d5ab0a5263347b43cef5738e800d868efdae1ea14430a4aefae10",
+        "native_probe_plugin.cpp": "f6b2d1bd2d30761a1842a7e4e4ca3341683372e8acd68149a11f4a678ba6879a"
+      },
+      "nativeModuleSha256": "a0d2cb62ffd5455d4ad4e3b722ea9b213482b507aa008033b4ed2df789f48f0a",
+      "logSha256": "ad8a9ab164a71f0b4cfc23b8386eca6221839748c836ba904d8ddd9f56948b59",
+      "callbacks": [
+        {
+          "symbol": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25",
+          "operation": 3,
+          "result": 3
+        },
+        {
+          "symbol": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25",
+          "operation": 3,
+          "result": 3
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": -1,
+          "result": 0
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": 1,
+          "result": 1
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": -1,
+          "result": 1
+        },
+        {
+          "symbol": "MM_Toggle_Bards_Hiring_Closed",
+          "operation": 0,
+          "result": 0
+        }
+      ],
+      "originalLists": 3,
+      "newListDeclarationsRequired": 0
+    }
+  },
+  "controlledWorld": "Original Random (Beginner), stock Palace agent; no new guild actor installed",
+  "preservedEarlierAlchemistLibraryLoadedAlongsideProbeLibrary": true,
+  "olderAlchemistVMSavedContinuationMigrationQualified": false,
+  "ordinaryGeneratedSave": {
+    "bytes": 1305927,
+    "sha256": "c982a9fa323242ccc423e1811902f107aa1c77119cba8295ee418222bcea492f",
+    "selectedBy": "changed_save unique generated file excluding copied hashes",
+    "inputHashes": []
+  },
+  "stoppedTypedSave": {
+    "rootAgentId": 1,
+    "lists": [
+      {
+        "attribute": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25_available",
+        "kind": "list",
+        "childCount": 0
+      },
+      {
+        "attribute": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25_done",
+        "kind": "list",
+        "childCount": 0
+      },
+      {
+        "attribute": "MM_KR_61f71999deb595c08a9e9fd4ad74ab25_pending",
+        "kind": "list",
+        "childCount": 0
+      }
+    ],
+    "hiring": [
+      {
+        "agentId": 35,
+        "unitId": 2311,
+        "kind": "boolean",
+        "value": false
+      }
+    ]
+  },
+  "originalSaveUnchangedAfterReload": true,
+  "originalLedgerRestoredWithoutRecreation": true,
+  "nondefaultHiringStateReloadQualified": false,
+  "browserLaunched": false,
+  "newGuildActorAssetsInstalled": false,
+  "newGuildPaidOrdersQualified": false,
+  "paidResearchBonusesQualified": false,
+  "productionChanged": false,
+  "userPlayerProfilesAccessed": false,
+  "ownedTestProfilesUsed": true,
+  "published": false,
+  "focusedPythonTestsPassed": 39,
+  "focusedPythonTestsSkipped": 0,
+  "remainingNativeGPLHelpers": [
+    "MM_ActionBasePeriod",
+    "MM_CommitSpellCooldown",
+    "MM_EffectorRemaining",
+    "MM_KR_AwardBonus",
+    "MM_KR_CapAdd",
+    "MM_KR_Eligible",
+    "MM_KR_Order",
+    "MM_SimulationElapsed",
+    "MM_SimulationTime",
+    "MM_UnitMovementBasePeriod"
+  ],
+  "remaining": "Connect source-backed guild UI services, final resource/feature composition and Old native helpers; verify actual paid guilds/abilities/overlap/saves/browser. This probe is controlled native GPL state evidence only."
+}

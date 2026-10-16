@@ -375,6 +375,66 @@ callback bookkeeping are explicit test fixtures. They do not establish live
 orders, gold deductions, abilities, UI rendering, save compatibility or SEH.
 See`recruitment-owner-verification.json` for exact source and result bindings.
 
+## Original VM attributes and saved kingdom ledgers
+
+The complete compiled source uses39 integer,21 boolean,10 function and seven
+list `AddAttribute` declarations. The previous Alchemist bridge always read an
+initializer and admitted only initialized scalars. All seven authored lists use
+the three-argument form. They back Renown contributors, street audiences,
+activity records and the Chronicles kingdom ledger. Reading a fourth argument
+would leave the original argument span and allocating a scalar would change
+the creator's mechanics.
+
+`gpl_attribute_bridge.h` now checks the original external-call reference span
+before reading required values or an optional initializer. It supports exactly
+the four declared types, retaining the native pool's typed allocation and
+virtual assignment. Without an initializer it calls the native Reset method,
+including the list clear that releases recycled elements. The original agent
+attribute map owns each resulting value and its serialization. Existing
+attributes remain unchanged. Native growth settings are checked, and missing
+symbol type10 never reaches a value bucket. Boundary tests cover omitted
+initializers, independent initialized values, invalid spans/types and failed
+insertion cleanup; the private plugin also compiles through official tools.
+
+The private scalar evaluator now uses the original Old string, function-call,
+typed argument, execution, result and cleanup helpers. Its no-argument agent
+result path replaces the constructor's integer return slot through native
+drain/NullAgent append/reference rebuild methods. It never patches a saved
+function's model or copies a modern evaluator layout into Old.
+
+Owned native trial1905 loaded the exact1860 common bytecode alongside the
+preserved earlier Alchemist library and entered a normal Beginner Random world.
+Controlled calls used its stock Palace agent: the authored Chronicles status
+callback returned3 twice for cancellation without a purchase; the hiring
+accessor returned0/1/1/0 for query/close/query/open. The actual VM executed all
+three empty-list declarations, and a typed return from the original root
+function resolved the same agent that received them. Its native map contained
+three distinct list values, each with zero elements.
+
+The ordinary Save Game menu wrote a1,305,927-byte GMP with SHA256
+`c982a9fa323242ccc423e1811902f107aa1c77119cba8295ee418222bcea492f`.
+An independent bounded typed traversal found the three empty lists on the
+original `GplAIRoot` and a boolean false `BardsHiringClosed` on the Palace agent.
+Trial1907 loaded that exact unchanged save in a fresh owned profile, reran the
+authored callbacks and resolved the original three lists with **zero** new list
+declarations. Both trials exited normally, muted, below173 MiB observed owned
+RSS; all owned games are closed. See`gpl-state-verification.json`.
+
+This qualifies a controlled VM attribute/callback/save boundary. It does not
+qualify a Bards building, paid research, bonuses, hiring contracts, rendered
+guild controls or browser gameplay. Hiring callbacks worked after reload;
+independent preservation of a nondefault hiring state remains a live guild
+check. No player save was changed. This probe also does not prove that replacing
+the deployed Alchemist library with the combined library preserves older saved
+VM continuations.
+
+The failed preparatory trials are retained:1896 rejected newer UI hooks in the
+older native host and was stopped;1898 sent input before readiness;1899/1900
+stopped at stock name/quest introduction dialogs. The successful probe used the
+native presented-frame readiness gate and the actual Play Game/name/quest
+introduction/Freestyle/Beginner sequence. These were harness failures, not
+qualified guild gameplay or evidence of an application-crash fix.
+
 ## Remaining qualification
 
 Adapt the compiled gameplay and required features to the pinned DirectDraw
@@ -383,6 +443,15 @@ equipment, hiring/activity lifecycle, Chronicles research, XP observers and
 projectile behavior. Phantoms needs private upgrade/recruitment controls, undead
 interactions, spell effects and native descriptor conversion. Do not silently
 disable unsupported features or relabel stock actors.
+
+Before final packaging, compare the exact prepared GPL against the creator's
+full composition path, which supplies final descriptions, spell policy and
+source context to `prepare_gpl_bundle`. The preliminary1851/1861 preparation
+did not explicitly pass all of those final resource views; do not assume its
+bytecode already proves their final integration. Recompile through the original
+SDK only if the authoritative final source changes. The current compiled source
+also calls ten native-only helpers for timing, movement and kingdom research;
+they still require Old implementations and ordinary gameplay verification.
 
 Require ordinary paid construction/recruitment, distinctive mechanics,
 selection/fog reveal, UI states, original saves and fresh reloads in bounded,

@@ -20,6 +20,30 @@ EXE_SHA256 = '654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542'
 TABLE_SHA256 = '116ab671abc4e384150bb2c6c007af7227bb33176e071a938d714236830bed29'
 
 
+def add_gpl_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+pop_add_plugin(community_gpl_probe SOURCE
+  ${RECOMP_GAME_DIR}/source/native/community/native_probe_plugin.cpp
+  OUTPUT_DIR ${POP_OUT}/private-plugins OUTPUT_NAME community_gpl_probe WARNINGS ${POP_WARN_HOST})
+target_sources(community_gpl_probe PRIVATE
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/RuntimeFeatureRegistry.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
+target_include_directories(community_gpl_probe PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+add_executable(community_gpl_attribute_tests
+  ${RECOMP_GAME_DIR}/source/native/community/gpl_attribute_bridge_tests.cpp)
+target_include_directories(community_gpl_attribute_tests PRIVATE ${RECOMP_GAME_DIR}/source/native/community)
+target_compile_features(community_gpl_attribute_tests PRIVATE cxx_std_17)
+target_compile_options(community_gpl_attribute_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_gpl_attribute_tests)
+add_dependencies(community_gpl_attribute_tests community_gpl_probe)
+add_test(NAME community_gpl_attribute_tests COMMAND community_gpl_attribute_tests)
+set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
 def prepare(game, controllers, output, shared_source=None, legacy_routes=None):
     if output.exists() or output.is_symlink():
         raise ValueError('Preserve existing fixture; choose a fresh output')
@@ -104,6 +128,7 @@ set_tests_properties(community_shared_routes_tests PROPERTIES LABELS nogame TIME
         originalFilesUnchanged=True, runtimeHooksEnabled=False, browserPlayable=False,
         command=['tools/test.py', '--game-dir', str(output), '--native-test',
                  'community_recruitment_tests', '--jobs', '1'])
+    add_gpl_fixture(output)
     (output / 'fixture.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
