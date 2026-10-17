@@ -113,6 +113,25 @@ def prepare(args):
         generated[name] = Path(folder).resolve()
     if generated.keys() != fixture['modules'].keys():
         raise ValueError('Require all four original private modules')
+    movement = None
+    if bool(args.movement) != bool(args.movement_proof):
+        raise ValueError('Require both movement generation and its producer proof')
+    if args.movement:
+        movement = json.loads(args.movement_proof.read_text())
+        if (movement.get('format') != 'majesty-private-movement-generation-v1' or
+                movement.get('exitCode') != 0 or movement.get('stopReason') or
+                movement.get('sourceStage') != source_digest or
+                movement.get('featureRegistry') != research_stage['featureRegistry'] or
+                movement.get('entries') != ['005b7490'] or
+                movement.get('frameLoanOffset') != 0x18 or
+                movement.get('compileDefinitions') != [
+                    'recomp_module_register=majesty_collect_private_movement',
+                    'fn_005b7490=majesty_template_movement_fn_005b7490'] or
+                set(movement.get('generatedFiles', {})) != {'chunk_000.c', 'table.c', 'funcs.h'}):
+            raise ValueError('Movement template and community source binding differ')
+        for name, expected in movement['generatedFiles'].items():
+            if digest_file(args.movement / name) != expected:
+                raise ValueError('Private movement translation changed: ' + name)
     module_cmake = []
     for name, folder in generated.items():
         binding = fixture['modules'][name]
@@ -128,6 +147,13 @@ def prepare(args):
             f'target_compile_definitions(community_template_{name} PRIVATE ' + ' '.join(definitions) +
             ' GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})',
             f'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_{name}>)']
+    if movement:
+        module_cmake += [
+            f'add_library(community_template_movement OBJECT {quoted(args.movement / "chunk_000.c")} {quoted(args.movement / "table.c")})',
+            f'target_include_directories(community_template_movement PRIVATE {quoted(args.movement)} ${{POP_ROOT}}/runtime ${{CMAKE_BINARY_DIR}}/generated)',
+            'target_compile_definitions(community_template_movement PRIVATE ' + ' '.join(movement['compileDefinitions']) +
+            ' GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})',
+            'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_movement>)']
     args.out.mkdir(parents=True)
     (args.out / 'game.toml').write_bytes(config_raw)
     shutil.copyfile(args.game / 'globals.toml', args.out / 'globals.toml')
@@ -150,7 +176,7 @@ def prepare(args):
     shutil.copyfile(native / 'native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
     for path in native.glob('*.h'):
         shutil.copyfile(path, support / path.name)
-    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp']:
+    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp', 'movement_runtime.cpp']:
         shutil.copyfile(native / name, support / name)
     vendor = ROOT / 'third_party/majesty-mod-manager/runtime'
     for path in vendor.glob('*.h'):
@@ -196,10 +222,19 @@ def prepare(args):
         'pop_test_binary(community_name_registration_tests)',
         'add_test(NAME community_name_registration_tests COMMAND community_name_registration_tests ' + quoted(core / 'features.bin') + ')',
         'set_tests_properties(community_name_registration_tests PROPERTIES LABELS nogame TIMEOUT 15)']
+    cmake += [
+        'add_executable(community_movement_scale_tests ' + quoted(native / 'movement_scale_tests.cpp') + ')',
+        'target_include_directories(community_movement_scale_tests PRIVATE ' + quoted(native) + ')',
+        'target_compile_features(community_movement_scale_tests PRIVATE cxx_std_17)',
+        'target_compile_options(community_movement_scale_tests PRIVATE ${POP_WARN_STRICT})',
+        'pop_test_binary(community_movement_scale_tests)',
+        'add_test(NAME community_movement_scale_tests COMMAND community_movement_scale_tests)',
+        'set_tests_properties(community_movement_scale_tests PROPERTIES LABELS nogame TIMEOUT 15)']
     (tests / 'CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
     receipt = dict(format='majesty-community-process-core-engine-stage-v1', originalProducer=digest_file(args.producer),
         originalHost=digest_file(exe), originalGuestSha256=PIN, originalObjects=source_inputs,
         gameConfig=digest_file(args.out / 'game.toml'), privateTemplates=fixture,
+        privateMovement=movement,
         sourceFiles={p.relative_to(core).as_posix():digest_file(p) for p in core.rglob('*') if p.is_file()},
         generatedSourcesEdited=False, originalObjectsReused=True, processLifetimeCore=True,
         nativeLinked=False, liveGameplayQualified=False, browserPlayable=False, published=False)
@@ -211,6 +246,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ['game','build','producer','fixture','seed-mod','controllers','research','source','tables','collection','out']:
         parser.add_argument('--' + name, required=True, type=Path)
+    parser.add_argument('--movement', type=Path)
+    parser.add_argument('--movement-proof', type=Path)
     parser.add_argument('--generated', action='append', required=True)
     args = parser.parse_args()
     try:

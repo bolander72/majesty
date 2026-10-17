@@ -837,6 +837,91 @@ Saved activity busy/ticking/running flags are false and its record list is empty
 See `activity-reentrancy-verification.json` for the scoped proof. The new
 collection remains private while the remaining gameplay/browser checks run.
 
+## Phantoms Haunt native guild play
+
+Native2146 placed the actual Haunt at map42,172 for1400 gold, preserving the
+existing stock Temple and Bards Hall. Native2151 resumed that generated save,
+completed the250HP building and recruited Fen Shadowfiend for700 gold.
+The original save contains the live Phantom `AVp1`, not a placement preview.
+Native2154 restored that save in a fresh owned profile, selected the Phantom
+through the normal Members list and displayed its original portrait, class and
+18HP character card. The paid1800-gold upgrade completed as `ABu2`,350HP.
+All three Bards remained alive, alongside Hall3 and completed Epic Chronicles.
+The latest generated Day8 save is409986 bytes, SHA256
+`2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5`.
+These are native gameplay/save checks; browser and advanced ability checks
+remain separate. The receipt is in `native-collection-verification.json`.
+
+Native2210 completed the paid2200-gold Haunt3 upgrade at475HP and saved Day9
+with all four community heroes alive. Native2214 then built the original
+Alchemy Lab for1400 gold in the same kingdom, completed its235HP building and
+recruited Arcane Amberglass for600 gold. The Alchemist subsequently died;
+the cause is unqualified, while normal death handling and the Day11 save
+completed. This does not establish living-Alchemist coexistence after reload.
+Those two trials used the earlier movement adapter and do not qualify its
+positive speed effect. Their building/recruitment observations remain scoped.
+
+Native2235 saved a second paid Alchemist recruitment while it was still in
+progress. Native2240 restored that exact save with the corrected adapters,
+completed recruitment normally and selected Adalia Smokesleeve's actual card
+at11/11HP. Its generated Day11 save is403232 bytes, SHA256
+`bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df`.
+It contains completed Hall3, Haunt3 and Lab1, plus living Dancer, Spellsinger,
+Troubadour, Phantom and Alchemist. A fresh reload of this five-hero state is
+still required.
+
+## Movement and original spell caster adapters
+
+The private native movement module retains the original order calculation and
+applies the creator's declared effector percentages to each current step.
+It does not repeatedly modify saved speed or the native cached base step.
+An audit of the original control flow rejected the first temporary at
+originalESP+20, which is reused by native vector assembly at005b771c. The
+corrected loan at originalESP+18 is unused through every continuation and
+RET12 path. Focused tests reject the old slot and a changed vector reference.
+
+Original CreateSpellUnit retains its resolved caster in EBP at the exact
+005ae750 callback returning to00422fca. The process core invokes the creator's
+MM_SO_Record before authored birth logic, preserving source context in the
+original saved agent attribute rather than a transient host map. Native2230
+exposed an evaluator ABI mistake: a two-agent scalar call retains twelve
+bytes of references, comprising the return value and both arguments. The
+adapter now validates all three typed slots. A fresh positive control is
+recorded by native2234: the original constructor spawned spell1613 from
+caster627 and the creator's record function returned1 before authored birth.
+The same fixture witnessed actual Dancer585 movement change from16384 to18841
+(115%), with its native cached base unchanged, followed by normal expiry of
+the original8000ms overlay. The session exited normally at201.5MiB peak RSS.
+
+The bounded component fixture invokes the actual March song and original
+spell constructor. It must never be used as ordinary campaign progress.
+Native arithmetic, compilation and the controlled effect/expiry pass; ordinary
+AI casting/learning and browser qualification remain separate. See
+`native-adapter-verification.json`.
+
+The new Palace icons preserve the stock25-by-25 emblem's exact two-pixel
+frame and opaque inset. Only the creator's inset art is quantized; native
+palette control indices are excluded. Decode/roundtrip tests verify the rim,
+and native2210 displayed the Bard icon beside stock Palace entries.
+
+## Private browser integration
+
+`prepare-community-browser-engine.py` binds the corrected native core and five
+private modules to the exact production browser objects. It removes only the
+three superseded Alchemist plugin objects and old builtin table, preserving
+the remaining148 objects and original libraries. It verifies the original
+artifact hashes, translation configuration, symbols and module inputs, then
+stages a separate resource bundle. No original generated source is edited.
+The official private build2238 passed at1707MiB peak owned RSS. Its WASM is
+90847770 bytes; this is link evidence, not browser gameplay qualification.
+
+Browser2244 stopped during initial asset import, before the game launched:
+OPFS reported a quota error and the host filesystem had only166MiB available.
+The owned staging directory was removed through the browser storage API,
+the owned browser/server closed, and783MiB became available. Preserve all
+profiles, original inputs and prior releases. Require at least3GiB free before
+another full browser import. No public release descriptor was changed.
+
 ## Remaining qualification
 
 Activate the final compiled gameplay, required features and private tables in
@@ -845,8 +930,10 @@ continuations, and audit CGPH/Old AP10 and AP78 in ordinary gameplay. In particu
 Bards still needs equipment/shopping, advanced combat and projectile checks,
 hiring controls, Chronicles benefit/negative controls and lifecycle restoration.
 Its three-choice recruitment, all original cards, paid upgrades through level3,
-research completion and original progress saves have native evidence above. Phantoms needs private upgrade/recruitment controls, undead
-interactions, spell effects and native descriptor conversion. Do not silently
+research completion and original progress saves have native evidence above.
+Phantoms has ordinary construction, recruitment, its own card, fresh reload
+and paid upgrades through tier3. It still needs undead interactions and spell
+effects. Do not silently
 disable unsupported features or relabel stock actors.
 
 Use the final resource-context source and compiled inputs described above,

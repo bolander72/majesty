@@ -201,16 +201,24 @@
     "nativeBardsPaidTier2": true,
     "nativeBardsPaidTier3": true,
     "nativeBardsEpicChroniclesSaved": true,
-    "nativeBardsEpicChroniclesFreshReload": false
+    "nativeBardsEpicChroniclesFreshReload": true,
+    "nativePhantomPaidConstruction": true,
+    "nativePhantomPaidRecruitment": true,
+    "nativePhantomCharacterCard": true,
+    "nativePhantomFreshHeroReload": true,
+    "nativePhantomPaidTier2": true,
+    "nativePhantomPaidTier3": true,
+    "nativeAlchemyPaidCombinedConstruction": true,
+    "nativeAlchemyCombinedRecruitAndDeath": true
   },
   "limits": [
     "Bootstrap uses older original native archive: Alchemist panel/research bridges disabled because fog entry remains unhookable in that archive. This is not a release configuration.",
     "Trials2012/2014/2017/2019/2025/2033/2034 did not establish paid Bards construction; wrong-row, existing-building/mobile-unit and fog refusals were retained as failed attempts.",
     "Chronicles gold/XP are source GPL wrappers, not missing native award observers; native visual ownership/world-ready events remain pending.",
     "The earlier three-argument factory fixture was insufficient. Original PE returns RET16; native2056 used RET12 and corrupted the caller. Current source and execution fixture preserve all four arguments and16-byte cleanup.",
-    "Trials2061/2077 parent cards opened but Recruit was inert: direct generated factory RET skipped owner attachment. Trial2088 corrects it and saves all three paid living heroes. Full mechanisms, fresh hero reload and browser remain unqualified.",
-    "Research execution/completion now use nested original callbacks and exit ResearchFlight before native RET; Official native2098 link passes; live research checks remain pending.",
-    "Unpatched common1920 fails nested street-show cancellation after upgrade3. Current candidate2130/common2126 reacquires the root after cancellation; exact native2135 replay passes and saves. Advanced mechanics, Haunt and full browser/Alchemy qualification remain pending."
+    "Trials2061/2077 parent cards opened but Recruit was inert: direct generated factory RET skipped owner attachment. Trial2088 corrects it and saves all three paid living heroes. Fresh hero reload and cards subsequently passed; advanced mechanisms and browser remain unqualified.",
+    "Research execution/completion now use nested original callbacks and exit ResearchFlight before native RET; Official native2098 link passes; native paid research and fresh reload subsequently passed.",
+    "Unpatched common1920 fails nested street-show cancellation after upgrade3. Current candidate2130/common2126 reacquires the root after cancellation; exact native2135 replay passes and saves. Native Haunt construction/recruitment/card/tier2 subsequently passed; advanced mechanics and full browser/Alchemy qualification remain pending."
   ],
   "paidBardsConstruction": {
     "trial": {
@@ -730,5 +738,132 @@
     "freshReloadQualified": false,
     "activityReentrancyProof": "content/community-mods/activity-reentrancy-verification.json",
     "fullBenefitsAndLifecycleQualified": false
+  },
+  "nativePhantomGuild": {
+    "paidConstructionGold": 1400,
+    "completedTier1Hp": 250,
+    "paidPhantomRecruitmentGold": 700,
+    "recruitedNativeType": "AVp1",
+    "recruitedName": "Fen Shadowfiend",
+    "directCharacterCard": true,
+    "freshOriginalSaveReload": true,
+    "paidTier2Gold": 1800,
+    "completedTier2Hp": 350,
+    "latestSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 8 Days.GMP",
+      "bytes": 409986,
+      "sha256": "2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5",
+      "profile": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/run.json",
+      "inputSha256": "e3f9fa0950fdd404e2ef4a723362915e01874f738c4cdb37c2a5abda10271ee7"
+    },
+    "evidence": {
+      "community2149-haunt-generated-save.json": {
+        "bytes": 567,
+        "sha256": "9055909cbf347882d03e54828f53fa7c76d588a71c28de53e691d1cf88fc4c55"
+      },
+      "community2153-haunt-generated-save.json": {
+        "bytes": 585,
+        "sha256": "4c482b08fbaf25678e3d01a11c4157d6bae22a7e7d31a585c4e04d1aa9d6f3d2"
+      },
+      "community2156-haunt-upgrade-generated-save.json": {
+        "bytes": 597,
+        "sha256": "05634040ed7a499fa69c60f2cee23f4f52952eff478acd54a9df0eb466092904"
+      },
+      "community2156-haunt-upgrade-saved-actors.json": {
+        "bytes": 2461,
+        "sha256": "f6608880ae9e2f881bbf61a53a0d6a6ea9dd074778e3d8229efa737ad5ba64f8"
+      },
+      "community2155-phantom-character-card.png": {
+        "bytes": 702422,
+        "sha256": "def74df264e6982b2f013720d54baf574465b2bd3bbadeb2e666cc93eb91da3a"
+      },
+      "community2146-native-haunt-north-site": {
+        "receipt": {
+          "bytes": 614,
+          "sha256": "bbb52e8067bcaf90c7248958a2931326095e3c06758905cc7d4f2bd0f64bb443"
+        },
+        "peakRssMiB": 212.6,
+        "exitCode": 0,
+        "audioMuted": true
+      },
+      "community2154-native-phantom-card-haunt-upgrade": {
+        "receipt": {
+          "bytes": 615,
+          "sha256": "9cc87f214a4c421d940f79226a340b37e34db27f099eb42b437bc6160f224058"
+        },
+        "peakRssMiB": 202.8,
+        "exitCode": 0,
+        "audioMuted": true
+      }
+    },
+    "scope": "Ordinary native guild play and saves only; advanced abilities and browser remain unqualified",
+    "paidTier3Gold": 2200,
+    "completedTier3Hp": 475,
+    "tier3Save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 9 Days.GMP",
+      "bytes": 399549,
+      "sha256": "9a3f32be693bd6a8ba77551674adb6fd250cad39776fb1d4e1949c4edab348e3",
+      "profile": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/run.json",
+      "inputSha256": "2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5"
+    },
+    "tier3Actors": {
+      "bytes": 2360,
+      "sha256": "ad8f211d9214ae872d38f627396d3dc3d4fbb52dba13dce20b63583d79e89a2a"
+    }
+  },
+  "nativeAlchemyCombinedWorld": {
+    "buildingNativeType": "ABx1",
+    "buildingId": 1812,
+    "paidBuildingGold": 1400,
+    "completedHp": 235,
+    "paidRecruitGold": 600,
+    "firstRecruitName": "Arcane Amberglass",
+    "firstRecruitId": 2079,
+    "firstRecruitDied": true,
+    "deathCauseQualified": false,
+    "normalSaveAfterDeath": true,
+    "otherFourCommunityHeroesAlive": true,
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 408111,
+      "sha256": "8ea4dd493fba40ce8524b8d9145ab94556903bbf9145fc1bf3cb1fdb89584b50",
+      "profile": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/run.json",
+      "inputSha256": "9a3f32be693bd6a8ba77551674adb6fd250cad39776fb1d4e1949c4edab348e3"
+    },
+    "savedActors": {
+      "bytes": 2947,
+      "sha256": "6648c44d8a8edcc13c76520d5b66974202c9142a0331559e46a7764aa478da7b"
+    },
+    "nativeExitCode": 0,
+    "peakRssMiB": 200.6,
+    "livingAlchemistFreshReloadQualified": false,
+    "movementAdapterLimit": "Native2210/2214 used old loan+20; native2234 separately qualified corrected loan+18 speed/expiry. Native2240 ordinary coexistence uses the corrected adapter.",
+    "livingCombinedSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 403232,
+      "sha256": "bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df",
+      "profile": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/run.json",
+      "inputSha256": "76c9eb9ce451c350645a89f72456e87a0dc8c52ca6e87045fe78b25158529953"
+    },
+    "livingCombinedActors": {
+      "bytes": 2948,
+      "sha256": "28c626cea1a08fbe9fb0cc54dcf79bfd295a1c550c7b806932eec778c208baa7"
+    },
+    "livingAlchemistCard": {
+      "bytes": 686863,
+      "sha256": "435a354890bb0a7c162888222526f15c8b25370f0ef0c9c37701bc4350b54042"
+    },
+    "livingRecruit": {
+      "id": 2143,
+      "name": "Adalia Smokesleeve",
+      "hp": 11,
+      "maxHp": 11,
+      "paidRecruitmentResumedFromOriginalSave": true
+    },
+    "allFiveHeroTypesAlive": true
   }
 }

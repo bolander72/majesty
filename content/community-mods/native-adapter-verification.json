@@ -1,0 +1,455 @@
+{
+  "format": "majesty-community-native-adapter-verification-v1",
+  "date": "2026-10-16",
+  "sourceFiles": {
+    "native/community/movement_scale.h": {
+      "bytes": 1499,
+      "sha256": "b891f68dc27c62a5fb589070115c3eb387e18cc4fd36a636ac2bd4a78a68c763"
+    },
+    "native/community/movement_scale_tests.cpp": {
+      "bytes": 1848,
+      "sha256": "6e1c58cfe3cc223d797435e40d9e9515a5f2a03c500c6541020906a2f0bd75ec"
+    },
+    "native/community/movement_runtime.cpp": {
+      "bytes": 2372,
+      "sha256": "1395740a7a1fcf885f9f582a8c2d5f06e590a20c4aba229f4ef040f301b1507f"
+    },
+    "native/community/movement_runtime.h": {
+      "bytes": 344,
+      "sha256": "a96493c72edff56eb17bcffdeaa4eef1debf285b022a5046a917ac6315f09587"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 153521,
+      "sha256": "61127424ffa286d3fa6b07d0b8ea870df8df4b0d87e6fbbc20b5e987d657d409"
+    },
+    "scripts/prepare-community-movement-template.py": {
+      "bytes": 5641,
+      "sha256": "fce553308ed4f2f0db8317dd1913867ae5649965dc3959df035c05f94f348c5c"
+    },
+    "scripts/lib/community_movement_frame.py": {
+      "bytes": 4009,
+      "sha256": "bc7d35bcec9f635517698abca78e63bf6467132d7f6c1b595999f4791e4829dc"
+    },
+    "scripts/prepare-community-process-engine.py": {
+      "bytes": 16463,
+      "sha256": "777adb7f2463e17855072bb991277aad5f4a91d42facb1da11bc6de9db240ab6"
+    },
+    "scripts/lib/community_building_icons.py": {
+      "bytes": 7301,
+      "sha256": "561a115095e0e4dcd6989552c5c7e25f3dee30db250b327ba1409f826550cda8"
+    },
+    "scripts/prepare-community-guild-media.py": {
+      "bytes": 7544,
+      "sha256": "1d65be1e1d7e76683a30a0a8cdf9b86f033d8802199039e7e0fe493b28dd70fe"
+    },
+    "tests/test_community_building_icons.py": {
+      "bytes": 2491,
+      "sha256": "505e2adf987fca6282c46904a4b5f242e9c5c5d6f8c5c52df87bd40431f6b69d"
+    },
+    "tests/test_community_movement_template.py": {
+      "bytes": 5469,
+      "sha256": "3acf49cbcc416de6d554d9506cecd351464d2809fbc3b905cb7bbae01d0a2c0d"
+    },
+    "scripts/prepare-community-browser-engine.py": {
+      "bytes": 11227,
+      "sha256": "5e692c401d25a409b24fea69dd16ea808cc885a144574728b3578039ac639732"
+    },
+    "tests/test_community_browser_engine.py": {
+      "bytes": 2530,
+      "sha256": "d82b3c7b3d14ea8811de7b7b7dc22f1f2ea43a13ed47fa36b453013868eb8fd0"
+    }
+  },
+  "officialCppAndArithmeticCheck": {
+    "bytes": 669,
+    "sha256": "75640aafa89741b6cca3f66101a8cac81a978dd3a874e5db5528c141e86dc436"
+  },
+  "officialPrivateMovementGeneration": {
+    "bytes": 845,
+    "sha256": "7c2deb026f74776d4ac5841c8cce5d744a115416d15db09fb81f8629f32988c8"
+  },
+  "privateMovementGenerationBinding": {
+    "bytes": 6069,
+    "sha256": "eba5ba26da6e9a4305438ab05ff8cbd3cb084632fdc37f083cdc624c45dcb635"
+  },
+  "nativeFrameAudit": {
+    "loanOffset": 24,
+    "originalReturnCleanup": 12,
+    "visitedInstructions": 189,
+    "originalStackRestored": true,
+    "rejectedOldLoan": {
+      "offset": 32,
+      "reuseAt": "005b771c"
+    },
+    "stackReferences": [
+      {
+        "at": "005b75c0",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b75cc",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b75d0",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b75da",
+        "offset": 48,
+        "bytes": 4
+      },
+      {
+        "at": "005b75e3",
+        "offset": 88,
+        "bytes": 4
+      },
+      {
+        "at": "005b75e7",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b75f2",
+        "offset": 88,
+        "bytes": 4
+      },
+      {
+        "at": "005b75f6",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b75fb",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b7604",
+        "offset": 88,
+        "bytes": 4
+      },
+      {
+        "at": "005b7608",
+        "offset": 48,
+        "bytes": 4
+      },
+      {
+        "at": "005b762e",
+        "offset": 16,
+        "bytes": 4
+      },
+      {
+        "at": "005b7632",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b7638",
+        "offset": 20,
+        "bytes": 4
+      },
+      {
+        "at": "005b763c",
+        "offset": 16,
+        "bytes": 4
+      },
+      {
+        "at": "005b7640",
+        "offset": 20,
+        "bytes": 4
+      },
+      {
+        "at": "005b765e",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b7664",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b766a",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b7679",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b7683",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b7694",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b76a7",
+        "offset": 20,
+        "bytes": 4
+      },
+      {
+        "at": "005b76ab",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b76b1",
+        "offset": 16,
+        "bytes": 4
+      },
+      {
+        "at": "005b76b5",
+        "offset": 20,
+        "bytes": 4
+      },
+      {
+        "at": "005b76b9",
+        "offset": 16,
+        "bytes": 4
+      },
+      {
+        "at": "005b76d0",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b76d6",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b76e5",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b76ef",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b7700",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b7704",
+        "offset": 48,
+        "bytes": 4
+      },
+      {
+        "at": "005b7708",
+        "offset": 36,
+        "bytes": 4
+      },
+      {
+        "at": "005b770e",
+        "offset": 60,
+        "bytes": 4
+      },
+      {
+        "at": "005b7718",
+        "offset": 44,
+        "bytes": 4
+      },
+      {
+        "at": "005b771c",
+        "offset": 32,
+        "bytes": 4
+      },
+      {
+        "at": "005b7722",
+        "offset": 56,
+        "bytes": 4
+      },
+      {
+        "at": "005b772c",
+        "offset": 40,
+        "bytes": 4
+      },
+      {
+        "at": "005b7730",
+        "offset": 28,
+        "bytes": 4
+      },
+      {
+        "at": "005b7736",
+        "offset": 52,
+        "bytes": 4
+      },
+      {
+        "at": "005b7740",
+        "offset": 64,
+        "bytes": 4
+      },
+      {
+        "at": "005b7749",
+        "offset": 64,
+        "bytes": 4
+      },
+      {
+        "at": "005b7754",
+        "offset": 68,
+        "bytes": 4
+      },
+      {
+        "at": "005b775b",
+        "offset": 72,
+        "bytes": 4
+      },
+      {
+        "at": "005b7762",
+        "offset": 80,
+        "bytes": 4
+      },
+      {
+        "at": "005b776b",
+        "offset": 80,
+        "bytes": 4
+      },
+      {
+        "at": "005b778c",
+        "offset": 84,
+        "bytes": 4
+      },
+      {
+        "at": "005b779e",
+        "offset": 88,
+        "bytes": 4
+      }
+    ]
+  },
+  "movementChangedOriginalOrderCache": false,
+  "movementPrivateOpcodeRewrites": 1,
+  "oldLoan20Rejected": true,
+  "currentLoan18": true,
+  "generatedSourcesEdited": false,
+  "spellOriginBirthCallSite": "00422fca",
+  "spellOriginCasterRegister": "EBP",
+  "spellOriginPersistentHostSourceCache": false,
+  "positiveNativeMarchControlQualified": true,
+  "positiveNativeSpellOriginControlQualified": true,
+  "browserQualified": false,
+  "published": false,
+  "uiFrames": {
+    "frameTileSha256": "29844aca8c95ac4066e14c3acc7e00ef0102f075132d6b4d7ffda40e29807432",
+    "framePaletteSha256": "a1bf60ce906beb8a46589f8065bd149ee127364acbcf682548ddc204aee2be1e",
+    "emblems": [
+      {
+        "images": [
+          "BDG1",
+          "BDG2",
+          "BDG3"
+        ],
+        "tile": 18097,
+        "nativeSize": [
+          25,
+          25
+        ],
+        "originalSha256": "a98a89b60571aeb71e693479fc883f142c67468cd8f5412439bd8371f5fb04eb",
+        "framedSha256": "fe24940ce92e9acfbf16746e410ae2f14ff622c6e59d485004ffc34108e9b400",
+        "creatorArtworkRetained": true,
+        "pixelScaling": false,
+        "insetPaletteQuantized": true,
+        "nativeBorderPixelsExact": true,
+        "opaque": true
+      },
+      {
+        "images": [
+          "PHG1",
+          "PHG2",
+          "PHG3"
+        ],
+        "tile": 21444,
+        "nativeSize": [
+          25,
+          25
+        ],
+        "originalSha256": "7f3b3d173513982578ff61b1802a921aa3b4fc5286e24eeee05d16151cd26e77",
+        "framedSha256": "4b8a46a0aa4c3bbf56efdc5f5f19f4f4edde25f444182f4fb9fd989fbda2e990",
+        "creatorArtworkRetained": true,
+        "pixelScaling": false,
+        "insetPaletteQuantized": true,
+        "nativeBorderPixelsExact": true,
+        "opaque": true
+      }
+    ]
+  },
+  "uiNativePalaceListObserved": {
+    "bytes": 693452,
+    "sha256": "847f5d91c162c19b83af9c2376f9966ec497bfbc89b017f882ff7b2bf8d50a66"
+  },
+  "limits": [
+    "Native2210/2214 ordinary guild progress is not corrected movement qualification: they used the retired+20 scratch choice.",
+    "First combined Alchemist recruit died before save; no living combined Alchemist reload is claimed.",
+    "Corrected2222 process core is building; its controlled actor probe must remain a disposable fixture, never campaign progress.",
+    "Source-only work does not activate the private collection or optional adapters in production."
+  ],
+  "officialCorrectedCoreBuild": {
+    "bytes": 630,
+    "sha256": "20f30600a5b9a94a7b18eec62326e478fda1266163bf6fac79f836d24ff89a68"
+  },
+  "nativeControl": {
+    "trial": {
+      "bytes": 609,
+      "sha256": "cd9720c48c8021826518b842fd1d376d9989a79a21c74a690f766d5c3cc5606a"
+    },
+    "nativeExecutableSha256": "97be7384cdc3e1fb148de8421d98f96a65fe825f40ba56b63069f9d3ebb82087",
+    "sourceSaveSha256": "2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5",
+    "baseStep": 16384,
+    "scaledStep": 18841,
+    "originalCachedBaseUnchanged": true,
+    "effectorInitialRemainingMs": 8000,
+    "originalEffectorExpired": true,
+    "originalCasterId": 627,
+    "originalSpawnedSpellId": 1613,
+    "originalGplRecordReturnedOne": true,
+    "campaignProgress": false,
+    "nativeExitCode": 0,
+    "peakOwnedRssMiB": 201.5
+  },
+  "officialPrivateBrowserBuild": {
+    "bytes": 633,
+    "sha256": "67c22782c59e397964e8db3c1798a0ec38bbede79674d337de269a46059337da"
+  },
+  "privateBrowserLinked": true,
+  "browserPlayable": false,
+  "limitations": [
+    "March and native source-origin witnesses are isolated component controls, not ordinary AI casting/learning qualification.",
+    "Native2210/2214 use the rejected old stack loan and do not qualify positive movement behavior.",
+    "Private browser build is linked; live browser checks and advanced community mechanics remain pending."
+  ],
+  "focusedPythonTests": {
+    "testsRun": 89,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": true,
+    "seconds": 0.42,
+    "receipt": {
+      "bytes": 106,
+      "sha256": "ff808f34fa3ab173ee3183a55143559ad38a59b0ee2628456afbaabb6da72e1c"
+    }
+  },
+  "browserTrial": {
+    "gameStarted": false,
+    "qualified": false,
+    "result": "Disk quota exceeded during private input import; owned staging removed and browser/server closed",
+    "availableDiskMiBAtFailure": 166,
+    "availableDiskMiBAfterCleanup": 783,
+    "minimumFreeDiskGiBBeforeRetry": 3,
+    "evidence": {
+      "bytes": 288,
+      "sha256": "366b348a8a6595dde5da62083d42124970e55c9e10e2516643ebd48967b90bfe"
+    }
+  }
+}

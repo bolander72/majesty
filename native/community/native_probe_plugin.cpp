@@ -16,8 +16,10 @@
 #include "gpl_base_timing_helpers.h"
 #include "gpl_spell_timing_helpers.h"
 #include "gpl_research_helpers.h"
+#include "movement_scale.h"
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
 #include "guild_gameplay_runtime.h"
+#include "movement_runtime.h"
 #endif
 #include "kingdom_research_descriptors.h"
 #include "rage_dispatch.h"
@@ -104,6 +106,12 @@ MajestyCommunity::ResearchInFlight researchFlight;
 MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
 std::map<std::uint32_t, MajestyCommunity::ResearchQuery> researchQueryFunctions;
 bool communityProcess = false;
+bool movementScale = false;
+std::uint32_t movementEntry = 0;
+bool spellOrigin = false;
+bool controlledMarch = false, controlledMarchApplied = false, controlledMarchScaled = false,
+     controlledMarchExpired = false;
+std::uint32_t controlledMarchStarted = 0, controlledOriginCount = 0, controlledOriginCaster = 0;
 std::vector<MajestyRuntimeFeatures::NameGeneratorRecord> communityNames;
 std::uint32_t communityResearchEntry = 0;
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
@@ -542,6 +550,48 @@ bool evaluateScalar(const std::string &symbol, std::uint32_t unit, std::int32_t 
     call(0x006299b0U, evaluator);
     require(host->guest_free(host, memory) == POP_OK, "GPL scalar native release");
     return valid;
+}
+
+bool invokeAgentPair(const char *symbol, std::uint32_t first, std::uint32_t second,
+                     bool scalarResult) {
+    const auto length = std::strlen(symbol);
+    require(length && length < 120, "two-agent callback name bound");
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 256, &memory) == POP_OK, "spell origin evaluator storage");
+    for (unsigned i = 0; i <= length; ++i)
+        require(host->guest_write_u8(host, memory + 128 + i, symbol[i]) == POP_OK,
+                "spell origin callback name");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    bool valid = binding && read(binding + 20) == 0x0061e4c0U;
+    if (valid) {
+        call(0x00629bf0U, evaluator);
+        call(0x00629a20U, evaluator, {first});
+        call(0x00629a20U, evaluator, {second});
+        call(0x00629c40U, evaluator);
+        if (scalarResult) {
+            const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+            // Old keeps both typed argument references beside the return
+            // reference after GPL evaluation: three slots, not just one.
+            valid = begin && end >= begin && end - begin == 12;
+            if (valid) {
+                const auto reference = read(begin), value = reference ? read(reference) : 0;
+                const auto firstValue = read(read(begin + 4)), secondValue = read(read(begin + 8));
+                valid = value && firstValue && secondValue && read(value + 4) == 1 &&
+                        read(firstValue + 4) == 5 && read(secondValue + 4) == 5 &&
+                        call(0x00629c10U, evaluator) == 1;
+            }
+        }
+    }
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "spell origin evaluator release");
+    return valid;
+}
+bool recordSpellOrigin(std::uint32_t spell, std::uint32_t caster) {
+    return invokeAgentPair("MM_SO_Record", spell, caster, true);
 }
 
 std::uint32_t evaluateAgentResult(const std::string &symbol) {
@@ -1226,6 +1276,78 @@ std::uint32_t evaluateSpellTiming(const char *symbol, const char *name, std::uin
                  result);
     return result;
 }
+void controlledNativeSpellBirth(std::uint32_t caster, std::uint32_t target) {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK,
+            "controlled spell constructor storage");
+    const auto text = [&](std::uint32_t where, const char *value) {
+        for (unsigned i = 0; i <= std::strlen(value); ++i)
+            require(host->guest_write_u8(host, where + i, value[i]) == POP_OK,
+                    "controlled spell constructor text");
+    };
+    text(memory + 128, "CreateSpellUnit");
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && read(binding + 20) == 0x00422ea0U,
+            "original CreateSpellUnit handler identity");
+    call(0x00629bf0U, evaluator);
+    call(0x00629a20U, evaluator, {caster});
+    text(memory + 256, "miasma_mist_cloud");
+    call(0x004e3520U, memory + 96, {memory + 256});
+    const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+    const auto value = call(0x0062a810U, pool, {3});
+    require(value && read(value + 4) == 3, "controlled spell constructor typed name");
+    call(0x004e4180U, valueRef(value, 0x30), {memory + 96});
+    call(0x004e3820U, memory + 96);
+    call(0x00636bf0U, evaluator + 8, {value});
+    call(0x00629a20U, evaluator, {target});
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end >= begin && end - begin == 16 && read(read(read(begin + 4)) + 4) == 5 &&
+                read(read(read(begin + 8)) + 4) == 3 && read(read(read(begin + 12)) + 4) == 5,
+            "original spell constructor three typed arguments");
+    const auto before = controlledOriginCount;
+    call(0x00629c40U, evaluator);
+    require(controlledOriginCount > before && controlledOriginCaster == 627,
+            "actual native birth recorded its original caster before GPL");
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "controlled spell constructor release");
+}
+
+// Isolated component fixture only: invoke the creator's actual song body and
+// the original stock spell constructor. Never save this controlled world as
+// campaign progress. The environment flag is absent from player builds.
+void runControlledMarch() {
+    const auto world = read(0x0071c68cU), manager = world ? read(world + 4) : 0;
+    if (!manager || controlledMarchExpired)
+        return;
+    const auto dancer = call(0x005a10d0U, manager, {585});
+    const auto troubadour = call(0x005a10d0U, manager, {627});
+    if (!dancer || !troubadour)
+        return;
+    require(read(dancer + 0x6c) == 0x31745641U && read(troubadour + 0x6c) == 0x31765641U &&
+                read(dancer + 0x70) == 0 && read(troubadour + 0x70) == 0,
+            "controlled actual owned Dancer and Troubadour");
+    if (!controlledMarchApplied) {
+        require(invokeAgentPair("Bards_March_Apply", troubadour, dancer, false),
+                "creator March body through original typed GPL evaluator");
+        require(evaluateSpellTiming("MM_EffectorRemaining", "Bards_March_Icon", dancer) == 8000,
+                "creator March owns its original eight-second native overlay");
+        controlledMarchStarted = read(0x0071c6a8U);
+        controlledMarchApplied = true;
+        controlledNativeSpellBirth(troubadour, dancer);
+        host->log(host, "Controlled creator March and original native spell birth applied.");
+    } else if (read(0x0071c6a8U) - controlledMarchStarted >= 10000) {
+        require(controlledMarchScaled &&
+                    evaluateSpellTiming("MM_EffectorRemaining", "Bards_March_Icon", dancer) == 0,
+                "actual moving Dancer scaled and original overlay expired");
+        controlledMarchExpired = true;
+        host->log(host, "Controlled native March: scaled movement witnessed and overlay expired.");
+    }
+}
+
 std::uint32_t evaluateResearchQuery(const char *symbol, std::uint32_t unit, std::uint32_t command) {
     std::uint32_t memory = 0;
     const auto length = std::strlen(symbol);
@@ -1590,6 +1712,63 @@ void registerAttributes() {
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+    if (spellOrigin && target == 0x005ae750U && read(cpu->esp) == 0x00422fcaU) {
+        // Old CreateSpellUnit keeps the resolved original caster in EBP until
+        // this exact birth callback. Record after native initialization and
+        // before GPL birth. This avoids a host-thread source cache and its
+        // nested-cast/RET cleanup hazards; sovereign births use another site.
+        require(recordSpellOrigin(read(cpu->esp + 4), cpu->ebp),
+                "original spell caster saved before authored birth callback");
+        if (controlledMarch && read(cpu->ebp + 0x60) == 627) {
+            ++controlledOriginCount;
+            controlledOriginCaster = 627;
+            std::fprintf(stderr, "[community-spell-origin] original-caster=627 spell=%u stored=1\n",
+                         read(read(cpu->esp + 4) + 0x60));
+        }
+        next(inv, cpu);
+        return;
+    }
+    if (movementScale && target == 0x005b7490U) {
+        const auto result = call(movementEntry, self,
+                                 {read(cpu->esp + 4), read(cpu->esp + 8), read(cpu->esp + 12)});
+        require(host->hook_return(host, cpu, result, 12) == POP_OK,
+                "original movement order RET12");
+        return;
+    }
+    if (movementScale && target == 0x005b7360U && read(cpu->esp) == 0x005b75a4U) {
+        struct MovementOps : AttributeOps {
+            bool hasEffector(std::uint32_t unit, std::uint32_t overlay) {
+                return call(0x005b4570U, unit, {overlay}) != 0;
+            }
+        } ops;
+        // Only the private native template replaces MOV ECX,[EBX] here.
+        // Its now-dead scalar temporary at original ESP+18 is borrowed for
+        // this update. EBX follows that local through comparison, vector
+        // math and the final continuation check. Never rewrite order+48,
+        // the original unit argument, or any saved movement state.
+        const auto base = MajestyCommunity::NativeSignedInteger(read(cpu->ebx));
+        const auto step = MajestyCommunity::CurrentMovementStep(
+            ops, cpu->ebp, base, read(cpu->esi + 0x34), researchQueryFeatures.movementScales);
+        cpu->ecx = static_cast<std::uint32_t>(step);
+        if (step != base) {
+            const auto temporary = cpu->esp + 4 + MajestyCommunity::kMovementScalarTemporary;
+            require(ops.valid(temporary, 4), "original movement scalar temporary");
+            write(temporary, cpu->ecx);
+            cpu->ebx = temporary;
+            if (controlledMarchApplied && !controlledMarchScaled && read(cpu->ebp + 0x60) == 585) {
+                require(step > base && read(cpu->esi + 0x48) == static_cast<std::uint32_t>(base),
+                        "actual March scaled step leaves original native cache unchanged");
+                controlledMarchScaled = true;
+                std::fprintf(stderr,
+                             "[community-march] unit=585 native-base=%d scaled=%d loan=18 "
+                             "cache-unchanged=1\n",
+                             base, step);
+            }
+        }
+        require(host->hook_return(host, cpu, cpu->eax, 0) == POP_OK,
+                "private movement instruction preserves EAX and flags");
+        return;
+    }
     if (communityProcess && target == 0x004ca4f0U) {
         const auto args = cpu->esp + 4, requested = read(args);
         static unsigned factoryReports = 0;
@@ -1697,6 +1876,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         controlledCommunityGplApplied = false;
         controlledCommunityGplActive = false;
         controlledEmptyLists = 0;
+        controlledMarchApplied = controlledMarchScaled = controlledMarchExpired = false;
+        controlledMarchStarted = controlledOriginCount = controlledOriginCaster = 0;
         controlledLedgerAgent = 0;
         controlledStockApplied = false;
         controlledDeathApplied = false;
@@ -1907,6 +2088,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (controlledEquipment && !controlledEquipmentApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledEquipment();
+        if (controlledMarch && state && (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledMarch();
         if (controlledCommunityGpl && !controlledCommunityGplApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledCommunityGpl();
@@ -2569,6 +2752,35 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         require(services &&
                     majesty_configure_recruitment_panels(&communityRecipes, &binding, 1, services),
                 "four real private guild services and original AP52 owner");
+        const char *movementFlag = std::getenv("RECOMP_COMMUNITY_MOVEMENT_SCALE");
+        movementScale = movementFlag && !std::strcmp(movementFlag, "1");
+        if (movementScale) {
+            movementEntry = majesty_community_movement_bridge();
+            require(movementEntry && !researchQueryFeatures.movementScales.empty(),
+                    "source-bound private movement template and overlay declarations");
+            for (const auto target : {0x005b7490U, 0x005b7360U}) {
+                std::uint32_t id = 0;
+                const auto status = host->hook_install_ex(host, target, 0, hook, POP_HOOK_WRAP,
+                                                          POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+                if (status != POP_OK)
+                    return status;
+                hooks.push_back(id);
+            }
+        }
+        const char *originFlag = std::getenv("RECOMP_COMMUNITY_SPELL_ORIGIN");
+        spellOrigin = originFlag && !std::strcmp(originFlag, "1");
+        const char *marchTest = std::getenv("RECOMP_COMMUNITY_TEST_MARCH");
+        controlledMarch = marchTest && !std::strcmp(marchTest, "2216");
+        require(!controlledMarch || (movementScale && spellOrigin && researchBridge),
+                "controlled March requires both real native adapters");
+        if (spellOrigin && !targetBridge) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, 0x005ae750U, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
         require(read(0x00682f58U) == 0x004ac2f0U, "original Old research execution dispatch slot");
         // Original4ac2f0 is a data-discovered block in this qualified image,
         // not a hookable entry. The creator wraps the original research vtable
@@ -2755,6 +2967,12 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     researchBindings.clear();
     researchQueryFeatures = {};
     communityNames.clear();
+    movementScale = false;
+    movementEntry = 0;
+    spellOrigin = false;
+    controlledMarch = controlledMarchApplied = controlledMarchScaled = controlledMarchExpired =
+        false;
+    controlledMarchStarted = controlledOriginCount = controlledOriginCaster = 0;
     researchFlight = {};
     controlledResearchQueryApplied = false;
     return POP_OK;

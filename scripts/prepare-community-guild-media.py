@@ -11,6 +11,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from lib.community_guild_composition import digest, json_value, stock_named_resources
+from lib.community_building_icons import frame_guild_icons
 
 
 def prepare(args):
@@ -90,6 +91,8 @@ def prepare(args):
         stock_records=c.load_effective_stock_strings(fixture)[0].index)
     payloads = {'merged_audio.cam': audio.to_bytes(), 'merged_sounddesc.cam': sound.to_bytes()}
     payloads.update({f'merged_{result.domain}.cam': result.archive.to_bytes() for result in art})
+    payloads['merged_main.cam'], native_icons = frame_guild_icons(
+        payloads['merged_main.cam'], fixture / 'Data/maindata.cam')
     if strings is not None:
         payloads['merged_strings.xml'] = strings.payload
     args.out.mkdir(parents=True)
@@ -98,6 +101,7 @@ def prepare(args):
     receipt = dict(format='majesty-community-creator-media-stage-v1',
         sourceStage=digest(proof_raw), managerCommit=policy.MANAGER_COMMIT,
         files={name: digest(raw) for name, raw in payloads.items()},
+        nativeBuildingIconFrames=native_icons,
         artRelocations={result.domain: c._art_report_payload(result) for result in art},
         soundSelections=[dict(section=row.section.decode('ascii'), key=row.key.decode('ascii'),
                               owners=list(row.owners), payload=digest(row.entry.data))
