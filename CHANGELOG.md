@@ -2,7 +2,7 @@
 
 ## Community guild integration — private work, October 16, 2026
 
-- Verify paid Bards Hall and Phantoms Haunt upgrades through level3 and save a kingdom containing their four authentic heroes alongside a living Alchemist and completed Lab.
+- Verify paid Bards Hall and Phantoms Haunt upgrades through level3, then save and freshly reload a kingdom containing their four authentic heroes alongside a living Alchemist and completed Lab.
 - Preserve native Palace icon frames. Implement the creator's temporary movement modifiers and original spell-caster tracking; verify a controlled March speed increase and expiry through the original engine.
 - Link a private browser core against the production runtime objects. Browser gameplay remains unqualified: the initial import stopped at the host disk limit. These guilds are not activated in the public build.
 

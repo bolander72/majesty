@@ -839,7 +839,7 @@
     },
     "nativeExitCode": 0,
     "peakRssMiB": 200.6,
-    "livingAlchemistFreshReloadQualified": false,
+    "livingAlchemistFreshReloadQualified": true,
     "movementAdapterLimit": "Native2210/2214 used old loan+20; native2234 separately qualified corrected loan+18 speed/expiry. Native2240 ordinary coexistence uses the corrected adapter.",
     "livingCombinedSave": {
       "path": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
@@ -864,6 +864,33 @@
       "maxHp": 11,
       "paidRecruitmentResumedFromOriginalSave": true
     },
-    "allFiveHeroTypesAlive": true
+    "allFiveHeroTypesAlive": true,
+    "reloadedCombinedSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 400021,
+      "sha256": "5126a2cca05310966f96f93f55eff097a3cd73b45ad20d23a7ef25da45f6fb1c",
+      "profile": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/run.json",
+      "inputSha256": "bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df"
+    },
+    "reloadedCombinedActors": {
+      "bytes": 2932,
+      "sha256": "66263ca4dc1651d9b21df69c4c4df1f459756f338abb4e5a864c6531be7988c7"
+    },
+    "reloadedAlchemistCard": {
+      "bytes": 693322,
+      "sha256": "bcc1a2374f1334509ea21466502514c0df57d0b4bcc149a6e69055ee136591fe"
+    },
+    "reloadTrial": {
+      "receipt": {
+        "bytes": 610,
+        "sha256": "d4cba0d04ee98d9112c7cc133765cea08db2c049ea56db71fdcc3177ef158d0c"
+      },
+      "peakRssMiB": 203.4,
+      "exitCode": 0,
+      "audioMuted": true,
+      "allFiveHeroTypesAlive": true,
+      "allThreeGuildsCompleted": true
+    }
   }
 }

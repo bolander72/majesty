@@ -451,5 +451,16 @@
       "bytes": 288,
       "sha256": "366b348a8a6595dde5da62083d42124970e55c9e10e2516643ebd48967b90bfe"
     }
+  },
+  "remainingPresentationRequirements": {
+    "heroInfoRows": 23,
+    "hiddenInventoryActions": 17,
+    "enchantmentRows": 2,
+    "nativeConsumersImplemented": false,
+    "requiredBeforePublishing": true,
+    "audit": {
+      "bytes": 585,
+      "sha256": "ad1253927e691077c593c9090b9752404b297db2c4075a32737e79125e36dee8"
+    }
   }
 }

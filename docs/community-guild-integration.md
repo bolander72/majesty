@@ -867,8 +867,11 @@ completed recruitment normally and selected Adalia Smokesleeve's actual card
 at11/11HP. Its generated Day11 save is403232 bytes, SHA256
 `bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df`.
 It contains completed Hall3, Haunt3 and Lab1, plus living Dancer, Spellsinger,
-Troubadour, Phantom and Alchemist. A fresh reload of this five-hero state is
-still required.
+Troubadour, Phantom and Alchemist. Native2248 restored it in a fresh owned
+profile, displayed the living Alchemist card and saved normally again. All
+five community hero types remain alive with all three completed guilds. The
+new Day11 save is400021 bytes, SHA256
+`5126a2cca05310966f96f93f55eff097a3cd73b45ad20d23a7ef25da45f6fb1c`.
 
 ## Movement and original spell caster adapters
 
@@ -929,6 +932,12 @@ the pinned DirectDraw runtime. Verify the final edition-specific MJC bodies and 
 continuations, and audit CGPH/Old AP10 and AP78 in ordinary gameplay. In particular,
 Bards still needs equipment/shopping, advanced combat and projectile checks,
 hiring controls, Chronicles benefit/negative controls and lifecycle restoration.
+The current merged MMFRv9 also declares23 hero-information rows,17 hidden
+inventory actions and2 enchantment rows. The private core has no consumers for
+those three presentation sections yet; port their native presenters before
+publication, rather than merely accepting a higher registry version. Its
+map-fog-query and movement-query flags are both false, so those optional
+services are not required by this collection.
 Its three-choice recruitment, all original cards, paid upgrades through level3,
 research completion and original progress saves have native evidence above.
 Phantoms has ordinary construction, recruitment, its own card, fresh reload
