@@ -20,6 +20,7 @@
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
 #include "guild_gameplay_runtime.h"
 #include "movement_runtime.h"
+#include "hero_ui_runtime.h"
 #endif
 #include "kingdom_research_descriptors.h"
 #include "rage_dispatch.h"
@@ -106,6 +107,7 @@ MajestyCommunity::ResearchInFlight researchFlight;
 MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
 std::map<std::uint32_t, MajestyCommunity::ResearchQuery> researchQueryFunctions;
 bool communityProcess = false;
+bool controlledProfileIo = false, controlledProfileIoApplied = false;
 bool movementScale = false;
 std::uint32_t movementEntry = 0;
 bool spellOrigin = false;
@@ -592,6 +594,32 @@ bool invokeAgentPair(const char *symbol, std::uint32_t first, std::uint32_t seco
 }
 bool recordSpellOrigin(std::uint32_t spell, std::uint32_t caster) {
     return invokeAgentPair("MM_SO_Record", spell, caster, true);
+}
+
+// One explicitly requested private probe, never a player save. This isolates
+// the original CreateFile/WriteFile ABI from the game's save serializer.
+void runControlledProfileIo() {
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK, "profile IO probe storage");
+    const char path[] = "Documents\\My Games\\MajestyHD\\SaveGame\\community2265-io.tmp";
+    const char payload[] = "native-write-probe";
+    for (unsigned i = 0; i < sizeof(path); ++i)
+        require(host->guest_write_u8(host, memory + 64 + i, path[i]) == POP_OK, "profile IO path");
+    for (unsigned i = 0; i < sizeof(payload); ++i)
+        require(host->guest_write_u8(host, memory + 256 + i, payload[i]) == POP_OK,
+                "profile IO bytes");
+    const auto file = call(read(0x0067f118U), 0, {memory + 64, 0x40000000U, 0, 0, 2, 0x80, 0});
+    std::uint32_t wrote = 0, result = 0, closed = 0;
+    if (file && file != 0xffffffffU) {
+        result = call(read(0x0067f144U), 0, {file, memory + 256, sizeof(payload), memory, 0});
+        wrote = read(memory);
+        closed = call(read(0x0067f090U), 0, {file});
+    }
+    std::fprintf(stderr,
+                 "[community-profile-io] file=%08x result=%u expected=%u wrote=%u closed=%u\n",
+                 file, result, static_cast<unsigned>(sizeof(payload)), wrote, closed);
+    require(host->guest_free(host, memory) == POP_OK, "profile IO probe release");
+    controlledProfileIoApplied = true;
 }
 
 std::uint32_t evaluateAgentResult(const std::string &symbol) {
@@ -2075,6 +2103,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (controlledProfileIo && !controlledProfileIoApplied && state &&
+            (read(state) == 3 || read(state) == 7) && !read(state + 4))
+            runControlledProfileIo();
         if (controlledIntegers && !controlledIntegersApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledIntegers();
@@ -2610,6 +2641,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     traceCombat = combat && !std::strcmp(combat, "1");
     const char *attributes = std::getenv("RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT");
     attributeCompat = attributes && !std::strcmp(attributes, "1");
+    const char *profileIo = std::getenv("RECOMP_COMMUNITY_TEST_PROFILE_IO");
+    controlledProfileIo = profileIo && !std::strcmp(profileIo, "2265");
     const char *integers = std::getenv("RECOMP_COMMUNITY_INTEGER_HELPERS");
     integerHelpers = integers && !std::strcmp(integers, "1");
     require(!integerHelpers || attributeCompat,
@@ -2781,6 +2814,13 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
                 return status;
             hooks.push_back(id);
         }
+        const char *heroUi = std::getenv("RECOMP_COMMUNITY_HERO_UI");
+        if (heroUi && !std::strcmp(heroUi, "1")) {
+            const auto aliases = file("hero-info-bindings.bin", 12 + 64 * 8);
+            require(majesty_configure_hero_ui(host, &researchQueryFeatures, aliases.data(),
+                                              aliases.size()),
+                    "source-bound original hero information presenters");
+        }
         require(read(0x00682f58U) == 0x004ac2f0U, "original Old research execution dispatch slot");
         // Original4ac2f0 is a data-discovered block in this qualified image,
         // not a hookable entry. The creator wraps the original research vtable
@@ -2923,6 +2963,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     return POP_OK;
 }
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+    majesty_shutdown_hero_ui();
+#endif
     if (communityResearchEntry) {
         require(read(0x00682f58U) == communityResearchEntry,
                 "process research dispatcher still owns its original slot");
@@ -2968,6 +3011,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     researchQueryFeatures = {};
     communityNames.clear();
     movementScale = false;
+    controlledProfileIo = controlledProfileIoApplied = false;
     movementEntry = 0;
     spellOrigin = false;
     controlledMarch = controlledMarchApplied = controlledMarchScaled = controlledMarchExpired =

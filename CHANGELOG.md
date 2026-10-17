@@ -1,5 +1,11 @@
 # Changelog
 
+## Community ability UI — private work, October 17, 2026
+
+- Render source-authored ability and enchantment labels, icons and hover descriptions through the original native hero lists. Verify the Dancer panel in native and browser builds.
+- Retain production's fixed shared-memory views in private browser bundles, correcting empty test saves without changing WASM. Verify an ordinary save and a fresh-profile browser reload with all five community hero types alive.
+- Recover 2.7 GiB by removing obsolete owned build caches and test executables. Preserve all player saves, profiles, backups, original game inputs and releases. Advanced guild mechanics remain under verification; production content is unchanged.
+
 ## Community guild integration — private work, October 16, 2026
 
 - Verify paid Bards Hall and Phantoms Haunt upgrades through level3, then save and freshly reload a kingdom containing their four authentic heroes alongside a living Alchemist and completed Lab.

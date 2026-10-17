@@ -1,0 +1,237 @@
+{
+  "format": "majesty-community-hero-ui-verification-v1",
+  "date": "2026-10-17",
+  "sourceFiles": {
+    "native/community/hero_info_policy.h": {
+      "bytes": 2274,
+      "sha256": "9ad9f3bb63337b496a9dfe1ae20e28eec9aff2e8c6d2557262ff0deb6f4f4d10"
+    },
+    "native/community/hero_info_policy_tests.cpp": {
+      "bytes": 1557,
+      "sha256": "e36612179d7342d107a5fd12492cd20356d241b6fbc6fe33247c2c619d181f07"
+    },
+    "native/community/hero_ui_runtime.h": {
+      "bytes": 532,
+      "sha256": "39899d757398f4229efc531639ea4187bafc4e6e518064640263b942185da9b1"
+    },
+    "native/community/hero_ui_runtime.cpp": {
+      "bytes": 2968,
+      "sha256": "b79039a7257750d2868a88f44690210514116b2a165b33f57535731d24d7383f"
+    },
+    "native/community/hero_ui_presenter.cpp": {
+      "bytes": 9431,
+      "sha256": "6d32e24662c08265203a1825b7e2b78b52daa3d61606534ee3860b8bc7506e74"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 156015,
+      "sha256": "dba4a9d830d02d9425da208093023744bb8861811a03a0edd2de6dbb36b48c47"
+    },
+    "scripts/prepare-community-hero-ui-template.py": {
+      "bytes": 5925,
+      "sha256": "325dfde82087a81e654b6a6af6cb5f18b3661a4b205168351fbf43fb2a4778d6"
+    },
+    "scripts/prepare-community-process-engine.py": {
+      "bytes": 19693,
+      "sha256": "33274a9e66dc822fe9213e972e805e2757397ad9aa1a2a81a1e3d53cb096f6d4"
+    },
+    "scripts/prepare-community-browser-engine.py": {
+      "bytes": 11799,
+      "sha256": "5e571f60a1740307752ace533f5763485b4366f95d3e1c973a4fdfeeed4f64d8"
+    },
+    "tests/test_community_hero_ui_template.py": {
+      "bytes": 1516,
+      "sha256": "edaa044b3943c29339b2e2e5dc643e6a59c1a2d6684a97c52b749d46e1f8ab09"
+    },
+    "scripts/pin-browser-memory-views.py": {
+      "bytes": 1763,
+      "sha256": "39b895c9fb07e36e703c25cd0554ba01555196f7efa8ca10dc01684e2dea8d55"
+    },
+    "tests/test_community_memory_views.py": {
+      "bytes": 1179,
+      "sha256": "34b062cc2e46a7b86fd5b5e9d39fee9655f5de548e564061583a3369f7dfa3ea"
+    }
+  },
+  "sourceBoundRecords": {
+    "heroInfo": 23,
+    "hiddenInventoryActions": 17,
+    "legacyEnchantmentRows": 2,
+    "passiveSubjectAliases": 2
+  },
+  "nativeConsumersImplemented": true,
+  "originalGeneratedSourceEdited": false,
+  "nativeObserved": {
+    "hero": "Riley the Gallant",
+    "className": "Blade Dancer",
+    "abilityLabels": [
+      "Dueling Flourish",
+      "Deflect",
+      "Encore"
+    ],
+    "enchantmentLabel": "Roused",
+    "deflectHover": "Turns aside incoming physical and magical missiles.",
+    "originalRowsIconsHoverAndFooter": true,
+    "trial": {
+      "bytes": 612,
+      "sha256": "f2ce0e5977bf8b8dc8085553c8d4605315d66e8206504428cfab8884328577f7"
+    },
+    "screenshot": {
+      "bytes": 670679,
+      "sha256": "cdb8353a8590cf0e0a276ffc5c5ddc19e8c27f29de08514a57669963cd291c67"
+    },
+    "hoverScreenshot": {
+      "bytes": 671975,
+      "sha256": "8f02d967c5197211e5e3cf79a67529731564ad87b392b771165fe4e88be098b6"
+    },
+    "nativeExitCode": 0,
+    "peakOwnedRssMiB": 195.5
+  },
+  "officialGeneration": {
+    "bytes": 857,
+    "sha256": "469bb4250f0b8818597595a3c8c8d42cc00bf292054d003d411c8934cd42fd6c"
+  },
+  "generationBinding": {
+    "bytes": 1401,
+    "sha256": "c13e8198801cb119da7ffccceeea9a7ad65848e844de66bf43283ce5c487a463"
+  },
+  "officialNativeBuild": {
+    "bytes": 634,
+    "sha256": "1cb253611523bff17842ab3a1d1cf05aab180d9b7b71c12749885ea4b6373435"
+  },
+  "nativePolicyTests": {
+    "bytes": 642,
+    "sha256": "542855888cd144a4a54aeebd00385ec23ced87091c949094284ea56e983a2641"
+  },
+  "pythonTests": {
+    "bytes": 87,
+    "sha256": "3d3e01132a3a27232bc05cba26e730a64d39d60c6d5a30ea9fae29e715c4baf3"
+  },
+  "officialBrowserBuild": {
+    "bytes": 633,
+    "sha256": "01db2addf748b859ed478acf955a49650e39c42f09e58eab6c8fa67aa25e0b61"
+  },
+  "browserGameplayQualified": false,
+  "browserSaveReloadQualified": true,
+  "published": false,
+  "limitations": [
+    "Live ability UI checks cover the Dancer panel and custom active enchantments; other class and legacy UI states remain under verification.",
+    "The browser checks cover a bounded local saved kingdom and native card presentation; advanced combat, equipment, lifecycle and internet play are not qualified.",
+    "Early disposable browser profiles produced zero-byte saves with growable views. Fixed production views pass original WriteFile, ordinary saving and a fresh-profile/runtime reload; original native saves were preserved.",
+    "A broad import/file trace exceeded the owned browser memory guard and was closed; stopped trial2256 was not resumed.",
+    "The Phantom card and Ice Lance text render in the browser; its missing row icon and authored spell behavior need comparison with the creator source before qualification."
+  ],
+  "pythonTestsResult": {
+    "passed": 95,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "browserAbilityUiQualified": true,
+  "browserObserved": {
+    "saveTrial": "community2278",
+    "freshRuntimeReloadTrial": "community2281",
+    "abilityLabels": [
+      "Dueling Flourish",
+      "Deflect",
+      "Encore"
+    ],
+    "enchantmentLabels": [
+      "Roused",
+      "Encore"
+    ],
+    "deflectHover": true,
+    "usesOriginalNativeUi": true,
+    "save": {
+      "bytes": 399892,
+      "sha256": "fd562cc44560369e6ac987c21ce3d9b3b3cdc4240eaef75f3c2a43015327019b",
+      "day": 12,
+      "originalWriterResult": 1,
+      "originalUnitVisits": 503,
+      "readOnlyAudit": {
+        "livingHeroTypes": [
+          "Blade_Dancer",
+          "Spellsinger",
+          "Troubadour",
+          "Phantom",
+          "Alchemist"
+        ],
+        "completedGuilds": [
+          "ABt3",
+          "ABu3",
+          "ABx1"
+        ]
+      }
+    },
+    "freshProfileImportedExactSave": true,
+    "freshRuntimeLoadedDay12": true,
+    "fixedSharedMemoryViews": true,
+    "originalWriteFileProbeBytes": 19,
+    "errorsObserved": [],
+    "silent": true,
+    "continuedToDay": 14,
+    "phantomNativeCardAndSpellTabOpened": true,
+    "phantomSpellRowQualified": false,
+    "peakOwnedRssMiB": {
+      "community2278": 1923.6,
+      "community2281": 1746.9
+    },
+    "phantomVisibleSpellLabel": "Ice Lance"
+  },
+  "browserArtifacts": {
+    "community2278-dancer-abilities.png": {
+      "bytes": 738753,
+      "sha256": "9005a14d888a4771e664b7b78dd597400df00becc48dbb04048b52294d7d31cd"
+    },
+    "community2278-deflect-tooltip.png": {
+      "bytes": 737188,
+      "sha256": "14f45a6d2a6d0bcbbcd097477e09cc515624a398ac75ac27d8078a885fa935dd"
+    },
+    "community2278-saved.png": {
+      "bytes": 732559,
+      "sha256": "d9ad4309f48605a123c89e89985a0494b048c434d4ab84efd88d94f3bcef93e2"
+    },
+    "community2280-browser-actors.json": {
+      "bytes": 2837,
+      "sha256": "6dea8172faa38ed5847f6f974339357dfb28a7336129c9ba566aee90a33d51e5"
+    },
+    "community2281-dancer-abilities.png": {
+      "bytes": 730076,
+      "sha256": "df1662b17f905065d23b3befc257bfa528cf947a3ddadc87d98e4da593161a2e"
+    },
+    "community2281-deflect-tooltip.png": {
+      "bytes": 730936,
+      "sha256": "acdafe81f6a7e842e9446674f04ea834ed204eeb70d7eb0c72023dd843d0286b"
+    },
+    "community2281-phantom-card.png": {
+      "bytes": 813753,
+      "sha256": "916ed723c3bb4c901640b9056895b270dd8424b524727084f0318e364957c2ff"
+    },
+    "community2281-phantom-abilities.png": {
+      "bytes": 798783,
+      "sha256": "65f38de2cc0e5a68d2e975fb302dd152ec3061f24109ca723f4169953b46ed62"
+    }
+  },
+  "privateBrowserArtifacts": {
+    "js": {
+      "bytes": 473315,
+      "sha256": "501a47257a42ba90e5dbd3ac0037da67e78669186245aae0c59094e8a57efa82"
+    },
+    "wasm": {
+      "bytes": 90927315,
+      "sha256": "e9dda49767caf53f214663a39397285aacaef62949ec35685a103817cb62a52f"
+    },
+    "data": {
+      "bytes": 5103509,
+      "sha256": "20caa78a2896bed2a1daf5a5c602862656dfc3fe23f1228deb7d6ed44ff36420"
+    },
+    "jsPolicy": "Applied audited production fixed-view selector after official build; unchanged WASM."
+  },
+  "cleanup": {
+    "recoveredGiB": 2.701,
+    "obsoleteOwnedBuildCaches": 22,
+    "allSavesProfilesBackupsOriginalInputsAndReleasesPreserved": true
+  },
+  "sourceBoundaryCheck": {
+    "bytes": 1101,
+    "sha256": "c143280965e06da436d86f5f7062aa0a268260d115379b64743dc0571818ce56"
+  }
+}

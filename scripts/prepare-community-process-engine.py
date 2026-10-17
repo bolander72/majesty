@@ -132,6 +132,26 @@ def prepare(args):
         for name, expected in movement['generatedFiles'].items():
             if digest_file(args.movement / name) != expected:
                 raise ValueError('Private movement translation changed: ' + name)
+    hero_ui = None
+    if any([args.hero_ui, args.hero_ui_proof, args.hero_ui_bindings]):
+        if not all([args.hero_ui, args.hero_ui_proof, args.hero_ui_bindings]):
+            raise ValueError('Require the complete hero UI generation and subject binding')
+        hero_ui = json.loads(args.hero_ui_proof.read_text())
+        if (hero_ui.get('format') != 'majesty-private-hero-ui-generation-v1' or
+                hero_ui.get('exitCode') != 0 or hero_ui.get('stopReason') or
+                hero_ui.get('sourceStage') != source_digest or
+                hero_ui.get('featureRegistry') != research_stage['featureRegistry'] or
+                hero_ui.get('entries') != ['00470c00', '00471030'] or
+                hero_ui.get('compileDefinitions') != [
+                    'recomp_module_register=majesty_collect_private_hero_ui',
+                    'fn_00470c00=majesty_template_hero_ui_fn_00470c00',
+                    'fn_00471030=majesty_template_hero_ui_fn_00471030'] or
+                hero_ui.get('subjectBindings') != digest_file(args.hero_ui_bindings) or
+                set(hero_ui.get('generatedFiles', {})) != {'chunk_000.c', 'table.c', 'funcs.h'}):
+            raise ValueError('Private hero UI/source/subject binding differs')
+        for name, expected in hero_ui['generatedFiles'].items():
+            if digest_file(args.hero_ui / name) != expected:
+                raise ValueError('Private hero UI translation changed: ' + name)
     module_cmake = []
     for name, folder in generated.items():
         binding = fixture['modules'][name]
@@ -154,6 +174,13 @@ def prepare(args):
             'target_compile_definitions(community_template_movement PRIVATE ' + ' '.join(movement['compileDefinitions']) +
             ' GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})',
             'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_movement>)']
+    if hero_ui:
+        module_cmake += [
+            f'add_library(community_template_hero_ui OBJECT {quoted(args.hero_ui / "chunk_000.c")} {quoted(args.hero_ui / "table.c")})',
+            f'target_include_directories(community_template_hero_ui PRIVATE {quoted(args.hero_ui)} ${{POP_ROOT}}/runtime ${{CMAKE_BINARY_DIR}}/generated)',
+            'target_compile_definitions(community_template_hero_ui PRIVATE ' + ' '.join(hero_ui['compileDefinitions']) +
+            ' GUEST_IMAGE_BASE=${RECOMP_IMAGE_BASE} GUEST_HEAP_BASE=${RECOMP_HEAP_BASE} GUEST_SIZE=${RECOMP_GUEST_SIZE})',
+            'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_hero_ui>)']
     args.out.mkdir(parents=True)
     (args.out / 'game.toml').write_bytes(config_raw)
     shutil.copyfile(args.game / 'globals.toml', args.out / 'globals.toml')
@@ -176,7 +203,8 @@ def prepare(args):
     shutil.copyfile(native / 'native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
     for path in native.glob('*.h'):
         shutil.copyfile(path, support / path.name)
-    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp', 'movement_runtime.cpp']:
+    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp', 'movement_runtime.cpp',
+                 'hero_ui_runtime.cpp', 'hero_ui_presenter.cpp']:
         shutil.copyfile(native / name, support / name)
     vendor = ROOT / 'third_party/majesty-mod-manager/runtime'
     for path in vendor.glob('*.h'):
@@ -189,6 +217,8 @@ def prepare(args):
     shutil.copyfile(routes, core / 'shared-overrides.tsv')
     shutil.copyfile(args.controllers, core / 'community-controllers.bin')
     shutil.copyfile(names, core / 'community-name-bindings.bin')
+    if hero_ui:
+        shutil.copyfile(args.hero_ui_bindings, core / 'hero-info-bindings.bin')
     for name in ['research-features.bin','research-bindings.bin']:
         shutil.copyfile(args.research / name, core / name)
     # Same bound registry supplies the declared timing and equipment subsystems.
@@ -230,11 +260,20 @@ def prepare(args):
         'pop_test_binary(community_movement_scale_tests)',
         'add_test(NAME community_movement_scale_tests COMMAND community_movement_scale_tests)',
         'set_tests_properties(community_movement_scale_tests PROPERTIES LABELS nogame TIMEOUT 15)']
+    cmake += [
+        'add_executable(community_hero_info_policy_tests ' + quoted(native / 'hero_info_policy_tests.cpp') +
+        ' ' + quoted(vendor / 'RuntimeFeatureRegistry.cpp') + ')',
+        'target_include_directories(community_hero_info_policy_tests PRIVATE ' + quoted(native) + ' ' + quoted(vendor) + ')',
+        'target_compile_features(community_hero_info_policy_tests PRIVATE cxx_std_17)',
+        'target_compile_options(community_hero_info_policy_tests PRIVATE ${POP_WARN_STRICT})',
+        'pop_test_binary(community_hero_info_policy_tests)',
+        'add_test(NAME community_hero_info_policy_tests COMMAND community_hero_info_policy_tests)',
+        'set_tests_properties(community_hero_info_policy_tests PROPERTIES LABELS nogame TIMEOUT 15)']
     (tests / 'CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
     receipt = dict(format='majesty-community-process-core-engine-stage-v1', originalProducer=digest_file(args.producer),
         originalHost=digest_file(exe), originalGuestSha256=PIN, originalObjects=source_inputs,
         gameConfig=digest_file(args.out / 'game.toml'), privateTemplates=fixture,
-        privateMovement=movement,
+        privateMovement=movement, privateHeroUi=hero_ui,
         sourceFiles={p.relative_to(core).as_posix():digest_file(p) for p in core.rglob('*') if p.is_file()},
         generatedSourcesEdited=False, originalObjectsReused=True, processLifetimeCore=True,
         nativeLinked=False, liveGameplayQualified=False, browserPlayable=False, published=False)
@@ -248,6 +287,9 @@ def main():
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--movement', type=Path)
     parser.add_argument('--movement-proof', type=Path)
+    parser.add_argument('--hero-ui', type=Path)
+    parser.add_argument('--hero-ui-proof', type=Path)
+    parser.add_argument('--hero-ui-bindings', type=Path)
     parser.add_argument('--generated', action='append', required=True)
     args = parser.parse_args()
     try:

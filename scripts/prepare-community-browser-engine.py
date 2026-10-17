@@ -114,8 +114,10 @@ def prepare(args):
                                         'target_include_directories(community_template_',
                                         'target_compile_definitions(community_template_',
                                         'target_sources(pop_smoke PRIVATE $<TARGET_OBJECTS:community_template_'))]
-    if len(module_lines) != 20:
-        raise ValueError('Require four private presenters and one private movement module')
+    private_stages = {k: v for k, v in {
+        'movement': stage.get('privateMovement'), 'hero_ui': stage.get('privateHeroUi')}.items() if v}
+    if len(module_lines) != 4 * (4 + len(private_stages)):
+        raise ValueError('Private original presenter/movement/UI module set differs')
     folders = {}
     for line in module_lines:
         if not line.startswith('add_library('):
@@ -124,13 +126,13 @@ def prepare(args):
         if not match or match[1] in folders:
             raise ValueError('Unexpected private module translation inputs')
         folders[match[1]] = Path(match[2])
-    if set(folders) != {*stage['privateTemplates']['modules'], 'movement'}:
+    if set(folders) != {*stage['privateTemplates']['modules'], *private_stages}:
         raise ValueError('Private translated module set differs')
     for name, folder in folders.items():
-        if name == 'movement':
-            for filename, expected in stage['privateMovement']['generatedFiles'].items():
+        if name in private_stages:
+            for filename, expected in private_stages[name]['generatedFiles'].items():
                 if digest(folder / filename) != expected:
-                    raise ValueError('Private movement translation changed')
+                    raise ValueError('Private ' + name + ' translation changed')
         else:
             for filename, expected in stage['privateTemplates']['modules'][name]['generatedFilesSha256'].items():
                 if digest(folder / filename)['sha256'] != expected:
@@ -139,6 +141,8 @@ def prepare(args):
     resource_files = {p.relative_to(original_resources).as_posix(): digest(p)
                       for p in original_resources.rglob('*') if p.is_file()}
     args.out.mkdir(parents=True)
+    memory_policy = args.out / 'pin-browser-memory-views.py'
+    shutil.copyfile(Path(__file__).with_name(memory_policy.name), memory_policy)
     for name in ['game.toml', 'globals.toml']:
         shutil.copyfile(args.web_game / name, args.out / name)
     config = tomllib.loads((args.web_game / 'game.toml').read_text())
@@ -173,13 +177,17 @@ def prepare(args):
              *module_lines,
              'target_link_libraries(recomp_app PRIVATE ' + ' '.join(libraries) + ')',
              'target_link_options(recomp_app PRIVATE ' + ' '.join(map(quote, rule['flags'])) +
-             ' --preload-file ' + quote(str(resources) + '@/app/resources') + ')']
+             ' --preload-file ' + quote(str(resources) + '@/app/resources') + ')',
+             'add_custom_command(TARGET recomp_app POST_BUILD COMMAND ${Python3_EXECUTABLE} ' +
+             quote(memory_policy) +
+             ' --js $<TARGET_FILE:recomp_app> VERBATIM)']
     (args.out / 'tests').mkdir()
     (args.out / 'tests/CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
     receipt = dict(format='majesty-community-browser-core-stage-v1', nativeProducer=digest(args.native_producer),
                    nativeStage=digest(stage_path), browserProducer=digest(args.web_producer),
                    originalNinja=digest(ninja), originalLinkFiles=bound,
                    originalResources=resource_files,
+                   browserMemoryViewPolicy=digest(memory_policy),
                    excludedPriorCoreObjects=rule['removed'],
                    coreFiles=stage['sourceFiles'], officialBuildRequired=True,
                    generatedSourcesEdited=False, browserPlayable=False, published=False)
