@@ -1,0 +1,60 @@
+{
+  "format": "majesty-community-advanced-ability-controls-v1",
+  "published": false,
+  "controlledEncounterNotCampaignProgress": true,
+  "originalCompiledGplUnchanged": true,
+  "sourceFiles": {
+    "native/community/mechanics_probe.h": {
+      "bytes": 34270,
+      "sha256": "fdc9f09b2f1b27fae6a3855941cf5dda3aca7f9b1fba67b4f86297434d85657e"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 162118,
+      "sha256": "5b436f6fc66f1cd0e3be3ea834a20d03862e48464e2e1cf75ecc7b8557aac380"
+    },
+    "native/community/research_visual_lifecycle.h": {
+      "bytes": 2826,
+      "sha256": "ee5b09e489831bbe9741b0f0c9be1fa07bb747f1a17f4a1d818dd76f89444fa6"
+    }
+  },
+  "inputSave": {
+    "sha256": "427530f2920621440b1dd1ffc61833609964e3c6251e3c32a7ba2f2e574d4628",
+    "bytes": 401583
+  },
+  "nativeExecutableSha256": "d14c6d6feeb2a0c2bc100957b78464554b1330299e78e83cce2dfb355239c5ba",
+  "nativeTrial": {
+    "bytes": 618,
+    "sha256": "66dac7a660b1d84a1ed626ca0a210f7b1c357ed3934ef29db5eac122611e5ac5"
+  },
+  "nativeLog": {
+    "bytes": 94199,
+    "sha256": "5a42ff9783c80e0959e558b7e15a797777f663c46c92d749b6f41602be69e03e"
+  },
+  "nativeExitCode": 0,
+  "peakOwnedRssMiB": 199.8,
+  "observed": [
+    "Combat control: healing restrictions, original level-ups and Flourish gates passed; real Ice Lance launched.",
+    "Combat control: real Ice Lance projectile callback applied Chill; native Arcane Note casting began.",
+    "Combat control: real Arcane Note hit built Resonance; Deflect cooldown and Crescendo consume/cap passed.",
+    "Combat control: actual projectiles, healing restrictions, source level-ups, Flourish, Deflect and Resonance/Crescendo passed.",
+    "Combat control: saved research reload/stage/ownership lifecycle passed; actual Frost Armor freeze refresh and building negative passed.",
+    "Combat control: Frost freeze expired; real Icy Touch and Call to Grave home teleport passed; actual Endless Winter created with correct caster.",
+    "Combat control COMPLETE: actual projectiles, healing restrictions, source level-ups, Flourish, Deflect, Resonance/Crescendo, research reload/stage/ownership, Frost freeze, Icy Touch, home teleport and Endless Winter native cleanup passed. Controlled encounter, not campaign progress."
+  ],
+  "checks": [
+    "Real Ice Lance and Arcane Note projectiles",
+    "Flourish third hostile hit/consume-once/allied negative; Deflect cooldown",
+    "Resonance cap6/Crescendo consumption and actual expiry",
+    "Phantom healing restrictions; original level-up path",
+    "Research saved completion, native stage/ownership visuals and exit animations",
+    "Frost Armor native freeze refresh, building rejection and actual expiry",
+    "Icy Touch original contact gate, actual damage and Gravechill overlay",
+    "Call to Grave original own-home gate and actual native teleport",
+    "Endless Winter actual unit birth with correct original caster; original cleanup after22500ms"
+  ],
+  "limits": [
+    "Controlled source callbacks and task context; not ordinary campaign progress or balance testing",
+    "Icy Touch and home teleport task preconditions set only in owned fixture",
+    "This does not qualify every Priestess/Paladin/shop combination or internet co-op"
+  ]
+}

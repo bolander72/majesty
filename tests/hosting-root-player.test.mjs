@@ -76,3 +76,39 @@ test('demo collection keeps the original Majesty save profile identity', async (
   }), ensureAssets: async id => assert.equal(id, contentId)});
   assert.deepEqual(result, [{id: 'majesty', contentStorageId: contentId}]);
 });
+
+
+test('composed community root prepares the declared data and keeps the original save identity', async () => {
+  const contentId = 'majesty-community-guilds-v1';
+  const calls = [];
+  let closed = false;
+  const games = [{id: 'majesty', title: 'Majesty', defaultContentStorageId: contentId}, {id: contentId}];
+  const result = await prepareRootPlayer({search: '?profile=existing-player', openClient: async () => ({
+    games, status: async id => {assert.equal(id, 'majesty'); return {status: {state: 'ready'}};},
+    close() {closed = true;},
+  }), ensureAssets: async id => calls.push(id)});
+  assert.deepEqual(calls, [contentId]);
+  assert.deepEqual(result, [{id: 'majesty', title: 'Majesty', contentStorageId: contentId}]);
+  assert.equal(games[0].defaultContentStorageId, contentId);
+  assert.ok(closed);
+});
+
+test('failed community preparation cannot silently launch the base game', async () => {
+  const contentId = 'majesty-community-guilds-v1';
+  let closed = false;
+  await assert.rejects(prepareRootPlayer({search: '', openClient: async () => ({
+    games: [{id: 'majesty', defaultContentStorageId: contentId}, {id: contentId}],
+    status: async () => ({status: {state: 'ready'}}), close() {closed = true;},
+  }), ensureAssets: async () => {throw Error('Incomplete community data');}}), /Incomplete community data/);
+  assert.ok(closed);
+});
+
+
+test('a declared community default missing from the catalog fails before native startup', async () => {
+  let closed = false;
+  await assert.rejects(prepareRootPlayer({search: '', openClient: async () => ({
+    games: [{id: 'majesty', defaultContentStorageId: 'majesty-community-guilds-v1'}],
+    status: async () => ({status: {state: 'ready'}}), close() {closed = true;},
+  }), ensureAssets: () => assert.fail('No incomplete collection can be prepared')}), /collection is unavailable/);
+  assert.ok(closed);
+});

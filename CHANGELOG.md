@@ -1,5 +1,19 @@
 # Changelog
 
+## Community guilds and Phantom spell icons — October17,2026
+
+- Add Phantomstar’s Bards Hall and Phantoms Haunt beside Alchemist Lab, using the community’s actual heroes, building artwork, voices, scripts and mechanics.
+- Fix Phantom ability icons using source artwork and native list/hover presentation. Reconcile saved research visuals after world entry, construction and ownership changes.
+- Verify native projectiles, combat/effect controls, ordinary browser saving/fresh reload, and automatic composed-content import at the normal root game. Keep the original save-profile identity and prior collections.
+- Distribute the engine and source-bound resources through immutable GitHub assets. Retain the qualified renderer and archive prior performance measurements under their original engine; no new performance benchmark is claimed.
+
+## Additional community mechanics — private work, October17,2026
+
+- Verify actual Ice Lance and Arcane Note projectiles, Dancer Flourish and Deflect, Resonance/Crescendo, and undead healing restrictions through the original engine.
+- Reconcile the creator's research visual callbacks after Old-edition world entry, construction and ownership changes, preserving original saved ledgers and native overlay exit animations.
+- Verify Frost Armor freeze refresh, building rejection and native expiry. Preserve all saves and profiles while removing another504MiB of obsolete owned test executables and caches.
+- Advanced Phantom and final browser checks still precede public activation.
+
 ## Phantom icons and mechanics checks — private work, October 17, 2026
 
 - Give Phantom spell rows icons derived from the creator's frost artwork, using native list geometry and hover descriptions. Verify native/browser Ice Lance and the Troubadour/Spellsinger panels.

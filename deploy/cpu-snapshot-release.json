@@ -1,8 +1,16 @@
 {
   "format": "majesty-cpu-snapshot-release-v1",
-  "engineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
   "requiredRuntimeEnvironment": {
     "RECOMP_DDRAW_CPU_SNAPSHOT_ONLY": "1"
   },
-  "verification": "deploy/cpu-snapshot-verification.json"
+  "verification": "deploy/cpu-snapshot-verification.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+    "unchangedOriginalBrowserObjects": true,
+    "originalBrowserProducer": "performance1797",
+    "privateLinkStageSha256": "06e2144f7e3ffa85220c8a881575b1e4bba48c6bb7897776a7b5c0f683b24113",
+    "newRegressionProof": "content/community-mods/browser-abilities-verification.json",
+    "scope": "Retained original runtime/renderer objects; native source-backed guild controls and new browser save/fresh reload. Prior detailed Alchemist/demo qualifications remain identified as inherited."
+  }
 }

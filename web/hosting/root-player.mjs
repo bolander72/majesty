@@ -1,3 +1,4 @@
+import {COMMUNITY_STORAGE_ID} from '../content/community-files.mjs';
 import {launcherClient} from './launcher-client.mjs';
 import {ensureAutomaticAssets} from './automatic-assets.mjs';
 
@@ -20,7 +21,9 @@ export async function prepareRootPlayer({search = location.search,
     signal?.throwIfAborted();
     const {contentStorageId, defaultContentStorageId, ...original} = game;
     const contentId = game.defaultContentStorageId;
-    if (['majesty-alchemist-v1-campaign3', 'majesty-alchemist-demo-v1'].includes(contentId) && client.games.some(item => item.id === contentId)) {
+    if (['majesty-alchemist-v1-campaign3', 'majesty-alchemist-demo-v1', COMMUNITY_STORAGE_ID].includes(contentId)) {
+      if (!client.games.some(item => item.id === contentId))
+        throw Error('The configured community collection is unavailable.');
       await ensureAssets(contentId, {
         status: id => client.status(id),
         importZip: (id, file) => client.importZip(id, file),

@@ -1,9 +1,11 @@
 # Bards Hall and Phantoms Haunt integration
 
-The integration goal is active. Alchemist Lab and Vampiric Revenge remain the
-deployed content. All three guilds' authentic combined GPL now compiles with the
-original SDK. Bards Hall and Phantoms Haunt remain private candidates, with no
-claim of native or browser gameplay qualification.
+The composed browser release adds Bards Hall and Phantoms Haunt alongside
+Alchemist Lab and the original Vampiric Revenge demo. Official SDK compilation,
+paid native guild play, combat/effect controls, native ability UI, ordinary
+browser save/fresh reload and root automatic import are qualified. The final
+section records the release evidence and its limits; intermediate sections
+retain their historical staging state.
 
 ## Acquired originals
 
@@ -1061,3 +1063,95 @@ research visual reconciliation on world entry/ownership changes. The latter
 has explicit creator callbacks, but the modern parity RVAs are not addresses
 for our pinned Old executable. Keep public content inactive until these
 remaining paths and the final browser/save flow qualify.
+
+
+## Native projectile/reaction and research lifecycle controls — October17
+
+Owned trial2328 invokes the actual source through the original GPL evaluator
+and observes native projectile callbacks. Ice Lance damages and chills its
+actual hostile target; Arcane Note builds Resonance on its actual hit. Dancer
+Flourish arms at the third hostile hit, consumes once and rejects allies;
+Deflect enforces its cooldown. Resonance caps at six, Crescendo consumes it,
+and its real native overlay expires. Sovereign and non-Priestess healing are
+refused by Phantom while an ordinary hero accepts sovereign healing. Original
+experience awards reach Phantom level7. These are explicitly controlled
+encounters, never ordinary campaign progress. The earlier fixture exit came
+from giving boolean-return GPL functions an integer return slot; native GPL
+booleans have their own type6, assignment and getter. The corrected typed
+fixture passes, without changing the creator's source or game balance.
+
+The Old research visual event adapter calls the creator's existing idempotent
+callbacks after original world entry, building stage changes and ownership
+transfers. Pinned PE audit2332 establishes Old416c30,431130 and5a2670 rather
+than borrowing modern-edition RVAs. Original world entry queues phase3; its
+one-shot reconciliation runs once that phase commits. No kingdom scan runs
+on every frame, and the saved GPL ledger still owns research and awards.
+Placement previews and retired or uninitialized actors do not get callbacks.
+
+Isolated trial2356 restores the existing completed Chronicles visual, clears
+it when a Hall becomes unfinished or changes to an unresearched owner, and
+restores it on completion or return to the researched owner. Native overlay
+retirement includes its exit animation: immediate and250ms presence checks
+were premature. The final controls wait for actual retirement with a bounded
+six-second deadline; they do not force-delete actors. Frost Armor's actual
+freeze callback also refreshes its timer, rejects a building and expires
+through native updates. The trial exits normally at203.1MiB. These checks do
+not yet establish the remaining advanced Phantom callbacks or final browser
+integration; keep the content private until those qualify.
+
+
+Native2363 extends that replay with an actual living Daemonwood target for
+Icy Touch: the contact gate passes, the original melee callback damages it
+and applies Gravechill. The original Call to Grave home gate accepts the
+fixture's distant, birth-bound Haunt task, and its native teleport reaches
+that Haunt. Endless Winter creates its actual PHW1 storm through the ordinary
+spell-unit factory; the original caster bridge records Phantom1412. After
+22500 simulation milliseconds the native storm is gone or retired. Normal
+caster deaths are allowed after launch; the cleanup assertion follows the
+storm's own identity rather than requiring unrelated heroes to survive.
+The complete controlled replay exits normally at199.8MiB. Source GPL and
+ordinary player saves remain unchanged. Task preconditions are explicitly
+set only in this owned fixture; it is not campaign progress or a claim about
+every shopping, Priestess or Paladin combination. Final browser integration
+and release admission remain pending.
+
+
+## Composed browser/root release — October17
+
+Release `community-guilds2373` binds the native-qualified core to the retained
+production runtime/renderer objects and the complete54-file composed content
+recipe. Phantom spell glyphs, Bard panels, ordinary401771-byte Day12 saving
+and a fresh browser reload pass. The saved actor audit retains all five living
+hero types and completed Hall3, Haunt3 and Lab1. Fixtures and cheats are absent
+from these browser saves.
+
+The root launcher originally recognized only the two older Alchemist data IDs.
+The private2377 root trial caught that omission: it selected stock data and the
+community save refused its missing name resources. The source now admits the
+composed collection and refuses an unavailable declared live collection.
+Retired Lost Trail/Wayfinder defaults remain excluded. Root2379 automatically
+imports all54 integrity-bound patches from public GitHub, verifies206 installed
+files, opens the normal native menu, restores the exact Day12 input through
+Majesty's original profile identity and continues into Day14. Phantom's native
+icon/footer remain correct and research reconciles after world entry. A normal
+root Save generates402611 bytes, SHA256
+`bdcd1749e62eb78bbde001d837f5118a09c68309172e7cb33f49041f47077d97`.
+The copied input is excluded when identifying that generated save. Runtime
+errors remain empty and the guarded, muted root trial stays below its2.4GiB
+ceiling. The source and qualification record are separate from the old initial
+candidate's staging-only booleans.
+
+Assets are immutable at Git commit
+`20829cb662a679af829f9aebf77e92c80d7c980d` on `codex/assets`. All23 new
+public objects pass exact size/SHA256 and CORS checks. Matching prior objects
+are reused rather than uploaded again. Original game collections, save/profile
+identities and creator credits remain intact. The production renderer's prior
+measurements retain their actual1799 engine in the archived proof; this is a
+content relink and functional regression check, not a new benchmark or a claim
+about every Priestess/Paladin/shop combination, internet co-op or arbitrary
+kingdom sizes.
+
+Cleanup removes obsolete owned build artifacts and the owned root trial's
+854087737-byte derived game-input copy after unloading its engine. It never
+removes a profile, save, backup, source input or prior public release. The
+normal original owned base remains cached for subsequent trials.

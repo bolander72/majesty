@@ -1,0 +1,35 @@
+{
+  "format": "majesty-community-projectile-reaction-controls-v1",
+  "originalCompiledGplUnchanged": true,
+  "controlledEncounter": true,
+  "campaignProgress": false,
+  "published": false,
+  "nativeExitCode": 0,
+  "peakOwnedRssMiB": 200.7,
+  "inputSave": {
+    "sha256": "427530f2920621440b1dd1ffc61833609964e3c6251e3c32a7ba2f2e574d4628",
+    "bytes": 401583
+  },
+  "engineSha256": "ff1c8d9ef1e9d98b1b8dfceff4592ac86b6eef0cdff6328b7cc9547de2e49268",
+  "logSha256": "47882f8cf6434f31a1040432679fec6575a37ae45181ba31fc8d0c1d4132762d",
+  "observed": [
+    "Combat control: healing restrictions, original level-ups and Flourish gates passed; real Ice Lance launched.",
+    "IceLance enemy=512 hp-before=108 hp-after=94 chill-tier=1 reborn=0",
+    "Combat control: real Ice Lance projectile callback applied Chill; native Arcane Note casting began.",
+    "Combat control: real Arcane Note hit built Resonance; Deflect cooldown and Crescendo consume/cap passed.",
+    "Combat control COMPLETE: actual projectiles, healing restrictions, source level-ups, Flourish, Deflect and Resonance/Crescendo passed. Controlled encounter, not campaign progress."
+  ],
+  "checks": [
+    "Phantom rejects sovereign and non-Priestess healing; ordinary hero positive",
+    "actual original give_exp reaches Phantom level7",
+    "Flourish third-hit gate, consume-once, allied negative",
+    "actual Ice Lance projectile damage and Chill callback",
+    "actual Arcane Note projectile yields Resonance",
+    "Dancer Deflect cooldown",
+    "Resonance cap6 and Crescendo consume; actual native overlay expiry"
+  ],
+  "limits": [
+    "These are owned controlled encounters, not ordinary campaign progress or comprehensive balance/performance tests",
+    "Research visual events and further Phantom mechanics still pending"
+  ]
+}

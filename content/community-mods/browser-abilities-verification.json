@@ -1,0 +1,179 @@
+{
+  "format": "majesty-community-browser-abilities-save-v1",
+  "published": false,
+  "engine": {
+    "js": {
+      "bytes": 473482,
+      "sha256": "4ee2d31cd8fcfc75d368626f0919e9f432715ed75726aa987bc2de28375abeba"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    },
+    "wasm": {
+      "bytes": 90967546,
+      "sha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0"
+    }
+  },
+  "originalCompiledGplUnchanged": true,
+  "gameCandidateSha256": "aec91ce34d65be7ef71da34069ca636e9d4c4fb631542530799d7af9568d6ceb",
+  "browserNativeUiQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "ordinaryProgress": true,
+  "controlledFixtureUsed": false,
+  "cheatsUsed": false,
+  "originalProfileIdentity": "majesty",
+  "save": {
+    "path": "/Users/mike/.local/share/majesty-work/community2367-browser-generated.GMP",
+    "bytes": 401771,
+    "sha256": "f30e21f4bce6979bb06011b7e0d8353f3504ce75470f97104479473f3a3f38ff",
+    "trial": "community2367",
+    "source": "ordinary native browser Save, no fixture or cheats",
+    "inputSha256": "427530f2920621440b1dd1ffc61833609964e3c6251e3c32a7ba2f2e574d4628",
+    "profile": "community2367"
+  },
+  "savedActorAudit": {
+    "bytes": 2764,
+    "sha256": "0de887b12d70818933fd227ebefcbe0b33fff1a2b115c02c0d9fff555948665e"
+  },
+  "livingSavedHeroes": [
+    "Blade_Dancer",
+    "Spellsinger",
+    "Troubadour",
+    "Phantom",
+    "Alchemist"
+  ],
+  "completedGuilds": [
+    "Bards_Hall",
+    "Phantoms_Haunt",
+    "AlchemistsLaboratory"
+  ],
+  "nativeUiScreenshots": {
+    "phantom-spells": {
+      "bytes": 789482,
+      "sha256": "00ccd58f0d85de5702623c71d56319cc33466b76f29f0db333cfb64cf9deb9fc"
+    },
+    "phantom-hover": {
+      "bytes": 788430,
+      "sha256": "afe779c5801a454721ebd3020bf62e46d31748b275c1216e2416625c51c16c42"
+    },
+    "troubadour-spells": {
+      "bytes": 738790,
+      "sha256": "0bf05f3d00f58a0126c8c7e7082211189f47ff8c755bf65d51db8b118f58d38f"
+    },
+    "spellsinger-spells": {
+      "bytes": 735573,
+      "sha256": "ed5cabcaab277e263960528b6b075fd6ab0df79ad03b95cf76997c7df4eeccd8"
+    },
+    "saved": {
+      "bytes": 728396,
+      "sha256": "0379850a0ade87e4d143714598151c7af21bb6005cbcf65e9c749212d5ac4d30"
+    }
+  },
+  "freshReload": {
+    "trial": "community2371",
+    "inputSha256": "f30e21f4bce6979bb06011b7e0d8353f3504ce75470f97104479473f3a3f38ff",
+    "inputBytes": 401771,
+    "nativeWorldRestored": true,
+    "phantomNativePanelReopened": true,
+    "researchWorldReadyReconciled": true,
+    "runtimeErrors": [],
+    "growableMemoryViews": false
+  },
+  "trials": {
+    "community2367": {
+      "resources": {
+        "peakRssMiB": 1786.6,
+        "lastRssMiB": 822.2,
+        "phase": {
+          "phase": "Phantom icon, Bard panels and ordinary save"
+        },
+        "largestProcesses": [
+          {
+            "pid": 96789,
+            "rssMiB": 431.2,
+            "process": "Google Chrome Helper (Renderer)"
+          },
+          {
+            "pid": 96596,
+            "rssMiB": 152.1,
+            "process": "Google Chrome"
+          },
+          {
+            "pid": 96602,
+            "rssMiB": 89.3,
+            "process": "Google Chrome Helper (GPU)"
+          },
+          {
+            "pid": 96603,
+            "rssMiB": 58.5,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 97126,
+            "rssMiB": 40.3,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 96604,
+            "rssMiB": 35.2,
+            "process": "Google Chrome Helper"
+          }
+        ]
+      },
+      "guardStopped": false,
+      "closed": true,
+      "audioMuted": true
+    },
+    "community2371": {
+      "resources": {
+        "peakRssMiB": 1895.9,
+        "lastRssMiB": 1217.8,
+        "phase": {
+          "phase": "native ability UI and ordinary browser save"
+        },
+        "largestProcesses": [
+          {
+            "pid": 99121,
+            "rssMiB": 543.4,
+            "process": "Google Chrome Helper (Renderer)"
+          },
+          {
+            "pid": 98918,
+            "rssMiB": 259.6,
+            "process": "Google Chrome"
+          },
+          {
+            "pid": 98925,
+            "rssMiB": 120.6,
+            "process": "Google Chrome Helper (GPU)"
+          },
+          {
+            "pid": 98926,
+            "rssMiB": 87.0,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 99285,
+            "rssMiB": 67.3,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 99130,
+            "rssMiB": 64.9,
+            "process": "Google Chrome Helper"
+          }
+        ]
+      },
+      "guardStopped": false,
+      "closed": true,
+      "audioMuted": true
+    }
+  },
+  "limits": [
+    "Bounded local browser UI, ordinary saving and fresh runtime reload",
+    "Does not qualify every shopping/Priestess/Paladin combination, internet co-op or performance at arbitrary kingdom sizes"
+  ],
+  "rootDefaultIntegrationQualified": true,
+  "rootQualification": "deploy/community-guilds-verification.json"
+}

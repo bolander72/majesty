@@ -6,8 +6,9 @@ Local WebAssembly build of the original Majesty engine, using
 
 The browser build runs the original engine and native menus. Alchemist Lab,
 with the community's artwork and alchemy mechanics, and the restored Vampiric
-Revenge demo mission are deployed. Bards Hall and Phantoms Haunt are being
-integrated; neither is enabled on the live site yet.
+Revenge demo mission are joined by Phantomstar’s Bards Hall and Phantoms Haunt.
+The composed release adds Blade Dancers, Troubadours, Spellsingers and Phantoms
+with their original artwork, voices and gameplay, plus native ability icons.
 
 Local two-player co-op save/resume and experimental regional world travel have
 been exercised in bounded trials. Separate-network full matches, seamless
@@ -27,8 +28,10 @@ Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
 sources and prior saves are preserved. The active milestone integrates
 Phantomstar's authentic Bards Hall and Phantoms Haunt alongside Alchemist Lab.
 Original packages and creator redistribution permission are confirmed. Combined
-scripts compile with the official SDK; native controls and browser gameplay
-qualification remain in progress. See [guild integration status](docs/community-guild-integration.md)
+scripts compile with the official SDK. Paid guilds, combat/effect controls,
+native ability UI, ordinary browser saving/fresh reload and root automatic
+import are qualified in bounded trials. Individual edge-case and network
+limits remain documented. See [guild integration status](docs/community-guild-integration.md)
 and [creator credits](CREDITS.md).
 
 Co-op joining, shared saves and resume have already been exercised. Completing

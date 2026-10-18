@@ -19,8 +19,12 @@ and `third_party/majesty-mod-manager/LICENSE`.
 **Phantomstar721** created [Bards Hall](https://steamcommunity.com/sharedfiles/filedetails/?id=3813128205)
 and [Phantoms Haunt](https://steamcommunity.com/sharedfiles/filedetails/?id=3769947406),
 including their original guild artwork, hero sprites, animations, portraits,
-effects, voices and gameplay. Browser integration is in progress; neither guild
-is qualified or deployed yet.
+effects, voices and gameplay. The composed browser release retains that
+community content with native compatibility and ability-UI adaptations.
+
+The composed preparation also uses Majesty Mod Manager `release/v0.3.10`,
+commit `b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`. Acquired package hashes and
+the public source references are retained in the guild contracts.
 
 Bards Hall voice credits, as listed by its creator: **Teatarouva (@serrizawa)**
 as Troubadour, **Jake (@jakewn)** as Spellsinger and **Char C (@chardoesva)**

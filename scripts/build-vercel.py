@@ -294,6 +294,70 @@ def install_vampiric_revenge_release(static):
     games_file.write_text(json.dumps(games, indent=2) + '\n')
 
 
+def install_community_guilds_release(static):
+    """Mount only the composed, engine-qualified community resource set."""
+    descriptor = ROOT / 'deploy/community-guilds-release.json'
+    if not descriptor.exists():
+        return
+    content = json.loads(descriptor.read_text())
+    proof = json.loads((ROOT / 'deploy/community-guilds-verification.json').read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    required = ['nativePaidGuildsQualified', 'nativeAdvancedAbilitiesQualified',
+                'browserNativeUiQualified', 'browserWorldSaveReloadQualified',
+                'originalSaveProfilePreserved', 'rootDefaultIntegrationQualified']
+    if (content.get('format') != 'majesty-community-guilds-release-v1'
+            or content.get('storageId') != 'majesty-community-guilds-v1'
+            or content.get('baseId') != 'majesty'
+            or content.get('engineSha256') != engine or proof.get('engineSha256') != engine
+            or any(proof.get(key) is not True for key in required)):
+        raise ValueError('Require the qualified composed community engine and browser flow')
+    module = (ROOT / 'web/content/community-files.mjs').read_text()
+    def binding(name):
+        return json.loads(module.split('export const COMMUNITY_' + name + ' = Object.freeze(', 1)[1].split(');', 1)[0])
+    bindings, sizes = binding('FILES'), binding('SIZES')
+    patches = content.get('patches', [])
+    if (len(bindings) != 54 or len(patches) != len(bindings)
+            or {p.get('path') for p in patches} != set(bindings)):
+        raise ValueError('Require every source-bound composed resource exactly once')
+    for patch in patches:
+        if (bindings[patch['path']] != patch.get('sha256')
+                or sizes[patch['path']] != patch.get('bytes')
+                or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Community resource differs from its qualified binding')
+    environment = {name: '1' for name in [
+        'RECOMP_COMMUNITY_INTEGER_HELPERS', 'RECOMP_COMMUNITY_BASE_TIMING_HELPERS',
+        'RECOMP_COMMUNITY_PROCESS_GUILDS', 'RECOMP_COMMUNITY_MOVEMENT_SCALE',
+        'RECOMP_COMMUNITY_SPELL_ORIGIN', 'RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS',
+        'RECOMP_COMMUNITY_SPELL_TIMING_HELPERS', 'RECOMP_COMMUNITY_HERO_UI',
+        'RECOMP_COMMUNITY_PHANTOM_UI']}
+    if content.get('additionalRuntimeEnvironment') != environment:
+        raise ValueError('Community environment differs or enables fixture/diagnostic controls')
+    # Validate the native startup anchor before writing any collection metadata.
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    anchor = '      m.ENV.RECOMP_GUEST_ARGS ='
+    if html.count(anchor) != 1 or any('m.ENV.' + name + ' =' in html for name in environment):
+        raise ValueError('Review composed community runtime environment placement')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-community-guilds-v1'] = {'baseId': 'majesty', 'patches': patches}
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    if any(game['id'] == 'majesty-community-guilds-v1' for game in games):
+        raise ValueError('Preserve the existing community collection before replacement')
+    derived = {**original, 'id': 'majesty-community-guilds-v1',
+               'title': 'Majesty: Community Guilds'}
+    derived.pop('defaultContentStorageId', None)
+    derived.pop('contentStorageId', None)
+    games.append(derived)
+    original['defaultContentStorageId'] = 'majesty-community-guilds-v1'
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+    player.write_text(html.replace(anchor, ''.join('      m.ENV.' + name + ' = "1";\n'
+                                      for name in environment) + anchor, 1))
+
+
 def install_cpu_snapshot_release(static):
     """Enable the complete-image renderer only for its qualified engine."""
     descriptor = ROOT / 'deploy/cpu-snapshot-release.json'
@@ -478,6 +542,7 @@ def build(destination=None):
     retire_custom_content(static)
     install_alchemist_release(static)
     install_vampiric_revenge_release(static)
+    install_community_guilds_release(static)
     install_cpu_snapshot_release(static)
     enable_native_cursor(static)
     for page in static.rglob('index.html'):

@@ -1,308 +1,33 @@
 {
   "format": "majesty-cpu-snapshot-verification-v1",
-  "status": "incremental native and browser qualified",
-  "engineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
-  "priorEngineSha256": "108e65fe6e9079f602f0cfe5223520ebaffa0c9c9a83a44e23b74166dd4115f4",
-  "engine": {
-    "js": {
-      "bytes": 472568,
-      "sha256": "423575ea4ca15e7c4797da647eeded789b44334b7476d6450677c7f62019fe56"
-    },
-    "data": {
-      "bytes": 5092034,
-      "sha256": "6fed95aefb357a2a895945c041bb10004d6481bd4c4c2a220b685c3a93cc8f67"
-    },
-    "wasm": {
-      "bytes": 90503913,
-      "sha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e"
-    },
-    "js.symbols": {
-      "bytes": 2138320,
-      "sha256": "e004d8cc6f373c5c65cccd9729a1eb8329e009cf5654c73c3958df851b9f44fd"
-    }
-  },
-  "priorQualification": "deploy/cpu-snapshot1770-verification.json",
-  "incrementalPatches": [
-    {
-      "path": "patches/recomp-kit-exact-change-bounds.patch",
-      "patchSha256": "445f909331c7b00c5cfc4bce5d81de5d19785efdf6c1789d0239b223bf53aebe",
-      "exactPatchRoundTrip": true,
-      "sources": {
-        "dx/pixel_change_mask.h": {
-          "before": "30b42a300450aa2a79700f5f0c88521ec298b9bc4455309a60ab1758dba9b67a",
-          "after": "4a41f71f2752caea7bdb7cc6eac9c458fa6e09301220d6ecc8308e8f9cd4786f"
-        },
-        "host/tests/pixel_kernel_tests.cpp": {
-          "before": "725ba35dee3b0b08f61e1ff57a8669c2c099aa07d004f43029224e6cefb906f9",
-          "after": "49cc5651ff5c9208c2a1f682a914bf477042573f5128febbefe1ce4eb4ec1a39"
-        },
-        "host/tests/pixel_compare_bench.cpp": {
-          "before": "32fc0c49c0fe7a91640ae8a5fa659e14c93b316e53cd6926b7d67f783ee2ce36",
-          "after": "7a89217df6d8758c79fb6da1e60a77aeee5ad5ca48f2700aa0bddf9da7caff50"
-        }
-      },
-      "scopedOfficialGameLiteralCheck": true,
-      "scopedOfficialTrackedBoundaryCheck": true
-    },
-    {
-      "path": "patches/recomp-kit-bulk-string-copy.patch",
-      "patchSha256": "5e57745d3c8e50d3968eded655bde0d866a2488f9876d6eff934d224911937ea",
-      "exactPatchRoundTrip": true,
-      "sources": {
-        "runtime/x86.h": {
-          "before": "8218013933e0e57f734f884e5d295c4cfb5fe9e2cc6563587b959bcd85f0a09f",
-          "after": "09669cf5443a23e1bd7474cd27deb478a0d4040d490c755bc8c29b183e17434c"
-        },
-        "runtime/CMakeLists.txt": {
-          "before": "0dae6e47518e4eaa8093ad483f0d33c654373a6d146fc5660e9e3f55695b50a5",
-          "after": "be1aa7669f57656333e0356b27a44c4057b2112f249bd5c02a80c6b2883eddbc"
-        },
-        "runtime/tests/string_ops_tests.cpp": {
-          "before": null,
-          "after": "47e216691c23ab1183c40ab0d4a2ca7016fa750f51827377a7c2089fd98c0725"
-        },
-        "tools/recomp/tests/test_translate_insns.py": {
-          "before": "054b8c601efdf7294be4a404321bb405aa925181254930765cb276c5a385bf9c",
-          "after": "c27bfe312a894aa5107cfadb1dea81bffe66174af7e2766d586d639b7192ec0c"
-        }
-      },
-      "scopedOfficialGameLiteralCheck": true,
-      "scopedOfficialTrackedBoundaryCheck": true
-    }
-  ],
-  "requiredRuntimeEnvironment": {
-    "RECOMP_DDRAW_CPU_SNAPSHOT_ONLY": "1"
-  },
+  "status": "unchanged renderer objects; community browser interaction/save/reload qualified",
+  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+  "priorQualification": "deploy/cpu-snapshot1799-verification.json",
   "nativeControlsQualified": true,
   "browserWorldSaveReloadQualified": true,
   "browserInteractionQualified": true,
-  "nativeChecks": {
-    "priorUnchangedRendererControls": "deploy/cpu-snapshot1770-verification.json",
-    "portablePixelKernels": "passed official target",
-    "wasmSimdPixelKernels": "passed official target",
-    "directDraw": {
-      "checks": 182934,
-      "failures": 0
+  "engine": {
+    "js": {
+      "bytes": 473482,
+      "sha256": "4ee2d31cd8fcfc75d368626f0919e9f432715ed75726aa987bc2de28375abeba"
     },
-    "portableRepMovs": {
-      "checks": 84539,
-      "failures": 0
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
     },
-    "actualWasmRepMovs": {
-      "checks": 84539,
-      "failures": 0
-    },
-    "translatedUnicornInstructionCases": {
-      "passed": 6,
-      "deselectedUnchangedCases": 74
-    },
-    "repBenchmarkWithChecks": {
-      "checks": 84554,
-      "failures": 0,
-      "cases": [
-        {
-          "bytes": 64,
-          "delta": 16384,
-          "scalarMs": 1.759,
-          "bulkMs": 0.335
-        },
-        {
-          "bytes": 256,
-          "delta": 16384,
-          "scalarMs": 6.189,
-          "bulkMs": 0.344
-        },
-        {
-          "bytes": 1280,
-          "delta": 16384,
-          "scalarMs": 30.733,
-          "bulkMs": 0.541
-        },
-        {
-          "bytes": 2560,
-          "delta": 16384,
-          "scalarMs": 60.915,
-          "bulkMs": 0.695
-        },
-        {
-          "bytes": 7680,
-          "delta": 16384,
-          "scalarMs": 170.642,
-          "bulkMs": 2.143
-        },
-        {
-          "bytes": 64,
-          "delta": -16,
-          "scalarMs": 1.72,
-          "bulkMs": 0.347
-        },
-        {
-          "bytes": 256,
-          "delta": -16,
-          "scalarMs": 6.313,
-          "bulkMs": 0.348
-        },
-        {
-          "bytes": 1280,
-          "delta": -16,
-          "scalarMs": 30.894,
-          "bulkMs": 0.525
-        },
-        {
-          "bytes": 2560,
-          "delta": -16,
-          "scalarMs": 58.587,
-          "bulkMs": 0.719
-        },
-        {
-          "bytes": 7680,
-          "delta": -16,
-          "scalarMs": 181.638,
-          "bulkMs": 1.674
-        },
-        {
-          "bytes": 64,
-          "delta": 16,
-          "scalarMs": 1.689,
-          "bulkMs": 1.778
-        },
-        {
-          "bytes": 256,
-          "delta": 16,
-          "scalarMs": 6.22,
-          "bulkMs": 6.343
-        },
-        {
-          "bytes": 1280,
-          "delta": 16,
-          "scalarMs": 30.647,
-          "bulkMs": 30.84
-        },
-        {
-          "bytes": 2560,
-          "delta": 16,
-          "scalarMs": 61.875,
-          "bulkMs": 59.785
-        },
-        {
-          "bytes": 7680,
-          "delta": 16,
-          "scalarMs": 183.046,
-          "bulkMs": 183.029
-        }
-      ],
-      "limit": "isolated helper work, not whole-game speed"
+    "wasm": {
+      "bytes": 90967546,
+      "sha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0"
     }
   },
-  "officialBuild": {
-    "exitCode": 0,
-    "stopReason": null,
-    "peakOwnedRssMiB": 1731.7
+  "compatibilityRelink": {
+    "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+    "unchangedOriginalBrowserObjects": true,
+    "originalBrowserProducer": "performance1797",
+    "privateLinkStageSha256": "06e2144f7e3ffa85220c8a881575b1e4bba48c6bb7897776a7b5c0f683b24113",
+    "newRegressionProof": "content/community-mods/browser-abilities-verification.json",
+    "scope": "Retained original runtime/renderer objects; native source-backed guild controls and new browser save/fresh reload. Prior detailed Alchemist/demo qualifications remain identified as inherited."
   },
-  "browser": {
-    "muted": true,
-    "isolated": true,
-    "normalOptimizingV8": true,
-    "compilerTasks": 1,
-    "ownedRssCeilingMiB": 2400,
-    "runtimeFlagSupplied": true,
-    "actualRequestedEngineUrlVerified": true,
-    "inputSaveSha256": "b08e5793fe83c468dc92365ec982fe0a9e4b1f32998cce233cb53a56673507ec",
-    "matchedCameraMotion": {
-      "baseline": {
-        "viewport": [
-          1920,
-          1080
-        ],
-        "samples": 1745,
-        "medianGapMs": 17.08507537841797,
-        "p95GapMs": 34.25002098083496,
-        "p99GapMs": 37.850141525268555,
-        "worstGapMs": 116.08505249023438,
-        "gapsOver50Ms": 10,
-        "gapsOver100Ms": 1,
-        "gapsOver200Ms": 0,
-        "aggregateCpuCores": 1.225397214305264
-      },
-      "candidate": {
-        "scenario": "matched continuous camera motion in original 111-building mission",
-        "viewport": [
-          1920,
-          1080
-        ],
-        "durationSeconds": 39.11645007133484,
-        "samples": 2261,
-        "medianGapMs": 16.69001579284668,
-        "p95GapMs": 18.73016357421875,
-        "p99GapMs": 33.82992744445801,
-        "worstGapMs": 51.6200065612793,
-        "gapsOver50Ms": 2,
-        "gapsOver100Ms": 0,
-        "gapsOver200Ms": 0,
-        "aggregateCpuCores": 1.2921786259393115,
-        "qualificationLimit": "Short displayed-image intervals during camera motion, not direct input-to-visible latency; synthetic original mission, not user Siege save."
-      }
-    },
-    "generatedSave": {
-      "sha256": "747d291810b79182aa49183e6e7777da9efe8ee28dc7c433c67069dcc66c4be4",
-      "bytes": 1618463,
-      "completedBuildings": 111,
-      "fullHealthBuildings": 108,
-      "livingHeroesWithAi": 29,
-      "heroLevels": [
-        1,
-        4
-      ]
-    },
-    "freshLogicalProfileReload": {
-      "exactGeneratedSave": true,
-      "dayDisplayed": 2,
-      "guardhouseHp": "200/200",
-      "palaceHp": "550/550",
-      "worldContinuedAfterLoad": true,
-      "frameIdProgression": [
-        371,
-        585
-      ],
-      "sameFinalEngine": true
-    },
-    "interactions": [
-      "native Guardhouse card",
-      "native Palace card",
-      "live resize from1280x633 to1920x1080",
-      "12 alternating continuous camera pans",
-      "native Options and Escape resume",
-      "ordinary save and fresh logical-profile reload"
-    ],
-    "guestErrorsObserved": [],
-    "qualifiedTrialsClosedNormally": true,
-    "peakOwnedRssMiB": 2087.2
-  },
-  "excludedExperiment": {
-    "name": "GROWABLE_ARRAYBUFFERS=1",
-    "published": false,
-    "browserQualified": false,
-    "observedGrowableSharedMemory": true,
-    "stop": "owned RSS guard during larger-view resize",
-    "peakOwnedRssMiB": 2452.4,
-    "sourceRestored": true,
-    "causalConclusion": "Threshold exceeded; exact source of increase is unresolved. No matched performance or save qualification."
-  },
-  "simulationTimingChanged": false,
-  "renderResolutionReduced": false,
-  "saveFormatChanged": false,
-  "profileIdentityChanged": false,
-  "gameContentChanged": false,
-  "generatedTranslationsEdited": false,
-  "qualificationLimits": [
-    "Short displayed-image gaps are measured, not direct click-to-visible latency.",
-    "Synthetic original 111-building mission, not the user's exact Siege save or every kingdom.",
-    "Total browser CPU increased slightly in the combined trial; no overall CPU or RAM reduction claim.",
-    "No recurring guest-exception or host-app crash fix is established."
-  ],
-  "rollout": {
-    "state": "none",
-    "manualDataOperations": "No migration, backfill, profile rewrite, content or memory-policy change. Only immutable engine bytes and qualification pins change.",
-    "rollback": "Restore the previous hosted/alchemist engine manifests, cpu-snapshot-release descriptor and archived cpu-snapshot1770 qualification; keep all player saves and profiles."
-  }
+  "performanceMeasurements": "Prior measurements are archived under their actual prior engine; no new performance benchmark claimed."
 }

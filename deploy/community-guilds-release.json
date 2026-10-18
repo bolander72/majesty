@@ -1,0 +1,349 @@
+{
+  "format": "majesty-community-guilds-release-v1",
+  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "storageId": "majesty-community-guilds-v1",
+  "baseId": "majesty",
+  "additionalRuntimeEnvironment": {
+    "RECOMP_COMMUNITY_INTEGER_HELPERS": "1",
+    "RECOMP_COMMUNITY_BASE_TIMING_HELPERS": "1",
+    "RECOMP_COMMUNITY_PROCESS_GUILDS": "1",
+    "RECOMP_COMMUNITY_MOVEMENT_SCALE": "1",
+    "RECOMP_COMMUNITY_SPELL_ORIGIN": "1",
+    "RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS": "1",
+    "RECOMP_COMMUNITY_SPELL_TIMING_HELPERS": "1",
+    "RECOMP_COMMUNITY_HERO_UI": "1",
+    "RECOMP_COMMUNITY_PHANTOM_UI": "1"
+  },
+  "patches": [
+    {
+      "path": "DataMX/mx_gpltext.cam",
+      "bytes": 155060,
+      "sha256": "d20bd0b235140ff134f708e9dcc5a7ffc3b8c1a785c02dae0b11b3448e61fc00",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_gpltext.cam"
+    },
+    {
+      "path": "DataMX/mx_Unittype.cam",
+      "bytes": 102644,
+      "sha256": "acda26fc5b35ec80f9e8de39bf99ba174517a13df115fb6bd5538acaeaf916f2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_Unittype.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-units.cam"
+    },
+    {
+      "path": "DataMX/mx_miscdata.cam",
+      "bytes": 17187,
+      "sha256": "325b03b936c0d8fa4e96295309b1cc0b290f07ba1d6890f8e996003fce6268b8",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_miscdata.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "DataMX/Alchemist_Composed.bcd",
+      "bytes": 2067851,
+      "sha256": "2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0914992d11c5fb57dd46c30b9873b0f0bcbc851e/assets/content/alchemist-v1-campaign3/DataMX/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "DataMX/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "DataMX/mx_action.cam",
+      "bytes": 20558,
+      "sha256": "2488afeaf0f6fcd51852bf6f2590bace6838824e0868ed95de87126fc27af8f0",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_action.cam"
+    },
+    {
+      "path": "DataMX/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_maindata.cam"
+    },
+    {
+      "path": "DataMX/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_audio.cam"
+    },
+    {
+      "path": "DataMX/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "DataMX/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-units.cam"
+    },
+    {
+      "path": "Data/unittype.cam",
+      "bytes": 191611,
+      "sha256": "dad06f738f0e71bc3f528f05d4953caf4d9c3156e1b94cbd9adacaec208f0048",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/unittype.cam"
+    },
+    {
+      "path": "Data/gpltext.cam",
+      "bytes": 156058,
+      "sha256": "7d684ef93be8e91d4bb508534af66eea56212624be7041bec3b643a1ee8033ec",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/gpltext.cam"
+    },
+    {
+      "path": "Data/textdata.cam",
+      "bytes": 397013,
+      "sha256": "9db43f20e7e6ff150b44c761d6beada13b34498f15b9388e54c3c245ac90dcb5",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/textdata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "Data/Alchemist_Composed.bcd",
+      "bytes": 701264,
+      "sha256": "98d726c14289ff0ca64adb147d2d922c8d2fdb893ad29f1ca593280edebfac93",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "Data/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "Data/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_maindata.cam"
+    },
+    {
+      "path": "Data/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_audio.cam"
+    },
+    {
+      "path": "Data/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "Data/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/action.cam",
+      "bytes": 31268,
+      "sha256": "9fa9210deb37a9fe40643125f8f2df1dafb09c36133c1b5b09e7e7ae81a620c0",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/action.cam"
+    },
+    {
+      "path": "Data/miscdata.cam",
+      "bytes": 10245,
+      "sha256": "8036b0c5ee3f172278fa91b09a4d05a0a2b81eba1170a2c2a74def3c24dc80c6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/miscdata.cam"
+    },
+    {
+      "path": "DataMX/mx_textdata.cam",
+      "bytes": 182410,
+      "sha256": "6f84dc4447447d5c1af6460e54ebd4c7cd041c4d22d7681a869d4e5a3010e0fd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_textdata.cam"
+    },
+    {
+      "path": "Data/mx_textdata.cam",
+      "bytes": 139122,
+      "sha256": "54d8f1784adf210e17a135b0fee0a1a699f0c7c33dcb18eea2f6703a730298bd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/mx_textdata.cam"
+    },
+    {
+      "path": "Data/mx_gpltext.cam",
+      "bytes": 141746,
+      "sha256": "71ba4e34bc8cf617e7864b90ee782f25b817b56e5af53c6b376ce23772738f08",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/mx_gpltext.cam"
+    },
+    {
+      "path": "Quests/VampiricRevengeLegacy.q",
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.q"
+    },
+    {
+      "path": "Quests/VampiricRevengeLegacy.qdd",
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.qdd"
+    },
+    {
+      "path": "QuestsMX/VampiricRevengeLegacy.q",
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.q"
+    },
+    {
+      "path": "QuestsMX/VampiricRevengeLegacy.qdd",
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.qdd"
+    },
+    {
+      "path": "Data/VampiricRevenge-menu.cam",
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevenge-menu.cam"
+    },
+    {
+      "path": "Data/VampiricRevengeBridge.bcd",
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevengeBridge.bcd"
+    },
+    {
+      "path": "DataMX/VampiricRevenge-menu.cam",
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevenge-menu.cam"
+    },
+    {
+      "path": "DataMX/VampiricRevengeBridge.bcd",
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevengeBridge.bcd"
+    },
+    {
+      "path": "Data/sounddesc.cam",
+      "bytes": 114824,
+      "sha256": "4b981c10f415ca9fccc5510c73c2d1b10aeb1acb181c9bddb9616107244279ae",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/sounddesc.cam"
+    },
+    {
+      "path": "Data/Community-textdata.cam",
+      "bytes": 43340,
+      "sha256": "bb205a93cbb7e46f3edd4393352897807d59daa567b551c619476fc43e4c24c4",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-textdata.cam"
+    },
+    {
+      "path": "Data/Community-gpltext.cam",
+      "bytes": 79958,
+      "sha256": "5b3069151d6fc83791f43849855cf5ef046a29754e6e3f9a89175a152122c640",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-gpltext.cam"
+    },
+    {
+      "path": "DataMX/mx_sounddesc.cam",
+      "bytes": 70732,
+      "sha256": "5a5ce56cc553c3c0f06e33e2010230cc709c35315fd000297af5033e78ce85eb",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/mx_sounddesc.cam"
+    },
+    {
+      "path": "DataMX/Community-textdata.cam",
+      "bytes": 43340,
+      "sha256": "71ade0c1d8d0c073773f1e5f160510ae647bfcb96e38355caaac7584262d9aff",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/Community-textdata.cam"
+    },
+    {
+      "path": "DataMX/Community-gpltext.cam",
+      "bytes": 79382,
+      "sha256": "693bc741d266d252ee43351596d32c8898af8b6e33cc9722433fdd11b449fa48",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/DataMX/Community-gpltext.cam"
+    },
+    {
+      "path": "Data/Community-audio.cam",
+      "bytes": 6599396,
+      "sha256": "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-audio.cam"
+    },
+    {
+      "path": "DataMX/Community-audio.cam",
+      "bytes": 6599396,
+      "sha256": "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-audio.cam"
+    },
+    {
+      "path": "Data/Community-interface.cam",
+      "bytes": 8302286,
+      "sha256": "8625dd23f263283efb504fd93437c82a3a0e1f5b5d4cfac611e9027ed354a36b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-interface.cam"
+    },
+    {
+      "path": "DataMX/Community-interface.cam",
+      "bytes": 8302286,
+      "sha256": "8625dd23f263283efb504fd93437c82a3a0e1f5b5d4cfac611e9027ed354a36b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-interface.cam"
+    },
+    {
+      "path": "Data/Community-main.cam",
+      "bytes": 22474991,
+      "sha256": "8ebaafa2c1a4ea31bbd5a85213c5e8a01160f7aee75a5be9227e5ca7be854bff",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-main.cam"
+    },
+    {
+      "path": "DataMX/Community-main.cam",
+      "bytes": 22474991,
+      "sha256": "8ebaafa2c1a4ea31bbd5a85213c5e8a01160f7aee75a5be9227e5ca7be854bff",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-main.cam"
+    },
+    {
+      "path": "Data/Community_Common.bcd",
+      "bytes": 15602927,
+      "sha256": "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Common.bcd"
+    },
+    {
+      "path": "Data/Community_Base.bcd",
+      "bytes": 187130,
+      "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Base.bcd"
+    },
+    {
+      "path": "Data/Community_Expansion.bcd",
+      "bytes": 27612,
+      "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Expansion.bcd"
+    },
+    {
+      "path": "DataMX/Community_Common.bcd",
+      "bytes": 15602927,
+      "sha256": "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Common.bcd"
+    },
+    {
+      "path": "DataMX/Community_Base.bcd",
+      "bytes": 187130,
+      "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Base.bcd"
+    },
+    {
+      "path": "DataMX/Community_Expansion.bcd",
+      "bytes": 27612,
+      "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Expansion.bcd"
+    }
+  ],
+  "creators": "Phantomstar721; original art/audio/gameplay used with permission and repository credits",
+  "nativeSourceBinding": {
+    "bytes": 11255,
+    "sha256": "aec91ce34d65be7ef71da34069ca636e9d4c4fb631542530799d7af9568d6ceb"
+  },
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d"
+}

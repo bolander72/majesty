@@ -1,0 +1,50 @@
+{
+  "format": "majesty-community-research-visual-lifecycle-v1",
+  "published": false,
+  "controlledWorldNotCampaignProgress": true,
+  "originalCompiledGplUnchanged": true,
+  "sourceFiles": {
+    "native/community/research_visual_lifecycle.h": {
+      "bytes": 2826,
+      "sha256": "ee5b09e489831bbe9741b0f0c9be1fa07bb747f1a17f4a1d818dd76f89444fa6"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 162118,
+      "sha256": "5b436f6fc66f1cd0e3be3ea834a20d03862e48464e2e1cf75ecc7b8557aac380"
+    },
+    "scripts/audit-native-research-visual-lifecycle.py": {
+      "bytes": 3430,
+      "sha256": "48cde994b796dad461f8aa63857e08d91896ce310ffdc096a109993236143283"
+    }
+  },
+  "audit": {
+    "bytes": 2318,
+    "sha256": "ffbbdb41c3ad6f6ec314bce1a0201b205919843343c0ab6fcd27326c993690cd"
+  },
+  "nativeTrial": {
+    "bytes": 615,
+    "sha256": "3ba478127323a3c157a73c276d65d8610309d46b472960a3f25d7c89c0ccac93"
+  },
+  "nativeLog": {
+    "bytes": 74657,
+    "sha256": "a9685aa98af90c2855a8593fca9be2a0c84228eb925674686680544bb2022f00"
+  },
+  "nativeExitCode": 0,
+  "peakOwnedRssMiB": 203.1,
+  "inputSave": {
+    "sha256": "427530f2920621440b1dd1ffc61833609964e3c6251e3c32a7ba2f2e574d4628",
+    "bytes": 401583
+  },
+  "checks": [
+    "Original world-ready restores completed Epic Chronicles visual from saved ledger",
+    "Clearing native CurrentStageBuilt calls original creator visual and removes overlay within native exit animation",
+    "Completing stage restores visual",
+    "Transferring Hall to unresearched owner removes visual; return to original owner restores",
+    "Frost Armor freeze original callback refreshes timer and refuses buildings; actual native expiry removes timer"
+  ],
+  "limits": [
+    "Native engine qualification only; browser rebuild/new world/save/reload pending",
+    "6-second bounded wait for original overlay retirement; no immediate destruction or new per-frame scan",
+    "Not complete Phantom perk or equipment qualification"
+  ]
+}

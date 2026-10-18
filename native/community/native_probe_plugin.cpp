@@ -522,7 +522,7 @@ void invokeSourceTarget(const TargetExecution &execution) {
 // Original Old GPL scalar call wrapper. Preserve its actual function binding,
 // argument/result references, typed values and normal-return cleanup.
 bool evaluateScalar(const std::string &symbol, std::uint32_t unit, std::int32_t operation,
-                    std::uint32_t &result) {
+                    std::uint32_t &result, bool includeOperation = true) {
     if (symbol.empty() || symbol.size() > 120 || !unit)
         return false;
     std::uint32_t memory = 0;
@@ -539,7 +539,8 @@ bool evaluateScalar(const std::string &symbol, std::uint32_t unit, std::int32_t 
     if (valid) {
         call(0x00629bf0U, evaluator);
         call(0x00629a20U, evaluator, {unit});
-        call(0x00629a40U, evaluator, {static_cast<std::uint32_t>(operation)});
+        if (includeOperation)
+            call(0x00629a40U, evaluator, {static_cast<std::uint32_t>(operation)});
         call(0x00629c40U, evaluator);
         const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
         valid = begin && end >= begin && end - begin >= 4 && end - begin <= 64;
@@ -1751,6 +1752,7 @@ void registerAttributes() {
         }
     }
 }
+#include "research_visual_lifecycle.h"
 #include "mechanics_probe.h"
 MechanicsProbe mechanicsProbe;
 bool controlledMechanics = false;
@@ -1758,6 +1760,44 @@ bool controlledMechanics = false;
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+    if (researchVisuals && target == 0x00416c30U) {
+        // Audited Old world entry, called by415e7a after new/load setup.
+        // Its tail restores collections and requests phase3 before returning.
+        researchWorldReady = false;
+        researchWorldVisualPending = true;
+        next(inv, cpu);
+        researchWorldReady = true;
+        syncResearchWorldVisuals();
+        return;
+    }
+    if (researchVisuals && (target == 0x00431130U || target == 0x005a2670U)) {
+        const auto argument = read(cpu->esp + 4);
+        const auto value = target == 0x00431130U ? read(cpu->esp + 8) : 0;
+        const bool relevant =
+            std::any_of(researchBindings.begin(), researchBindings.end(), [&](const auto &binding) {
+                return !binding.record.activeEffector.empty() &&
+                       (read(self + 0x6c) & 0xffffffU) == binding.nativeFamily;
+            });
+        const auto previousOwner = relevant ? read(self + 0x70) : 0;
+        const bool stage =
+            target == 0x00431130U && (argument == 0x01425041U || argument == 0x02425041U);
+        const bool hadAgent = relevant && stage && argument == 0x01425041U && value != 1 &&
+                              call(0x005a1c40U, self, {argument, 0}) == 1;
+        next(inv, cpu);
+        if (relevant && (stage || (target == 0x005a2670U && previousOwner != argument))) {
+            if (controlledMechanics)
+                std::fprintf(stderr,
+                             "[research-visual-event] target=%08x unit=%u argument=%08x value=%u "
+                             "flags=%08x first=%u current=%u agent=%u active=%u busy=%u\n",
+                             target, read(self + 0x60), argument, value, read(self + 0x64),
+                             call(0x005a1c40U, self, {0x01425041U, 0}),
+                             call(0x005a1c40U, self, {0x02425041U, 0}),
+                             call(0x005a1c40U, self, {0x4541U, 0}), researchVisualGameActive(),
+                             researchVisualBusy);
+            syncResearchVisual(self, hadAgent);
+        }
+        return;
+    }
     if (spellOrigin && target == 0x005ae750U && read(cpu->esp) == 0x00422fcaU) {
         // Old CreateSpellUnit keeps the resolved original caster in EBP until
         // this exact birth callback. Record after native initialization and
@@ -1765,6 +1805,10 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         // nested-cast/RET cleanup hazards; sovereign births use another site.
         require(recordSpellOrigin(read(cpu->esp + 4), cpu->ebp),
                 "original spell caster saved before authored birth callback");
+        if (controlledMechanics && read(read(cpu->esp + 4) + 0x6c) == 0x31574850U) {
+            mechanicsProbe.stormIdentity = read(read(cpu->esp + 4) + 0x60);
+            mechanicsProbe.stormCaster = read(cpu->ebp + 0x60);
+        }
         if (controlledMarch && read(cpu->ebp + 0x60) == 627) {
             ++controlledOriginCount;
             controlledOriginCaster = 627;
@@ -2125,6 +2169,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto recruitment = pending ? activity.capture(researchActivity.unit())
                                          : MajestyCommunity::BuildingActivity{};
         next(inv, cpu);
+        if (researchWorldVisualPending)
+            syncResearchWorldVisuals();
         if (controlledProfileIo && !controlledProfileIoApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledProfileIo();
@@ -2779,7 +2825,12 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     const char *processGuilds = std::getenv("RECOMP_COMMUNITY_PROCESS_GUILDS");
     communityProcess = processGuilds && !std::strcmp(processGuilds, "1");
     const char *mechanics = std::getenv("RECOMP_COMMUNITY_TEST_MECHANICS");
-    controlledMechanics = mechanics && !std::strcmp(mechanics, "2295");
+    controlledMechanics =
+        mechanics && (!std::strcmp(mechanics, "2295") || !std::strcmp(mechanics, "2314") ||
+                      !std::strcmp(mechanics, "2347"));
+    mechanicsProbe.variant = mechanics && !std::strcmp(mechanics, "2347")   ? 3
+                             : mechanics && !std::strcmp(mechanics, "2314") ? 2
+                                                                            : 1;
     require(!controlledMechanics || (communityProcess && attributeCompat && spellTimingHelpers),
             "controlled mechanics require the original complete private community core");
     if (communityProcess) {
@@ -2870,6 +2921,24 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         // not a hookable entry. The creator wraps the original research vtable
         // slot instead. Store a process-lived guest bridge, never a host pointer.
         require(majesty_guild_process_bridge(1) != 0, "process-lived original research dispatcher");
+        researchVisuals =
+            std::any_of(researchBindings.begin(), researchBindings.end(),
+                        [](const auto &binding) { return !binding.record.activeEffector.empty(); });
+        if (researchVisuals) {
+            require(read(0x00415e7bU) + 0x00415e7fU == 0x00416c30U &&
+                        read(0x0041706aU) == 0xcb8b036aU &&
+                        read(0x0067f96cU + 0x124) == 0x00431130U &&
+                        read(0x0067f96cU + 0x20) == 0x005a2670U,
+                    "pinned Old world-ready, building stage and ownership lifecycle");
+            for (const auto address : {0x00416c30U, 0x00431130U, 0x005a2670U}) {
+                std::uint32_t id = 0;
+                const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                          POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+                if (status != POP_OK)
+                    return status;
+                hooks.push_back(id);
+            }
+        }
         // Commit the slot only after all requested hooks install successfully.
 #endif
     }
@@ -3057,6 +3126,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     researchQueryFeatures = {};
     heroUiCompatibility = {};
     controlledMechanics = false;
+    researchVisuals = researchWorldReady = researchVisualBusy = researchWorldVisualPending = false;
     mechanicsProbe = {};
     communityNames.clear();
     movementScale = false;

@@ -1,0 +1,90 @@
+{
+  "format": "majesty-community-guilds-verification-v1",
+  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "nativePaidGuildsQualified": true,
+  "nativeAdvancedAbilitiesQualified": true,
+  "browserNativeUiQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "originalSaveProfilePreserved": true,
+  "rootDefaultIntegrationQualified": true,
+  "sourceProofs": {
+    "native-recruitment-verification.json": {
+      "bytes": 2555,
+      "sha256": "9167b3eb87684020ce6c712a4fa0702c72490627436c9dbd55453fff48ec9364"
+    },
+    "advanced-ability-verification.json": {
+      "bytes": 3246,
+      "sha256": "ac6383bc19484ba70144719f1c46f875fca4199a3133de4e794a30474bc6b54f"
+    },
+    "research-visual-verification.json": {
+      "bytes": 1988,
+      "sha256": "db2cef4cce0b4c3f70587c553adb6821d6ccb64aa36482b77722842c193b4515"
+    },
+    "browser-abilities-verification.json": {
+      "bytes": 5172,
+      "sha256": "38d0807a962a21abc8bd3c595397febbe1f943ecd07ca159835fc0b0298cb227"
+    }
+  },
+  "root": {
+    "trial": "community2379",
+    "rootPath": "/",
+    "automaticImportFromPublicGithub": true,
+    "importedFiles": 206,
+    "patches": 54,
+    "originalProfileIdentity": "majesty",
+    "inputSave": {
+      "bytes": 401771,
+      "sha256": "f30e21f4bce6979bb06011b7e0d8353f3504ce75470f97104479473f3a3f38ff"
+    },
+    "nativePhantomIconAndTooltip": true,
+    "nativeWorldContinuedToDay14": true,
+    "ordinarySave": {
+      "name": "(Freestyle Game) 14 Days.GMP",
+      "bytes": 402611,
+      "sha256": "bdcd1749e62eb78bbde001d837f5118a09c68309172e7cb33f49041f47077d97"
+    },
+    "runtimeErrors": [],
+    "growableMemoryViews": false,
+    "peakOwnedRssMiB": 1674.7,
+    "guardStopped": false,
+    "audioMuted": true
+  },
+  "rootPlayerSource": {
+    "bytes": 1840,
+    "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+  },
+  "rootScreenshots": {
+    "community2379-root-menu": {
+      "bytes": 427474,
+      "sha256": "80893f01cd00e826b14f239ae625654b0fe9a2fadd591be1741d51bd65e9fb21"
+    },
+    "community2379-reloaded-world": {
+      "bytes": 776218,
+      "sha256": "f3e3bcd31c56741c13ec43640d1307350f1389497f37a0f3c76ec5e902901d0a"
+    },
+    "community2379-ice-lance-tooltip": {
+      "bytes": 791221,
+      "sha256": "cec2ae87310a1a9570a51213f1b89990ed16f1237a3281e81631d17fd89260df"
+    },
+    "community2380-root-saved": {
+      "bytes": 789538,
+      "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
+    }
+  },
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
+  "publicAssetsVerified": {
+    "files": 23,
+    "bytes": 62704338,
+    "sha256": "e43614ad71cfde367c70032d2e497f832a0a8c8d56ebb0a2e3bcc6f383ff7a38"
+  },
+  "originalGameDataAndPlayerProfilesPreserved": true,
+  "productionRenderer": {
+    "unchangedObjectRelink": true,
+    "noNewPerformanceBenchmarkClaimed": true
+  },
+  "limits": [
+    "Bounded native source controls and local browser/root import/save/reload; not exhaustive balance or every Priestess/Paladin/shop combination",
+    "Internet co-op, huge-kingdom performance and historical host-app crash cause remain separately unqualified"
+  ],
+  "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification."
+}
