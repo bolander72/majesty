@@ -1,0 +1,51 @@
+{
+  "format": "majesty-community-mechanics-control-v1",
+  "date": "2026-10-17",
+  "sourceFiles": {
+    "native/community/mechanics_probe.h": {
+      "bytes": 10266,
+      "sha256": "91109a029d7e986f78972cdd2553787bc89b44eb658e66a6946e7cc092f62bf2"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 158136,
+      "sha256": "57543d1e8f54a2f4787c278e9edb414cd16a3bf7db6aec367a0a41a587759578"
+    }
+  },
+  "originalCompiledGplUnchanged": true,
+  "canonicalInputSave": {
+    "bytes": 399892,
+    "sha256": "fd562cc44560369e6ac987c21ce3d9b3b3cdc4240eaef75f3c2a43015327019b"
+  },
+  "controlledTrial": true,
+  "ordinaryCampaignProgress": false,
+  "trial": {
+    "bytes": 614,
+    "sha256": "252c560e6c083c6f26d38c138cc5b0ed3837b4280f520f635ef7afeea165b630"
+  },
+  "log": {
+    "bytes": 58428,
+    "sha256": "c76cdede59687e9d8c10347682d59e28d902eaf7ef8508bc1a009a113c336ef5"
+  },
+  "nativeExitCode": 0,
+  "peakOwnedRssMiB": 195.0,
+  "observed": [
+    "Mechanics control: Eternal Soul apply/idempotence/restore and Chill tier refresh passed.",
+    "Mechanics control: actual Chill expiry and Gravechill exact penalties passed.",
+    "Mechanics control: Gravechill restored, Valor refresh and Countermelody overlap passed.",
+    "Mechanics control: actual native Valor and Countermelody expiry restored original stats.",
+    "Mechanics control COMPLETE: Phantom/Bard modifiers, real expiry, Chronicles awards and hiring state passed. Controlled fixture, not campaign progress."
+  ],
+  "checks": [
+    "Eternal Soul: +30% maxHP, +15 parry/resistance; duplicate begin/end and full attribute restoration.",
+    "Chill: normal/empowered refresh does not stack or downgrade; building target refused; actual watcher expiry restores rates.",
+    "Gravechill: strength/parry/resistance penalties, duplicate refresh and real expiry restoration.",
+    "Valor: source bonuses, no stacking on refresh; overlaps Countermelody; both original timers expire and restore stats.",
+    "Epic Chronicles: 100 becomes115 for both gold and XP; building recipient remains100.",
+    "Original hiring close/query/restore."
+  ],
+  "remaining": [
+    "Ordinary projectile combat, Dancer reactions, Phantom Frost Armor/undead/tier perks, gear shopping and research visual ownership/reload events.",
+    "Final browser engine/content qualification and deployment."
+  ],
+  "published": false
+}

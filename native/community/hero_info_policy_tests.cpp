@@ -28,4 +28,16 @@ int main() {
     assert(policy.passives(300, 1000).empty()); // Unbound stock identity stays stock.
     assert(policy.passives(401, 1000).empty());
     assert(registry.hiddenInventoryActions == std::vector<std::uint32_t>({10, 20}));
+    MajestyRuntimeFeatures::Registry compatibility;
+    compatibility.heroInfoRows = {
+        {1, 100, 0, 9, 1019, "shadow", "Must not override", "Unchanged creator row."},
+        {1, 101, 0, 8, 1019, "ice-lance", "Ice Lance", "Chills a living target."},
+        {2, 202, 0, 7, 1019, "chill", "Chilled", "Movement is slowed."},
+    };
+    const MajestyCommunity::HeroInfoPolicy supplemented(registry, aliases, &compatibility);
+    assert(supplemented.spell(100) == policy.spell(100));
+    assert(supplemented.spell(101)->displayText == "Ice Lance");
+    assert(!supplemented.spell(102));
+    assert(*supplemented.effectLabel(202) == "Chilled");
+    assert(supplemented.passives(400, 5) == policy.passives(400, 5));
 }

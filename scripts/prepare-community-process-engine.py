@@ -152,6 +152,17 @@ def prepare(args):
         for name, expected in hero_ui['generatedFiles'].items():
             if digest_file(args.hero_ui / name) != expected:
                 raise ValueError('Private hero UI translation changed: ' + name)
+    hero_ui_compat = None
+    if args.hero_ui_compat:
+        hero_ui_compat = json.loads((args.hero_ui_compat / 'phantom-ui-stage.json').read_text())
+        if (not hero_ui or hero_ui_compat.get('format') != 'majesty-phantom-ui-compat-v1' or
+                hero_ui_compat.get('sourceStage') != source_digest or
+                hero_ui_compat.get('candidate') != digest_file(args.collection / 'candidate.json') or
+                hero_ui_compat.get('mediaStage') != collection['mediaStage'] or
+                hero_ui_compat.get('features') != digest_file(args.hero_ui_compat / 'hero-info-compat.bin') or
+                hero_ui_compat.get('sourceActionsUnchanged') is not True or
+                hero_ui_compat.get('compiledGplUnchanged') is not True):
+            raise ValueError('Phantom UI compatibility art/source binding differs')
     module_cmake = []
     for name, folder in generated.items():
         binding = fixture['modules'][name]
@@ -219,6 +230,8 @@ def prepare(args):
     shutil.copyfile(names, core / 'community-name-bindings.bin')
     if hero_ui:
         shutil.copyfile(args.hero_ui_bindings, core / 'hero-info-bindings.bin')
+    if hero_ui_compat:
+        shutil.copyfile(args.hero_ui_compat / 'hero-info-compat.bin', core / 'hero-info-compat.bin')
     for name in ['research-features.bin','research-bindings.bin']:
         shutil.copyfile(args.research / name, core / name)
     # Same bound registry supplies the declared timing and equipment subsystems.
@@ -273,7 +286,7 @@ def prepare(args):
     receipt = dict(format='majesty-community-process-core-engine-stage-v1', originalProducer=digest_file(args.producer),
         originalHost=digest_file(exe), originalGuestSha256=PIN, originalObjects=source_inputs,
         gameConfig=digest_file(args.out / 'game.toml'), privateTemplates=fixture,
-        privateMovement=movement, privateHeroUi=hero_ui,
+        privateMovement=movement, privateHeroUi=hero_ui, privateHeroUiCompatibility=hero_ui_compat,
         sourceFiles={p.relative_to(core).as_posix():digest_file(p) for p in core.rglob('*') if p.is_file()},
         generatedSourcesEdited=False, originalObjectsReused=True, processLifetimeCore=True,
         nativeLinked=False, liveGameplayQualified=False, browserPlayable=False, published=False)
@@ -290,6 +303,7 @@ def main():
     parser.add_argument('--hero-ui', type=Path)
     parser.add_argument('--hero-ui-proof', type=Path)
     parser.add_argument('--hero-ui-bindings', type=Path)
+    parser.add_argument('--hero-ui-compat', type=Path)
     parser.add_argument('--generated', action='append', required=True)
     args = parser.parse_args()
     try:

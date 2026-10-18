@@ -15,20 +15,24 @@ struct HeroSubjectBinding {
 class HeroInfoPolicy {
     const MajestyRuntimeFeatures::Registry &registry_;
     const std::vector<HeroSubjectBinding> &subjects_;
+    const MajestyRuntimeFeatures::Registry *compatibility_;
 
   public:
     HeroInfoPolicy(const MajestyRuntimeFeatures::Registry &registry,
-                   const std::vector<HeroSubjectBinding> &subjects)
-        : registry_(registry), subjects_(subjects) {}
+                   const std::vector<HeroSubjectBinding> &subjects,
+                   const MajestyRuntimeFeatures::Registry *compatibility = nullptr)
+        : registry_(registry), subjects_(subjects), compatibility_(compatibility) {}
     bool hidden(std::uint32_t action) const {
         const auto &ids = registry_.hiddenInventoryActions;
         return std::binary_search(ids.begin(), ids.end(), action);
     }
     const MajestyRuntimeFeatures::HeroInfoRecord *spell(std::uint32_t action) const {
-        return registry_.FindHeroInfo(1, action);
+        const auto *row = registry_.FindHeroInfo(1, action);
+        return row || !compatibility_ ? row : compatibility_->FindHeroInfo(1, action);
     }
     const MajestyRuntimeFeatures::HeroInfoRecord *effect(std::uint32_t overlay) const {
-        return registry_.FindHeroInfo(2, overlay);
+        const auto *row = registry_.FindHeroInfo(2, overlay);
+        return row || !compatibility_ ? row : compatibility_->FindHeroInfo(2, overlay);
     }
     const std::string *effectLabel(std::uint32_t overlay) const {
         if (const auto *row = effect(overlay))

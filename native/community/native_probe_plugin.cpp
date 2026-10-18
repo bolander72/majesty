@@ -1,32 +1,32 @@
 // Private live-guest qualification through the official mod API; not a public
 // content build.
 #include "RuntimeFeatureRegistry.h"
-#include "shared_function_routes.h"
-#include "controller_lifecycle.h"
-#include "controller_dispatch.h"
-#include "name_registration.h"
 #include "community_names.h"
-#include "pop_mod_api.h"
-#include "resource_meter.h"
-#include "research_descriptors.h"
-#include "research_activity.h"
-#include "gpl_attribute_bridge.h"
+#include "controller_dispatch.h"
+#include "controller_lifecycle.h"
 #include "equipment_registration.h"
-#include "gpl_integer_helpers.h"
+#include "gpl_attribute_bridge.h"
 #include "gpl_base_timing_helpers.h"
-#include "gpl_spell_timing_helpers.h"
+#include "gpl_integer_helpers.h"
 #include "gpl_research_helpers.h"
+#include "gpl_spell_timing_helpers.h"
 #include "movement_scale.h"
+#include "name_registration.h"
+#include "pop_mod_api.h"
+#include "research_activity.h"
+#include "research_descriptors.h"
+#include "resource_meter.h"
+#include "shared_function_routes.h"
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
 #include "guild_gameplay_runtime.h"
-#include "movement_runtime.h"
 #include "hero_ui_runtime.h"
+#include "movement_runtime.h"
 #endif
+#include "fog_reveal_identity.h"
 #include "kingdom_research_descriptors.h"
+#include "map_selection_identity.h"
 #include "rage_dispatch.h"
 #include "upgrade_research_gate.h"
-#include "map_selection_identity.h"
-#include "fog_reveal_identity.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -102,6 +102,7 @@ std::map<std::uint32_t, MajestyCommunity::SpellTimingHelper> spellTimingFunction
 bool researchQueryHelpers = false, controlledResearchQuery = false,
      controlledResearchQueryApplied = false;
 MajestyRuntimeFeatures::Registry researchQueryFeatures;
+MajestyRuntimeFeatures::Registry heroUiCompatibility;
 std::vector<MajestyCommunity::ResearchBinding> researchBindings;
 MajestyCommunity::ResearchInFlight researchFlight;
 MajestyCommunity::KingdomResearchDescriptors kingdomResearchDescriptors;
@@ -616,7 +617,8 @@ void runControlledProfileIo() {
         closed = call(read(0x0067f090U), 0, {file});
     }
     std::fprintf(stderr,
-                 "[community-profile-io] file=%08x result=%u expected=%u wrote=%u closed=%u\n",
+                 "[community-profile-io] file=%08x result=%u expected=%u "
+                 "wrote=%u closed=%u\n",
                  file, result, static_cast<unsigned>(sizeof(payload)), wrote, closed);
     require(host->guest_free(host, memory) == POP_OK, "profile IO probe release");
     controlledProfileIoApplied = true;
@@ -674,7 +676,8 @@ void runControlledCommunityGpl() {
         require(evaluateScalar(test.first, palace, test.second.first, result),
                 "controlled original authored GPL scalar binding/result");
         std::fprintf(stderr,
-                     "[community-gpl-control] symbol=%s operation=%d result=%u expected=%u\n",
+                     "[community-gpl-control] symbol=%s operation=%d result=%u "
+                     "expected=%u\n",
                      test.first.c_str(), test.second.first, result, test.second.second);
         require(result == test.second.second, "controlled authored GPL scalar result");
     }
@@ -704,7 +707,8 @@ void runControlledCommunityGpl() {
         require(host->guest_free(host, storage) == POP_OK, "ledger check native release");
     }
     host->log(host, controlledCommunityGplReload
-                        ? "Controlled community GPL: original save restored native research lists "
+                        ? "Controlled community GPL: original save restored native research "
+                          "lists "
                           "and hiring state."
                         : "Controlled community GPL: native empty research ledgers and saved "
                           "hiring toggle passed.");
@@ -735,9 +739,8 @@ void setupControlledStock(std::uint32_t controller) {
     call(0x004e3820U, text);
     require(host->guest_free(host, text) == POP_OK, "controlled reagent fixture name release");
     call(read(read(unit) + 0x124), unit, {0x30565041U, 25});
-    host->log(
-        host,
-        "Controlled fixture initialized exactly25 reagents; ordinary collection unqualified.");
+    host->log(host, "Controlled fixture initialized exactly25 reagents; ordinary "
+                    "collection unqualified.");
 }
 bool timedActionActive() {
     if (timedAction.unit && read(0x0071c6a8U) - timedAction.started >= timedAction.duration)
@@ -882,7 +885,8 @@ void researchPresentation(std::uint32_t controller, std::uint64_t generation) {
         const auto world = manager ? read(manager + 0x10) : 0;
         if (world) {
             std::fprintf(stderr,
-                         "[alchemist-research] original-world=%08x table=%08x update-entry=%08x\n",
+                         "[alchemist-research] original-world=%08x table=%08x "
+                         "update-entry=%08x\n",
                          world, read(world), read(read(world) + 0x8c));
             updateReported = true;
         }
@@ -1013,7 +1017,8 @@ void runControlledEquipment() {
     }
     require(call(0x004c0760U, 0) == presenter, "original singleton repeated getter");
     controlledEquipmentApplied = true;
-    host->log(host, "Controlled community equipment: original singleton maps and authored quality "
+    host->log(host, "Controlled community equipment: original singleton maps and "
+                    "authored quality "
                     "names passed.");
 }
 // Resolve an authored export before the original VM prepares its call frame.
@@ -1210,7 +1215,8 @@ void runControlledIntegers() {
     const auto maximum = evaluateBuiltinIntegers("MM_KR_AwardBonus", {0x7fffffffU, 100, 99});
     require(maximum[0] == 0x7fffffffU && maximum[3] == 99, "full native integer earned range");
     controlledIntegersApplied = true;
-    host->log(host, "Controlled community integer helpers: original clock, cap, bonus and mutable "
+    host->log(host, "Controlled community integer helpers: original clock, cap, "
+                    "bonus and mutable "
                     "carry passed.");
 }
 std::uint32_t evaluateBuiltinBaseTiming(const char *symbol, const char *name, std::uint32_t unit,
@@ -1372,7 +1378,8 @@ void runControlledMarch() {
                     evaluateSpellTiming("MM_EffectorRemaining", "Bards_March_Icon", dancer) == 0,
                 "actual moving Dancer scaled and original overlay expired");
         controlledMarchExpired = true;
-        host->log(host, "Controlled native March: scaled movement witnessed and overlay expired.");
+        host->log(host, "Controlled native March: scaled movement witnessed and "
+                        "overlay expired.");
     }
 }
 
@@ -1437,7 +1444,8 @@ void runControlledResearchQuery(std::uint32_t palace) {
                 read(descriptor + 4) == record.requiredLevel &&
                 read(descriptor + 8) == record.price &&
                 read(descriptor + 16) == record.completionAttribute,
-            "original lookup retrieves actual Chronicles level price completion and stock timing");
+            "original lookup retrieves actual Chronicles level price completion "
+            "and stock timing");
     require(descriptors.lookup(record.descriptorTemplateControlId) == source &&
                 read(source) == originalTime && read(source + 12) == originalNotification &&
                 kingdomResearchDescriptors.prepare(descriptors,
@@ -1445,13 +1453,16 @@ void runControlledResearchQuery(std::uint32_t palace) {
                 descriptors.lookup(command) == descriptor,
             "stock template preserved and repeated registration idempotent");
     std::fprintf(stderr,
-                 "[community-research-descriptor] command=%u template=%u level=%u price=%u "
+                 "[community-research-descriptor] command=%u template=%u "
+                 "level=%u price=%u "
                  "completion=%08x native-time=%u notification=%u\n",
                  command, record.descriptorTemplateControlId, read(descriptor + 4),
                  read(descriptor + 8), read(descriptor + 16), originalTime, originalNotification);
     controlledResearchQueryApplied = true;
-    host->log(host, "Controlled community research queries: original VM bindings, family isolation "
-                    "and unchanged Palace activity passed; positive guild/order tests pending.");
+    host->log(host, "Controlled community research queries: original VM "
+                    "bindings, family isolation "
+                    "and unchanged Palace activity passed; positive guild/order "
+                    "tests pending.");
 }
 std::uint32_t addControlledNativeAttribute(std::uint32_t unit, const char *name, bool agent) {
     std::uint32_t memory = 0;
@@ -1514,7 +1525,8 @@ void checkControlledSpellExpiry() {
                 read(valueRef(controlledSpellSourceValue, 0x5c) + 8) == 0xffffffffU,
             "authored End callback cleared original owned agent reference");
     controlledSpellExpiryApplied = true;
-    host->log(host, "Controlled community spell expiry: original authored End callback cleared "
+    host->log(host, "Controlled community spell expiry: original authored End "
+                    "callback cleared "
                     "owned agentref and expired effect is absent.");
 }
 void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
@@ -1560,7 +1572,8 @@ void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
     require(evaluateSpellTiming("MM_EffectorRemaining", effect, worker) == 8000,
             "original created effect reports its actual timeout order");
     controlledSpellTimingApplied = true;
-    host->log(host, "Controlled community spell timing: original learned cooldown, availability "
+    host->log(host, "Controlled community spell timing: original learned "
+                    "cooldown, availability "
                     "and actual effect timeout passed.");
 }
 void runControlledBaseTiming() {
@@ -1618,7 +1631,8 @@ void runControlledBaseTiming() {
     if (controlledResearchQuery && !controlledResearchQueryApplied)
         runControlledResearchQuery(palace);
     controlledBaseTimingApplied = true;
-    host->log(host, "Controlled community base timing: original action/worker getters and negative "
+    host->log(host, "Controlled community base timing: original action/worker "
+                    "getters and negative "
                     "controls passed.");
 }
 void addAttribute(std::uint32_t context) {
@@ -1737,6 +1751,10 @@ void registerAttributes() {
         }
     }
 }
+#include "mechanics_probe.h"
+MechanicsProbe mechanicsProbe;
+bool controlledMechanics = false;
+
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
@@ -1802,7 +1820,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         static unsigned factoryReports = 0;
         if (std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI") && factoryReports++ < 24)
             std::fprintf(stderr,
-                         "[community-factory] requested=%08x window=%08x unit=%08x flags=%08x\n",
+                         "[community-factory] requested=%08x window=%08x unit=%08x "
+                         "flags=%08x\n",
                          requested, read(args + 4), read(args + 8), read(args + 12));
         if (requested == 0x48504743U) { // source-bound CGPH, modern AP07 -> Old AP10
             write(args, 0x30315041U);
@@ -1970,8 +1989,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 // requires. Receipt/execution does not depend on a UI pointer.
                 write(argument, action.privateMode);
                 write(argument + 20, targetOwner.identity);
-                host->log(host,
-                          "Private source and clicked target committed in native spell packet.");
+                host->log(host, "Private source and clicked target committed in native "
+                                "spell packet.");
             } else {
                 // Preserve native repeat-target behavior and its ordinary
                 // unaffordable-cast feedback without executing another spell.
@@ -2022,7 +2041,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         if (action) {
             require(!targetExecution.spawned || targetExecution.invoked,
-                    "created private spell must invoke its authored source-target callback");
+                    "created private spell must invoke its authored source-target "
+                    "callback");
             write(argument, mode);
             write(argument + 24, cost);
         }
@@ -2048,10 +2068,12 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     if (targetBridge && target == 0x005ae750U && targetExecution.action &&
         targetExecution.spawned && read(cpu->esp + 4) == targetExecution.spawned &&
         read(cpu->esp) == 0x004a7174U) {
-        std::fprintf(
-            stderr, "[alchemist-target] callback=%s expected=%s target=%08x expected-target=%08x\n",
-            guestString(self).c_str(), targetExecution.action->sourceTargetCallback.c_str(),
-            read(cpu->esp + 8), targetExecution.clicked);
+        std::fprintf(stderr,
+                     "[alchemist-target] callback=%s expected=%s target=%08x "
+                     "expected-target=%08x\n",
+                     guestString(self).c_str(),
+                     targetExecution.action->sourceTargetCallback.c_str(), read(cpu->esp + 8),
+                     targetExecution.clicked);
         // The old Character description leaves this stock two-argument script
         // slot empty for the community's paired callback. Its validated MMCR
         // record supplies the name; 629910 resolves that original GPL export.
@@ -2059,8 +2081,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 "native private spell callback and exact clicked target");
         invokeSourceTarget(targetExecution);
         targetExecution.invoked = true;
-        host->log(host,
-                  "Native spell invoked authored callback with Spell, Lab and clicked enemy.");
+        host->log(host, "Native spell invoked authored callback with Spell, Lab "
+                        "and clicked enemy.");
         require(host->hook_return(host, cpu, 1, 8) == POP_OK,
                 "private spell preserves original two-argument RET8");
         return;
@@ -2119,6 +2141,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (controlledEquipment && !controlledEquipmentApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledEquipment();
+        if (controlledMechanics && state && (read(state) == 3 || read(state) == 7) &&
+            !read(state + 4))
+            mechanicsProbe.tick();
         if (controlledMarch && state && (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledMarch();
         if (controlledCommunityGpl && !controlledCommunityGplApplied && state &&
@@ -2147,11 +2172,12 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                   915});
             require(host->guest_free(host, position) == POP_OK,
                     "controlled target coordinate release");
-            host->log(host, "Controlled existing target submitted through original spell packet.");
+            host->log(host, "Controlled existing target submitted through original "
+                            "spell packet.");
         }
         if (pending && researchActivity.capture(activity, recruitment))
-            host->log(host,
-                      "Original simulation update installed private research; AP10 restored.");
+            host->log(host, "Original simulation update installed private research; "
+                            "AP10 restored.");
         if (controlledDeath && !controlledDeathApplied && controlledDeathUnit && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4)) {
             if (!controlledDeathClock)
@@ -2199,7 +2225,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         write(argument, scratch + 128);
         next(inv, cpu);
         write(argument, 0x006c0170U);
-        host->log(host, "Original Rage invocation constructed the authored private GPL callback.");
+        host->log(host, "Original Rage invocation constructed the authored private "
+                        "GPL callback.");
         return;
     }
     if (researchBridge && target == 0x004abf70U) {
@@ -2347,8 +2374,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         const auto type = read(cpu->esp + 4), count = read(cpu->esp + 8);
         next(inv, cpu);
         std::fprintf(stderr,
-                     "[alchemist-pool-trace] setter pool=%08x type=%u growth=%u boolean=%u\n", self,
-                     type, count, read(self + 0xbc));
+                     "[alchemist-pool-trace] setter pool=%08x type=%u growth=%u "
+                     "boolean=%u\n",
+                     self, type, count, read(self + 0xbc));
         return;
     }
     if (target == 0x0062abf0U) {
@@ -2374,11 +2402,11 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 if (vtable)
                     host->guest_read_u32(host, vtable + 0x2c, &boolean);
             }
-            std::fprintf(
-                stderr,
-                "[alchemist-value-trace] requested=%u actual=%u value=%08x "
-                "vtable=%08x bool-method=%08x allocator=%08x caller=%08x instruction=%08x\n",
-                type, actual, cpu->eax, vtable, boolean, target, caller, instruction);
+            std::fprintf(stderr,
+                         "[alchemist-value-trace] requested=%u actual=%u value=%08x "
+                         "vtable=%08x bool-method=%08x allocator=%08x caller=%08x "
+                         "instruction=%08x\n",
+                         type, actual, cpu->eax, vtable, boolean, target, caller, instruction);
             if (caller == 0x0061e586U) {
                 std::fprintf(stderr,
                              "[alchemist-result-trace] operation=%u result-ref=%08x "
@@ -2545,14 +2573,17 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             const auto result =
                 MajestyCommunity::RegisterNames(ops, self, read(context + 0x160), r);
             if (result != MajestyCommunity::Registration::Installed)
-                std::fprintf(
-                    stderr, "[community-names] id=%08x status=%u registry=%08x resources=%08x\n",
-                    r.generatorId, static_cast<unsigned>(result), self, read(context + 0x160));
+                std::fprintf(stderr,
+                             "[community-names] id=%08x status=%u registry=%08x "
+                             "resources=%08x\n",
+                             r.generatorId, static_cast<unsigned>(result), self,
+                             read(context + 0x160));
             require(result == MajestyCommunity::Registration::Installed,
                     "source-bound native name registration");
         }
         host->log(host, communityProcess
-                            ? "All five community name generators installed; stock NM11 preserved."
+                            ? "All five community name generators installed; stock NM11 "
+                              "preserved."
                             : "Alchemist NM18 installed through original generator lifecycle.");
         return;
     }
@@ -2586,8 +2617,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 !upgradeAllowed(self, s.generation)) {
                 upgradePresentation(self, s.generation);
                 returned(cpu, 0);
-                host->log(host,
-                          "Private Laboratory upgrade rejected by authored research prerequisite.");
+                host->log(host, "Private Laboratory upgrade rejected by authored "
+                                "research prerequisite.");
                 return;
             }
     if (target == 0x00465f00U && s.parent && s.recipe &&
@@ -2747,10 +2778,14 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     }
     const char *processGuilds = std::getenv("RECOMP_COMMUNITY_PROCESS_GUILDS");
     communityProcess = processGuilds && !std::strcmp(processGuilds, "1");
+    const char *mechanics = std::getenv("RECOMP_COMMUNITY_TEST_MECHANICS");
+    controlledMechanics = mechanics && !std::strcmp(mechanics, "2295");
+    require(!controlledMechanics || (communityProcess && attributeCompat && spellTimingHelpers),
+            "controlled mechanics require the original complete private community core");
     if (communityProcess) {
 #if !defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
-        require(false,
-                "private guilds require a process-lifetime builtin, not an unloadable plugin");
+        require(false, "private guilds require a process-lifetime builtin, not an "
+                       "unloadable plugin");
 #else
         require(researchQueryHelpers && spellTimingHelpers && majesty_private_templates_ready(),
                 "complete source-backed core prerequisites");
@@ -2817,8 +2852,17 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         const char *heroUi = std::getenv("RECOMP_COMMUNITY_HERO_UI");
         if (heroUi && !std::strcmp(heroUi, "1")) {
             const auto aliases = file("hero-info-bindings.bin", 12 + 64 * 8);
+            const char *compat = std::getenv("RECOMP_COMMUNITY_PHANTOM_UI");
+            const bool useCompatibility = compat && !std::strcmp(compat, "1");
+            if (useCompatibility) {
+                const auto raw = file("hero-info-compat.bin", 16384);
+                require(MajestyRuntimeFeatures::ParseRegistry(raw.data(), raw.size(),
+                                                              &heroUiCompatibility, &error),
+                        "source-bound Phantom presentation rows");
+            }
             require(majesty_configure_hero_ui(host, &researchQueryFeatures, aliases.data(),
-                                              aliases.size()),
+                                              aliases.size(),
+                                              useCompatibility ? &heroUiCompatibility : nullptr),
                     "source-bound original hero information presenters");
         }
         require(read(0x00682f58U) == 0x004ac2f0U, "original Old research execution dispatch slot");
@@ -2840,7 +2884,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             return status;
         hooks.push_back(id);
     }
-    host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 method "
+    host->log(host, "Private Alchemist names/factory/setup probe loaded; original AP69 "
+                    "method "
                     "eligibility is unchanged. Private dispatch is explicitly opt-in.");
     if (panelBridge) {
         for (const auto address :
@@ -2867,7 +2912,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
                 return status;
             hooks.push_back(id);
         }
-        host->log(host, "Private research route enabled through original queue/update/event2009.");
+        host->log(host, "Private research route enabled through original "
+                        "queue/update/event2009.");
     }
     if ((controlledCommunityGpl || controlledEquipment || controlledIntegers ||
          controlledBaseTiming) &&
@@ -3009,6 +3055,9 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     researchQueryFunctions.clear();
     researchBindings.clear();
     researchQueryFeatures = {};
+    heroUiCompatibility = {};
+    controlledMechanics = false;
+    mechanicsProbe = {};
     communityNames.clear();
     movementScale = false;
     controlledProfileIo = controlledProfileIoApplied = false;

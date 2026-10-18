@@ -233,5 +233,6 @@
   "sourceBoundaryCheck": {
     "bytes": 1101,
     "sha256": "c143280965e06da436d86f5f7062aa0a268260d115379b64743dc0571818ce56"
-  }
+  },
+  "phantomIconFollowup": "phantom-ui-verification.json records the later native/browser fix and fresh reload."
 }

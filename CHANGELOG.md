@@ -1,5 +1,11 @@
 # Changelog
 
+## Phantom icons and mechanics checks — private work, October 17, 2026
+
+- Give Phantom spell rows icons derived from the creator's frost artwork, using native list geometry and hover descriptions. Verify native/browser Ice Lance and the Troubadour/Spellsinger panels.
+- Verify actual creator effect application, non-stacking refresh, expiry and restoration for Eternal Soul, Chill, Gravechill, Valor and Countermelody in an isolated original-engine component trial. Check Chronicles wrapper results and hiring state controls.
+- Preserve original gameplay bytecode and player progress; ordinary combat/shopping and remaining lifecycle checks still precede deployment.
+
 ## Community ability UI — private work, October 17, 2026
 
 - Render source-authored ability and enchantment labels, icons and hover descriptions through the original native hero lists. Verify the Dancer panel in native and browser builds.

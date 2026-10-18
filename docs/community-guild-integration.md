@@ -1006,3 +1006,58 @@ profile, save, backup, original input, required link dependency and release was
 preserved. One broad-trace browser2256 exceeded its existing memory guard and
 was closed; it was not resumed. Subsequent scoped2278/2281 trials stayed below
 the same limit. No community content or new engine was activated publicly.
+
+## Phantom icons and additional mechanics checks — October 17
+
+The creator's Phantom actions use WRa2..WRa7. Original Old AP78 has no icon
+cases for those IDs, and the acquired Phantom manifest declares no HeroInfo
+rows. `prepare-community-phantom-ui.py` binds the exact acquired XML/GPL/media
+and adapts the creator's existing frost, skull and soul-flame glyphs to native
+24px learned rows and25px enchantment rows. It retains the original static
+image layout, opaque inset, palette budget, native list controls and hover
+behavior. Names come from the source XML; the compatibility tooltip text is
+our description of the source GPL. These are presentation adaptations, not
+new creator declarations or replacement gameplay. No acquired package, action,
+compiled GPL, learned-spell state or character stat is changed.
+
+The optional row registry is separate from the unchanged creator registry.
+It can only supplement spell/enchantment presentation; existing creator rows
+have priority. Runtime validation rejects gameplay services, passives and
+colliding declarations in that pack. The private engine stage binds its rows
+to the matching interface art and canonical source. Native2294 displays Ice
+Lance with the source frost glyph and correct native hover text. Native2303
+also shows the Troubadour's Ballad of Valor, Marching Song and Cutting Satire,
+and the Spellsinger's Arcane Note, Countermelody and Reverberation passive,
+with their authored icons and active effects.
+
+An explicitly opted-in component trial2300 calls the actual compiled creator
+functions through the original typed GPL evaluator. It verifies Eternal
+Soul's30% maximum-HP and15-point parry/resistance bonuses, duplicate begin/end
+handling and restoration; normal/empowered Chill refresh, no stacking or
+downgrade, building rejection and real watcher expiry; and Gravechill's exact
+strength/parry/resistance penalties, refresh and expiry. Valor and
+Countermelody overlap and refresh without repeated bonuses/penalties, then
+both original native timers restore the baseline stats. The Chronicles gold
+and XP wrappers return115 for a100-point eligible hero award and100 for a
+building recipient. The original hiring callback closes, queries and restores
+its initial state. These are component observations, not a claim that every
+ordinary combat or shopping path is qualified. The controlled world is never
+campaign progress. The trial exits normally at195MiB peak owned RSS.
+
+Original attribute IDs used by the fixture were checked against the pinned
+Old executable's expression constructors, including Parry07565041,
+MagicResistance08565041, MovementRateModifier22565041 and
+ActionRateModifier32565041. No modern-edition address profile is substituted
+for the Old executable. The native policy test and97 focused Python tests
+pass. Browser2306 displays the new Phantom icon/hover and both additional
+Bard panels and writes an ordinary401583-byte Day12 save, preserving all five
+living hero types and all three completed guilds. The two changed interface
+archives were imported through the normal importer; other owned game inputs
+were reused, preserving the existing saves and avoiding another815MB download.
+
+Remaining qualification includes ordinary projectiles/reactions, Phantom
+Frost Armor and tier perks, undead interactions, equipment shopping and
+research visual reconciliation on world entry/ownership changes. The latter
+has explicit creator callbacks, but the modern parity RVAs are not addresses
+for our pinned Old executable. Keep public content inactive until these
+remaining paths and the final browser/save flow qualify.

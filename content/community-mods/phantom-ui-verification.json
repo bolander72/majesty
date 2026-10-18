@@ -1,0 +1,264 @@
+{
+  "format": "majesty-phantom-native-ui-verification-v1",
+  "date": "2026-10-17",
+  "sourceFiles": {
+    "native/community/hero_info_policy.h": {
+      "bytes": 2646,
+      "sha256": "ac07dbbcd0e8b9b73e0f3dc4cbba531c608e265814ae8cb37c4447e246213300"
+    },
+    "native/community/hero_info_policy_tests.cpp": {
+      "bytes": 2274,
+      "sha256": "a7e8ccdd2be0a57c1ef177ef7175752ffe3fedf287cf34b424e51069783e18c3"
+    },
+    "native/community/hero_ui_presenter.cpp": {
+      "bytes": 10578,
+      "sha256": "590ee3ee101d0d385b107c720c554abe0bcce2884e17c108eae03c6d7967fb3d"
+    },
+    "native/community/hero_ui_runtime.h": {
+      "bytes": 626,
+      "sha256": "8b33eeba0cfc9cada69f8e38d31c59d7f6c80a710fce030bee177f8293a3a440"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 158136,
+      "sha256": "57543d1e8f54a2f4787c278e9edb414cd16a3bf7db6aec367a0a41a587759578"
+    },
+    "scripts/prepare-community-phantom-ui.py": {
+      "bytes": 12026,
+      "sha256": "b1b0556065debb5d4ac6cc0d54e5ed89698a571a0dc686ae5f219a85c14bad1b"
+    },
+    "scripts/prepare-community-process-engine.py": {
+      "bytes": 20755,
+      "sha256": "54ee4a8c8f988c55755d855adb64ded6fbeeae6b66f2695bf588095fc7925ef6"
+    },
+    "tests/test_community_phantom_ui.py": {
+      "bytes": 1613,
+      "sha256": "98bb983dc4e5e4898b801d70119f7db58209674cd5210e09c5c96489f3ba2b9d"
+    }
+  },
+  "presentationAdapter": {
+    "format": "majesty-phantom-ui-compat-v1",
+    "sourceStage": {
+      "bytes": 98585,
+      "sha256": "6d599c97a8d3148f5b457b2c8742cfa1e58e2b9c6e7a037f865a50be3d58aa7f"
+    },
+    "originalMediaStage": {
+      "bytes": 262164,
+      "sha256": "de11251de65c34d0f29f7ded70c244407a484ae5a5ded53c2620fe12380fcb4e"
+    },
+    "mediaStage": {
+      "bytes": 262164,
+      "sha256": "2269828adbfd8d47bbb8227d917aec6c635a27f7631188fa41ff0fdbf0cca17e"
+    },
+    "features": {
+      "bytes": 1630,
+      "sha256": "878a458fcf76de8c5e01dc6d5ba8a8618386c9a45db922065e01e4feabde666e"
+    },
+    "sourceActionsUnchanged": true,
+    "candidate": {
+      "bytes": 11255,
+      "sha256": "aec91ce34d65be7ef71da34069ca636e9d4c4fb631542530799d7af9568d6ceb"
+    },
+    "priorCandidate": {
+      "bytes": 11127,
+      "sha256": "8138a65ce769b67ca34194cdfec058195ac028602cba060ce22299d43dedc582"
+    },
+    "compiledGplUnchanged": true,
+    "creatorGlyphs": [
+      {
+        "subject": "WRa2",
+        "glyph": "PHo4",
+        "frame": 0,
+        "tileIndex": 17640,
+        "originalTileSha256": "a4460ea91a230182202b3000701eb0be21e658a43f4b8741f2337bf8ca06e4c5",
+        "image": "PU00"
+      },
+      {
+        "subject": "WRa3",
+        "glyph": "WRa3",
+        "frame": 6,
+        "tileIndex": 17179,
+        "originalTileSha256": "e271c4ac9aa6984408f6660a23af8c887a3b6f7d80ae0f1d72251f1434fac9b0",
+        "image": "PU01"
+      },
+      {
+        "subject": "WRa4",
+        "glyph": "PHg1",
+        "frame": 0,
+        "tileIndex": 17698,
+        "originalTileSha256": "381b95677fb63f1c112cc128dc1a5423f07fcabd8c30388834eaed08bfe5ec19",
+        "image": "PU02"
+      },
+      {
+        "subject": "WRa5",
+        "glyph": "PHc3",
+        "frame": 0,
+        "tileIndex": 17669,
+        "originalTileSha256": "38be2a58ecd420ef7b37c467340125d0785d4ec1fa797e0afbd729c078619925",
+        "image": "PU03"
+      },
+      {
+        "subject": "WRa6",
+        "glyph": "PHg1",
+        "frame": 0,
+        "tileIndex": 17698,
+        "originalTileSha256": "381b95677fb63f1c112cc128dc1a5423f07fcabd8c30388834eaed08bfe5ec19",
+        "image": "PU04"
+      },
+      {
+        "subject": "WRa7",
+        "glyph": "PHe1",
+        "frame": 0,
+        "tileIndex": 17733,
+        "originalTileSha256": "00c9dfcab3994f18c871c0b5a560ac02d3a1a5a63183f89c5287f782e1673e0e",
+        "image": "PU05"
+      },
+      {
+        "subject": "PHo4",
+        "glyph": "PHo4",
+        "frame": 0,
+        "tileIndex": 17640,
+        "originalTileSha256": "a4460ea91a230182202b3000701eb0be21e658a43f4b8741f2337bf8ca06e4c5",
+        "image": "PU06"
+      },
+      {
+        "subject": "PH11",
+        "glyph": "PHc3",
+        "frame": 0,
+        "tileIndex": 17669,
+        "originalTileSha256": "38be2a58ecd420ef7b37c467340125d0785d4ec1fa797e0afbd729c078619925",
+        "image": "PU07"
+      },
+      {
+        "subject": "PHg1",
+        "glyph": "PHg1",
+        "frame": 0,
+        "tileIndex": 17698,
+        "originalTileSha256": "381b95677fb63f1c112cc128dc1a5423f07fcabd8c30388834eaed08bfe5ec19",
+        "image": "PU08"
+      },
+      {
+        "subject": "PHo2",
+        "glyph": "WRa3",
+        "frame": 6,
+        "tileIndex": 17179,
+        "originalTileSha256": "e271c4ac9aa6984408f6660a23af8c887a3b6f7d80ae0f1d72251f1434fac9b0",
+        "image": "PU09"
+      },
+      {
+        "subject": "PHo6",
+        "glyph": "WRa3",
+        "frame": 6,
+        "tileIndex": 17179,
+        "originalTileSha256": "e271c4ac9aa6984408f6660a23af8c887a3b6f7d80ae0f1d72251f1434fac9b0",
+        "image": "PU0A"
+      },
+      {
+        "subject": "PHe1",
+        "glyph": "PHe1",
+        "frame": 0,
+        "tileIndex": 17733,
+        "originalTileSha256": "00c9dfcab3994f18c871c0b5a560ac02d3a1a5a63183f89c5287f782e1673e0e",
+        "image": "PU0B"
+      }
+    ],
+    "rows": 12,
+    "sourceScript": {
+      "bytes": 12026,
+      "sha256": "b1b0556065debb5d4ac6cc0d54e5ed89698a571a0dc686ae5f219a85c14bad1b"
+    },
+    "browserPlayable": false,
+    "published": false
+  },
+  "sourceGplAndNativeActionBodiesUnchanged": true,
+  "nativeTrial": {
+    "bytes": 614,
+    "sha256": "748ae6f8ea952f06447635490c2e658d3652369ba7bc20ad14f36c0b449debaf"
+  },
+  "nativeObserved": {
+    "phantom": [
+      "Ice Lance source glyph and hover"
+    ],
+    "troubadour": [
+      "Ballad of Valor",
+      "Marching Song",
+      "Cutting Satire",
+      "Roused",
+      "Marching Song effect"
+    ],
+    "spellsinger": [
+      "Arcane Note",
+      "Countermelody",
+      "Reverberation",
+      "Marching Song effect"
+    ]
+  },
+  "nativePolicyTests": {
+    "bytes": 645,
+    "sha256": "22d55ceb46e8a42702aa8c362b81d6cf97fdf8d2a16edde570a4f7f584bad0d8"
+  },
+  "pythonTests": {
+    "bytes": 87,
+    "sha256": "31795c0ed063f9fd9206cbb75a01d08969093d8b9aa4885ea798c9b3107512fb"
+  },
+  "browserBuild": {
+    "bytes": 639,
+    "sha256": "724ab2e22937192a0470efebbbdc9aedca60c08b0ffcc7cac043b8c8abeee924"
+  },
+  "browserUiObserved": true,
+  "browserOrdinarySave": {
+    "bytes": 401583,
+    "sha256": "427530f2920621440b1dd1ffc61833609964e3c6251e3c32a7ba2f2e574d4628",
+    "allFiveHeroTypesAlive": true
+  },
+  "browserSaveReloadQualified": true,
+  "published": false,
+  "scope": "Source glyphs adapted to24/25px native row geometry. Compatibility labels/tooltips are derived from source GPL, not new creator declarations. Original creator rows take priority; compatibility pack cannot activate other services or passives.",
+  "browserSaveReloadTrials": [
+    "community2306",
+    "community2310"
+  ],
+  "browserFreshProfileImportedExactSave": true,
+  "browserErrorsObserved": [],
+  "browserArtifacts": {
+    "community2306-phantom-spells.png": {
+      "bytes": 793770,
+      "sha256": "3b55958af0e91eea98fa3190c61508dfb098d3b636441581a29524409dfd4693"
+    },
+    "community2306-phantom-hover.png": {
+      "bytes": 793943,
+      "sha256": "3aba68daeed684d1c30ef0d1045340ceddc5a4015e996f426faca392a2a14113"
+    },
+    "community2306-troubadour-spells.png": {
+      "bytes": 734394,
+      "sha256": "2cf9ae1bf53287798ab5a9f5911601b1fdabdc6298234f1715eb94e3a562fd00"
+    },
+    "community2306-spellsinger-spells.png": {
+      "bytes": 735236,
+      "sha256": "dfb1ed236d0f669fa8f356f8e23fc88bb98144466d8617d88b0eeaef5c8cdaf0"
+    },
+    "community2306-saved.png": {
+      "bytes": 729944,
+      "sha256": "10f443810071e519a5cdf2d8bb25c3b40225dff7b9014acc2eb0b170c3f09f72"
+    },
+    "community2309-browser-actors.json": {
+      "bytes": 2813,
+      "sha256": "240131df612a2f8d8bb1a2288094ba7a56c0a22aff9e82ee377618463b9a5129"
+    },
+    "community2310-phantom-abilities.png": {
+      "bytes": 787190,
+      "sha256": "9ae0e8366e6026747f10505829a34cc86c9004f96668c8f5cb58a94b38c7ce4c"
+    },
+    "community2310-ice-lance-tooltip.png": {
+      "bytes": 785722,
+      "sha256": "d75cf3a06bd46e2d557523f06037c79427c1de6d7c49dcf4362ae06537beaf5a"
+    }
+  },
+  "browserPeakOwnedRssMiB": {
+    "community2306": 1570.0,
+    "community2310": 1870.7
+  },
+  "browserWasm": {
+    "bytes": 90941159,
+    "sha256": "6ae03aaf0a8b67af818ce6fa393ccd177467089b10ea401fe511679bcdd8bbb1"
+  }
+}

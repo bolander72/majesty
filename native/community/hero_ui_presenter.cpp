@@ -1,5 +1,5 @@
-#include "hero_ui_runtime.h"
 #include "hero_info_policy.h"
+#include "hero_ui_runtime.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -180,7 +180,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
 
 extern "C" bool majesty_configure_hero_ui(const PopModApi *host,
                                           const MajestyRuntimeFeatures::Registry *registry,
-                                          const unsigned char *bytes, std::size_t size) {
+                                          const unsigned char *bytes, std::size_t size,
+                                          const MajestyRuntimeFeatures::Registry *compatibility) {
     if (api || !host || !registry || !bytes || size < 12 || std::memcmp(bytes, "MHB1", 4))
         return false;
     const auto word = [&](unsigned at) {
@@ -202,10 +203,26 @@ extern "C" bool majesty_configure_hero_ui(const PopModApi *host,
     for (const auto &row : registry->heroInfoRows)
         if (row.kind == 3 && !sourceIds.count(row.subjectId))
             return false;
+    // The optional Old-edition presentation pack adds rows only. Never use it
+    // to activate gameplay services or replace a creator-declared row.
+    if (compatibility) {
+        if (!compatibility->nameGenerators.empty() || !compatibility->enchantmentRows.empty() ||
+            compatibility->mapFogQuery || compatibility->movementQuery ||
+            !compatibility->equipment.empty() || !compatibility->kingdomResearch.empty() ||
+            !compatibility->movementScales.empty() ||
+            !compatibility->hiddenInventoryActions.empty() || compatibility->nativeTiming ||
+            !compatibility->timingSpellIds.empty() || !compatibility->timingEffectorIds.empty() ||
+            compatibility->heroInfoRows.empty() || compatibility->heroInfoRows.size() > 32)
+            return false;
+        for (const auto &row : compatibility->heroInfoRows)
+            if ((row.kind != 1 && row.kind != 2) || row.unlockLevel ||
+                registry->FindHeroInfo(row.kind, row.subjectId))
+                return false;
+    }
     api = host;
     features = registry;
     subjects = std::move(parsed);
-    policy = std::make_unique<MajestyCommunity::HeroInfoPolicy>(*features, subjects);
+    policy = std::make_unique<MajestyCommunity::HeroInfoPolicy>(*features, subjects, compatibility);
     for (const auto target : {0x00470c00U, 0x00471030U, 0x005b7360U, 0x00519fe0U, 0x004e4180U,
                               0x00511ce0U, 0x00511c10U}) {
         std::uint32_t id = 0;
