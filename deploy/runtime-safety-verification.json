@@ -1,0 +1,64 @@
+{
+  "format": "majesty-runtime-safety-verification-v1",
+  "date": "2026-10-19",
+  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "wasmUnchanged": true,
+  "trial": "freeze2391",
+  "rootPath": "/",
+  "nativeWebGpuDeviceIdentityPreserved": true,
+  "communitySaveReloaded": {
+    "bytes": 402611,
+    "sha256": "bdcd1749e62eb78bbde001d837f5118a09c68309172e7cb33f49041f47077d97"
+  },
+  "codesEntered": [
+    "infinite gold",
+    "level 1000",
+    "build anything",
+    "give me power",
+    "cheezy towers"
+  ],
+  "instantLevelsApplied": 3,
+  "ordinaryGeneratedSave": {
+    "name": "(Freestyle Game) 15 Days.GMP",
+    "bytes": 394483,
+    "sha256": "bc2bb8b1f5ffead034e89de286990d84a3422e573892c0d2b7b6e7b30b1df233"
+  },
+  "savedBytesVerifiedUnchangedAfterTerminalStop": true,
+  "normalRuntimeErrors": [],
+  "normalGraphicsPeak": {
+    "closed": false,
+    "queuedBytes": 0,
+    "queuedOperations": 0,
+    "queuedSubmissions": 0,
+    "peakBytes": 8034400,
+    "peakOperations": 17,
+    "peakSubmissions": 2
+  },
+  "syntheticOversizedRequestRejectedBeforeGpuAllocation": true,
+  "failureCleanup": {
+    "mainLoopPaused": true,
+    "ownedThreadCount": 0,
+    "audioState": "closed",
+    "deviceDestroyed": true,
+    "noEmergencySave": true
+  },
+  "guardStopped": false,
+  "peakOwnedRssMiB": 1741.2,
+  "ownedBrowserClosed": true,
+  "audioMuted": true,
+  "testCounts": {
+    "javascript": 25,
+    "python": 14
+  },
+  "files": {
+    "web/hosting/runtime-safety.mjs": "8aeb894daa1efb53bb36a4938107710a97f9cc8a8e90ab0e41bee4ca8857dcbe",
+    "scripts/build-vercel.py": "409c5854a466615daad3b859a4e83c8ab19ec506bd4b8b8a4f4afa255e375747"
+  },
+  "postTrialChange": "Shortened only the over-budget error text; repeated automated checks.",
+  "limits": [
+    "Short bounded community Freestyle replay, not a long mission soak or reproduction of the whole-Mac hang.",
+    "OS reports do not identify the Chrome helper service/tab.",
+    "Queue limits do not bound total GPU/process memory or prevent a driver/kernel hang."
+  ],
+  "rolloutManualOperations": "none: frontend safety wrapper only; unchanged engine, game collections and save/profile paths; no migrations or new configuration."
+}

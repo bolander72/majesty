@@ -433,6 +433,49 @@ def unpack_release(data, release, destination):
             target.write_bytes(content)
 
 
+def install_runtime_safety(static):
+    """Contain a failed guest and bound its own unretired graphics work."""
+    page = static / 'majesty/index.html'
+    html = page.read_text()
+    changes = {
+        'function showFailure(what) {':
+            'let stopGameRuntime = () => {};\nfunction showFailure(what) {\n  stopGameRuntime();',
+        '    preinitializedWebGPUDevice: device,':
+            '    preinitializedWebGPUDevice: graphicsGuard.device,',
+        '  device.lost.then((info) => showFailure(`The graphics device was lost: ${info.message}`));':
+            '''  const {guardGraphicsDevice, createRuntimeStop} = await import("../hosting/runtime-safety.mjs");
+  const graphicsGuard = guardGraphicsDevice(device, {fail: showFailure});
+  device.lost.then((info) => {
+    if (info.reason !== "destroyed") showFailure(`The graphics device was lost: ${info.message}`);
+  });''',
+        '  window.Module = Module;':
+            '''  const {installGameAudio} = await import("../hosting/audio-start.mjs");
+  const stopAudio = installGameAudio(Module);
+  const stopRuntime = createRuntimeStop({module: Module, device, stopAudio,
+    stopThreads: () => { if (typeof PThread !== "undefined") PThread.terminateAllThreads(); }});
+  const onRuntimeError = event => {
+    const source = String(event.filename || event.reason?.stack || "");
+    if (source.includes("/majesty/MajestyRecomp.") || source.includes("/hosting/runtime-safety.mjs"))
+      showFailure(event.message || event.reason?.message || "Game runtime error");
+  };
+  addEventListener("error", onRuntimeError);
+  addEventListener("unhandledrejection", onRuntimeError);
+  stopGameRuntime = () => {
+    removeEventListener("error", onRuntimeError);
+    removeEventListener("unhandledrejection", onRuntimeError);
+    graphicsGuard.stop(); stopRuntime();
+  };
+  addEventListener("pagehide", stopGameRuntime, {once: true});
+  window.recompRuntimeSafety = {snapshot: graphicsGuard.snapshot};
+  window.Module = Module;''',
+    }
+    for old, new in changes.items():
+        if html.count(old) != 1:
+            raise ValueError('Review the runtime safety integration template')
+        html = html.replace(old, new, 1)
+    page.write_text(html)
+
+
 def root_player(html, versions=None, artwork=None):
     # Deep links also receive the favicon during packaging; emit it once at root.
     html = html.replace('<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">', '')
@@ -445,7 +488,7 @@ def root_player(html, versions=None, artwork=None):
                   + '\n'.join(f'<link rel="modulepreload" href="/{name}">' for name in [
                       'hosting/root-player.mjs', 'hosting/launcher-client.mjs',
                       'hosting/automatic-assets.mjs', 'hosting/derived-assets.mjs', 'hosting/asset-url.mjs',
-                      'hosting/content-cache.mjs', 'hosting/audio-start.mjs',
+                      'hosting/content-cache.mjs', 'hosting/audio-start.mjs', 'hosting/runtime-safety.mjs',
                       'hosting/menu-text.mjs',
                       'world/sha256.mjs', 'world/content-hash.mjs',
                       'content/edition-session.mjs', 'content/lost-trail-files.mjs', 'backups/storage.mjs',
@@ -465,9 +508,6 @@ rootPreparation.then(games => { preparedRootGames = games; return ([...new URLSe
             'const games = preparedRootGames || await fetch("../games.json", {signal}).then((r) => r.json());',
         'const dataId = edition ? edition.storageId : id;':
             'const dataId = edition ? edition.storageId : (preparedRootGames?.find(g => g.id === id)?.contentStorageId || id);',
-        '  window.Module = Module;':
-            '  const {installGameAudio} = await import("../hosting/audio-start.mjs");\n'
-            '  installGameAudio(Module);\n  window.Module = Module;',
         '  const heroRestoreReceipt = prepareHeroRestore ?':
             '''  const displayProfile = multiplayerProfile !== null ? multiplayerProfile :
     (new URLSearchParams(location.search).get("profile") || "");
@@ -544,6 +584,7 @@ def build(destination=None):
     install_vampiric_revenge_release(static)
     install_community_guilds_release(static)
     install_cpu_snapshot_release(static)
+    install_runtime_safety(static)
     enable_native_cursor(static)
     for page in static.rglob('index.html'):
         text = page.read_text()

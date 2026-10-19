@@ -52,6 +52,31 @@ class ReleaseIntegrity(unittest.TestCase):
                     build.unpack_release(data, release, Path(temp))
 
 
+class RuntimeSafetyIntegration(unittest.TestCase):
+    def test_common_player_is_guarded_once_and_keeps_native_device_for_cleanup(self):
+        template = '''function showFailure(what) {
+}
+    preinitializedWebGPUDevice: device,
+  device.lost.then((info) => showFailure(`The graphics device was lost: ${info.message}`));
+  window.Module = Module;'''
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'majesty').mkdir()
+            page = root / 'majesty/index.html'
+            page.write_text(template)
+            build.install_runtime_safety(root)
+            html = page.read_text()
+            self.assertIn('preinitializedWebGPUDevice: graphicsGuard.device', html)
+            self.assertIn('stopGameRuntime();', html)
+            self.assertIn('createRuntimeStop({module: Module, device, stopAudio', html)
+            self.assertIn('PThread.terminateAllThreads()', html)
+            self.assertIn('info.reason !== "destroyed"', html)
+            self.assertEqual(html.count('installGameAudio(Module)'), 1)
+            self.assertIn('addEventListener("pagehide", stopGameRuntime', html)
+            with self.assertRaisesRegex(ValueError, 'safety integration'):
+                build.install_runtime_safety(root)
+
+
 class CpuSnapshotReleaseIntegrity(unittest.TestCase):
     def fixture(self, directory):
         root = Path(directory)

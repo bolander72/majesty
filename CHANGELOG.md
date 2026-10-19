@@ -1,5 +1,11 @@
 # Changelog
 
+## Browser freeze containment — October 19, 2026
+
+- Stop the owned main loop, workers, audio recovery/context and graphics device on terminal runtime failure or page exit. Avoid leaving audio playback running behind a game error.
+- Bound estimated unretired GPU allocation/uploads and submission backlogs, rejecting over-budget work before sending it to WebGPU. Preserve actual WebIDL device identity and original saves.
+- Investigate local Mac memory-pressure reports without attributing an unidentified Chrome helper to Majesty. These containment changes do not establish that the reported whole-Mac hang is resolved.
+
 ## Community guilds and Phantom spell icons — October17,2026
 
 - Add Phantomstar’s Bards Hall and Phantoms Haunt beside Alchemist Lab, using the community’s actual heroes, building artwork, voices, scripts and mechanics.
