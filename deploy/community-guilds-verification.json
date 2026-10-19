@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-verification-v1",
-  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
   "nativePaidGuildsQualified": true,
   "nativeAdvancedAbilitiesQualified": true,
   "browserNativeUiQualified": true,
@@ -25,7 +25,39 @@
       "sha256": "38d0807a962a21abc8bd3c595397febbe1f943ecd07ca159835fc0b0298cb227"
     }
   },
-  "root": {
+  "rootPlayerSource": {
+    "bytes": 1840,
+    "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+  },
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
+  "publicAssetsVerified": {
+    "files": 23,
+    "bytes": 62704338,
+    "sha256": "e43614ad71cfde367c70032d2e497f832a0a8c8d56ebb0a2e3bcc6f383ff7a38"
+  },
+  "originalGameDataAndPlayerProfilesPreserved": true,
+  "productionRenderer": {
+    "unchangedObjectRelink": false,
+    "qualification": "deploy/composite-pool-verification.json"
+  },
+  "limits": [
+    "Detailed combat/abilities qualification inherited from exact unchanged native objects and content; no new full mission or internet co-op qualification.",
+    "No whole-Mac hard-reset reproduction or universal huge-kingdom CPU guarantee."
+  ],
+  "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
+  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "priorQualification": "deploy/community-guilds-verification-engine777.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+    "unchangedOriginalBrowserObjects": false,
+    "changedObjects": [
+      "present_thread.cpp.o"
+    ],
+    "allOtherObjectsAndDataUnchanged": true,
+    "newRegressionProof": "deploy/composite-pool-verification.json",
+    "scope": "Only completed-frame composite storage reuse changes. Native community mechanics, mission resources and guest translations remain identical. Prior detailed mechanics and benchmarks are inherited under their actual prior engine; fresh pooled root world/save/reload and renderer ownership are newly qualified."
+  },
+  "priorRootQualification": {
     "trial": "community2379",
     "rootPath": "/",
     "automaticImportFromPublicGithub": true,
@@ -49,11 +81,22 @@
     "guardStopped": false,
     "audioMuted": true
   },
-  "rootPlayerSource": {
-    "bytes": 1840,
-    "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+  "root": {
+    "trials": [
+      "freeze2406",
+      "freeze2412"
+    ],
+    "rootPath": "/",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Freestyle Game) 16 Days.GMP",
+      "bytes": 397835,
+      "sha256": "02f3d82a627e549256a4d6035f799ab598cc47912a17a351e519550c21b4e09b"
+    },
+    "freshProfileReloadQualified": true,
+    "runtimeErrors": []
   },
-  "rootScreenshots": {
+  "priorRootScreenshots": {
     "community2379-root-menu": {
       "bytes": 427474,
       "sha256": "80893f01cd00e826b14f239ae625654b0fe9a2fadd591be1741d51bd65e9fb21"
@@ -70,21 +113,5 @@
       "bytes": 789538,
       "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
     }
-  },
-  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
-  "publicAssetsVerified": {
-    "files": 23,
-    "bytes": 62704338,
-    "sha256": "e43614ad71cfde367c70032d2e497f832a0a8c8d56ebb0a2e3bcc6f383ff7a38"
-  },
-  "originalGameDataAndPlayerProfilesPreserved": true,
-  "productionRenderer": {
-    "unchangedObjectRelink": true,
-    "noNewPerformanceBenchmarkClaimed": true
-  },
-  "limits": [
-    "Bounded native source controls and local browser/root import/save/reload; not exhaustive balance or every Priestess/Paladin/shop combination",
-    "Internet co-op, huge-kingdom performance and historical host-app crash cause remain separately unqualified"
-  ],
-  "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification."
+  }
 }

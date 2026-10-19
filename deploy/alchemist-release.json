@@ -1,6 +1,6 @@
 {
   "format": "majesty-alchemist-content-release-v1",
-  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
   "storageId": "majesty-alchemist-v1-campaign3",
   "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
   "nativeMechanicsQualified": true,
@@ -193,6 +193,17 @@
   "exactPixelMaskVerification": "deploy/exact-pixel-mask-verification.json",
   "cpuSnapshotVerification": "deploy/cpu-snapshot-verification.json",
   "compatibilityRelink": {
+    "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+    "unchangedOriginalBrowserObjects": false,
+    "changedObjects": [
+      "present_thread.cpp.o"
+    ],
+    "allOtherObjectsAndDataUnchanged": true,
+    "newRegressionProof": "deploy/composite-pool-verification.json",
+    "scope": "Only completed-frame composite storage reuse changes. Native community mechanics, mission resources and guest translations remain identical. Prior detailed mechanics and benchmarks are inherited under their actual prior engine; fresh pooled root world/save/reload and renderer ownership are newly qualified."
+  },
+  "compositePoolVerification": "deploy/composite-pool-verification.json",
+  "priorCompatibilityRelink": {
     "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
     "unchangedOriginalBrowserObjects": true,
     "originalBrowserProducer": "performance1797",

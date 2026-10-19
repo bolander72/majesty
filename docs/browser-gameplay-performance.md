@@ -5,6 +5,66 @@ uncaught guest exits. The earlier Alchemist missing-campaign-functions fix and
 fog fix remain enabled. A generic guest exit code does not identify the cause
 of a later unrelated crash.
 
+## Reuse completed GPU composites
+
+The October 19 investigation traced recurring allocations to
+`Service::composite()` in the native presenter. Every fresh image created a
+full-screen texture. Native handle release kept the live handle count stable,
+but the WebGPU backend released wrappers without immediately reclaiming all
+browser/driver memory. The owned GPU process physical footprint grew at almost
+the measured texture allocation rate. This is allocation churn with delayed
+reclamation, rather than proof of a permanently unreachable-reference leak.
+
+The [source-bound qualification](../deploy/composite-pool-verification.json)
+compares the exact same original Day-14 save and content. A newly compiled,
+unpooled control reproduces the prior production WASM byte for byte. Only the
+presenter object changes in the pooled engine; data and all other objects are
+retained, and JavaScript functional glue is identical after removing generated
+build-path comments/strings.
+
+| Matched 800×600 observation | Prior engine | Composite reuse |
+| --- | ---: | ---: |
+| Duration | 5.114 s | 5.106 s |
+| New full-screen textures | 124 | 0 |
+| New texture allocation | 227.1 MiB | 0 MiB |
+| GPU physical footprint | 295.2 → 512.1 MiB | 272.2 → 272.6 MiB |
+
+At 1920×1080 the original crossed the private test's 1 GiB GPU footprint limit
+and was stopped before further interaction. The pooled trial stayed below 372 MiB during
+52 seconds of alternating edge scrolling and peaked at 380.2 MiB across the
+full trial, including cheats and saving. It created no further textures after
+resizing settled during that scrolling interval. This is GPU process physical
+footprint, measured with macOS `proc_pid_rusage`; RSS alone omitted much of this
+charge. It is not total browser memory or a whole-game CPU/input-latency result.
+
+`native/performance/composite_pool.h` keeps eight reusable shared leases.
+Only a matching texture exclusively owned by the pool can be overwritten.
+Outstanding GPU frames, captures and cached images keep independent leases;
+a fully busy pool uses an uncached temporary allocation instead of blocking or
+overwriting a frame. Free mismatched entries are replaced rather than keeping
+an unbounded cache of resolutions. The official `composite_pool_tests` covers
+10,000 allocation-free completed frames, busy/capture ownership, allocation
+failure, size/format changes and final destruction.
+
+Stage a new engine using `scripts/prepare-composite-pool-browser-engine.py`
+with `--base-engine`, `--base-build`, `--out` and
+`--expected-engine-sha256`. It requires the pinned presenter source and retains
+the input link's object/archive hashes and original compile flags. Build only
+through the kit's official `tools/build.py`; `--unpooled-control` prepares the
+matched comparison. For the native test, include
+`native/performance/composite_pool.cmake` from a game test configuration and run
+the official `tools/test.py --native-test composite_pool_tests`. Generated
+translations are never edited.
+
+Both browser trials were muted and bounded. Ordinary saving after five cheats
+produced the exact Day-16 save that a fresh logical profile reloaded; the world
+continued normally. Detailed community ability and mission proofs remain
+archived under their actual previous engine hashes. Friday's OS memory report
+shows a very large Chrome helper but does not identify its tab/service. No
+whole-Mac freeze was deliberately reproduced, and no universal huge-kingdom
+lag or crash guarantee follows from this result. There is no save migration;
+rollback restores the prior engine-bound deploy descriptors together.
+
 ## Faster changed-row bounds and guest copies
 
 The `smooth-copy1799` release adds two incremental patches to the previously

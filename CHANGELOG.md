@@ -1,5 +1,11 @@
 # Changelog
 
+## Reuse completed GPU composites — October 19, 2026
+
+- Remove the full-screen GPU texture allocation on each fresh image. Reuse storage only after GPU frames, captures and cached-image consumers release their leases.
+- In the matched 800×600 interval, reduce new composite textures from 124 in 5.11 seconds to zero after warmup. At 1080p the pooled trial stayed below 372 MiB GPU physical footprint through 52 seconds of scrolling; the prior engine crossed the 1 GiB test limit.
+- Verify native ownership/failure/resolution controls, five cheats, ordinary saving and a fresh-session reload. Retain the exact native game/core objects, content, audio, simulation and profile identity. This addresses a measured GPU allocation/reclamation problem; it does not establish that every historical whole-Mac freeze has the same cause.
+
 ## Browser freeze containment — October 19, 2026
 
 - Stop the owned main loop, workers, audio recovery/context and graphics device on terminal runtime failure or page exit. Avoid leaving audio playback running behind a game error.

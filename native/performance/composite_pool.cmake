@@ -1,0 +1,5 @@
+add_executable(composite_pool_tests ${CMAKE_CURRENT_LIST_DIR}/composite_pool_tests.cpp)
+target_include_directories(composite_pool_tests PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_compile_options(composite_pool_tests PRIVATE -UNDEBUG)
+add_test(NAME composite_pool_tests COMMAND composite_pool_tests)
+set_tests_properties(composite_pool_tests PROPERTIES LABELS "nogame")

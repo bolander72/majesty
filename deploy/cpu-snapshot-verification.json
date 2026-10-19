@@ -1,33 +1,35 @@
 {
   "format": "majesty-cpu-snapshot-verification-v1",
-  "status": "unchanged renderer objects; community browser interaction/save/reload qualified",
-  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-  "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
-  "priorQualification": "deploy/cpu-snapshot1799-verification.json",
+  "status": "composite storage reuse; CPU snapshot controls inherited; fresh browser world/save/reload qualified",
+  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "priorQualification": "deploy/cpu-snapshot-verification-engine777.json",
   "nativeControlsQualified": true,
   "browserWorldSaveReloadQualified": true,
   "browserInteractionQualified": true,
   "engine": {
+    "wasm": {
+      "bytes": 90968013,
+      "sha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110"
+    },
     "js": {
-      "bytes": 473482,
-      "sha256": "4ee2d31cd8fcfc75d368626f0919e9f432715ed75726aa987bc2de28375abeba"
+      "bytes": 473437,
+      "sha256": "834c738cdc0249332cf7b6ae77d716d24212691bdabce3a7ddbb4c54468d1d9e"
     },
     "data": {
       "bytes": 5105139,
       "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
-    },
-    "wasm": {
-      "bytes": 90967546,
-      "sha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0"
     }
   },
   "compatibilityRelink": {
-    "priorEngineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
-    "unchangedOriginalBrowserObjects": true,
-    "originalBrowserProducer": "performance1797",
-    "privateLinkStageSha256": "06e2144f7e3ffa85220c8a881575b1e4bba48c6bb7897776a7b5c0f683b24113",
-    "newRegressionProof": "content/community-mods/browser-abilities-verification.json",
-    "scope": "Retained original runtime/renderer objects; native source-backed guild controls and new browser save/fresh reload. Prior detailed Alchemist/demo qualifications remain identified as inherited."
+    "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+    "unchangedOriginalBrowserObjects": false,
+    "changedObjects": [
+      "present_thread.cpp.o"
+    ],
+    "allOtherObjectsAndDataUnchanged": true,
+    "newRegressionProof": "deploy/composite-pool-verification.json",
+    "scope": "Only completed-frame composite storage reuse changes. Native community mechanics, mission resources and guest translations remain identical. Prior detailed mechanics and benchmarks are inherited under their actual prior engine; fresh pooled root world/save/reload and renderer ownership are newly qualified."
   },
-  "performanceMeasurements": "Prior measurements are archived under their actual prior engine; no new performance benchmark claimed."
+  "performanceMeasurements": "Renderer GPU allocation/physical-footprint measurements are in deploy/composite-pool-verification.json; historical CPU/display-gap benchmarks retain their prior engine."
 }

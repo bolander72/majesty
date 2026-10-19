@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-release-v1",
-  "engineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
   "storageId": "majesty-community-guilds-v1",
   "baseId": "majesty",
   "additionalRuntimeEnvironment": {
@@ -345,5 +345,6 @@
     "bytes": 11255,
     "sha256": "aec91ce34d65be7ef71da34069ca636e9d4c4fb631542530799d7af9568d6ceb"
   },
-  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d"
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
+  "compositePoolVerification": "deploy/composite-pool-verification.json"
 }

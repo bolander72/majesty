@@ -1,0 +1,209 @@
+{
+  "format": "majesty-composite-pool-verification-v1",
+  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
+  "status": "native ownership controls and bounded browser save/fresh reload qualified",
+  "engine": {
+    "wasm": {
+      "bytes": 90968013,
+      "sha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110"
+    },
+    "js": {
+      "bytes": 473437,
+      "sha256": "834c738cdc0249332cf7b6ae77d716d24212691bdabce3a7ddbb4c54468d1d9e"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "rootCause": {
+    "path": "present_thread.cpp Service::composite -> gpu::create_texture -> WebGPU device.createTexture",
+    "mechanism": "A fresh full-screen composite texture was allocated for every fresh game image. Native release kept handle counts stable, but browser/driver reclamation lagged allocation, growing the GPU process physical footprint. Reuse removes the recurring allocation after warmup.",
+    "scope": "Observed allocation churn and GPU memory growth; does not prove every historical hard reset or all simulation lag has the same cause."
+  },
+  "source": {
+    "stagingScript": {
+      "bytes": 9725,
+      "sha256": "59fa40c4f700bb6d22962a0196451400940a23ec4140431ecfb5a87d8bec56b5"
+    },
+    "poolHeader": {
+      "bytes": 1213,
+      "sha256": "4fd580f1a7e6364d305f1d727ab6c126c74b513d739358c19cfe1080e3dbabdb"
+    },
+    "poolTests": {
+      "bytes": 3038,
+      "sha256": "9d6489a33c83083a498438074c8a60f2e7d9477e353a20a9032360918a47c85d"
+    },
+    "originalPresenter": {
+      "bytes": 77449,
+      "sha256": "c93203e281befad5b16427cb2e6f4afc238cb3043f39a1624494504e8542b4c7"
+    },
+    "pooledPresenter": {
+      "bytes": 77816,
+      "sha256": "0820a40f2a1b22e48742b2bd0aa7c3631df57dfba0dd62e3a3d1d7c2c9c2bf16"
+    },
+    "linkStage": {
+      "bytes": 51726,
+      "sha256": "4c5c42558ec870c88a53d63079d9cdc8f0b4e482cde13308787226bc6667310f"
+    },
+    "allOtherObjectsAndGameDataUnchanged": true,
+    "generatedTranslationsEdited": false,
+    "matchedUnpooledControlByteIdenticalToPriorProductionWasm": true,
+    "javascriptFunctionalGlueUnchanged": true
+  },
+  "tests": {
+    "officialNativeTarget": "composite_pool_tests",
+    "passed": true,
+    "completedFramesWithoutNewAllocation": 10000,
+    "controls": [
+      "GPU and capture leases remain protected",
+      "all slots busy uses uncached temporary fallback",
+      "resolution and format matching",
+      "failed allocation preserves old cache",
+      "final release counts match"
+    ],
+    "officialPooledBrowserBuildExitCode": 0,
+    "officialUnpooledControlBuildExitCode": 0
+  },
+  "comparison": {
+    "inputSave": {
+      "bytes": 402611,
+      "sha256": "bdcd1749e62eb78bbde001d837f5118a09c68309172e7cb33f49041f47077d97"
+    },
+    "viewport": [
+      800,
+      600
+    ],
+    "prior": {
+      "trial": "freeze2397",
+      "seconds": 5.114,
+      "newTextures": 124,
+      "allocatedMiB": 227.1,
+      "liveNativeTextures": [
+        18,
+        18
+      ],
+      "wasmMiB": [
+        512,
+        512
+      ],
+      "gpuFootprintMiB": [
+        295.2,
+        512.1
+      ]
+    },
+    "pooled": {
+      "trial": "freeze2406",
+      "seconds": 5.106,
+      "newTextures": 0,
+      "allocatedMiB": 0,
+      "gpuFootprintMiB": [
+        272.2,
+        272.6
+      ]
+    }
+  },
+  "browser": {
+    "rootPath": "/",
+    "originalProfileIdentity": "majesty",
+    "communityContentAndAll54PatchBindingsUnchanged": true,
+    "worldReady": true,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 1,
+    "scrollSeconds": 52.12,
+    "newTexturesAfterViewportSettled": 0,
+    "peakGpuFootprintMiB": 380.2,
+    "priorFullHdGpuGuardStopMiB": 1122.1,
+    "cheats": [
+      "infinite gold",
+      "level 1000",
+      "build anything",
+      "give me power",
+      "cheezy towers"
+    ],
+    "ordinarySave": {
+      "name": "(Freestyle Game) 16 Days.GMP",
+      "bytes": 397835,
+      "sha256": "02f3d82a627e549256a4d6035f799ab598cc47912a17a351e519550c21b4e09b"
+    },
+    "freshProfileReloadTrial": "freeze2412",
+    "freshReloadExactInput": {
+      "bytes": 397835,
+      "sha256": "02f3d82a627e549256a4d6035f799ab598cc47912a17a351e519550c21b4e09b"
+    },
+    "freshReloadWorldVisuallyVerified": true,
+    "continuedThroughDay": 18,
+    "runtimeErrors": [],
+    "candidateGuardStopped": false,
+    "allOwnedSessionsClosed": true,
+    "audioMuted": true
+  },
+  "evidence": {
+    "freeze2397-gpu-samples.json": {
+      "bytes": 11089,
+      "sha256": "354ad6ab73284c772b85d0df9ece8efa4bdd9fdd703cc54cf5282519493ef0d5"
+    },
+    "freeze2397-guard-stop.json": {
+      "bytes": 614,
+      "sha256": "4e54573f60d5c8d4c7d9be130669066afbd27d60ce1c3e4a316687b859f72cfd"
+    },
+    "freeze2406-gpu-samples.json": {
+      "bytes": 72441,
+      "sha256": "26148966ae752a63ea752ecda32e81bb033dde9678d19e5b5129e7440f7f1a0b"
+    },
+    "freeze2406-fullhd.png": {
+      "bytes": 3830904,
+      "sha256": "8146285685b874048abe93e44be2043b46431f079a0fc4e98a56862d9b6fecb1"
+    },
+    "freeze2406-cheats-observed.json": {
+      "bytes": 507,
+      "sha256": "1ec362ee4713a6840fa867bc6a033f3ef2056212110099f85dc97b69ebecb62d"
+    },
+    "freeze2407-root-save-observed.json": {
+      "bytes": 423,
+      "sha256": "8ed5a7fc29d8f9b543e8f65a579e24318573a2a37e7e5245d90bf6150e348795"
+    },
+    "freeze2411-exact-control-qualified.json": {
+      "bytes": 464,
+      "sha256": "f0c6e71345ff1dc26cbb774fefe57ad75c84997b84481918c99ae72731d79ebe"
+    },
+    "freeze2412-reload-observed.json": {
+      "bytes": 804,
+      "sha256": "36bc8e3e46456dbd05bad2ec893f844c3d03b0d1663f20ff6ad4b932be45a42f"
+    },
+    "freeze2412-reloaded.png": {
+      "bytes": 854636,
+      "sha256": "816ec64e811a1967821667de136fae687fc038e09e23580959ccd887880547b4"
+    }
+  },
+  "limitations": [
+    "No deliberate whole-Mac freeze or kernel panic reproduction; tests stopped before unsafe resource growth.",
+    "Friday memory report does not identify the responsible Chrome tab or helper service.",
+    "No new frame-rate, input-latency or huge-kingdom CPU benchmark claimed.",
+    "DPR 2 and 4K were not qualified in these trials. Existing detailed ability and mission qualifications remain under their original engine hashes."
+  ],
+  "rollout": {
+    "playerDataMigration": "none",
+    "priorAssetsPreserved": true,
+    "rollback": "Restore the previous engine-bound deploy descriptor set together; player saves and original collections need no migration."
+  },
+  "releaseChecks": {
+    "pythonReleaseTests": 16,
+    "runtimeSafetyJavaScriptTests": 11,
+    "officialFormattingFiles": 3,
+    "scopedOfficialSourceBoundaryAndLiteralChecksPassed": true,
+    "fullInventoryPreexistingIssues": [
+      "Retired archived Wayfinder_Support.dat is tracked",
+      "deploy/multiplayer/.env.example is tracked",
+      "docs/native-world-heap.md links to a missing upstream heap-inspection.md"
+    ],
+    "finalStaticRootAndEngineIdenticalToTestedSite": true,
+    "publicArchiveIntegrityCheckedBySiteBuild": true,
+    "playerDataMigration": "none"
+  },
+  "publicEngineAssetsCommit": "3d0d3a16766bdce8c575784c4bbb55d4b3de2cfb"
+}
