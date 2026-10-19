@@ -1213,3 +1213,29 @@ All owned engines close normally, with no guard stop. The final Git build is
 byte-identical to the tested private site apart from an added updater preload.
 Detailed previous ability controls and renderer benchmarks keep their actual
 prior-engine records; these checks do not establish a whole-Mac hard-reset fix.
+
+
+## Further campaign crash regression checks — October19
+
+An additional muted, bounded browser run resumes the qualified Day8 original
+campaign and continues to Day14, including a Lab upgrade attempt and Brewing navigation,
+Hall level3 completion, hostile destruction of the Haunt, hero deaths and the
+original Restoration cheat. It generates a new ordinary1310835-byte save,
+SHA256 `bdf714a777082b510796c2c9b53d4239717faa3909b2b8b739364d09a75b2255`.
+The Hall retains its native700HP and saved capacity8. No new terminal game
+failure is observed. The engine and gameplay resources remain unchanged.
+
+Content preparation now requires the Hall's25 stock Guild fields, all53 stock
+hero fields on both private hero prototypes, and all85 authored script/validator
+callbacks in the original campaign's actual GPL scope. Commented declarations,
+wrong field types, and functions available only in the expansion cannot satisfy
+this contract. Eight focused controls pass; the full community suite runs104
+checks with six existing optional-fixture skips. Repreparing the prior source
+produces four byte-identical GPL/DAT files, so this admission check needs no
+new engine, content migration or player-save change.
+
+A separate effect-creation audit finds Northern-only potion resources referenced
+by shared source. An original-campaign execution/failure of those paths has not
+been reproduced. They remain an explicit resource/reachability follow-up;
+CreateEffector is not suppressed and gameplay effects are not replaced with
+empty operations. These checks do not establish a whole-Mac hard-freeze fix.

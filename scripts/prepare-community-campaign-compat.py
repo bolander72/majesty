@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 from lib.community_legacy_guild_capacity import restore_legacy_capacity
+from lib.community_campaign_contract import audit_stage
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,7 +46,11 @@ def prepare(source, output):
     for name in ('stock-fixture', 'resources', 'phantom-source-package'):
         (output / name).symlink_to((source / name).resolve(), target_is_directory=True)
     policy = ROOT / 'scripts/lib/community_legacy_guild_capacity.py'
+    campaign_contract = audit_stage(output, output / 'stock-fixture',
+        (output / 'resources/merged_descriptions.xml').read_bytes())
     proof.update(legacyCapacityPriorStage=record(proof_raw),
+        originalCampaignContract=campaign_contract,
+        campaignContractPolicy=record((ROOT / 'scripts/lib/community_campaign_contract.py').read_bytes()),
         legacyGuildCapacityCompatibility=[dict(file='Any/Merged.gpl', before=record(original),
             after=record(payloads['Any/Merged.gpl']), policy=record(policy.read_bytes()),
             stockGuildsAndNativeCapacityUnchanged=True)],

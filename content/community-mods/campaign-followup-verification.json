@@ -1,0 +1,115 @@
+{
+  "format": "majesty-community-campaign-followup-v1",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "runtimeChanged": false,
+  "gameplayChanged": false,
+  "newRuntimeCrashReproduced": false,
+  "browser": {
+    "trial": "freeze2459",
+    "mission": "Vengeance of the Liche Queen",
+    "inputSave": {
+      "bytes": 1300348,
+      "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
+    },
+    "continuedFromDay": 8,
+    "continuedThroughDay": 14,
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 14 Days.GMP",
+      "bytes": 1310835,
+      "sha256": "bdf714a777082b510796c2c9b53d4239717faa3909b2b8b739364d09a75b2255"
+    },
+    "hallTier3Completed": true,
+    "hallSavedCapacity": 8,
+    "hostileHauntDestructionAndHeroDeaths": true,
+    "restorationCheatRecognized": true,
+    "terminalErrors": [],
+    "guardStopped": false,
+    "audioMuted": true,
+    "peakOwnedRssMiB": 1993.7,
+    "peakGpuFootprintMiB": 324.1,
+    "ownedGameBrowserAndServerClosed": true,
+    "labUpgradeAttemptAndBrewingNavigation": true
+  },
+  "sourceAdmission": {
+    "prototypes": {
+      "Bards_Hall_Prototype": {
+        "stock": "Guild",
+        "requiredFields": 25,
+        "actualFields": 28
+      },
+      "Bards_Support_Hero": {
+        "stock": "hero",
+        "requiredFields": 53,
+        "actualFields": 62
+      },
+      "Phantom_Hero": {
+        "stock": "hero",
+        "requiredFields": 53,
+        "actualFields": 59
+      }
+    },
+    "callbacksChecked": 85,
+    "includesActionValidators": true,
+    "expansionOnlyFunctionCannotSatisfyOriginalCampaign": true,
+    "commentedFieldsDoNotCount": true,
+    "typedFieldsRequired": true,
+    "scope": "Future content preparation fails before compilation on missing/mistyped stock fields or unresolved authored callbacks. This does not claim all native effect/resource dependencies are reachable or qualified."
+  },
+  "tests": {
+    "focusedNewTests": 8,
+    "pythonCommunitySuite": {
+      "run": 104,
+      "skipped": 6,
+      "failed": 0
+    },
+    "exactExistingGeneratedSourceFilesUnchanged": 4
+  },
+  "sources": {
+    "scripts/lib/community_campaign_contract.py": {
+      "bytes": 5090,
+      "sha256": "8a3725da25e43f491b348e8adee533eb3c1e1938ea35ffd231e1b748455ef473"
+    },
+    "tests/test_community_campaign_contract.py": {
+      "bytes": 4382,
+      "sha256": "588c58d95e12ed3bfcba022dfd89297533eb9e4f468bc4cd9462fe9b558e3a45"
+    },
+    "scripts/prepare-community-guild-gpl.py": {
+      "bytes": 13108,
+      "sha256": "d6dc9a73d54096ef2379d1eb5c45df645652772ac6a8c52e325be8be2ce43e27"
+    },
+    "scripts/prepare-community-campaign-compat.py": {
+      "bytes": 3387,
+      "sha256": "3d2f31bb9adcf55c5734c2f01b1eedff842c6698264dfd2d50da5928397fbb55"
+    }
+  },
+  "evidence": {
+    "freeze2460-campaign-contract-audit.json": {
+      "bytes": 12176,
+      "sha256": "69fe2414e42c5b90f59acd3a2920255dd42cab75b3e0baea1006a138a18cdf7f"
+    },
+    "freeze2461-source-equivalence.json": {
+      "bytes": 437,
+      "sha256": "ef9fc8de1d421220aa72f522ac05d27795235d7d70c105f0d917927282efe873"
+    },
+    "freeze2459-day14-save.json": {
+      "bytes": 1512,
+      "sha256": "efba5ae8c1535cc6dff6fea93f4ad637b63a6b6c8a15fb3d7c56968977b47600"
+    },
+    "freeze2459-day14-guild-agents.json": {
+      "bytes": 2017,
+      "sha256": "007b5c12f467ccffebeaef9795078cd628a9caab956b59fd7603051e622b5e1b"
+    },
+    "freeze2459-final-saved.png": {
+      "bytes": 798390,
+      "sha256": "98caf06045d4df283928818b48ee6212c9e469795cabd05bdee82bb4e76c15e8"
+    },
+    "freeze2459-restoration-cheat.png": {
+      "bytes": 794573,
+      "sha256": "efa244f254c1eb492e0a7d43f1ec26daf60bc95b26ae1aafea75bb1206544b30"
+    }
+  },
+  "limits": [
+    "One bounded extended campaign trial; no universal crash-free or whole-Mac freeze claim.",
+    "Further Northern-only potion creation dependencies were identified statically; their execution/failure in original missions was not reproduced, so no speculative runtime suppression or content replacement was shipped."
+  ]
+}

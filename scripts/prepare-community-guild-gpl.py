@@ -199,6 +199,8 @@ def prepare(args):
             files[f'{scope}/{name}'] = record(raw)
     if len(activity_root_compatibility) != 1:
         raise ValueError('Missing the original activity dispatcher compatibility pass')
+    from lib.community_campaign_contract import audit_stage
+    campaign_contract = audit_stage(args.out, fixture, resources['merged_descriptions.xml'])
     receipt = dict(format='majesty-community-combined-creator-gpl-stage-v1',
         managerCommit=MANAGER_COMMIT, phantomSourceCommit=PHANTOM_COMMIT,
         phantomSourceRecovery=record(recovery_raw),
@@ -210,11 +212,13 @@ def prepare(args):
         finalResourceContext=True, resourceFiles={name: record(raw) for name, raw in resources.items()},
         activityRootReentrancyCompatibility=activity_root_compatibility,
         legacyGuildCapacityCompatibility=legacy_capacity_compatibility,
+        originalCampaignContract=campaign_contract,
         compositionPolicy={name: record((ROOT / name).read_bytes()) for name in (
             'scripts/prepare-community-guild-gpl.py', 'scripts/lib/community_guild_composition.py',
             'scripts/lib/community_guild_source_resolutions.py',
             'scripts/lib/community_activity_reentrancy.py',
-            'scripts/lib/community_legacy_guild_capacity.py')},
+            'scripts/lib/community_legacy_guild_capacity.py',
+            'scripts/lib/community_campaign_contract.py')},
         mediaMergeQualified=False,
         explicitSourceResolutions=sorted(resolutions), compiled=False,
         targetNativeABIQualified=False, browserPlayable=False, published=False)
