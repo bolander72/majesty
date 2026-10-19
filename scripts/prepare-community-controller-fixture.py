@@ -46,6 +46,8 @@ set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIME
     add_integer_fixture(output)
     add_research_query_fixture(output)
     add_kingdom_descriptor_fixture(output)
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('include("${RECOMP_GAME_DIR}/source/native/community/optional_expansion_effectors.cmake")\n')
 
 
 def add_equipment_fixture(output):

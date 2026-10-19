@@ -1,5 +1,11 @@
 # Changelog
 
+## Community guilds in original campaigns — October 19, 2026
+
+- Fix Bards Hall completion in original campaigns by restoring the Hall’s legacy capacity field from its real native guild limit, including old saves and upgrades.
+- Fix Bard AI queries for five Northern-only effects when those definitions are absent from the current campaign. Preserve defined effects and all other native checks.
+- Update only the two verified community script files in existing installations, preserving saves, original collections and customized files. Cache the verified revision to keep later startup fast.
+
 ## Reuse completed GPU composites — October 19, 2026
 
 - Remove the full-screen GPU texture allocation on each fresh image. Reuse storage only after GPU frames, captures and cached-image consumers release their leases.

@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "composite-pool2414",
-  "bytes": 7668844,
-  "sha256": "8691f51fab03a43bbc80ead08fdce80c826cd7361490948d406e64bf34c91854",
-  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "release": "campaign-compat2449",
+  "bytes": 7669589,
+  "sha256": "196ab14e74cc725a0b9c2672b3ba3984f0eb38d76144d1cbef944d4e22798d01",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -19,7 +19,7 @@
     },
     "static/games.json": {
       "bytes": 1821,
-      "sha256": "fdcc56c5ad417c5444270073409b40c28d1a356a2ecfc74bedb2e9b2f0c2ba04"
+      "sha256": "32fd374b1ee0ca86338b7fed56ae24b3bb8fc2557e37c523264ca5dc1ad6f4bb"
     },
     "static/core.js": {
       "bytes": 18659,
@@ -470,12 +470,12 @@
       "sha256": "a651e0262e45bb1d4393164986fe9985fbb63b72b235eca97c647627bb58e446"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 7010231,
-      "sha256": "893b5d64dfa576faef2d85d77922db9c84edcf10dd22e381f97f50a2df1ffc0d"
+      "bytes": 7011711,
+      "sha256": "47ce21814c84b39a63b6e6e89b2065928be90a80d8a45eafe66463d5822a1784"
     },
     "static/majesty/MajestyRecomp.js": {
-      "bytes": 473437,
-      "sha256": "834c738cdc0249332cf7b6ae77d716d24212691bdabce3a7ddbb4c54468d1d9e"
+      "bytes": 473419,
+      "sha256": "834e72c88a1b69df2134d2fca7c89ca1df8de0d858db519494750f6a69fd8587"
     },
     "static/majesty/MajestyRecomp.data": {
       "bytes": 5105139,
@@ -598,8 +598,8 @@
       "sha256": "740257efe032ded200dbf001055e3807baac6e9ef99140a44962dbb028613938"
     }
   },
-  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-  "browserProof": "deploy/composite-pool-verification.json",
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "browserProof": "deploy/community-campaign-compat-verification.json",
   "nativeMechanicsProof": "content/community-mods/advanced-ability-verification.json",
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/3d0d3a16766bdce8c575784c4bbb55d4b3de2cfb/assets/releases/composite-pool2414.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/f06880ea1709aa243f0af8c8cbd2242481778f26/assets/releases/campaign-compat2449.tar.gz"
 }

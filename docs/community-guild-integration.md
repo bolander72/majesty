@@ -1155,3 +1155,61 @@ Cleanup removes obsolete owned build artifacts and the owned root trial's
 854087737-byte derived game-input copy after unloading its engine. It never
 removes a profile, save, backup, source input or prior public release. The
 normal original owned base remains cached for subsequent trials.
+
+
+## Original-campaign crash compatibility — October19
+
+The Vengeance of the Liche Queen browser reproduction identifies two separate
+base-campaign compatibility errors. Neither is inferred from resource ceilings.
+First, original-campaign GuildHasOpenSlots reads the script max_members field,
+whereas the expansion helper reads native MaxGuildMembers. The creator Hall
+prototype comments out max_members. Hall completion reached that missing value
+and failed at the native integer conversion (return006441b5, access violation
+0xC0000005). The private GPL transformation restores only the Hall field and
+mirrors its authoritative native capacity at birth, completed construction,
+upgrade and restored-world reconciliation. Stock guilds and native capacity,
+including quest restrictions, remain unchanged. Old saved Halls are repaired
+through the original AddAttribute operation when necessary.
+
+Second, recruiting a Spellsinger reproduces the reported0xE06D7363 exception.
+The first native exception string is:
+`CheckEffector( false, Skeleton#40, Champion_Icon ): couldn't find effector named Champion_Icon`.
+The Bard hunting script queries the Northern Expansion Champion marker in a
+base campaign whose effector catalog lacks that definition. A narrow community
+native bridge checks five audited Northern-only names against the current
+original catalog: Champion_Icon, Champions_Vigor_Icon, Speed_Tonic_Icon,
+Strength_Potion_Icon and Shapeshift_Potion_Icon. Blade Dancer birth independently
+reproduced the missing Champions_Vigor_Icon error. The audit compares all25
+literal checks in the composed GPL with original SDK and community descriptors.
+Missing optional definitions return false using original CBool::Reset; defined
+markers and every other effect name continue through the original CheckEffector. The capability result is cached per world catalog and reset at
+registry/world teardown. It adds no recurring object scan, guest allocation or
+per-call string allocation. Focused native controls cover absent/defined names,
+wrong tags/spans, unrelated missing names, cache reuse and catalog reset.
+
+The GPL fix is compiled by the original SDK. The browser stage replaces only
+the handwritten community core object; the qualified pooled renderer and all
+generated translations remain unchanged. The production updater admits only
+the two previously pinned Community_Common.bcd files and validates their full
+hashes before fetching/writing. Unknown customized scripts are preserved and
+the update refuses them. Interrupted updates retry; a verified metadata marker
+skips hashing and network work on subsequent unchanged startup. Collections,
+profile identities, saves and earlier public releases remain intact.
+
+Original-campaign reproduction/save-reload evidence and deployment bindings
+are recorded separately from the earlier Freestyle ability qualifications.
+No whole-Mac hard reset has been reproduced in these bounded trials.
+
+The final browser engine is `campaign-compat2449`. Two isolated muted trials
+resume the exact pending-recruit crash input, upgrade the Hall to level2,
+complete a paid Haunt and recruit the community heroes. A normal Day7 save
+restores in a fresh browser process; a new Day8 save contains all five living
+hero types and three completed guilds. The Hall saves max_members6 after its
+upgrade. A separate earlier Phantom died in combat; the audit distinguishes
+that dead actor from the living replacement. The real root updater downloads
+one commit-pinned payload for both locations, preserves existing saves and
+completion records, and skips hashing/network/writes on an unchanged retry.
+All owned engines close normally, with no guard stop. The final Git build is
+byte-identical to the tested private site apart from an added updater preload.
+Detailed previous ability controls and renderer benchmarks keep their actual
+prior-engine records; these checks do not establish a whole-Mac hard-reset fix.

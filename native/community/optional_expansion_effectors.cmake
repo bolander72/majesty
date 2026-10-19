@@ -1,0 +1,7 @@
+add_executable(optional_expansion_effectors_tests
+  ${CMAKE_CURRENT_LIST_DIR}/optional_expansion_effectors_tests.cpp)
+target_compile_features(optional_expansion_effectors_tests PRIVATE cxx_std_17)
+target_compile_options(optional_expansion_effectors_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(optional_expansion_effectors_tests)
+add_test(NAME optional_expansion_effectors_tests COMMAND optional_expansion_effectors_tests)
+set_tests_properties(optional_expansion_effectors_tests PROPERTIES LABELS nogame TIMEOUT 15)

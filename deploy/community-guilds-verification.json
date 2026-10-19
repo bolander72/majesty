@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-verification-v1",
-  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
   "nativePaidGuildsQualified": true,
   "nativeAdvancedAbilitiesQualified": true,
   "browserNativeUiQualified": true,
@@ -41,47 +41,27 @@
     "qualification": "deploy/composite-pool-verification.json"
   },
   "limits": [
-    "Detailed combat/abilities qualification inherited from exact unchanged native objects and content; no new full mission or internet co-op qualification.",
-    "No whole-Mac hard-reset reproduction or universal huge-kingdom CPU guarantee."
+    "Bounded browser original-campaign reproduction and regression trials; no whole-Mac hard-reset reproduction or universal crash-free guarantee.",
+    "Detailed advanced combat/ability qualification remains archived under its actual prior engine; defined effect dispatch and other native objects are retained.",
+    "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
   ],
   "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
-  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-  "priorQualification": "deploy/community-guilds-verification-engine777.json",
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorQualification": "deploy/community-guilds-verification-engineb4a.json",
   "compatibilityRelink": {
-    "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-    "unchangedOriginalBrowserObjects": false,
+    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
     "changedObjects": [
-      "present_thread.cpp.o"
+      "alchemist_native_probe.cpp.o"
     ],
-    "allOtherObjectsAndDataUnchanged": true,
-    "newRegressionProof": "deploy/composite-pool-verification.json",
-    "scope": "Only completed-frame composite storage reuse changes. Native community mechanics, mission resources and guest translations remain identical. Prior detailed mechanics and benchmarks are inherited under their actual prior engine; fresh pooled root world/save/reload and renderer ownership are newly qualified."
+    "changedResources": [
+      "Data/Community_Common.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "allOtherObjectsAndResourcesRetained": true,
+    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
+    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
   },
   "priorRootQualification": {
-    "trial": "community2379",
-    "rootPath": "/",
-    "automaticImportFromPublicGithub": true,
-    "importedFiles": 206,
-    "patches": 54,
-    "originalProfileIdentity": "majesty",
-    "inputSave": {
-      "bytes": 401771,
-      "sha256": "f30e21f4bce6979bb06011b7e0d8353f3504ce75470f97104479473f3a3f38ff"
-    },
-    "nativePhantomIconAndTooltip": true,
-    "nativeWorldContinuedToDay14": true,
-    "ordinarySave": {
-      "name": "(Freestyle Game) 14 Days.GMP",
-      "bytes": 402611,
-      "sha256": "bdcd1749e62eb78bbde001d837f5118a09c68309172e7cb33f49041f47077d97"
-    },
-    "runtimeErrors": [],
-    "growableMemoryViews": false,
-    "peakOwnedRssMiB": 1674.7,
-    "guardStopped": false,
-    "audioMuted": true
-  },
-  "root": {
     "trials": [
       "freeze2406",
       "freeze2412"
@@ -95,6 +75,23 @@
     },
     "freshProfileReloadQualified": true,
     "runtimeErrors": []
+  },
+  "root": {
+    "trials": [
+      "freeze2446",
+      "freeze2451"
+    ],
+    "rootPath": "/",
+    "mission": "Vengeance of the Liche Queen",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
+      "bytes": 1300348,
+      "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
+    },
+    "freshProfileReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
   },
   "priorRootScreenshots": {
     "community2379-root-menu": {
@@ -113,5 +110,6 @@
       "bytes": 789538,
       "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
     }
-  }
+  },
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json"
 }

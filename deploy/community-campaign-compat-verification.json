@@ -1,0 +1,423 @@
+{
+  "format": "majesty-community-campaign-compat-verification-v1",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "engine": {
+    "wasm": {
+      "bytes": 90971150,
+      "sha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a"
+    },
+    "js": {
+      "bytes": 473419,
+      "sha256": "834e72c88a1b69df2134d2fca7c89ca1df8de0d858db519494750f6a69fd8587"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "status": "exact original-campaign crash reproduction, source fixes, fresh browser reload/save and installed-cache update qualified",
+  "failures": [
+    {
+      "trials": [
+        "freeze2420",
+        "freeze2421",
+        "freeze2423",
+        "freeze2431"
+      ],
+      "code": 3221225477,
+      "hex": "0xC0000005",
+      "path": "Bards_Hall_Birth -> check_strays -> base GuildHasOpenSlots -> absent max_members -> integer conversion at return006441b5",
+      "fix": "Restore only the private Hall script field from authoritative native MaxGuildMembers; repair older saved Halls and synchronize birth/completion/upgrades/restored research visuals."
+    },
+    {
+      "trial": "freeze2437",
+      "code": 3765269347,
+      "hex": "0xE06D7363",
+      "exception": "CheckEffector( false, Skeleton#40, Champion_Icon ): couldn't find effector named Champion_Icon",
+      "fix": "Original-catalog capability check for audited Northern-only names; absent returns false with original CBool::Reset; defined names delegate unchanged."
+    },
+    {
+      "trial": "freeze2442",
+      "code": 3765269347,
+      "hex": "0xE06D7363",
+      "exception": "CheckEffector( false, Blade_Dancer#131, Champions_Vigor_Icon ): couldn't find effector named Champions_Vigor_Icon",
+      "fix": "Audit all composed literal checks and handle all five missing Northern-only definitions together."
+    }
+  ],
+  "source": {
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 163826,
+      "sha256": "3c518401869f09e4806746001fc3fdc002c861e0125d938d8fba0d8044047153"
+    },
+    "native/community/optional_expansion_effectors.h": {
+      "bytes": 3423,
+      "sha256": "001b56db2bb5fe0852c190914fd7bfcbff52005c1fb75ad713bae45cce2f8c43"
+    },
+    "native/community/optional_expansion_effectors_tests.cpp": {
+      "bytes": 4951,
+      "sha256": "b0ca92345a3d3add193e241b7ec68351f4af8d79dff6b041b174e50c64bdc769"
+    },
+    "scripts/lib/community_legacy_guild_capacity.py": {
+      "bytes": 3226,
+      "sha256": "30e16177f2e4d4ea1ec45bb57119ccc3ad2a26dd6c14137fddf24bbb045fe819"
+    },
+    "scripts/prepare-community-campaign-compat.py": {
+      "bytes": 3033,
+      "sha256": "d9114e32b26ab6406b8dd8572f908c9c2ef053bfe4e9f00d5e1dc2a672c7b143"
+    },
+    "scripts/prepare-community-guild-gpl.py": {
+      "bytes": 12845,
+      "sha256": "8e46ed095cdfbce6572cd60faf4890dd5b2e30615082fdb2ebf7bc7824373655"
+    },
+    "scripts/audit-community-campaign-effectors.py": {
+      "bytes": 2568,
+      "sha256": "809e2828a971afb00335811e4cb8380110bae16f316545a2ed0ca580462aa3b0"
+    },
+    "scripts/prepare-community-campaign-browser-engine.py": {
+      "bytes": 5443,
+      "sha256": "073524aac576758f4b74b66c98c03b0d0336f817263a51130f82ffbb6bcf709a"
+    },
+    "web/hosting/automatic-assets.mjs": {
+      "bytes": 5764,
+      "sha256": "401ac46f5d068e33d1540ffe5d9520b84b7defb1304ce095b9022925439a2784"
+    },
+    "web/hosting/community-updates.mjs": {
+      "bytes": 6026,
+      "sha256": "09dba9a4f6956cf0b8ab1d84d75fbb95a6e6c48e76e21d22a7e4c9d632e5638e"
+    }
+  },
+  "compiler": {
+    "proof": {
+      "bytes": 1297,
+      "sha256": "1308cc4781e2de80b72ba09475965289feaf8952d6c43e17c4085373326fbff4"
+    },
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "outputs": {
+      "common": {
+        "bytes": 15656844,
+        "sha256": "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 818,
+        "compiledDefinitions": 818
+      },
+      "base": {
+        "bytes": 187130,
+        "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 85,
+        "compiledDefinitions": 85
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "allDefinitionsCompiled": true,
+    "baseAndExpansionBytecodeUnchanged": true
+  },
+  "effectorAudit": {
+    "proof": {
+      "bytes": 9093,
+      "sha256": "c7320dbc0f9259f147d4b6f85e666bde8905b214395700d1a12f9d6eb9ff43ea"
+    },
+    "literalChecks": 25,
+    "optionalExpansionNames": [
+      "Champion_Icon",
+      "Champions_Vigor_Icon",
+      "Shapeshift_Potion_Icon",
+      "Speed_Tonic_Icon",
+      "Strength_Potion_Icon"
+    ],
+    "caseInsensitiveNativeNames": true,
+    "noRecurringObjectScan": true,
+    "noGuestAllocation": true,
+    "noPerCallStringAllocation": true,
+    "cacheResetOnRegistrationAndWorldTeardown": true
+  },
+  "build": {
+    "officialTools": true,
+    "proof": {
+      "bytes": 613,
+      "sha256": "62b7da964c479eeadd12b28177ad344b224fa548059f843e2d71c1ac8e06d153"
+    },
+    "exitCode": 0,
+    "peakOwnedRssMiB": 1685.5,
+    "oneCoreObjectReplaced": true,
+    "pooledPresenterAndAllOtherObjectsRetained": true,
+    "generatedTranslationsEdited": false,
+    "fixedMemoryViewsRetained": true
+  },
+  "tests": {
+    "nativeTarget": "optional_expansion_effectors_tests",
+    "passed": true,
+    "controls": [
+      "all five absent names",
+      "all five defined names delegate to original",
+      "case insensitive matching",
+      "unrelated names unchanged",
+      "invalid spans/references/types",
+      "per-world cache reset/address reuse",
+      "boolean result only"
+    ],
+    "nativeLog": {
+      "bytes": 7154,
+      "sha256": "96362610730b66482db0bd74e322443c106caccaccf52babee3bf15147cc9fa4"
+    },
+    "javascriptAssetAndUpdateTests": {
+      "run": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "javascriptRootTests": {
+      "run": 18,
+      "passed": 18,
+      "failed": 0
+    },
+    "pythonCommunityTests": {
+      "run": 96,
+      "skipped": 6,
+      "failed": 0,
+      "scope": "Includes native packaging/content policies and capacity-source controls; six existing optional-fixture skips."
+    },
+    "pythonGitBuildTests": {
+      "run": 12,
+      "failed": 0
+    },
+    "pythonDemoReleaseTests": {
+      "run": 2,
+      "failed": 0
+    },
+    "scopedOfficialSourceAndGameLiteralsPassed": true
+  },
+  "browser": {
+    "trials": [
+      "freeze2446",
+      "freeze2451"
+    ],
+    "rootPath": "/",
+    "mission": "Vengeance of the Liche Queen",
+    "originalProfileIdentity": "majesty",
+    "inputSave": {
+      "bytes": 1293604,
+      "sha256": "8aa2e45da9076b324bae4954607cb7a12df52a127f80770e0a47434db65d2be2"
+    },
+    "firstGeneratedSave": {
+      "name": "(Vengeance of the Liche Queen) 5 Days.GMP",
+      "bytes": 1338183,
+      "sha256": "8676a804ab1abad18713f6fa9dd8a39cfadb0989972998fae2d2eeef089b0087"
+    },
+    "freshSessionInput": {
+      "name": "(Vengeance of the Liche Queen) 7 Days.GMP",
+      "bytes": 1325201,
+      "sha256": "9ffa397b4ad7a3631312e0751723abb8d59b7aec49c2b71f7e1a5db8256922b7"
+    },
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
+      "bytes": 1300348,
+      "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
+    },
+    "livingHeroes": [
+      {
+        "agentId": 85,
+        "unitId": 1942,
+        "native": {
+          "hp": 2009,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Spellsinger"
+      },
+      {
+        "agentId": 95,
+        "unitId": 2036,
+        "native": {
+          "hp": 99354,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 514,
+          "parentUnitId": 1891
+        },
+        "title": "Blade_Dancer"
+      },
+      {
+        "agentId": 96,
+        "unitId": 2048,
+        "native": {
+          "hp": 3352,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Alchemist"
+      },
+      {
+        "agentId": 106,
+        "unitId": 2230,
+        "native": {
+          "hp": 4993,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Troubadour"
+      },
+      {
+        "agentId": 136,
+        "unitId": 3055,
+        "native": {
+          "hp": 3512,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Phantom"
+      }
+    ],
+    "completedGuilds": [
+      {
+        "agentId": 62,
+        "unitId": 1860,
+        "native": {
+          "hp": 235,
+          "completed": 1,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "max_members": 4,
+        "title": "AlchemistsLaboratory"
+      },
+      {
+        "agentId": 76,
+        "unitId": 1891,
+        "native": {
+          "hp": 500,
+          "completed": 1,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "max_members": 6,
+        "title": "Bards_Hall"
+      },
+      {
+        "agentId": 101,
+        "unitId": 2131,
+        "native": {
+          "hp": 250,
+          "completed": 1,
+          "owner": 0,
+          "stateFlags": 513,
+          "parentUnitId": 0
+        },
+        "max_members": 4,
+        "title": "Phantoms_Haunt"
+      }
+    ],
+    "normalRecruitmentAndConstruction": true,
+    "hallLevel2Upgrade": true,
+    "cheats": [
+      "build anything",
+      "infinite gold",
+      "give me power",
+      "revelation",
+      "level 1000"
+    ],
+    "continuedThroughDay": 8,
+    "terminalErrors": [],
+    "knownPriorWarnings": "A pre-existing unresolved menu-load target0054539f warning remains; no new terminal failure was observed.",
+    "peakOwnedRssMiB": 1733.2,
+    "peakGpuFootprintMiB": 312.0,
+    "guardStopped": false,
+    "audioMuted": true,
+    "ownedBrowsersClosed": true
+  },
+  "update": {
+    "patches": 2,
+    "downloadedPayloads": 1,
+    "sourceCommit": "f06880ea1709aa243f0af8c8cbd2242481778f26",
+    "onlyKnownPriorOrCurrentHashesAdmitted": true,
+    "allExistingInputsValidatedBeforeWrites": true,
+    "savesAndCompletionFilesPreserved": true,
+    "warmHashes": 0,
+    "warmDownloads": 0,
+    "warmWrites": 0,
+    "unknownCustomizationsPreserved": true,
+    "interruptedWriteAndConcurrencyTests": true,
+    "proof": {
+      "bytes": 3034,
+      "sha256": "b42f09ec638be8f86ced6d59e13315e9dd6c7dea601d615bb44914a4c2d88ec1"
+    }
+  },
+  "evidence": {
+    "freeze2437-exception-stack.json": {
+      "bytes": 5935,
+      "sha256": "fb82a4f8c94f2f45e65b9ecfff3019a18f8a1391523f86b2ec791c7339df1007"
+    },
+    "freeze2442-exception-stack.json": {
+      "bytes": 1868,
+      "sha256": "70337bb83cca5ba5f4099de128570a2a995722a35bbff87fd9effda460907539"
+    },
+    "freeze2446-hall-members-final.png": {
+      "bytes": 764388,
+      "sha256": "8bbcd6653d2c5d30682a6693bd9ee26c933f37819c84c30fe9fc8cead2b7af13"
+    },
+    "freeze2446-day7-save.json": {
+      "bytes": 971,
+      "sha256": "3390be79bf5ec7459ba3e6854773089f1607d8d9635e7c0b164133413b70eeed"
+    },
+    "freeze2451-fresh-day7-world.png": {
+      "bytes": 814116,
+      "sha256": "c04d8a8d7359e39a8316abcfe84ef8b0fcdee1890a79e6d74446d1ea5df8a1fd"
+    },
+    "freeze2451-phantom-birth-after-reload.png": {
+      "bytes": 774747,
+      "sha256": "07749953f6ca68932158c7d01dc3d43256a364904989442185437f2ee80f77f9"
+    },
+    "freeze2451-day8-save.json": {
+      "bytes": 1150,
+      "sha256": "3c7247ed0b17692d1b61f9680394c5271bf5641d871a00a1f1d42584e27e14bd"
+    },
+    "freeze2451-day8-guild-agents.json": {
+      "bytes": 2276,
+      "sha256": "2efdc7739253b9fe7f10aa21f05926495d8b1c4929ffb6ba751c2ff20fd359d4"
+    },
+    "freeze2451-day8-running.png": {
+      "bytes": 774461,
+      "sha256": "17b2294224ecaa6774c20a009f8eea6cd2985d371e00c9756c6a9170b2a72bbe"
+    }
+  },
+  "limits": [
+    "Bounded browser original-campaign reproduction and regression trials; no whole-Mac hard-reset reproduction or universal crash-free guarantee.",
+    "Detailed advanced combat/ability qualification remains archived under its actual prior engine; defined effect dispatch and other native objects are retained.",
+    "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
+  ],
+  "rollout": {
+    "storageId": "majesty-community-guilds-v1",
+    "profileId": "majesty",
+    "playerSavesMigrated": false,
+    "priorAssetsPreserved": true,
+    "rollback": "Restore the previous engine and descriptor set together. Preserve updated collection and saves; script additions retain old native capacity semantics."
+  },
+  "finalBuild": {
+    "hostedArchiveIntegrityVerified": true,
+    "sourceBoundAll54Resources": true,
+    "comparisonToTestedPrivateRoot": "Only one extra modulepreload for the already tested updater; every other served file, including native page, worker, engine and content recipe, is byte-identical.",
+    "proof": {
+      "bytes": 79,
+      "sha256": "a14e4fc45dd8b93ea95a1ef98d2583aafb177bae09abb080672d12d15b72d4b2"
+    }
+  }
+}

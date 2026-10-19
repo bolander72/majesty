@@ -1,6 +1,6 @@
 {
   "format": "majesty-vampiric-revenge-verification-v1",
-  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
   "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
   "nativeId": "XQD3",
   "originalTemplateBodyPreserved": true,
@@ -126,15 +126,18 @@
     "sha256": "6a1cd483c646237c2cd6f65c79c86c46eaba0629d7dae3828fbdc817225aed66"
   },
   "compatibilityRelink": {
-    "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-    "unchangedOriginalBrowserObjects": false,
+    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
     "changedObjects": [
-      "present_thread.cpp.o"
+      "alchemist_native_probe.cpp.o"
     ],
-    "allOtherObjectsAndDataUnchanged": true,
-    "newRegressionProof": "deploy/composite-pool-verification.json",
-    "scope": "Only completed-frame composite storage reuse changes. Native community mechanics, mission resources and guest translations remain identical. Prior detailed mechanics and benchmarks are inherited under their actual prior engine; fresh pooled root world/save/reload and renderer ownership are newly qualified."
+    "changedResources": [
+      "Data/Community_Common.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "allOtherObjectsAndResourcesRetained": true,
+    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
+    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
   },
-  "priorEngineSha256": "777985ecc32338a2f2d56d315a67cfd7404d76b9dec633f397c1b2c1f43602c0",
-  "priorQualification": "deploy/vampiric-revenge-verification-engine777.json"
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorQualification": "deploy/vampiric-revenge-verification-engineb4a.json"
 }

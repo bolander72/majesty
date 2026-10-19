@@ -488,6 +488,7 @@ def root_player(html, versions=None, artwork=None):
                   + '\n'.join(f'<link rel="modulepreload" href="/{name}">' for name in [
                       'hosting/root-player.mjs', 'hosting/launcher-client.mjs',
                       'hosting/automatic-assets.mjs', 'hosting/derived-assets.mjs', 'hosting/asset-url.mjs',
+                      'hosting/community-updates.mjs',
                       'hosting/content-cache.mjs', 'hosting/audio-start.mjs', 'hosting/runtime-safety.mjs',
                       'hosting/menu-text.mjs',
                       'world/sha256.mjs', 'world/content-hash.mjs',

@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-release-v1",
-  "engineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
   "storageId": "majesty-community-guilds-v1",
   "baseId": "majesty",
   "additionalRuntimeEnvironment": {
@@ -305,9 +305,9 @@
     },
     {
       "path": "Data/Community_Common.bcd",
-      "bytes": 15602927,
-      "sha256": "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Common.bcd"
+      "bytes": 15656844,
+      "sha256": "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/f06880ea1709aa243f0af8c8cbd2242481778f26/assets/content/community-campaign-compat2449/Community_Common.bcd"
     },
     {
       "path": "Data/Community_Base.bcd",
@@ -323,9 +323,9 @@
     },
     {
       "path": "DataMX/Community_Common.bcd",
-      "bytes": 15602927,
-      "sha256": "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Common.bcd"
+      "bytes": 15656844,
+      "sha256": "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/f06880ea1709aa243f0af8c8cbd2242481778f26/assets/content/community-campaign-compat2449/Community_Common.bcd"
     },
     {
       "path": "DataMX/Community_Base.bcd",
@@ -346,5 +346,6 @@
     "sha256": "aec91ce34d65be7ef71da34069ca636e9d4c4fb631542530799d7af9568d6ceb"
   },
   "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
-  "compositePoolVerification": "deploy/composite-pool-verification.json"
+  "compositePoolVerification": "deploy/composite-pool-verification.json",
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json"
 }

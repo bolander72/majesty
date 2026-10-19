@@ -174,6 +174,8 @@ def prepare(args):
     files = {}
     activity_root_compatibility = []
     from lib.community_activity_reentrancy import restore_activity_root
+    from lib.community_legacy_guild_capacity import restore_legacy_capacity
+    legacy_capacity_compatibility = []
     for scope, result in bundle.outputs:
         folder = sources / scope
         folder.mkdir(parents=True)
@@ -186,6 +188,12 @@ def prepare(args):
                     function='MM_AD_Change',
                     change='Reacquire named kingdom root after cancellation callback',
                     callbackOrderPreserved=True, gameplayLedgersAndTimingPreserved=True))
+                before_capacity = text.encode('cp1252')
+                text = restore_legacy_capacity(text)
+                legacy_capacity_compatibility.append(dict(file=scope + '/' + name,
+                    before=record(before_capacity), after=record(text.encode('cp1252')),
+                    scope='Private Bards Hall only; mirror native capacity for original GPL',
+                    stockGuildsAndNativeCapacityUnchanged=True))
             raw = text.encode('cp1252')
             (folder / name).write_bytes(raw)
             files[f'{scope}/{name}'] = record(raw)
@@ -201,10 +209,12 @@ def prepare(args):
         stockFixture=stock_inputs, files=files, privateActivityTexts=len(texts),
         finalResourceContext=True, resourceFiles={name: record(raw) for name, raw in resources.items()},
         activityRootReentrancyCompatibility=activity_root_compatibility,
+        legacyGuildCapacityCompatibility=legacy_capacity_compatibility,
         compositionPolicy={name: record((ROOT / name).read_bytes()) for name in (
             'scripts/prepare-community-guild-gpl.py', 'scripts/lib/community_guild_composition.py',
             'scripts/lib/community_guild_source_resolutions.py',
-            'scripts/lib/community_activity_reentrancy.py')},
+            'scripts/lib/community_activity_reentrancy.py',
+            'scripts/lib/community_legacy_guild_capacity.py')},
         mediaMergeQualified=False,
         explicitSourceResolutions=sorted(resolutions), compiled=False,
         targetNativeABIQualified=False, browserPlayable=False, published=False)

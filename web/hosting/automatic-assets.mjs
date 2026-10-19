@@ -1,6 +1,7 @@
 import {Sha256} from '../world/sha256.mjs';
 import {derivedDescriptor, collectGameFiles, buildDerivedFiles} from './derived-assets.mjs';
 import {assetUrl} from './asset-url.mjs';
+import {refreshCommunityScripts} from './community-updates.mjs';
 
 export function assetDescriptor(value, id) {
   const record = value?.games?.[id];
@@ -72,7 +73,11 @@ export async function ensureAutomaticAssets(id, {
   status, importZip, importFiles, signal, progress, storage = navigator.storage, locks = navigator.locks,
   fetchFile = fetch,
 }) {
-  if ((await status(id))?.status?.state === 'ready') return;
+  if ((await status(id))?.status?.state === 'ready') {
+    if (id === 'majesty-community-guilds-v1')
+      await refreshCommunityScripts({storage, locks, fetchFile, signal});
+    return;
+  }
   if (!locks?.request) throw Error('This browser cannot prepare the game files.');
   if (['majesty-wayfinder', 'majesty-lost-trail', 'majesty-lost-trail-v2', 'majesty-alchemist-v1-campaign3', 'majesty-alchemist-demo-v1', 'majesty-community-guilds-v1'].includes(id)) {
     const response = await fetchFile(new URL('./automatic-assets.json', import.meta.url), {signal});

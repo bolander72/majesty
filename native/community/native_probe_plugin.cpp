@@ -12,6 +12,7 @@
 #include "gpl_spell_timing_helpers.h"
 #include "movement_scale.h"
 #include "name_registration.h"
+#include "optional_expansion_effectors.h"
 #include "pop_mod_api.h"
 #include "research_activity.h"
 #include "research_descriptors.h"
@@ -140,6 +141,8 @@ bool researchCompletionStaged = false;
 std::uint32_t researchController = 0;
 std::uint64_t researchControllerGeneration = 0;
 std::uint32_t attributeFunction = 0;
+std::uint32_t optionalEffectorFunction = 0;
+MajestyCommunity::OptionalExpansionEffectors optionalExpansion;
 bool traceArmed = false;
 unsigned traceCalls = 0;
 unsigned traceOperators = 0;
@@ -1108,6 +1111,26 @@ struct IntegerOps : AttributeOps {
         return ::read(0x0071c6a8U);
     }
 };
+struct ExpansionEffectorOps : AttributeOps {
+    std::uint8_t byte(std::uint32_t address) {
+        std::uint8_t value = 0;
+        require(host->guest_read_u8(host, address, &value) == POP_OK, "effector name byte");
+        return value;
+    }
+    std::uint32_t catalog() {
+        return ::read(0x0071c6c8U);
+    }
+    std::uint32_t find(std::uint32_t catalog, std::uint32_t name) {
+        return ::call(0x0059c060U, catalog, {name});
+    }
+    void resetBoolean(std::uint32_t value) {
+        // Old.exe CBool::Reset is MOV BYTE PTR [ECX+8],0; RET at 006437c0.
+        // Use its original virtual operation, preserving tag and ownership.
+        const auto method = ::read(::read(value) + 0x10);
+        require(method == 0x006437c0U, "original native boolean reset");
+        ::call(method, value);
+    }
+};
 struct BaseTimingOps : IntegerOps {
     std::uint32_t unit(std::uint32_t value) {
         const auto reference = valueRef(value, 0x5c);
@@ -1686,6 +1709,15 @@ void registerAttributes() {
     attributeFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
     require(attributeFunction && read(attributeFunction + 20) == 0x005a9600U,
             "AddAttribute registered dispatch identity");
+    optionalExpansion.reset();
+    optionalEffectorFunction = 0;
+    if (communityProcess) {
+        prepareName("CheckEffector");
+        optionalEffectorFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+        require(optionalEffectorFunction &&
+                    call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 6,
+                "original CheckEffector boolean binding");
+    }
     if (integerHelpers) {
         integerFunctions.clear();
         using Kind = MajestyCommunity::IntegerHelper;
@@ -1953,6 +1985,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         }
 #endif
         sharedResolved.clear();
+        optionalExpansion.reset();
+        optionalEffectorFunction = 0;
         targetOwner = {};
         targetExecution = {};
         targetBeginDepth = 0;
@@ -2505,6 +2539,13 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     // Read the original function object's string and operator arguments;
     // continue every call unchanged, including the guest's failure path.
     if (target == 0x006381b0U) {
+        if (communityProcess && self == optionalEffectorFunction) {
+            ExpansionEffectorOps ops;
+            if (optionalExpansion.absent(ops, read(cpu->esp + 4) + 0x14)) {
+                returned(cpu, 0);
+                return;
+            }
+        }
         const auto researchQuery = researchQueryFunctions.find(self);
         if (researchQueryHelpers && researchQuery != researchQueryFunctions.end()) {
             ResearchQueryOps ops;
