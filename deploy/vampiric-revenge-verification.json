@@ -1,6 +1,6 @@
 {
   "format": "majesty-vampiric-revenge-verification-v1",
-  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
   "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
   "nativeId": "XQD3",
   "originalTemplateBodyPreserved": true,
@@ -126,16 +126,29 @@
     "sha256": "6a1cd483c646237c2cd6f65c79c86c46eaba0629d7dae3828fbdc817225aed66"
   },
   "compatibilityRelink": {
-    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
     ],
-    "changedResources": [],
-    "allOther169ObjectsAndAllGameResourcesRetained": true,
-    "newRegressionProof": "deploy/healer-campaign-verification.json",
-    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
   },
-  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
-  "priorQualification": "deploy/vampiric-revenge-verification-enginedfa.json",
-  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorQualification": "deploy/vampiric-revenge-verification-enginecf2.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
 }

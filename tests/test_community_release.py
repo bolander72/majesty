@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -89,6 +90,53 @@ class CommunityReleaseTests(unittest.TestCase):
                 with patch.object(BUILD, 'ROOT', root), self.assertRaises(ValueError):
                     BUILD.install_community_guilds_release(static)
                 self.assertEqual(before, {p.relative_to(static).as_posix(): p.read_bytes() for p in static.rglob('*') if p.is_file()})
+
+    def campaign_fixture(self, root):
+        descriptor = root / 'deploy/community-guilds-release.json'
+        content = json.loads(descriptor.read_text())
+        content['campaignResourceVerification'] = 'deploy/community-campaign-resource-verification.json'
+        descriptor.write_text(json.dumps(content))
+        checks = ['nativeStringAttributesQualified', 'sharedHelpersInCommonQualified',
+                  'nativeFireBalmLifecycleQualified', 'browserOriginalAndNorthernQualified',
+                  'browserFiveCommunityClassesSaveReloadQualified', 'originalSaveProfilePreserved']
+        audit = {key: True for key in checks}
+        audit.update(format='majesty-community-campaign-resource-qualification-v1',
+                     engineSha256=content['engineSha256'], sourcePolicies={},
+                     files={p['path']: {k: p[k] for k in ('bytes', 'sha256')}
+                            for p in content['patches'] if p['path'] in BUILD.CAMPAIGN_RESOURCE_PATHS})
+        for name in BUILD.CAMPAIGN_RESOURCE_POLICIES:
+            p = root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(b'qualified policy fixture')
+            audit['sourcePolicies'][name] = hashlib.sha256(p.read_bytes()).hexdigest()
+        path = root / content['campaignResourceVerification']
+        path.write_text(json.dumps(audit))
+        return path, audit
+
+    def test_qualified_campaign_resources_mount_with_the_matching_runtime(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, static = self.fixture(temp)
+            self.campaign_fixture(root)
+            with patch.object(BUILD, 'ROOT', root):
+                BUILD.install_community_guilds_release(static)
+            self.assertIn('majesty-community-guilds-v1', (static / 'games.json').read_text())
+
+    def test_wrong_runtime_scope_payload_or_changed_source_cannot_ship_campaign_resources(self):
+        for bad in ['runtime', 'scope', 'payload', 'source']:
+            with self.subTest(bad=bad), tempfile.TemporaryDirectory() as temp:
+                root, static = self.fixture(temp)
+                path, audit = self.campaign_fixture(root)
+                before = {p.relative_to(static).as_posix(): p.read_bytes()
+                          for p in static.rglob('*') if p.is_file()}
+                if bad == 'runtime': audit['engineSha256'] = '0' * 64
+                elif bad == 'scope': audit['sharedHelpersInCommonQualified'] = False
+                elif bad == 'payload': audit['files']['Data/unittype.cam']['sha256'] = '0' * 64
+                else: (root / 'native/community/gpl_attribute_bridge.h').write_bytes(b'changed')
+                path.write_text(json.dumps(audit))
+                with patch.object(BUILD, 'ROOT', root), self.assertRaises(ValueError):
+                    BUILD.install_community_guilds_release(static)
+                self.assertEqual(before, {p.relative_to(static).as_posix(): p.read_bytes()
+                                         for p in static.rglob('*') if p.is_file()})
 
 
 if __name__ == '__main__':

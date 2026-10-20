@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-release-v1",
-  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
   "storageId": "majesty-community-guilds-v1",
   "baseId": "majesty",
   "additionalRuntimeEnvironment": {
@@ -95,9 +95,9 @@
     },
     {
       "path": "Data/unittype.cam",
-      "bytes": 191611,
-      "sha256": "dad06f738f0e71bc3f528f05d4953caf4d9c3156e1b94cbd9adacaec208f0048",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/unittype.cam"
+      "bytes": 198259,
+      "sha256": "3340443dd4b61276d159d3c5f146f819c8e1a56e5724a4ac06655861ba3031f3",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/unittype.cam"
     },
     {
       "path": "Data/gpltext.cam",
@@ -155,9 +155,9 @@
     },
     {
       "path": "Data/action.cam",
-      "bytes": 31268,
-      "sha256": "9fa9210deb37a9fe40643125f8f2df1dafb09c36133c1b5b09e7e7ae81a620c0",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/action.cam"
+      "bytes": 33109,
+      "sha256": "e5091b452752bb8d4026928d597efcef9c44b422dc3a9b2e2c4895281b99e6cb",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/action.cam"
     },
     {
       "path": "Data/miscdata.cam",
@@ -233,9 +233,9 @@
     },
     {
       "path": "Data/sounddesc.cam",
-      "bytes": 114824,
-      "sha256": "4b981c10f415ca9fccc5510c73c2d1b10aeb1acb181c9bddb9616107244279ae",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/sounddesc.cam"
+      "bytes": 116905,
+      "sha256": "72f0d7de39a0b7758083a9587c677c2d95f18789ed5b534c547a79417459edf1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/sounddesc.cam"
     },
     {
       "path": "Data/Community-textdata.cam",
@@ -269,9 +269,9 @@
     },
     {
       "path": "Data/Community-audio.cam",
-      "bytes": 6599396,
-      "sha256": "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-audio.cam"
+      "bytes": 7404486,
+      "sha256": "b8c926f48dd4b542aa2e6626930c08ec360efcb79a885f4a947ff5a462be45ae",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community-audio.cam"
     },
     {
       "path": "DataMX/Community-audio.cam",
@@ -293,9 +293,9 @@
     },
     {
       "path": "Data/Community-main.cam",
-      "bytes": 22474991,
-      "sha256": "8ebaafa2c1a4ea31bbd5a85213c5e8a01160f7aee75a5be9227e5ca7be854bff",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community-main.cam"
+      "bytes": 24693464,
+      "sha256": "4843477a418197d8576ee2648fe7397da28b6b612dcbc26455bed52193d9efb6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community-main.cam"
     },
     {
       "path": "DataMX/Community-main.cam",
@@ -305,15 +305,15 @@
     },
     {
       "path": "Data/Community_Common.bcd",
-      "bytes": 15656844,
-      "sha256": "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/f06880ea1709aa243f0af8c8cbd2242481778f26/assets/content/community-campaign-compat2449/Community_Common.bcd"
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Common.bcd"
     },
     {
       "path": "Data/Community_Base.bcd",
-      "bytes": 187130,
-      "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Base.bcd"
+      "bytes": 214283,
+      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Base.bcd"
     },
     {
       "path": "Data/Community_Expansion.bcd",
@@ -323,15 +323,15 @@
     },
     {
       "path": "DataMX/Community_Common.bcd",
-      "bytes": 15656844,
-      "sha256": "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/f06880ea1709aa243f0af8c8cbd2242481778f26/assets/content/community-campaign-compat2449/Community_Common.bcd"
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Common.bcd"
     },
     {
       "path": "DataMX/Community_Base.bcd",
-      "bytes": 187130,
-      "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/20829cb662a679af829f9aebf77e92c80d7c980d/assets/content/community-guilds-v1/Data/Community_Base.bcd"
+      "bytes": 214283,
+      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Base.bcd"
     },
     {
       "path": "DataMX/Community_Expansion.bcd",
@@ -349,8 +349,7 @@
   "compositePoolVerification": "deploy/composite-pool-verification.json",
   "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
   "healerCampaignVerification": "deploy/healer-campaign-verification.json",
-  "priorCompatibilityRelink": null,
-  "compatibilityRelink": {
+  "priorCompatibilityRelink": {
     "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
@@ -359,5 +358,28 @@
     "allOther169ObjectsAndAllGameResourcesRetained": true,
     "newRegressionProof": "deploy/healer-campaign-verification.json",
     "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
-  }
+  },
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
 }

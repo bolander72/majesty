@@ -1,0 +1,323 @@
+{
+  "format": "majesty-community-campaign-resource-qualification-v1",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "nativeStringAttributesQualified": true,
+  "sharedHelpersInCommonQualified": true,
+  "nativeFireBalmLifecycleQualified": true,
+  "browserOriginalAndNorthernQualified": true,
+  "browserFiveCommunityClassesSaveReloadQualified": true,
+  "originalSaveProfilePreserved": true,
+  "sourcePolicies": {
+    "native/community/gpl_attribute_bridge.h": "dae7c0518b18a5f64c149ceafff76efa126a64b2eea501ce0e0e9666320dddde",
+    "scripts/prepare-community-campaign-browser-engine.py": "80b27bcd818c42b757ed0036e30626b5e0ea36944be8ba79bb08f43a300242da",
+    "scripts/prepare-community-campaign-resources.py": "7328e454c8b4787a4e854462644cdb94d7bf59b9ff23ed5e58af2488fb4e4c85",
+    "scripts/lib/community_resource_closure.py": "8314c2fbe4355a379cfef9673727a426cacd4831e57f3483dff256b0fcd9a2c5",
+    "scripts/lib/community_campaign_resources.py": "a37acdb8e739d57649164d4753ea36285fe2ac89ede5ed634d71ab6976cc8d93",
+    "scripts/lib/community_campaign_media.py": "0250a89202ae8c0b3e817b759d5ce338b801a43ace9b2703ed788255068b1896",
+    "scripts/lib/community_fire_balm.py": "0c6efbc36f337728d5dbe804e0e5dbcd536eb141d0a5ca5c74708036fea94329"
+  },
+  "files": {
+    "Data/unittype.cam": {
+      "bytes": 198259,
+      "sha256": "3340443dd4b61276d159d3c5f146f819c8e1a56e5724a4ac06655861ba3031f3"
+    },
+    "Data/action.cam": {
+      "bytes": 33109,
+      "sha256": "e5091b452752bb8d4026928d597efcef9c44b422dc3a9b2e2c4895281b99e6cb"
+    },
+    "Data/sounddesc.cam": {
+      "bytes": 116905,
+      "sha256": "72f0d7de39a0b7758083a9587c677c2d95f18789ed5b534c547a79417459edf1"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 24693464,
+      "sha256": "4843477a418197d8576ee2648fe7397da28b6b612dcbc26455bed52193d9efb6"
+    },
+    "Data/Community-audio.cam": {
+      "bytes": 7404486,
+      "sha256": "b8c926f48dd4b542aa2e6626930c08ec360efcb79a885f4a947ff5a462be45ae"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 214283,
+      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 214283,
+      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61"
+    }
+  },
+  "runtime": {
+    "changedImplementation": "native/community/gpl_attribute_bridge.h: original VM type3 strings",
+    "retainedObjectCount": 169,
+    "retainedObjectBytesVerified": true,
+    "generatedTranslationsEdited": false,
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "engineFiles": {
+      "wasm": {
+        "bytes": 90973522,
+        "sha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3"
+      },
+      "js": {
+        "bytes": 473413,
+        "sha256": "4cc43a616bc1e68329450da2eab03a5b67fd3cd8383bd2c590a65a59d6c4983a"
+      },
+      "data": {
+        "bytes": 5105139,
+        "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+      }
+    }
+  },
+  "source": {
+    "originalSdkCompilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 206927,
+      "sha256": "ddfdf509d87ae87701dd157c6385b5564094d29d63d8d0d5116cfbcef670fc8b"
+    },
+    "originalSdkOutputs": {
+      "common": {
+        "bytes": 15661240,
+        "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 820,
+        "compiledDefinitions": 820
+      },
+      "base": {
+        "bytes": 214283,
+        "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 115,
+        "compiledDefinitions": 115
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "allPreparedPayloadsAndCompilerOutputsReproduced": true,
+    "priorRelease": {
+      "bytes": 19972,
+      "sha256": "fba3dcfd8270345ba7814aec2735e5ef8b26f137c8133592fe1db947ede921bd"
+    },
+    "originalDependencyInputCount": 198,
+    "effectiveReleasedInputs": 54,
+    "appendOnlyNativeDescriptions": 44,
+    "privateBaseCallbacks": 14,
+    "originalConstants": 15,
+    "sharedFireBalmHelpers": 2,
+    "criticalHitOriginalSpellTemplatePreserved": true,
+    "originalHeroPrototypeUnchanged": true,
+    "originalRetailMediaBound": true,
+    "originalNorthernResourcesUnchanged": true
+  },
+  "tests": {
+    "python": 152,
+    "pythonSkipped": 0,
+    "native": 17,
+    "updater": 11,
+    "allPassed": true,
+    "originalGameFixtureTestsIncluded": 6,
+    "unchangedFullRuntimeNativeHarnessesNotRun": 2
+  },
+  "browser": {
+    "trials": {
+      "freeze2550": {
+        "peakGpuFootprintMiB": 308.5,
+        "peakRssMiB": 2211.3
+      },
+      "freeze2555": {
+        "peakGpuFootprintMiB": 310.6,
+        "peakRssMiB": 2170.1
+      },
+      "freeze2564": {
+        "peakGpuFootprintMiB": 313.7,
+        "peakRssMiB": 1988.3
+      },
+      "freeze2569": {
+        "peakGpuFootprintMiB": 308.5,
+        "peakRssMiB": 1884.8
+      }
+    },
+    "ownedBrowsersClosed": true,
+    "silent": true,
+    "original": {
+      "mission": "Vengeance of the Liche Queen",
+      "inputSha256": "9ad9b63aeb474f92a65b236d07c41a6ff5cb8dc79086c6686c5325f1387c2c1f",
+      "progress": {
+        "name": "(Vengeance of the Liche Queen) 11 Days.GMP",
+        "bytes": 1366456,
+        "sha256": "4f9a3addfc1e63b7c51aaac1ca3b52753a64369e547e63486c59b0adfa5a4d87"
+      },
+      "freshReload": "freeze2555"
+    },
+    "northern": {
+      "mission": "Rise of the Ratmen",
+      "allThreeGuildsCompleted": true,
+      "completionMethod": "Native paid build-anything placement followed by native restoration cheat; not ordinary construction completion",
+      "allFiveClassesRecruitedThroughNativePaidButtons": true,
+      "heroes": [
+        {
+          "title": "Alchemist",
+          "unitId": 2925,
+          "hp": 5003,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        {
+          "title": "Troubadour",
+          "unitId": 3217,
+          "hp": 4994,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        {
+          "title": "Spellsinger",
+          "unitId": 3265,
+          "hp": 3500,
+          "stateFlags": 514,
+          "parentUnitId": 3016
+        },
+        {
+          "title": "Blade_Dancer",
+          "unitId": 3277,
+          "hp": 101341,
+          "stateFlags": 514,
+          "parentUnitId": 3016
+        },
+        {
+          "title": "Phantom",
+          "unitId": 3414,
+          "hp": 2016,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        }
+      ],
+      "guilds": [
+        {
+          "title": "AlchemistsLaboratory",
+          "unitId": 2823,
+          "hp": 444,
+          "completed": true
+        },
+        {
+          "title": "Bards_Hall",
+          "unitId": 3016,
+          "hp": 700,
+          "completed": true
+        },
+        {
+          "title": "Phantoms_Haunt",
+          "unitId": 3352,
+          "hp": 475,
+          "completed": true
+        }
+      ],
+      "codesEnabled": [
+        "infinite gold",
+        "level 1000",
+        "build anything",
+        "give me power",
+        "cheezy towers"
+      ],
+      "additionalSetupCode": "restoration; revelation for visible placement ground",
+      "beforeSewerKill": {
+        "name": "(Rise of the Ratmen) 5 Days.GMP",
+        "bytes": 1357813,
+        "sha256": "96180e892f09db0cbefedd03fc2d0816a863045f30970baf54144ffb8d42a013"
+      },
+      "afterSewerKill": {
+        "name": "(Rise of the Ratmen) 6 Days.GMP",
+        "bytes": 1340748,
+        "sha256": "3d96c4165be194b48e2ac894e70d29cb397ef78665c064ffca4c29319640ca84"
+      },
+      "freshReload": {
+        "name": "(Rise of the Ratmen) 6 Days.GMP",
+        "bytes": 1369396,
+        "sha256": "4be2f320f2546d7f009f9e0b532f558369a3bcf5da882674d288e73ab3fe315c"
+      },
+      "killedTargets": [
+        {
+          "unitId": 2500,
+          "type": "ordinary indestructible Sewer Entrance"
+        },
+        {
+          "unitId": 2529,
+          "type": "hostile Broken Sewer Main"
+        }
+      ],
+      "killedStatePersistedAfterFreshReload": true,
+      "oneOtherHostileBrokenSewerMainRemains": true,
+      "noPrivateFixtureAttributes": true,
+      "terminalErrors": []
+    }
+  },
+  "fireBalm": {
+    "classes": [
+      "Ranger",
+      "Rogue",
+      "Elf"
+    ],
+    "missingFieldsWitnessed": 3,
+    "applicationAndDuplicateSafety": true,
+    "unsupportedHealerAndAlchemistRejected": true,
+    "activeBuffFreshBrowserReload": true,
+    "originalTimedExpiryAndAttackRestore": true,
+    "testedHelperBodiesUnchangedInSharedScope": true,
+    "controlInput": "9ad9b63aeb474f92a65b236d07c41a6ff5cb8dc79086c6686c5325f1387c2c1f",
+    "activeSave": {
+      "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
+      "bytes": 1395356,
+      "sha256": "307b09d7cf6a2525434fefbbcecf215749d1711bac2263e8f7dd11d73029c95a"
+    },
+    "reloadedActiveSave": {
+      "name": "(Vengeance of the Liche Queen) 9 Days.GMP",
+      "bytes": 1395132,
+      "sha256": "dde1c96f97b620c63e7744b34b8cc8c774d7caed1947f5a460583be2fb3fdace"
+    },
+    "expiredSave": {
+      "name": "(Vengeance of the Liche Queen) 12 Days.GMP",
+      "bytes": 1386490,
+      "sha256": "97ffd7167d2219b2464b3aa07afd6e09c272f7d1b6465e2cbab018aca832ea55"
+    },
+    "preconditions": [
+      "Stock Ranger/Rogue/Elf spawned by original SDK SpawnUnit",
+      "10000 HP survival fixture",
+      "Actual Bazaar inventory items and original Fire_Balm_Effect call",
+      "Unmodified native timers; no forced expiry"
+    ],
+    "limits": [
+      "Controlled SDK-spawned stock heroes with10000HP survival precondition; not ordinary recruitment",
+      "Fire spell command/projectile impact not separately instrumented"
+    ]
+  },
+  "attributeTypes": {
+    "boolean": 23,
+    "integer": 41,
+    "function": 10,
+    "agentref": 15,
+    "list": 7,
+    "string": 1
+  },
+  "limits": [
+    "Whole-Mac hard-freeze cause not reproduced or proven fixed",
+    "No universal crash-freedom claim or exhaustive mission/cheat combination proof",
+    "No new performance benchmark; historical renderer/performance measurements retain their original engines",
+    "New saves with imported resource IDs/callbacks require this content/runtime or a compatible successor",
+    "Historical advanced mechanics qualify unchanged bodies/retained objects; no claim every ability was retested here"
+  ],
+  "published": true,
+  "assetsCommit": "d33977c5fe3859238ef850ce957ef85fd51bb3a1"
+}

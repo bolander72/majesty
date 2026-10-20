@@ -294,6 +294,48 @@ def install_vampiric_revenge_release(static):
     games_file.write_text(json.dumps(games, indent=2) + '\n')
 
 
+CAMPAIGN_RESOURCE_PATHS = frozenset([
+    'Data/Community_Common.bcd', 'DataMX/Community_Common.bcd',
+    'Data/Community_Base.bcd', 'DataMX/Community_Base.bcd',
+    'Data/unittype.cam', 'Data/action.cam', 'Data/sounddesc.cam',
+    'Data/Community-main.cam', 'Data/Community-audio.cam'])
+CAMPAIGN_RESOURCE_POLICIES = frozenset([
+    'native/community/gpl_attribute_bridge.h',
+    'scripts/prepare-community-campaign-browser-engine.py',
+    'scripts/prepare-community-campaign-resources.py',
+    'scripts/lib/community_resource_closure.py',
+    'scripts/lib/community_campaign_resources.py',
+    'scripts/lib/community_campaign_media.py',
+    'scripts/lib/community_fire_balm.py'])
+
+
+def qualify_campaign_resource_release(content, engine):
+    """Keep the string-capable engine and its nine resource updates together."""
+    name = content.get('campaignResourceVerification')
+    if name is None:
+        return  # Historical releases do not use the new VM/string helpers.
+    if name != 'deploy/community-campaign-resource-verification.json':
+        raise ValueError('Unexpected campaign resource qualification')
+    audit = json.loads((ROOT / name).read_text())
+    checks = ['nativeStringAttributesQualified', 'sharedHelpersInCommonQualified',
+              'nativeFireBalmLifecycleQualified', 'browserOriginalAndNorthernQualified',
+              'browserFiveCommunityClassesSaveReloadQualified', 'originalSaveProfilePreserved']
+    if (audit.get('format') != 'majesty-community-campaign-resource-qualification-v1'
+            or audit.get('engineSha256') != engine
+            or any(audit.get(key) is not True for key in checks)):
+        raise ValueError('Require campaign resources qualified with the string-capable engine')
+    policies = audit.get('sourcePolicies', {})
+    if set(policies) != CAMPAIGN_RESOURCE_POLICIES or any(
+            hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != value
+            for path, value in policies.items()):
+        raise ValueError('Campaign resource policy differs from its qualification')
+    files = audit.get('files', {})
+    patches = {p['path']: {k: p[k] for k in ('bytes', 'sha256')}
+               for p in content['patches'] if p['path'] in CAMPAIGN_RESOURCE_PATHS}
+    if set(files) != CAMPAIGN_RESOURCE_PATHS or patches != files:
+        raise ValueError('Campaign resources differ from the qualified original SDK outputs')
+
+
 def install_community_guilds_release(static):
     """Mount only the composed, engine-qualified community resource set."""
     descriptor = ROOT / 'deploy/community-guilds-release.json'
@@ -324,6 +366,7 @@ def install_community_guilds_release(static):
                 or sizes[patch['path']] != patch.get('bytes')
                 or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
             raise ValueError('Community resource differs from its qualified binding')
+    qualify_campaign_resource_release(content, engine)
     environment = {name: '1' for name in [
         'RECOMP_COMMUNITY_INTEGER_HELPERS', 'RECOMP_COMMUNITY_BASE_TIMING_HELPERS',
         'RECOMP_COMMUNITY_PROCESS_GUILDS', 'RECOMP_COMMUNITY_MOVEMENT_SCALE',

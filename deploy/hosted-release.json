@@ -1,9 +1,9 @@
 {
   "format": "majesty-hosted-release-v1",
-  "release": "healer-compat2471",
-  "bytes": 7669595,
-  "sha256": "b2340a5c1d33050f7187386ab3547705bbdc8f99d1d421599f6dc17c8b7da711",
-  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "release": "campaign-compat2571",
+  "bytes": 7668593,
+  "sha256": "5921763c99ec8983eb0541fc724cd53806a8a150e7c69c1110816c5ed7b4e18f",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
   "files": {
     "config.json": {
       "bytes": 1021,
@@ -19,7 +19,7 @@
     },
     "static/games.json": {
       "bytes": 1821,
-      "sha256": "f9bf41de4af8d0dc80fcd997245fa90d0676b030c2e839e4cd6aa41e4ad06898"
+      "sha256": "878c6aef512ab34a3abafd1e551de89eab7eb4f3c295ae52de82b51db8381d07"
     },
     "static/core.js": {
       "bytes": 18659,
@@ -470,12 +470,12 @@
       "sha256": "a651e0262e45bb1d4393164986fe9985fbb63b72b235eca97c647627bb58e446"
     },
     "static/majesty/MajestyRecomp.wasm.br": {
-      "bytes": 7011787,
-      "sha256": "60eebd0dba5b4491c69a41084deb755776c7dcb14dc5eac11de179bf06057d70"
+      "bytes": 7010381,
+      "sha256": "a3a737d461d59445bd23201209f52072b2765adad799885e5d7f42e858fe5261"
     },
     "static/majesty/MajestyRecomp.js": {
       "bytes": 473413,
-      "sha256": "5cf983b616bfc599c2d5d276b6c1724f42b977e2473453f390eb89292b74c4bb"
+      "sha256": "4cc43a616bc1e68329450da2eab03a5b67fd3cd8383bd2c590a65a59d6c4983a"
     },
     "static/majesty/MajestyRecomp.data": {
       "bytes": 5105139,
@@ -598,8 +598,8 @@
       "sha256": "740257efe032ded200dbf001055e3807baac6e9ef99140a44962dbb028613938"
     }
   },
-  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
-  "browserProof": "deploy/healer-campaign-verification.json",
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "browserProof": "deploy/community-campaign-resource-verification.json",
   "nativeMechanicsProof": "content/community-mods/advanced-ability-verification.json",
-  "url": "https://raw.githubusercontent.com/bolander72/majesty/fa84f058afbb236e279d3ad32107e0d507178967/assets/releases/healer-compat2471.tar.gz"
+  "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/releases/campaign-compat2571.tar.gz"
 }

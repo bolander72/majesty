@@ -1,0 +1,36 @@
+{
+  "format": "majesty-cpu-snapshot-verification-v1",
+  "status": "renderer objects retained; exact Healer campaign exception and fresh save reload regression qualified",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorQualification": "deploy/cpu-snapshot-verification-enginedfa.json",
+  "nativeControlsQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "browserInteractionQualified": true,
+  "engine": {
+    "wasm": {
+      "bytes": 90973456,
+      "sha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8"
+    },
+    "js": {
+      "bytes": 473413,
+      "sha256": "5cf983b616bfc599c2d5d276b6c1724f42b977e2473453f390eb89292b74c4bb"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "compatibilityRelink": {
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+  },
+  "performanceMeasurements": "No new performance benchmark. Historical measurements remain under their actual prior engines; all renderer objects retained byte-identically.",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+}

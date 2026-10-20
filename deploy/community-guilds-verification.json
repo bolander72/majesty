@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-verification-v1",
-  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
   "nativePaidGuildsQualified": true,
   "nativeAdvancedAbilitiesQualified": true,
   "browserNativeUiQualified": true,
@@ -46,36 +46,31 @@
     "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
   ],
   "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
-  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
-  "priorQualification": "deploy/community-guilds-verification-enginedfa.json",
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorQualification": "deploy/community-guilds-verification-enginecf2.json",
   "compatibilityRelink": {
-    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
     ],
-    "changedResources": [],
-    "allOther169ObjectsAndAllGameResourcesRetained": true,
-    "newRegressionProof": "deploy/healer-campaign-verification.json",
-    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
   },
   "priorRootQualification": {
-    "trials": [
-      "freeze2446",
-      "freeze2451"
-    ],
-    "rootPath": "/",
-    "mission": "Vengeance of the Liche Queen",
-    "originalProfileIdentity": "majesty",
-    "ordinarySave": {
-      "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
-      "bytes": 1300348,
-      "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
-    },
-    "freshProfileReloadQualified": true,
-    "terminalErrors": [],
-    "installedCacheUpdateQualified": true
-  },
-  "root": {
     "trials": [
       "freeze2469",
       "freeze2470"
@@ -89,6 +84,26 @@
       "sha256": "bceb661fde7348690ee28b9dd13298ba3b0e1488e3d14263206b9cf018d7a66d"
     },
     "freshProfileReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
+  },
+  "root": {
+    "trials": [
+      "freeze2550",
+      "freeze2555",
+      "freeze2564",
+      "freeze2569"
+    ],
+    "rootPath": "/",
+    "originalProfileIdentity": "majesty",
+    "originalAndNorthernQualified": true,
+    "fiveCommunityClassesSaveReloadQualified": true,
+    "ordinarySave": {
+      "name": "(Rise of the Ratmen) 6 Days.GMP",
+      "bytes": 1369396,
+      "sha256": "4be2f320f2546d7f009f9e0b532f558369a3bcf5da882674d288e73ab3fe315c"
+    },
+    "freshBrowserReloadQualified": true,
     "terminalErrors": [],
     "installedCacheUpdateQualified": true
   },
@@ -111,5 +126,6 @@
     }
   },
   "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
-  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
 }

@@ -102,8 +102,12 @@ int main() {
         check(address != 216 && address != 316 && address != 1400);
     check(InstallAuthoredAttribute(emptyList, 100) == AttributeInstall::AlreadyExists);
     check(emptyList.allocations == 1);
-    for (const auto &row : std::map<std::string, std::uint32_t>{
-             {"integer", 1}, {"list", 4}, {"agentref", 5}, {"boolean", 6}, {"function", 8}}) {
+    for (const auto &row : std::map<std::string, std::uint32_t>{{"integer", 1},
+                                                                {"string", 3},
+                                                                {"list", 4},
+                                                                {"agentref", 5},
+                                                                {"boolean", 6},
+                                                                {"function", 8}}) {
         Ops initialized(5, row.second);
         initialized.typeName = row.first;
         check(InstallAuthoredAttribute(initialized, 100) == AttributeInstall::Added);
@@ -114,6 +118,16 @@ int main() {
     nullAgent.typeName = "agentref";
     check(InstallAuthoredAttribute(nullAgent, 100) == AttributeInstall::Added);
     check(nullAgent.resets == 1 && !nullAgent.copies);
+    Ops emptyString(4, 3);
+    emptyString.typeName = "string";
+    check(InstallAuthoredAttribute(emptyString, 100) == AttributeInstall::Added);
+    check(emptyString.resets == 1 && !emptyString.copies);
+    check(InstallAuthoredAttribute(emptyString, 100) == AttributeInstall::AlreadyExists);
+    check(emptyString.allocations == 1);
+    Ops wrongStringInitializer(5, 1);
+    wrongStringInitializer.typeName = "string";
+    check(InstallAuthoredAttribute(wrongStringInitializer, 100) == AttributeInstall::Invalid);
+    check(!wrongStringInitializer.allocations);
     for (auto end : {200U, 212U, 217U, 224U, 196U, 0xffffffffU}) {
         Ops malformed(4, 4);
         malformed.memory[108] = end;

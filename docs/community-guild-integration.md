@@ -1276,3 +1276,105 @@ measurements remain bound to their actual prior engines.
 
 This identifies a game exception from Healer recruitment. It does not establish
 the cause of the separately reported whole-Mac freeze.
+
+
+### Campaign resource closure and original Fire Balm fields — October 20, 2026
+
+The follow-up audit traces literal API calls, full argument expressions,
+deferred `special_splat` values, original bytecode exports, DAT parents and
+retail media dependencies. `prepare-community-campaign-resources.py` stages
+append-only original Northern dependencies in private files. It verifies the
+creator-source ancestry, all effective released inputs, original SDK sources,
+retail description bytes and the media archives. Existing IDs and original
+campaign resources remain intact; this does not enable Northern buildings or
+monsters in the base campaign.
+
+The candidate adds 44 missing native descriptions, 14 privately named native
+callbacks, 15 unchanged SDK constants and the original `Critical_Hit` Spell
+specialization. Its art and sound are the original dependency assets. The
+optional `completed_reward` sound is absent in both editions; its original
+no-op lookup is retained. Northern Goblin spawning remains gated by the
+original, absent base-game Goblin Fortress. Inactive Northern quest helpers do
+not justify adding their monsters to original missions.
+
+Fire Balm has an additional original-save incompatibility: base Ranger,
+Rogue and Elf prototypes lack Northern's `Special_Attack_Action` string.
+Attempting the native string operation on an absent value can cause an access
+violation. The controlled negative harness initially also used an unsupported
+Healer; that invalid fixture is recorded separately from ordinary gameplay.
+Original Bazaar eligibility permits only Ranger, Rogue and Elf. The candidate
+preserves that rule, initializes the missing field using each class's original
+Northern fire attack, rejects duplicate active buffs, and preserves existing
+nonempty attack values. Five original/legacy entry gates share these checks.
+The original Hero prototype and existing saves are not replaced.
+
+The runtime adds native type-3 string support to the existing authored
+attribute bridge. Allocation, assignment, reset and saved ownership use the
+original VM's string implementation. Other runtime inputs and generated
+translations are unchanged. Seventeen official native contract tests pass;
+all 152 Python community tests pass, including the six original-game
+fixture checks enabled against the verified local executable, and
+11 updater tests pass. A private native lifecycle control now proves supported-class application,
+unsupported-class rejection, duplicate safety, active-buff save/fresh-browser
+reload, and original timed expiry restoring all three attacks and clearing
+flags/icons. It uses SDK-spawned stock heroes with an explicit survival HP
+precondition; it is not ordinary recruitment or campaign progress. The Fire Balm spell-command/projectile path was not separately instrumented.
+The ordinary campaign and Northern save/reload regressions below also pass.
+These results do not establish a whole-Mac freeze fix.
+
+The updater recognizes released prior versions of the nine affected paths,
+verifies every existing input and every distinct download before writing, and
+preserves customized files. A partially completed update can be retried.
+Player profiles and saves are outside that update set.
+
+
+Both edition classifications load `Community_Common.bcd`; Northern does not
+load `Community_Base.bcd`. The two Fire Balm compatibility helpers therefore
+belong to the shared `Any` source scope. A regression test keeps these helpers
+separate from the 14 imported base-only callbacks. Original SDK compilation
+verifies both helper exports in Common and their absence from Base/Expansion;
+their function bodies exactly match the successful lifecycle control.
+
+The corrected private build restored the ordinary Day11 Liche Queen save,
+returned through the native main menu, selected Rise of the Ratmen, generated
+its Northern world and made an ordinary initial save. There were no game
+exceptions or guard stops. Subsequent Northern tests qualify all three guilds, all five community hero
+classes and the reported sewer-cheat interaction, as detailed below.
+
+The Northern regression uses the original Rise of the Ratmen mission. The
+native Palace list places level-three Lab, Hall and Haunt foundations for their
+normal prices with Build Anything enabled. The original Restoration cheat
+completes construction; this is explicitly a cheat setup, rather than a claim
+of ordinary construction completion. Native paid buttons then recruit an
+Alchemist, Troubadour, Spellsinger, Blade Dancer and Phantom. The original GMP
+contains completed guilds at 444, 700 and 475 HP, with the Hall retaining eight
+slots. All five classes are living after fresh-browser reload, including
+heroes resting inside their guilds.
+
+With the five reported cheats active, Now You Die destroys both the ordinary
+indestructible Sewer Entrance (unit2500) and a hostile Broken Sewer Main
+(unit2529). Their original native death flags persist after fresh reload, and
+one other hostile Broken Sewer Main remains alive. No fixture attributes or
+forced native actor edits were used for these mission saves. No game exception
+or host failure occurred in the qualified trials. This does not prove every
+mission/cheat combination or a whole-Mac hard-freeze fix.
+
+The static authored-attribute audit covers all97 literal AddAttribute calls:
+23 Boolean,41 integer,10 function,15 agent-reference,7 list and1 string. There
+are no dynamic type arguments or unsupported literal types. The new string is
+the missing Fire Balm field. Original SDK recompilation reproduces every
+prepared source/resource payload and all three compiled libraries byte-for-byte.
+
+The release gate binds all nine changed paths to the qualified string-capable
+engine and source policies. It refuses missing shared-scope qualification,
+changed resource hashes and changed policies before writing static metadata.
+The source preparer accepts --prior-release so the archived pre-extension
+descriptor remains usable after current-release hashes change. Retain this
+content/runtime or a compatible successor for saves containing the newly
+imported resources; a frontend rollback must keep those compatible bindings.
+
+See deploy/community-campaign-resource-verification.json for exact source,
+engine, compiler, saves, native object retention, resource bounds and limitations.
+Historical ability and performance measurements retain their original engine
+bindings. This audit adds no performance benchmark and changes no renderer,
+scheduler, music or player-profile format.

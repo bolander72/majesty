@@ -31,7 +31,9 @@ def prepare(args):
     removed = [p for p in objects if p.name == 'alchemist_native_probe.cpp.o']
     if len(removed) != 1:
         raise ValueError('Require exactly one original community core object')
-    old_core = core_engine / 'mods/core/community-guilds'
+    old_core = core_engine / 'community-core'
+    if not old_core.is_dir():
+        old_core = core_engine / 'mods/core/community-guilds'
     rule = block((core_build / 'build.ninja').read_text(), 'build ' +
                  removed[0].relative_to(core_build).as_posix() + ': ')
     for p in objects:
@@ -42,6 +44,10 @@ def prepare(args):
     shutil.copyfile(ROOT / 'native/community/native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
     shutil.copyfile(ROOT / 'native/community/optional_expansion_effectors.h', core / 'optional_expansion_effectors.h')
     shutil.copyfile(ROOT / 'native/community/optional_expansion_spells.h', core / 'optional_expansion_spells.h')
+    attribute_header = core / 'gpl_attribute_bridge.h'
+    if not attribute_header.exists() and (core / 'support/gpl_attribute_bridge.h').is_file():
+        attribute_header = core / 'support/gpl_attribute_bridge.h'
+    shutil.copyfile(ROOT / 'native/community/gpl_attribute_bridge.h', attribute_header)
     for name in ('game.toml', 'globals.toml'):
         shutil.copyfile(base / name, out / name)
     cfg = tomllib.loads((base / 'game.toml').read_text())['translate'].get('native', {})
@@ -75,7 +81,7 @@ def prepare(args):
     (out / 'tests/CMakeLists.txt').write_text('\n'.join(cmake) + '\n')
     (out / 'campaign-core-stage.json').write_text(json.dumps(dict(
         format='majesty-community-campaign-core-stage-v1', baseEngine=digest(wasm),
-        sources={p.name: digest(p) for p in core.iterdir() if p.is_file()},
+        sources={p.relative_to(core).as_posix(): digest(p) for p in core.rglob('*') if p.is_file()},
         replacedObject=digest(removed[0]), retainedObjects={str(p): digest(p) for p in objects if p != removed[0]},
         generatedTranslationsEdited=False, originalFilesUnchanged=True,
         built=False, browserPlayable=False, published=False), indent=2) + '\n')

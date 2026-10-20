@@ -1,5 +1,13 @@
 # Changelog
 
+## Campaign resources, Fire Balm and mixed-guild saves — October 20, 2026
+
+- Restore 44 original Northern resource dependencies needed by community scripts in original campaigns, with their actual callbacks, constants, art and sound. Preserve existing resource identities and the stock Hero prototype.
+- Fix Fire Balm's missing attack-action field on original Ranger, Rogue and Elf saves. Use the native VM's string ownership, preserve existing attack values, reject unsupported classes and duplicate active buffs, and restore attacks on expiry. Shared helpers load in both campaign editions.
+- Verify original campaign play/save/reload and Northern paid recruitment of all five community classes across three completed guilds with the reported cheats active. Verify Now You Die on ordinary and hostile sewers, persisted deaths and a fresh reload of the mixed party.
+- Bind the nine resource updates and compatible engine at release time; preserve prior qualification records, player saves, profiles and customized content. All 169 other native objects are retained byte-for-byte.
+- These targeted game fixes do not establish a whole-Mac hard-freeze fix. Historical performance measurements retain their original engine bindings.
+
 ## Healers in original campaigns — October 19, 2026
 
 - Fix a reproduced script exception after recruiting a Healer alongside community guilds: shared AI queried Northern Expansion’s `turn_undead_healer`, which the original campaign does not define.
