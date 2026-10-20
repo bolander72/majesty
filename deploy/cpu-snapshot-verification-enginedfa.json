@@ -1,0 +1,38 @@
+{
+  "format": "majesty-cpu-snapshot-verification-v1",
+  "status": "renderer objects retained; campaign compatibility regression qualified",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorQualification": "deploy/cpu-snapshot-verification-engineb4a.json",
+  "nativeControlsQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "browserInteractionQualified": true,
+  "engine": {
+    "wasm": {
+      "bytes": 90971150,
+      "sha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a"
+    },
+    "js": {
+      "bytes": 473419,
+      "sha256": "834e72c88a1b69df2134d2fca7c89ca1df8de0d858db519494750f6a69fd8587"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "compatibilityRelink": {
+    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [
+      "Data/Community_Common.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "allOtherObjectsAndResourcesRetained": true,
+    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
+    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
+  },
+  "performanceMeasurements": "Historical renderer measurements retain actual prior engines. New campaign compatibility/save/update qualification is in deploy/community-campaign-compat-verification.json; no new performance benchmark claimed."
+}

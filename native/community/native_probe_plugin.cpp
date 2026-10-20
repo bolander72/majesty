@@ -13,6 +13,7 @@
 #include "movement_scale.h"
 #include "name_registration.h"
 #include "optional_expansion_effectors.h"
+#include "optional_expansion_spells.h"
 #include "pop_mod_api.h"
 #include "research_activity.h"
 #include "research_descriptors.h"
@@ -143,6 +144,8 @@ std::uint64_t researchControllerGeneration = 0;
 std::uint32_t attributeFunction = 0;
 std::uint32_t optionalEffectorFunction = 0;
 MajestyCommunity::OptionalExpansionEffectors optionalExpansion;
+std::uint32_t optionalSpellFunction = 0;
+MajestyCommunity::OptionalExpansionSpells optionalExpansionSpells;
 bool traceArmed = false;
 unsigned traceCalls = 0;
 unsigned traceOperators = 0;
@@ -1710,6 +1713,8 @@ void registerAttributes() {
     require(attributeFunction && read(attributeFunction + 20) == 0x005a9600U,
             "AddAttribute registered dispatch identity");
     optionalExpansion.reset();
+    optionalExpansionSpells.reset();
+    optionalSpellFunction = 0;
     optionalEffectorFunction = 0;
     if (communityProcess) {
         prepareName("CheckEffector");
@@ -1717,6 +1722,11 @@ void registerAttributes() {
         require(optionalEffectorFunction &&
                     call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 6,
                 "original CheckEffector boolean binding");
+        prepareName("IsSpellAvailable");
+        optionalSpellFunction = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+        require(optionalSpellFunction && read(optionalSpellFunction + 20) == 0x00422740U &&
+                    call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 6,
+                "original IsSpellAvailable boolean binding");
     }
     if (integerHelpers) {
         integerFunctions.clear();
@@ -1986,6 +1996,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
 #endif
         sharedResolved.clear();
         optionalExpansion.reset();
+        optionalExpansionSpells.reset();
+        optionalSpellFunction = 0;
         optionalEffectorFunction = 0;
         targetOwner = {};
         targetExecution = {};
@@ -2542,6 +2554,13 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (communityProcess && self == optionalEffectorFunction) {
             ExpansionEffectorOps ops;
             if (optionalExpansion.absent(ops, read(cpu->esp + 4) + 0x14)) {
+                returned(cpu, 0);
+                return;
+            }
+        }
+        if (communityProcess && self == optionalSpellFunction) {
+            ExpansionEffectorOps ops;
+            if (optionalExpansionSpells.absent(ops, read(cpu->esp + 4) + 0x14)) {
                 returned(cpu, 0);
                 return;
             }

@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-release-v1",
-  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
   "storageId": "majesty-community-guilds-v1",
   "baseId": "majesty",
   "additionalRuntimeEnvironment": {
@@ -347,5 +347,17 @@
   },
   "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
   "compositePoolVerification": "deploy/composite-pool-verification.json",
-  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json"
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "priorCompatibilityRelink": null,
+  "compatibilityRelink": {
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+  }
 }

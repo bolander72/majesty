@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-guilds-verification-v1",
-  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
   "nativePaidGuildsQualified": true,
   "nativeAdvancedAbilitiesQualified": true,
   "browserNativeUiQualified": true,
@@ -46,37 +46,19 @@
     "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
   ],
   "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
-  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
-  "priorQualification": "deploy/community-guilds-verification-engineb4a.json",
+  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorQualification": "deploy/community-guilds-verification-enginedfa.json",
   "compatibilityRelink": {
-    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
     ],
-    "changedResources": [
-      "Data/Community_Common.bcd",
-      "DataMX/Community_Common.bcd"
-    ],
-    "allOtherObjectsAndResourcesRetained": true,
-    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
-    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
   },
   "priorRootQualification": {
-    "trials": [
-      "freeze2406",
-      "freeze2412"
-    ],
-    "rootPath": "/",
-    "originalProfileIdentity": "majesty",
-    "ordinarySave": {
-      "name": "(Freestyle Game) 16 Days.GMP",
-      "bytes": 397835,
-      "sha256": "02f3d82a627e549256a4d6035f799ab598cc47912a17a351e519550c21b4e09b"
-    },
-    "freshProfileReloadQualified": true,
-    "runtimeErrors": []
-  },
-  "root": {
     "trials": [
       "freeze2446",
       "freeze2451"
@@ -88,6 +70,23 @@
       "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
       "bytes": 1300348,
       "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
+    },
+    "freshProfileReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
+  },
+  "root": {
+    "trials": [
+      "freeze2469",
+      "freeze2470"
+    ],
+    "rootPath": "/",
+    "mission": "Vengeance of the Liche Queen",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 6 Days.GMP",
+      "bytes": 1372167,
+      "sha256": "bceb661fde7348690ee28b9dd13298ba3b0e1488e3d14263206b9cf018d7a66d"
     },
     "freshProfileReloadQualified": true,
     "terminalErrors": [],
@@ -111,5 +110,6 @@
       "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
     }
   },
-  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json"
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
 }

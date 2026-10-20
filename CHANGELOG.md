@@ -1,5 +1,11 @@
 # Changelog
 
+## Healers in original campaigns — October 19, 2026
+
+- Fix a reproduced script exception after recruiting a Healer alongside community guilds: shared AI queried Northern Expansion’s `turn_undead_healer`, which the original campaign does not define.
+- Treat only that audited, absent expansion spell as unavailable. Defined actions retain the original spell, level and cooldown checks; other missing names still report errors.
+- Preserve existing game resources, saves, profiles and renderer optimizations.
+
 ## Community guilds in original campaigns — October 19, 2026
 
 - Fix Bards Hall completion in original campaigns by restoring the Hall’s legacy capacity field from its real native guild limit, including old saves and upgrades.

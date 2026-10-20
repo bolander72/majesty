@@ -1,0 +1,115 @@
+{
+  "format": "majesty-community-guilds-verification-v1",
+  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "nativePaidGuildsQualified": true,
+  "nativeAdvancedAbilitiesQualified": true,
+  "browserNativeUiQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "originalSaveProfilePreserved": true,
+  "rootDefaultIntegrationQualified": true,
+  "sourceProofs": {
+    "native-recruitment-verification.json": {
+      "bytes": 2555,
+      "sha256": "9167b3eb87684020ce6c712a4fa0702c72490627436c9dbd55453fff48ec9364"
+    },
+    "advanced-ability-verification.json": {
+      "bytes": 3246,
+      "sha256": "ac6383bc19484ba70144719f1c46f875fca4199a3133de4e794a30474bc6b54f"
+    },
+    "research-visual-verification.json": {
+      "bytes": 1988,
+      "sha256": "db2cef4cce0b4c3f70587c553adb6821d6ccb64aa36482b77722842c193b4515"
+    },
+    "browser-abilities-verification.json": {
+      "bytes": 5172,
+      "sha256": "38d0807a962a21abc8bd3c595397febbe1f943ecd07ca159835fc0b0298cb227"
+    }
+  },
+  "rootPlayerSource": {
+    "bytes": 1840,
+    "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+  },
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
+  "publicAssetsVerified": {
+    "files": 23,
+    "bytes": 62704338,
+    "sha256": "e43614ad71cfde367c70032d2e497f832a0a8c8d56ebb0a2e3bcc6f383ff7a38"
+  },
+  "originalGameDataAndPlayerProfilesPreserved": true,
+  "productionRenderer": {
+    "unchangedObjectRelink": false,
+    "qualification": "deploy/composite-pool-verification.json"
+  },
+  "limits": [
+    "Bounded browser original-campaign reproduction and regression trials; no whole-Mac hard-reset reproduction or universal crash-free guarantee.",
+    "Detailed advanced combat/ability qualification remains archived under its actual prior engine; defined effect dispatch and other native objects are retained.",
+    "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
+  ],
+  "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
+  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+  "priorQualification": "deploy/community-guilds-verification-engineb4a.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [
+      "Data/Community_Common.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "allOtherObjectsAndResourcesRetained": true,
+    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
+    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
+  },
+  "priorRootQualification": {
+    "trials": [
+      "freeze2406",
+      "freeze2412"
+    ],
+    "rootPath": "/",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Freestyle Game) 16 Days.GMP",
+      "bytes": 397835,
+      "sha256": "02f3d82a627e549256a4d6035f799ab598cc47912a17a351e519550c21b4e09b"
+    },
+    "freshProfileReloadQualified": true,
+    "runtimeErrors": []
+  },
+  "root": {
+    "trials": [
+      "freeze2446",
+      "freeze2451"
+    ],
+    "rootPath": "/",
+    "mission": "Vengeance of the Liche Queen",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 8 Days.GMP",
+      "bytes": 1300348,
+      "sha256": "cf57eb753780fd81802f552ef462e66da236886b7813ff6d7be2dd3ed47897de"
+    },
+    "freshProfileReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
+  },
+  "priorRootScreenshots": {
+    "community2379-root-menu": {
+      "bytes": 427474,
+      "sha256": "80893f01cd00e826b14f239ae625654b0fe9a2fadd591be1741d51bd65e9fb21"
+    },
+    "community2379-reloaded-world": {
+      "bytes": 776218,
+      "sha256": "f3e3bcd31c56741c13ec43640d1307350f1389497f37a0f3c76ec5e902901d0a"
+    },
+    "community2379-ice-lance-tooltip": {
+      "bytes": 791221,
+      "sha256": "cec2ae87310a1a9570a51213f1b89990ed16f1237a3281e81631d17fd89260df"
+    },
+    "community2380-root-saved": {
+      "bytes": 789538,
+      "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
+    }
+  },
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json"
+}

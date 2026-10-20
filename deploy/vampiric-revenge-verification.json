@@ -1,6 +1,6 @@
 {
   "format": "majesty-vampiric-revenge-verification-v1",
-  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
   "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
   "nativeId": "XQD3",
   "originalTemplateBodyPreserved": true,
@@ -126,18 +126,16 @@
     "sha256": "6a1cd483c646237c2cd6f65c79c86c46eaba0629d7dae3828fbdc817225aed66"
   },
   "compatibilityRelink": {
-    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
     ],
-    "changedResources": [
-      "Data/Community_Common.bcd",
-      "DataMX/Community_Common.bcd"
-    ],
-    "allOtherObjectsAndResourcesRetained": true,
-    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
-    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
   },
-  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
-  "priorQualification": "deploy/vampiric-revenge-verification-engineb4a.json"
+  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorQualification": "deploy/vampiric-revenge-verification-enginedfa.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
 }

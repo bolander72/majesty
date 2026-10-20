@@ -17,9 +17,13 @@ def audit(source, stock, descriptions):
         inputs[str(path)] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
         return raw
     checks = set()
+    spells = set()
     for p in sorted((source / 'sources').rglob('*.gpl')):
         text = re.sub(r'//[^\n]*', '', read(p).decode('cp1252'))
         checks.update(re.findall(r'\$CheckEffector\s*\([^;]*?"([^"\n]+)"', text, re.I))
+        spells.update(re.findall(
+            r'\$(?:IsSpellAvailable|Bards_Spell_Available)\s*\([^;,\n]+,\s*"([^"\n]+)"',
+            text, re.I))
     def names(paths):
         return {d.get('Name', '').lower() for p in paths
                 for d in ET.fromstring(read(p)).iter('Description')}
@@ -35,8 +39,20 @@ def audit(source, stock, descriptions):
     policy = set(re.findall(r'\{"([A-Za-z_]+)"\}', read(header).decode()))
     if set(optional) != policy:
         raise ValueError('Native optional policy differs from the audited Northern-only names')
+    spell_rows = [dict(name=n, base=n.lower() in base, expansion=n.lower() in northern,
+                       community=n.lower() in community) for n in sorted(spells)]
+    optional_spells = sorted({r['name'].lower() for r in spell_rows
+                             if not r['base'] and not r['community'] and r['expansion']})
+    if any(not r['base'] and not r['community'] and not r['expansion'] for r in spell_rows):
+        raise ValueError('Unresolved literal spell availability name')
+    spell_header = ROOT / 'native/community/optional_expansion_spells.h'
+    spell_policy = re.findall(r'constexpr char expected\[\] = "([A-Za-z_]+)"',
+                             read(spell_header).decode())
+    if optional_spells != spell_policy:
+        raise ValueError('Native spell policy differs from audited Northern-only names')
     return dict(format='majesty-community-campaign-effector-audit-v1', inputs=inputs,
                 literalChecks=rows, optionalExpansionNames=optional,
+                literalSpellChecks=spell_rows, optionalExpansionSpellNames=optional_spells,
                 caseInsensitiveNativeNames=True, runtimeQualified=False)
 
 

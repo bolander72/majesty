@@ -1,20 +1,20 @@
 {
   "format": "majesty-cpu-snapshot-verification-v1",
-  "status": "renderer objects retained; campaign compatibility regression qualified",
-  "engineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
-  "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
-  "priorQualification": "deploy/cpu-snapshot-verification-engineb4a.json",
+  "status": "renderer objects retained; exact Healer campaign exception and fresh save reload regression qualified",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "priorQualification": "deploy/cpu-snapshot-verification-enginedfa.json",
   "nativeControlsQualified": true,
   "browserWorldSaveReloadQualified": true,
   "browserInteractionQualified": true,
   "engine": {
     "wasm": {
-      "bytes": 90971150,
-      "sha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a"
+      "bytes": 90973456,
+      "sha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8"
     },
     "js": {
-      "bytes": 473419,
-      "sha256": "834e72c88a1b69df2134d2fca7c89ca1df8de0d858db519494750f6a69fd8587"
+      "bytes": 473413,
+      "sha256": "5cf983b616bfc599c2d5d276b6c1724f42b977e2473453f390eb89292b74c4bb"
     },
     "data": {
       "bytes": 5105139,
@@ -22,17 +22,15 @@
     }
   },
   "compatibilityRelink": {
-    "priorEngineSha256": "b4a6e413f5a656ab6dd1d149ddd6bedd219acb6f26a5899e4605772fc4da7110",
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
     "changedObjects": [
       "alchemist_native_probe.cpp.o"
     ],
-    "changedResources": [
-      "Data/Community_Common.bcd",
-      "DataMX/Community_Common.bcd"
-    ],
-    "allOtherObjectsAndResourcesRetained": true,
-    "newRegressionProof": "deploy/community-campaign-compat-verification.json",
-    "scope": "Original-campaign private Hall capacity compatibility and five optional Northern effect checks. Renderer/texture pooling, audio, scheduler, guest translations and all other content resources are retained. Historical advanced mechanics and performance measurements remain under their original engine."
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
   },
-  "performanceMeasurements": "Historical renderer measurements retain actual prior engines. New campaign compatibility/save/update qualification is in deploy/community-campaign-compat-verification.json; no new performance benchmark claimed."
+  "performanceMeasurements": "No new performance benchmark. Historical measurements remain under their actual prior engines; all renderer objects retained byte-identically.",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
 }

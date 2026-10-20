@@ -41,6 +41,7 @@ def prepare(args):
     shutil.copytree(old_core, core)
     shutil.copyfile(ROOT / 'native/community/native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
     shutil.copyfile(ROOT / 'native/community/optional_expansion_effectors.h', core / 'optional_expansion_effectors.h')
+    shutil.copyfile(ROOT / 'native/community/optional_expansion_spells.h', core / 'optional_expansion_spells.h')
     for name in ('game.toml', 'globals.toml'):
         shutil.copyfile(base / name, out / name)
     cfg = tomllib.loads((base / 'game.toml').read_text())['translate'].get('native', {})

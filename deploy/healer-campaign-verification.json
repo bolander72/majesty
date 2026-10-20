@@ -1,0 +1,267 @@
+{
+  "format": "majesty-healer-campaign-verification-v1",
+  "engineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+  "engine": {
+    "wasm": {
+      "bytes": 90973456,
+      "sha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8"
+    },
+    "js": {
+      "bytes": 473413,
+      "sha256": "5cf983b616bfc599c2d5d276b6c1724f42b977e2473453f390eb89292b74c4bb"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "status": "exact original-campaign Healer recruitment exception reproduced, corrected, and browser save/fresh-session reload qualified",
+  "failure": {
+    "trial": "freeze2466",
+    "mission": "Vengeance of the Liche Queen",
+    "inputSave": {
+      "bytes": 1282057,
+      "sha256": "de2204a487649e7ec799451855f2421579fda2f677e7b1d23891e066a6fa1f54"
+    },
+    "action": "Ordinary Temple to Agrela recruitment from the original Day 3 world with an Alchemy Lab present",
+    "code": 3765269347,
+    "hex": "0xE06D7363",
+    "nativeException": "IsSpellAvailable() couldn't find spell turn_undead_healer",
+    "exceptionEvidence": {
+      "bytes": 1813,
+      "sha256": "1020ed5b8f073d43eed134aa52f114914f85fba9fbe79d423ec9d7b3cd52fc92"
+    }
+  },
+  "fix": {
+    "scope": "Only the audited absent Northern-only turn_undead_healer availability query returns false in original quests; defined actions retain original behavior.",
+    "unrelatedMissingNamesUnchanged": true,
+    "originalLevelAndCooldownChecksRetainedForDefinedActions": true,
+    "typedArgumentValidation": true,
+    "perCatalogCapabilityCache": true,
+    "cacheResetOnWorldAndRegistry": true,
+    "noPerCallAllocation": true
+  },
+  "catalogAudit": {
+    "proof": {
+      "bytes": 12708,
+      "sha256": "07f675010191455c96c7c090e3a9ffd56c0cdb0960f9b579c28c7086cdddb1dd"
+    },
+    "literalSpellChecks": 29,
+    "optionalNames": [
+      "turn_undead_healer"
+    ]
+  },
+  "source": {
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 164744,
+      "sha256": "71e94ed7a5e736c1ad0a7d4bdd1b2da188628b529465f57a7a51fb217a657308"
+    },
+    "native/community/optional_expansion_spells.h": {
+      "bytes": 2715,
+      "sha256": "6c67bb5a4541a38fc0494f0e20614238bdd28d30b69cfcc0b9de2dcea01de221"
+    },
+    "native/community/optional_expansion_spells_tests.cpp": {
+      "bytes": 5166,
+      "sha256": "5deb6e3eb839a38faf1e9cebca81a8d93271869f0ea6006189af841c1627f26b"
+    },
+    "native/community/optional_expansion_effectors.cmake": {
+      "bytes": 1019,
+      "sha256": "10c9f3531b8d00dc210dfcd8920eaff4313d785d0664802804589d44836a3ace"
+    },
+    "scripts/audit-community-campaign-effectors.py": {
+      "bytes": 3658,
+      "sha256": "51c89ffc60bce219f0453d39906186994d79fe771b38f6a2c5d402f752c27d0c"
+    },
+    "scripts/prepare-community-campaign-browser-engine.py": {
+      "bytes": 5556,
+      "sha256": "16532e7fceb3f23619b06629c783d011f1b35b122eb98f4510bfb8fa8d9d6f30"
+    }
+  },
+  "build": {
+    "officialTools": true,
+    "proof": {
+      "bytes": 609,
+      "sha256": "5a504b68fa69df08b6381c4b47988d331f7409e32772e5872ba354fc1be08118"
+    },
+    "exitCode": 0,
+    "peakOwnedRssMiB": 1762.8,
+    "oneCommunityCoreObjectChanged": true,
+    "retainedObjects": 169,
+    "allOther169LinkObjectsByteIdenticalToPreviousQualifiedEngine": true,
+    "generatedTranslationsEdited": false
+  },
+  "tests": {
+    "nativeTargets": [
+      "optional_expansion_spells_tests",
+      "optional_expansion_effectors_tests"
+    ],
+    "passed": true,
+    "logs": [
+      {
+        "bytes": 7139,
+        "sha256": "4c88f70797ad92b58091ddf5314e3eb15c6d9b02d400e68da4c0622600547bf0"
+      },
+      {
+        "bytes": 6846,
+        "sha256": "9c506e718cade9c4fd303b49eafd8dfeb97b5487162646d63d58696189092f13"
+      }
+    ],
+    "python": {
+      "run": 104,
+      "skipped": 6,
+      "failures": 0,
+      "proof": {
+        "bytes": 216,
+        "sha256": "523236b9d1acfc3ddeb99009a124db9af6e3e22e465e061b6d9cb1a20406d98d"
+      }
+    }
+  },
+  "browser": {
+    "trials": [
+      "freeze2469",
+      "freeze2470"
+    ],
+    "rootPath": "/",
+    "inputSave": {
+      "bytes": 1282057,
+      "sha256": "de2204a487649e7ec799451855f2421579fda2f677e7b1d23891e066a6fa1f54"
+    },
+    "mission": "Vengeance of the Liche Queen",
+    "ordinaryPaidHealerRecruitment": 4,
+    "alchemyRecruitment": true,
+    "secondPaidLabPlacementAndConstruction": true,
+    "secondLabCompleted": false,
+    "secondLabOutcome": "Destroyed by ordinary hostile attacks during construction; no completion qualification claimed.",
+    "cheats": [
+      "build anything",
+      "infinite gold",
+      "level 1000"
+    ],
+    "healerLevel1000CardQualified": true,
+    "saves": [
+      {
+        "name": "(Vengeance of the Liche Queen) 5 Days.GMP",
+        "bytes": 1384790,
+        "sha256": "6414b285b37f08a4bfd1c066c14a0fffec0068e1fffd9347ef1834a92b3d1565"
+      },
+      {
+        "name": "(Vengeance of the Liche Queen) 6 Days.GMP",
+        "bytes": 1372167,
+        "sha256": "bceb661fde7348690ee28b9dd13298ba3b0e1488e3d14263206b9cf018d7a66d"
+      }
+    ],
+    "freshOwnedBrowserReload": true,
+    "continuedThroughDay": 6,
+    "healers": [
+      {
+        "agentId": 79,
+        "unitId": 1908,
+        "native": {
+          "hp": 2005,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 513,
+          "parentUnitId": 0
+        },
+        "title": "Healer"
+      },
+      {
+        "agentId": 81,
+        "unitId": 1941,
+        "native": {
+          "hp": 2005,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Healer"
+      },
+      {
+        "agentId": 104,
+        "unitId": 2113,
+        "native": {
+          "hp": 2005,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Healer"
+      },
+      {
+        "agentId": 111,
+        "unitId": 2414,
+        "native": {
+          "hp": 2005,
+          "completed": null,
+          "owner": 0,
+          "stateFlags": 512,
+          "parentUnitId": 0
+        },
+        "title": "Healer"
+      }
+    ],
+    "terminalErrors": [],
+    "audioMuted": true,
+    "guardStopped": false,
+    "peakOwnedRssMiB": 2011.1,
+    "peakGpuFootprintMiB": 314.7,
+    "ownedBrowsersClosed": true
+  },
+  "evidence": {
+    "freeze2466-healer-recruited.png": {
+      "bytes": 777570,
+      "sha256": "34dbd8a8f2a9cae702ef8ac9698d0e8e91915c096aaf5879339936498fa1ba38"
+    },
+    "freeze2469-healer-first.png": {
+      "bytes": 779241,
+      "sha256": "14f3054fd965a7b927f5ae1c049cf7137c2f9b4c6bb26be2b0e47c58b8c22118"
+    },
+    "freeze2469-paid-lab-site.png": {
+      "bytes": 717162,
+      "sha256": "4d7ad20e848c55706d7bc843acc79b3030a2bfaa432e51bced99cf610fd0a559"
+    },
+    "freeze2469-day5-save.json": {
+      "bytes": 1510,
+      "sha256": "06b7ce1c35693c150ee6fbab0d12823a9353ea3b0b2a6ce4af60d0f3d0619996"
+    },
+    "freeze2469-day5-actors.json": {
+      "bytes": 2279,
+      "sha256": "2dea93c474a08bf4b4aa3a85d4db4b11890da5eec7141da165ad76447b086173"
+    },
+    "freeze2470-healer-members.png": {
+      "bytes": 762244,
+      "sha256": "4cbee8e5c61b566dbb1f126bd7cdbdd33a8db6a1d8152ed95fc82c7d0a72e424"
+    },
+    "freeze2470-healer-card.png": {
+      "bytes": 800079,
+      "sha256": "7173fa568c2dbcbfc9cbb265ee087ed0cb749044cf35f4ac48e4c51f66b4e439"
+    },
+    "freeze2470-day6-save.json": {
+      "bytes": 1689,
+      "sha256": "8704cb3267e4e29a0c9d78ef34742b5b2eb792f0eff1e14eb3a8a3ab319da495"
+    },
+    "freeze2470-day6-actors.json": {
+      "bytes": 2027,
+      "sha256": "027536a0a7424ba8b18781c32fd05bc9574d6bcb8d192f0cfee063ea803879fd"
+    }
+  },
+  "rollout": {
+    "manualOperations": "none",
+    "gameResourcesUnchanged": true,
+    "scriptBytecodeUnchanged": true,
+    "saveFormatUnchanged": true,
+    "storageId": "majesty-community-guilds-v1",
+    "profileIdentity": "majesty",
+    "migrationRequired": false,
+    "priorAssetsPreserved": true,
+    "rollback": "Restore the prior hosted engine and engine-bound release/proof descriptors together; preserve all player collections and profiles."
+  },
+  "limits": [
+    "The captured game exception is identified and fixed. This does not establish the cause or resolution of whole-Mac freezes.",
+    "Northern defined-action delegation has focused native controls; this change does not claim a fresh full Northern campaign playthrough.",
+    "No new huge-kingdom, 4K, FPS, CPU or internet co-op performance qualification."
+  ]
+}

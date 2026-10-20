@@ -1239,3 +1239,40 @@ by shared source. An original-campaign execution/failure of those paths has not
 been reproduced. They remain an explicit resource/reachability follow-up;
 CreateEffector is not suppressed and gameplay effects are not replaced with
 empty operations. These checks do not establish a whole-Mac hard-freeze fix.
+
+
+### Original-campaign Healer recruitment exception — October 19, 2026
+
+A separate browser reproduction (`freeze2466`) identifies the later report of
+Alchemy Lab construction alongside Temple to Agrela recruitment. With the
+unchanged production engine `campaign-compat2449`, loading the original Day 3
+Vengeance of the Liche Queen world and recruiting its first Healer exits with
+`3765269347` (`0xE06D7363`). The preserved native exception object says:
+`IsSpellAvailable() couldn't find spell turn_undead_healer`.
+The Lab's presence alone did not establish the cause; the Healer's shared AI
+calls `Bards_Spell_Available` for this Northern-only action in the original
+campaign, whose catalog has no such description. Old.exe's original native
+`IsSpellAvailable` throws on the absent name before testing the actor's spells.
+
+`optional_expansion_spells.h` handles only this audited optional name at the
+existing native function dispatcher. It validates the result/agent/string
+argument contract, including the optional integer cooldown flag, and checks
+the actual original description catalog. Absence resets only the ordinary
+Boolean result to false; a defined action delegates to the original native
+ability/level/cooldown checks. Other names and malformed calls retain original
+behavior. The catalog capability is cached without recurring allocation and
+reset on world teardown and function registration. No spell, class, save
+layout, game resource, generated translation or renderer is changed.
+
+The descriptor audit now covers literal `IsSpellAvailable` and
+`Bards_Spell_Available` calls as well as effect checks. Across the composed
+sources it finds 29 literal availability names; the sole absent-original,
+present-Northern name is `turn_undead_healer`. Native regression controls cover
+original/Northern catalog presence, case, cooldown arguments, unrelated names,
+invalid values/spans, address reuse, and writes restricted to the result.
+Live save/reload results and the source-bound released engine are recorded in
+`deploy/healer-campaign-verification.json`; historical campaign and renderer
+measurements remain bound to their actual prior engines.
+
+This identifies a game exception from Healer recruitment. It does not establish
+the cause of the separately reported whole-Mac freeze.
