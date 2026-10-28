@@ -305,9 +305,9 @@
     },
     {
       "path": "Data/Community_Common.bcd",
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Common.bcd"
+      "bytes": 15671601,
+      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/7f81bd3567cda2b23b9f43f374701e0a7acff1d7/assets/content/phantom-resilience-v1/Community_Common.bcd"
     },
     {
       "path": "Data/Community_Base.bcd",
@@ -323,9 +323,9 @@
     },
     {
       "path": "DataMX/Community_Common.bcd",
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/d33977c5fe3859238ef850ce957ef85fd51bb3a1/assets/content/community-campaign-compat-v1/Data/Community_Common.bcd"
+      "bytes": 15671601,
+      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/7f81bd3567cda2b23b9f43f374701e0a7acff1d7/assets/content/phantom-resilience-v1/Community_Common.bcd"
     },
     {
       "path": "DataMX/Community_Base.bcd",
@@ -381,5 +381,6 @@
     "newRegressionProof": "deploy/community-campaign-resource-verification.json",
     "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
   },
-  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json",
+  "phantomResilienceVerification": "deploy/phantom-resilience-verification.json"
 }

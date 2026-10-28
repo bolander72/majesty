@@ -1,0 +1,198 @@
+{
+  "format": "majesty-phantom-resilience-qualification-v1",
+  "date": "2026-10-28",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "existingHeroMigrationQualified": true,
+  "freshReloadIdempotent": true,
+  "newRecruitQualified": true,
+  "otherHeroesUnchanged": true,
+  "ownedBrowsersClosed": true,
+  "nativeEternalSoulRoundTripQualified": true,
+  "sourcePolicies": {
+    "scripts/prepare-phantom-resilience.py": "0ddeed000f3528b40530e58ce545bb5eba2434c1d15925b8bde2675a0102cccf",
+    "content/community-mods/phantoms-haunt/resilience.gpl": "f6475ca73c7c0443c6864e166275064fb42c4d47ce692e4a8e4926b792a6f574"
+  },
+  "priorFiles": {
+    "Data/Community_Common.bcd": {
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 15661240,
+      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    }
+  },
+  "files": {
+    "Data/Community_Common.bcd": {
+      "bytes": 15671601,
+      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 15671601,
+      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
+    }
+  },
+  "cause": {
+    "functions": [
+      "Eternal_Soul_Begin",
+      "Eternal_Soul_End"
+    ],
+    "arithmetic": "HP * maximum HP overflows the original GPL Q22.10 expression accumulator",
+    "reproducedFullHp": 5031,
+    "reproducedLethalHp": -130,
+    "maximumObservedSingleUpdateDrop": 5161,
+    "trace": "phantom20261028trace",
+    "fix": "Bounded integer long division with exact nearest-integer rounding; percentage bonus uses quotient/remainder decomposition; living health clamped to at least one"
+  },
+  "balance": {
+    "additionalStartingHp": 18,
+    "additionalVitality": 8,
+    "naturalHealingModifierDelta": -3,
+    "retreatThresholdDelta": 15,
+    "defaultRetreatPercent": 35,
+    "historicalHpAllowance": "18 + 3 * (level - 1), applied once; current and maximum HP increase together",
+    "marker": "MJPPhantomResilienceV1",
+    "activeEternalSoulMigrationDeferredUntilOriginalExpiry": true,
+    "healingRestrictionsPreserved": true,
+    "anchoredLowHealthRetreatUsesOriginalSafeBuildingPath": true,
+    "originalRecallCooldownAndLevelRetained": true
+  },
+  "compiler": {
+    "originalSdkCompilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 207607,
+      "sha256": "88eec03df2ba5003e8a90fcbb5a8655369e73d90f748b03e1dc12c47d96436cc"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 15671601,
+        "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 823,
+        "compiledDefinitions": 823
+      },
+      "base": {
+        "bytes": 214283,
+        "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 115,
+        "compiledDefinitions": 115
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "baseAndNorthernLibrariesByteIdentical": true,
+    "onlySharedBytecodeChanged": true,
+    "engineRebuilt": false,
+    "generatedTranslationsEdited": false
+  },
+  "nativeSpellControl": {
+    "trial": "phantom20261028probe2",
+    "input": {
+      "bytes": 1366349,
+      "sha256": "3594dfa4dce4bea37ad854c01de1ef76c6747f436e06a97e7baf242eed555d03"
+    },
+    "result": {
+      "MJPProbeDone": true,
+      "MJPProbeFullBoostedHP": 6540,
+      "MJPProbeHalfAfter": 2515,
+      "MJPProbeHalfBefore": 2515,
+      "MJPProbeOneHP": 1,
+      "MJPProbePassed": true
+    },
+    "testedReleaseFunctionBodiesIdentical": true,
+    "fixtureNotIncludedInRelease": true,
+    "scope": "Controlled actual compiled GPL calls through the original VM; full/half/one-HP, duplicate begin/end and defense restoration"
+  },
+  "browser": {
+    "mission": "Rise of the Ratmen",
+    "input": "4be2f320f2546d7f009f9e0b532f558369a3bcf5da882674d288e73ab3fe315c",
+    "firstSave": "dd321664343a333f989b2043661b3133508659fb33f204a6a46ff61b3317999c",
+    "boostedSave": "ce807d73f3cf4b63e323388ca1e311a97419fc759fe5c8867ae6a054d25387f0",
+    "reloadedSave": "88ba9d5c89e00898f1ae085307b6841f743612167d26350df3c90fc76e8a967e",
+    "migratedHero": {
+      "unitId": 3414,
+      "priorHp": 2016,
+      "baseHp": 5031,
+      "level": 1000
+    },
+    "newRecruit": {
+      "unitId": 4043,
+      "recruitPrice": 700,
+      "startingHp": 36,
+      "startingVitality": 15,
+      "level1000BaseHp": 5025
+    },
+    "cheat": "level 1000",
+    "instantCommitMicroseconds": 899,
+    "continuedFromDay": 6,
+    "continuedThroughDay": 14,
+    "exactBoostedSaveReloadedAlone": true,
+    "livingCommunityHeroesAfterReload": 6,
+    "originalFourOtherClassesPresent": true,
+    "sourceProfileIdentity": "majesty",
+    "isolatedOwnedProfiles": true,
+    "muted": true,
+    "noGuestErrors": true,
+    "guardStopped": false,
+    "resources": {
+      "phantom20261028probe2": {
+        "peakGpuFootprintMiB": 307.1,
+        "peakRssMiB": 1916.8
+      },
+      "phantom20261028final": {
+        "peakGpuFootprintMiB": 321.5,
+        "peakRssMiB": 2037.0
+      },
+      "phantom20261028verify": {
+        "peakGpuFootprintMiB": 319.4,
+        "peakRssMiB": 1826.5
+      }
+    }
+  },
+  "tests": {
+    "focusedPython": 35,
+    "updater": 13,
+    "allPassed": true,
+    "exactBoundedArithmeticInputCases": 105
+  },
+  "rollout": {
+    "manualOperations": "none",
+    "automaticUpgrade": "Existing living Phantoms update once during ordinary world callbacks; dead heroes are not revived",
+    "preserves": [
+      "player saves",
+      "profile identity",
+      "resource identities",
+      "creator inputs",
+      "other hero balance",
+      "engine"
+    ],
+    "rollback": "Retain this fixed Eternal Soul shared bytecode or a compatible successor for high-HP Phantom saves; engine/frontend may otherwise roll back independently"
+  },
+  "limitations": [
+    "Bounded test saves, not an exhaustive campaign or every possible hero count",
+    "Retreat retains the original birth-Haunt validity requirements",
+    "No new performance benchmark or host-app crash claim"
+  ],
+  "published": true,
+  "nativeRetreatControl": {
+    "trial": "phantom20261028retreat",
+    "scope": "Private copied native save with only unit3414 current HP changed from5031 to1000; not ordinary progress",
+    "input": "30799b38dbd26cdb72de8773933c83c2c249780ff0b8ef5b68c7d8e2ba064569",
+    "observedParentUnitId": 3352,
+    "observedScript": "Phantom_Rest_At_Guild",
+    "enteredOriginalHomeHaunt": true,
+    "guestErrors": [],
+    "guardStopped": false
+  },
+  "assetsCommit": "7f81bd3567cda2b23b9f43f374701e0a7acff1d7",
+  "publicationScope": "Immutable compiled asset; deployment state is tracked by the source release and hosting service"
+}

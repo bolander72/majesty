@@ -11,12 +11,14 @@ const PREVIOUS = Object.freeze({
   "Data/Community_Common.bcd": [
     "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
     "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
-    "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
+    "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
   ],
   "DataMX/Community_Common.bcd": [
     "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
     "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
-    "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+    "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce",
+    "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
   ],
   "Data/Community_Base.bcd": [
     "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",

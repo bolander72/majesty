@@ -139,5 +139,45 @@ class CommunityReleaseTests(unittest.TestCase):
                                          for p in static.rglob('*') if p.is_file()})
 
 
+    def test_phantom_upgrade_requires_bound_sources_and_live_save_checks(self):
+        for bad in [None, 'reload', 'recruit', 'spell', 'engine', 'source', 'prior', 'extra']:
+            with self.subTest(bad=bad), tempfile.TemporaryDirectory() as temp:
+                root, _ = self.fixture(temp)
+                _, audit = self.campaign_fixture(root)
+                content = json.loads((root / 'deploy/community-guilds-release.json').read_text())
+                content['phantomResilienceVerification'] = 'deploy/phantom-resilience-verification.json'
+                names = ['Data/Community_Common.bcd', 'DataMX/Community_Common.bcd']
+                update = {'bytes': 15000000, 'sha256': 'c' * 64}
+                proof = dict(format='majesty-phantom-resilience-qualification-v1',
+                    engineSha256=content['engineSha256'], existingHeroMigrationQualified=True,
+                    freshReloadIdempotent=True, newRecruitQualified=True,
+                    otherHeroesUnchanged=True, ownedBrowsersClosed=True, nativeEternalSoulRoundTripQualified=True,
+                    files={n: update for n in names},
+                    priorFiles={n: audit['files'][n] for n in names}, sourcePolicies={})
+                for name in ['scripts/prepare-phantom-resilience.py',
+                             'content/community-mods/phantoms-haunt/resilience.gpl']:
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b'qualified Phantom balance')
+                    proof['sourcePolicies'][name] = hashlib.sha256(path.read_bytes()).hexdigest()
+                for rec in content['patches']:
+                    if rec['path'] in names:
+                        rec.update(update)
+                if bad == 'reload': proof['freshReloadIdempotent'] = False
+                elif bad == 'recruit': proof['newRecruitQualified'] = False
+                elif bad == 'spell': proof['nativeEternalSoulRoundTripQualified'] = False
+                elif bad == 'engine': proof['engineSha256'] = '0' * 64
+                elif bad == 'source': (root / 'scripts/prepare-phantom-resilience.py').write_bytes(b'changed')
+                elif bad == 'prior': proof['priorFiles'][names[0]] = update
+                elif bad == 'extra': proof['files']['Data/unittype.cam'] = update
+                (root / content['phantomResilienceVerification']).write_text(json.dumps(proof))
+                with patch.object(BUILD, 'ROOT', root):
+                    if bad is None:
+                        BUILD.qualify_campaign_resource_release(content, content['engineSha256'])
+                    else:
+                        with self.assertRaises(ValueError):
+                            BUILD.qualify_campaign_resource_release(content, content['engineSha256'])
+
+
 if __name__ == '__main__':
     unittest.main()

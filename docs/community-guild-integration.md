@@ -1378,3 +1378,47 @@ engine, compiler, saves, native object retention, resource bounds and limitation
 Historical ability and performance measurements retain their original engine
 bindings. This audit adds no performance benchmark and changes no renderer,
 scheduler, music or player-profile format.
+
+
+## Phantom survivability and Eternal Soul — October28
+
+Eternal Soul's original current-HP times maximum-HP expression can overflow
+Majesty's Q22.10 expression accumulator at high levels. A preserved level1000
+Phantom with5031HP dropped to−130 in one update. The initial health-only
+balance candidate still reproduced this; it was not released.
+
+The browser adaptation uses bounded integer long division for exact rounded
+health proportions, and quotient/remainder decomposition for the30% bonus.
+It preserves the original buff guards, duration, defenses and expiry. An
+original-VM controlled trial verifies5031→6540→5031HP,2515→2515HP after a full
+round trip, and survival at1HP, with duplicate begin/end defense restoration.
+The release functions are identical to those tested; private probes are absent
+from the release.105 focused arithmetic inputs cover bounded intermediate
+values through million-HP scenarios.
+
+Phantoms gain18 starting HP, eight vitality and a−3 natural-healing-rate
+modifier. Their default retreat threshold becomes35%, retaining prior kingdom
+modifiers. A saved one-time marker applies the same improvements to living
+existing heroes, with18+3×(level−1) historical HP allowance and no damage reset.
+An active Eternal Soul finishes before this migration. Dead heroes remain dead.
+An anchored low-health Phantom uses the existing safe home retreat instead of
+the stock last-stand gamble; the original recall eligibility and cooldown remain.
+A private1000HP save control enters its actual Haunt and runs the original rest
+script. This control is separate from ordinary campaign progress.
+
+Ordinary paid recruitment, level1000, multi-day Northern play, native saving
+and an exact-save fresh reload retain both Phantoms and the other four community
+classes. The older Phantom's base HP changes2016→5031; the new recruit begins
+at36HP and retains5025HP at level1000. The original media, resource identities,
+other hero balance, engine and player-profile format are unchanged. Only the
+shared bytecode at Data/Community_Common.bcd and DataMX/Community_Common.bcd
+updates. Historical campaign/resource qualification remains bound to its original
+files; the release gate verifies this additional adaptation separately.
+
+See deploy/phantom-resilience-verification.json. Prepare reproducibly with
+scripts/prepare-phantom-resilience.py against the qualified campaign-resource
+source stage, then use the existing original-SDK compiler tool. Creator packages
+are read-only. Existing compatible installations update through the ordinary
+integrity-checked updater; customized content is preserved. No manual save edit
+or other rollout operation is required. Keep this corrected Eternal Soul or a
+compatible successor when retaining high-HP Phantom saves.

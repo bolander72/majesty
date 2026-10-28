@@ -1,5 +1,13 @@
 # Changelog
 
+## Phantom survivability and Eternal Soul — October 28, 2026
+
+- Fix Eternal Soul's high-level HP multiplication overflowing the original GPL expression accumulator and killing its caster. Scale current HP with bounded integer long division, preserve exact rounded health proportions, and keep a living one-HP hero alive when the effect begins or expires.
+- Give Phantoms 18 additional starting HP, eight additional vitality, faster natural regeneration, and a 35-percent retreat threshold. Retain their original spells, artwork, equipment and undead healing restrictions.
+- Upgrade existing living Phantoms once with the same vitality/recovery changes and an HP allowance for already-earned levels. Preserve damage taken and the original Eternal Soul lifecycle; persist the upgrade marker through ordinary saves.
+- Let anchored Phantoms choose safe home retreat at low health instead of the stock last-stand gamble. Preserve Call to Grave's existing level, cooldown and destination checks.
+- Change only composed shared gameplay bytecode in the original and Northern collections. Keep the engine, stock hero stats, resource identities and player-profile format unchanged.
+
 ## Campaign resources, Fire Balm and mixed-guild saves — October 20, 2026
 
 - Restore 44 original Northern resource dependencies needed by community scripts in original campaigns, with their actual callbacks, constants, art and sound. Preserve existing resource identities and the stock Hero prototype.

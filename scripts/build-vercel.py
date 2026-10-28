@@ -329,7 +329,30 @@ def qualify_campaign_resource_release(content, engine):
             hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != value
             for path, value in policies.items()):
         raise ValueError('Campaign resource policy differs from its qualification')
-    files = audit.get('files', {})
+    files = dict(audit.get('files', {}))
+    resilience = content.get('phantomResilienceVerification')
+    if resilience is not None:
+        if resilience != 'deploy/phantom-resilience-verification.json':
+            raise ValueError('Unexpected Phantom resilience qualification')
+        proof = json.loads((ROOT / resilience).read_text())
+        required = ['existingHeroMigrationQualified', 'freshReloadIdempotent',
+                    'newRecruitQualified', 'otherHeroesUnchanged', 'ownedBrowsersClosed',
+                    'nativeEternalSoulRoundTripQualified']
+        policies = proof.get('sourcePolicies', {})
+        if (proof.get('format') != 'majesty-phantom-resilience-qualification-v1'
+                or proof.get('engineSha256') != engine
+                or any(proof.get(key) is not True for key in required)
+                or set(policies) != {'scripts/prepare-phantom-resilience.py',
+                    'content/community-mods/phantoms-haunt/resilience.gpl'}
+                or any(hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != value
+                       for path, value in policies.items())):
+            raise ValueError('Require source-bound Phantom balance and save/reload checks')
+        updates = proof.get('files', {})
+        if (set(updates) != {'Data/Community_Common.bcd', 'DataMX/Community_Common.bcd'}
+                or updates['Data/Community_Common.bcd'] != updates['DataMX/Community_Common.bcd']
+                or proof.get('priorFiles') != {name: files[name] for name in updates}):
+            raise ValueError('Phantom balance must extend the qualified shared bytecode')
+        files.update(updates)
     patches = {p['path']: {k: p[k] for k in ('bytes', 'sha256')}
                for p in content['patches'] if p['path'] in CAMPAIGN_RESOURCE_PATHS}
     if set(files) != CAMPAIGN_RESOURCE_PATHS or patches != files:
