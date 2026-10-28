@@ -1,0 +1,84 @@
+# Community expansion integration
+
+Adventurers Guild, The Royal Menagerie and More Heroes have been acquired and
+verified in private staging. Their shared source composes with the installed
+Alchemist Lab, Bards Hall and Phantoms Haunt. The original SDK compiles the
+adapted common/base/expansion libraries with all 1,338 expected definitions.
+This is source/compiler qualification, not playable native/browser integration.
+Production and player saves have not changed.
+
+## Original inputs
+
+| Mod | Original package | Binding |
+| --- | --- | --- |
+| Adventurers Guild | Creator's 1.0.0 release ZIP | Git `4684853b1c3c37a5aa5c8a8db34cc26fd50c389c`; SHA-256 `8f5b847c0ec7f3795f7f6528a1b8b22e76b23f83291728bdd276ff255356649e` |
+| Royal Menagerie | Steam Workshop 3796459696 | Manifest 2691728586177823327; 14 files; 86,062,467 bytes |
+| More Heroes | Steam Workshop 2106634312 | Manifest 6687461410276579576; 13 files; 842,997 bytes |
+
+Per-file hashes, original manifest identities and required media records are in
+`content/community-expansions/*/source-contract.json`. No original art, audio,
+binary, creator GPL source, player save or run log is committed. Download
+availability does not establish a blanket redistribution license.
+
+## Implemented source compatibility
+
+`inspect-community-expansion-package.py` checks every acquired file, rejects
+linked/escaping or changed inputs, checks CAM/bytecode bounds and XML entities,
+and retains explicit unplayable/unpublished status. Standard More Heroes
+remains a Standard mod; it does not receive an invented Merge declaration.
+
+`prepare-community-expansion-gpl.py` uses the clean, pinned creator Manager
+release source read-only. It preserves the existing guild parent/child dialog
+IDs, reserves separate output IDs for the new panels, and invokes the original
+Standard source/bytecode reproduction proof through a platform compiler
+launcher. The launcher uses the unchanged original SDK compiler in an isolated
+Wine prefix; it does not replace or skip that proof. Manager files are not
+changed.
+
+Two explicit additive source resolutions preserve both sets of content:
+
+- Random recruitment includes all 13 More Heroes classes plus the existing
+  Alchemist and Phantom. The prior Haunt/Paladin restriction remains. The
+  expanded pool exists only in the Northern Expansion view.
+- Guild lookup adds each new class's original guild while preserving all stock
+  and previously installed community guild mappings and the original fallback.
+
+More Heroes adds seven spellcasting titles to the shapeshifting potion's
+Medusa branch but omits matching expiry cleanup. Its private adaptation adds
+the same title predicate to the stock cleanup. All original application
+instructions and ranged-first precedence remain. Both the original package
+and corrected private source reproduce their respective bytecode with the
+original compiler. Actual potion round-trip gameplay remains unqualified.
+
+`stage-community-expansion-legacy-gpl.py` carries the current qualified fixes
+into the new creator result using structural three-way merging. It updates
+both original exports and their first-wins VM aliases, moves edition-specific
+definitions out of the common library, and refuses unresolved edits or
+overlapping routes. Its route tables contain 157 base and 135 expansion entries,
+within the existing 256-entry bound. All six protected Phantom health/spell
+functions remain byte-for-byte identical, and Fire Balm retains its existing
+campaign guard alongside the new potion quest credit.
+
+The common compiler output is 37,265,667 bytes. The compiler wrapper therefore
+permits up to 64 MiB for compiler outputs while keeping source-input limits at
+16 MiB. Full container and definition-set checks still apply. Compilation peaked
+at 125.4 MiB RSS and completed in 26.18 seconds.
+
+## Verification and continuation
+
+`source-integration-verification.json` binds the source stages, original
+compiler and outputs, exact package inspections, source policies and the
+remaining acceptance work. 26 focused tests pass: 16 new boundary/source tests,
+three Phantom resilience tests and seven existing namespace tests.
+
+The new source/resources must not be put into the public collection yet.
+Required next work is the original 1.5.1.2 native controller and intrinsic port,
+resource/actor import, More Heroes quest participation, and ordinary gameplay
+acceptance. Verify native UI at stock scale, paid construction/recruitment,
+quest rewards, monster capture/taming/rental, death/teardown, potion expiry,
+save/fresh reload, existing saves and bounded paired co-op. Only then prepare
+the publication/media review and a source-bound deployment gate.
+
+Private stages use separate directories and preserve all originals. Never
+resume retired Lost Trail/Wayfinder content or substitute stock reskins for
+the acquired mechanics and artwork.

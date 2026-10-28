@@ -1,0 +1,78 @@
+{
+  "format": "majesty-community-expansion-source-contract-v1",
+  "id": "more-heroes",
+  "workshopItem": "2106634312",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=2106634312",
+  "workshopManifest": "6687461410276579576",
+  "canonicalGuid": "{B26120CB-8A16-4025-B72B-530AB0BE0300}",
+  "internalName": null,
+  "manifestFilename": "MoreHeroes.mmxml",
+  "definitionFilename": null,
+  "fullPackageAcquired": true,
+  "requiredMedia": [],
+  "requiredCamRecords": {},
+  "runtimeFeatureCounts": {},
+  "packageFiles": {
+    "Data/MoreHeroes.bcd": {
+      "bytes": 601179,
+      "sha256": "32308458da1f7bcf9344fe528db5185219eeffe1270444416931af701b57f3d9"
+    },
+    "Data/MoreHeroes_Actions.xml": {
+      "bytes": 14567,
+      "sha256": "21e728f0a5fd6edb0a2fc381905071034d0e3f5f88ece88cad3d9b3008811711"
+    },
+    "Data/MoreHeroes_Buildings.xml": {
+      "bytes": 15396,
+      "sha256": "dd4bba95e6253989ca1acec946edfbbebfb301eb3b21f5063be9b4b64727f454"
+    },
+    "Data/MoreHeroes_Characters.xml": {
+      "bytes": 17892,
+      "sha256": "01cbfd2342e67583b9eb74f1ce60296fe6872b1246b25b9166596e497e3975db"
+    },
+    "Data/MoreHeroes_Overlays.xml": {
+      "bytes": 3885,
+      "sha256": "4d9c44b6791c72ef3a44a849f46d91bc7a49999cde70d413e400c57f49c3af08"
+    },
+    "Data/MoreHeroes_Projectiles.xml": {
+      "bytes": 2163,
+      "sha256": "d287ed91a29b09b2ec6b139e9b72ec16f66c922d9777e8d51bcd8f56c9d4831b"
+    },
+    "Data/MoreHeroes_Text.xml": {
+      "bytes": 12990,
+      "sha256": "d43d843fd8efeccab92466a471223e75414c899f3d837b34b4d052c61ea72bac"
+    },
+    "Data/TempProject.gplproj": {
+      "bytes": 335,
+      "sha256": "a3c45099c3f19a6d7dba608923678e2251703c8faba888a9a300c96a98e4d472"
+    },
+    "GPL/MoreHeroes.gpl": {
+      "bytes": 114689,
+      "sha256": "1dd7115fd2aa164699d3069032e2a7c6c0dd08d0757a15ba2e21038bdefc85df"
+    },
+    "GPL/MoreHeroes_Data.dat": {
+      "bytes": 16270,
+      "sha256": "a6981a0175f0bbbf3dc4d189d9daabf02c0ecd981abbb4d599ba4ff82ec840ad"
+    },
+    "GPL/MoreHeroes_DecisionTrees.gpl": {
+      "bytes": 41987,
+      "sha256": "5be56b299c8df035b0826f0166d8403b4bf74e5df35cb7afe5d78041023db19d"
+    },
+    "MoreHeroes.mmxml": {
+      "bytes": 1117,
+      "sha256": "8e185b8e943a5747008d24c306913e1362e316845d7a3df9098eaf2c4282eede"
+    },
+    "MoreHeroes.mswproj": {
+      "bytes": 527,
+      "sha256": "a55e5639c045b0319c0c2383d3a68a3d1775bc0103f10c33560e1f2b586751be"
+    }
+  },
+  "packageInventorySha256": "6b10401bf97aea1cdf4909311bf9e53ee059b9f48bd0ff9eebf8b26a17ca7390",
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "mediaRedistribution": "Keep original media and source in private staging pending publication review; no blanket license inferred.",
+  "datasetBases": [
+    "MajestyExpansion"
+  ],
+  "originalCampaignEnabled": false
+}

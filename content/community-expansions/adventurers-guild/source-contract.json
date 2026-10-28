@@ -1,0 +1,140 @@
+{
+  "format": "majesty-community-expansion-source-contract-v1",
+  "id": "adventurers-guild",
+  "workshopItem": "3804026997",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3804026997",
+  "source": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-adventurers-guild",
+    "commit": "4684853b1c3c37a5aa5c8a8db34cc26fd50c389c",
+    "archivePath": "dist/release/AdventurersGuild-1.0.0.zip",
+    "archiveSha256": "8f5b847c0ec7f3795f7f6528a1b8b22e76b23f83291728bdd276ff255356649e",
+    "archiveBytes": 2918733
+  },
+  "canonicalGuid": "{f851817e-de04-4f5d-bb40-93a2395460b9}",
+  "internalName": "AdventurerGuild",
+  "manifestFilename": "AdventurerGuild.mmxml",
+  "fullPackageAcquired": true,
+  "requiredMedia": [
+    "Data/adventurer_guild_audio.cam",
+    "Data/adventurer_guild_interfacedata.cam",
+    "Data/adventurer_guild_maindata.cam",
+    "Data/adventurer_guild_sounddesc.cam",
+    "Data/adventurer_guild_textdata.cam"
+  ],
+  "requiredCamRecords": {
+    "Data/adventurer_guild_audio.cam": [
+      [
+        "WAVE",
+        "AGW1Guild Select"
+      ]
+    ],
+    "Data/adventurer_guild_interfacedata.cam": [
+      [
+        "IMAG",
+        "AGTIraw textures"
+      ],
+      [
+        "IMAG",
+        "AGBGquest board"
+      ],
+      [
+        "IMAG",
+        "AGBAguild actions"
+      ]
+    ],
+    "Data/adventurer_guild_maindata.cam": [
+      [
+        "IMAG",
+        "AGB1Fairgrounds"
+      ],
+      [
+        "IMAG",
+        "AGE0Empty quests"
+      ]
+    ],
+    "Data/adventurer_guild_sounddesc.cam": [
+      [
+        "DSND",
+        "AGS1Adventurer_Guild"
+      ]
+    ],
+    "Data/adventurer_guild_textdata.cam": [
+      [
+        "SMNU",
+        "AGP1"
+      ],
+      [
+        "SMNU",
+        "AGQB"
+      ]
+    ]
+  },
+  "runtimeFeatureCounts": {
+    "stock.hero-quest-lifecycle.v1": 1,
+    "stock.mx05-data-record-list-panel.v1": 1,
+    "stock.mx22-building-open-toggle.v1": 1,
+    "stock.map-fog-query.v1": 1,
+    "stock.gameplay-event-observer.v1": 4,
+    "stock.activity-duration.v1": 1,
+    "stock.movement-query.v1": 1
+  },
+  "packageFiles": {
+    "AdventurerGuild.mmxml": {
+      "bytes": 1314,
+      "sha256": "51f4d20f3b8c1b09d4b62f6ee4c8dfdd642f2839494a67488cd60059b9a90766"
+    },
+    "CREDITS.txt": {
+      "bytes": 811,
+      "sha256": "cb57bf0f24b2711fcc577c384615853ec8d586a7e3e532ac6c54e49ffaa83520"
+    },
+    "Data/Adventurer_Guild.bcd": {
+      "bytes": 1488111,
+      "sha256": "1c1153071597655f3a5159d2551ece680e009bf8c7b9f0c35bf393aa67d2588c"
+    },
+    "Data/adventurer-guild-units.xml": {
+      "bytes": 1845,
+      "sha256": "79ecc62b98e08cc0632f11782f17b84e58c32880f3d3340503f0ec52ea6756e2"
+    },
+    "Data/adventurer_guild_audio.cam": {
+      "bytes": 79488,
+      "sha256": "3631fc61a89d44f8a34edec6cae071c9bcc9b443d5dc629ddae0be368fca2671"
+    },
+    "Data/adventurer_guild_interfacedata.cam": {
+      "bytes": 1817754,
+      "sha256": "d57aee725d21d7a6ef8717e19b1cc33829ca81d306b8e2da7a242d40d8d3fd99"
+    },
+    "Data/adventurer_guild_maindata.cam": {
+      "bytes": 3059319,
+      "sha256": "d2a0df6b5ffd7c91c0f4f90d172ff0d0d7978e7868f045fdc8a8dbf147ce0fa2"
+    },
+    "Data/adventurer_guild_sounddesc.cam": {
+      "bytes": 826,
+      "sha256": "1f1c7fcdcc3463f31145fbb68c0fcb9eaa924c87da57e2dc5515a8108245a0f8"
+    },
+    "Data/adventurer_guild_textdata.cam": {
+      "bytes": 105956,
+      "sha256": "1a41527e7177615655bdd98f4550786a8070a2585962f980be682766d06c0a7a"
+    },
+    "GPL/Adventurer_Guild_Activities.gpl": {
+      "bytes": 73547,
+      "sha256": "465c8c8030a4db44ecdb6f2fcf108e701d0ff44d8750f0462b22cef72927a20c"
+    },
+    "GPL/Adventurer_Guild_Core.gpl": {
+      "bytes": 95302,
+      "sha256": "7f4254d16aee6a21fa4c6cb41ec9951207b4510f38a64c30588fef79c70a8d13"
+    },
+    "GPL/Adventurer_Guild_Data.dat": {
+      "bytes": 307,
+      "sha256": "62ca7b997bd7427ef92b65d4873732f01ca0901099e2992f0ba568040ece0fc6"
+    },
+    "mod-definition.json": {
+      "bytes": 4604,
+      "sha256": "aa89a41f3d62e46478594f5887880efb8038d4312a97a84928375a75418a890a"
+    }
+  },
+  "packageInventorySha256": "e2f395363737ff528ebcd60ad564f51c107b7d253beaa0134c166f632e4580b1",
+  "mediaRedistribution": "Not inferred from download availability. Keep original media in private staging pending publication review.",
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "published": false
+}

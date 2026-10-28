@@ -33,7 +33,7 @@ def prepare_inputs(source, compiler, output):
     proof_raw = read(source / 'source-stage.json')
     proof = json.loads(proof_raw)
     if proof.get('format') != 'majesty-community-combined-creator-gpl-stage-v1':
-        raise ValueError('Require prepared authentic three-guild source')
+        raise ValueError('Require prepared authentic community source')
     payloads = {}
     for scope, slug in SCOPES:
         names = sorted(name for name in proof['files'] if name.startswith(scope + '/'))
@@ -102,7 +102,10 @@ def compile_sources(args):
                     time.sleep(.2)
             if process.returncode:
                 raise ValueError('Original SDK compiler failed: ' + slug)
-            raw = read(args.out / (slug + '.bcd'))
+            # The merged expansion library includes autonomous quest scripts.
+            # Keep source inputs at16 MiB; allow bounded compiler outputs up to
+            #64 MiB, still checking the full container and every definition.
+            raw = read(args.out / (slug + '.bcd'), limit=64 * 1024 * 1024)
             if (len(raw) < 28 or struct.unpack_from('<III', raw)
                     != (len(raw) - 4, len(raw) - 4, 0xffffffff)):
                 raise ValueError('Original SDK emitted no valid bytecode: ' + slug)

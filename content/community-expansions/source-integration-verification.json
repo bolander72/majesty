@@ -1,0 +1,245 @@
+{
+  "format": "majesty-community-expansion-source-integration-verification-v1",
+  "date": "2026-10-28",
+  "status": "private-source-compiled; native-integration-pending",
+  "packages": {
+    "adventurers-guild": {
+      "format": "majesty-community-expansion-package-inspection-v1",
+      "id": "adventurers-guild",
+      "packageInventorySha256": "e2f395363737ff528ebcd60ad564f51c107b7d253beaa0134c166f632e4580b1",
+      "filesInspected": 13,
+      "bytesInspected": 6729184,
+      "originalMediaPresent": true,
+      "runtimeFeatureCounts": {
+        "stock.hero-quest-lifecycle.v1": 1,
+        "stock.mx05-data-record-list-panel.v1": 1,
+        "stock.mx22-building-open-toggle.v1": 1,
+        "stock.map-fog-query.v1": 1,
+        "stock.gameplay-event-observer.v1": 4,
+        "stock.activity-duration.v1": 1,
+        "stock.movement-query.v1": 1
+      },
+      "nativeHooksQualified": false,
+      "browserPlayable": false,
+      "published": false
+    },
+    "royal-menagerie": {
+      "format": "majesty-community-expansion-package-inspection-v1",
+      "id": "royal-menagerie",
+      "packageInventorySha256": "1f57e765c12c68cd3232704983b73393de58c54c628dc20a79bfc761a48f5154",
+      "filesInspected": 14,
+      "bytesInspected": 86062467,
+      "originalMediaPresent": true,
+      "runtimeFeatureCounts": {
+        "stock.mx09-ap41-reward-panel.v1": 1,
+        "stock.mx04-mx05-occupant-action-panel.v1": 1,
+        "stock.mx22-building-open-toggle.v1": 1,
+        "stock.gplmx-purchase-bazaar-tail.v1": 1,
+        "stock.controlled-follower-speed-sync.v1": 1,
+        "stock.ap41-fl00-hostile-monster-flag.v1": 1
+      },
+      "nativeHooksQualified": false,
+      "browserPlayable": false,
+      "published": false
+    },
+    "more-heroes": {
+      "format": "majesty-community-expansion-package-inspection-v1",
+      "id": "more-heroes",
+      "packageInventorySha256": "6b10401bf97aea1cdf4909311bf9e53ee059b9f48bd0ff9eebf8b26a17ca7390",
+      "filesInspected": 13,
+      "bytesInspected": 842997,
+      "originalMediaPresent": true,
+      "runtimeFeatureCounts": {},
+      "nativeHooksQualified": false,
+      "browserPlayable": false,
+      "published": false
+    }
+  },
+  "sourceContracts": {
+    "adventurers-guild": {
+      "bytes": 4380,
+      "sha256": "9ecab7a98cc42a1bdc0958b6bfe20839db8b29401dd22f28cd1f5a27c3de24bc"
+    },
+    "royal-menagerie": {
+      "bytes": 4587,
+      "sha256": "f3767f0da8377a68e84f7bda6f14416ca9306cbf8da5fa81bb6189dc2c58ad52"
+    },
+    "more-heroes": {
+      "bytes": 2842,
+      "sha256": "c7005fde782df4b2782abedbe4e82b85726e2fa2a9b4f99a6d93ded7d427d14d"
+    }
+  },
+  "compiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 274058,
+      "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 476912,
+        "sha256": "4f0d780ccfd6170c218c00d93a4b05921e05a0d74a0f9c4b92ff0d27b96d282e",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 66,
+        "compiledDefinitions": 66
+      }
+    },
+    "elapsedSeconds": 26.18,
+    "peakRssMiB": 125.4,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "creatorStage": {
+    "bytes": 7252,
+    "sha256": "08c627d8e9f49d057fd799c4e636244cdcf5ac7b3cdd82aeeccc558508d496ae"
+  },
+  "legacyStage": {
+    "bytes": 274058,
+    "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+  },
+  "legacyRoutes": {
+    "Majesty": 157,
+    "MajestyExpansion": 135
+  },
+  "explicitAdditiveSourceResolutions": {
+    "Random_Hero_Type": {
+      "result": {
+        "bytes": 3193,
+        "sha256": "4e7995957987a13a570197b551fe5832c52032bd1f5cebba26158224aecd884e"
+      },
+      "candidates": {
+        "b26120cb-8a16-4025-b72b-530ab0be0300": {
+          "bytes": 1481,
+          "sha256": "df54db618be2d246a0f7c87c7f1cbc90f43737fbebba1b4a0a43944614e39e8f"
+        },
+        "42ba4603-2b13-446d-a2a4-6cf3a55ddac3": {
+          "bytes": 1877,
+          "sha256": "9a93fbe720b2da9479d9447d11ade020a7fe4405bc005ebacac91409335c6805"
+        },
+        "8c48289e-7c70-4426-8913-133f3544a182": {
+          "bytes": 1877,
+          "sha256": "9a93fbe720b2da9479d9447d11ade020a7fe4405bc005ebacac91409335c6805"
+        }
+      }
+    },
+    "Guild_Title": {
+      "result": {
+        "bytes": 4251,
+        "sha256": "a926f89daf94675a7e534eaae1f437e5634a58ab96a4d1a01e5d68e6dd9895f1"
+      },
+      "candidates": {
+        "b26120cb-8a16-4025-b72b-530ab0be0300": {
+          "bytes": 2633,
+          "sha256": "cd8c2c99119113ba95f44c8cff239b848eda66d558f5ced9398bac0d8d68f782"
+        },
+        "42ba4603-2b13-446d-a2a4-6cf3a55ddac3": {
+          "bytes": 1645,
+          "sha256": "b8c8e14f27d828e135008b3c1be2840aa2615e0eccfbc01f3a8c721735dd4ae2"
+        },
+        "e277a34f-bfb6-54ec-bfec-565d735edc37": {
+          "bytes": 1717,
+          "sha256": "427dda7060a25f959277d4ff991b195e3d7fd599f6b1cfffbda10595a3527ac8"
+        },
+        "8c48289e-7c70-4426-8913-133f3544a182": {
+          "bytes": 1635,
+          "sha256": "88f2d33645c5d89c20ccc1afb117222ae811e5397e3266359bba34659a507b37"
+        }
+      }
+    }
+  },
+  "moreHeroesOriginalSourceBytecodeReproductionQualified": true,
+  "moreHeroesPairedCleanup": {
+    "magicHeroTitles": [
+      "Necromancer",
+      "Fire_Witch",
+      "Lightning_Lord",
+      "Fallen_Angel",
+      "Minstrel",
+      "Mystic",
+      "Timewalker"
+    ],
+    "changedOriginalPaths": [
+      "Data/MoreHeroes.bcd",
+      "GPL/MoreHeroes.gpl"
+    ],
+    "sourceBytecodeReproductionQualified": true,
+    "nativeRoundTripQualified": false
+  },
+  "protectedPhantomFunctionsUnchanged": 6,
+  "fireBalmGuardAndQuestCreditPreserved": true,
+  "moreHeroesExpansionOnlyPoolPreserved": true,
+  "resourceBindingsValid": true,
+  "focusedTests": {
+    "total": 26,
+    "expansionBoundaryAndSource": 16,
+    "phantomResilience": 3,
+    "existingGuildNamespace": 7
+  },
+  "originalPackagesAndPlayerSavesUnmodified": true,
+  "productionReleaseUnchanged": true,
+  "nativeEngineBuilt": false,
+  "browserGamesLaunched": false,
+  "nativeRuntimeQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "sourcePolicies": {
+    "scripts/inspect-community-expansion-package.py": {
+      "bytes": 5372,
+      "sha256": "f5b6a9b12533110ce64d648839f738bbebca457346e605bcd28220148702ded0"
+    },
+    "scripts/prepare-community-expansion-gpl.py": {
+      "bytes": 18840,
+      "sha256": "3f6dc2eac2234f27f88095485b4c21f4893d7089e635a8c9a2e92244b4e2ca95"
+    },
+    "scripts/stage-more-heroes-shapeshift.py": {
+      "bytes": 6130,
+      "sha256": "f5d205a294021a22068845e68738fdacd1ca4e3ccffd5f3a0cee4c66eb903cfa"
+    },
+    "scripts/stage-community-expansion-legacy-gpl.py": {
+      "bytes": 10631,
+      "sha256": "1131d3f4be488b27a9233b9ff50b20677d958d9b2ab412301dbe97d287a0b1c7"
+    },
+    "scripts/lib/community_expansion_source_resolutions.py": {
+      "bytes": 3553,
+      "sha256": "ffbaa584f7a4b96bfd6dade9f6a7441f8290023c99f11394fb6f499a783cc86f"
+    },
+    "scripts/compile-community-guild-gpl.py": {
+      "bytes": 7648,
+      "sha256": "86f3c6e6bb0dcc17d4f619735a71a84ac132b9e5bde25d8578f2a7ede6e7c950"
+    }
+  },
+  "remainingAcceptance": [
+    "Original 1.5.1.2 controller/panel lifecycles for quest board and Zoo",
+    "Original-ABI map-fog and movement-query intrinsics, capture flags and follower speed synchronization",
+    "Native CAM/description/name/actor import preserving current IDs",
+    "More Heroes decision-tree quest participation",
+    "Native-scale UI including Palace icon contract",
+    "Paid gameplay, quest rewards, capture/taming/rental and death/teardown",
+    "Live potion round trip and save/fresh reload/existing-save regressions",
+    "Bounded paired co-op",
+    "Publication/media review and source-bound release gate"
+  ]
+}

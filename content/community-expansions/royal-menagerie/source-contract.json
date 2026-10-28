@@ -1,0 +1,160 @@
+{
+  "format": "majesty-community-expansion-source-contract-v1",
+  "id": "royal-menagerie",
+  "workshopItem": "3796459696",
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3796459696",
+  "workshopManifest": "2691728586177823327",
+  "canonicalGuid": "{d45a135f-31ca-4b53-b3e4-776e231a328c}",
+  "internalName": "RestoreAbandonedZoo",
+  "manifestFilename": "RestoreAbandonedZoo.mmxml",
+  "definitionFilename": "mod-definition.json",
+  "fullPackageAcquired": true,
+  "requiredMedia": [
+    "Data/restore_zoo_gpltext.cam",
+    "Data/restore_zoo_interfacedata.cam",
+    "Data/restore_zoo_maindata.cam",
+    "Data/restore_zoo_miscdata.cam",
+    "Data/restore_zoo_textdata.cam"
+  ],
+  "requiredCamRecords": {
+    "Data/restore_zoo_gpltext.cam": [],
+    "Data/restore_zoo_interfacedata.cam": [
+      [
+        "IMAG",
+        "IX92monster icons"
+      ],
+      [
+        "IMAG",
+        "IX94monstor icons n"
+      ],
+      [
+        "IMAG",
+        "ZOTIraw textures"
+      ],
+      [
+        "IMAG",
+        "ZOBGbuilding dialog"
+      ],
+      [
+        "IMAG",
+        "ZCICItem Icons"
+      ],
+      [
+        "IMAG",
+        "ZCBBbuilding frame"
+      ],
+      [
+        "IMAG",
+        "ZTBBbuilding frame"
+      ],
+      [
+        "IMAG",
+        "CUR1Tactical Cursor"
+      ]
+    ],
+    "Data/restore_zoo_maindata.cam": [
+      [
+        "IMAG",
+        "ZCA2Capture flag"
+      ],
+      [
+        "IMAG",
+        "ABn1Zoo Level 1"
+      ],
+      [
+        "IMAG",
+        "ABn2Zoo Level 2"
+      ],
+      [
+        "IMAG",
+        "ABn3Zoo Level 3"
+      ]
+    ],
+    "Data/restore_zoo_miscdata.cam": [],
+    "Data/restore_zoo_textdata.cam": [
+      [
+        "SMNU",
+        "MX09"
+      ],
+      [
+        "SMNU",
+        "ZC01"
+      ],
+      [
+        "SMNU",
+        "ZT01"
+      ]
+    ]
+  },
+  "runtimeFeatureCounts": {
+    "stock.mx09-ap41-reward-panel.v1": 1,
+    "stock.mx04-mx05-occupant-action-panel.v1": 1,
+    "stock.mx22-building-open-toggle.v1": 1,
+    "stock.gplmx-purchase-bazaar-tail.v1": 1,
+    "stock.controlled-follower-speed-sync.v1": 1,
+    "stock.ap41-fl00-hostile-monster-flag.v1": 1
+  },
+  "packageFiles": {
+    "Data/RestoreAbandonedZoo.bcd": {
+      "bytes": 162824,
+      "sha256": "45d1dd03eae8200b6b2f312e539691e82856a218bcbe6574ae47d21b84361fed"
+    },
+    "Data/restore_zoo_gpltext.cam": {
+      "bytes": 91988,
+      "sha256": "5613bd66a2d2094f8571a8e87792a1e40656345b86e75f79c5831e8e06a059c9"
+    },
+    "Data/restore_zoo_interfacedata.cam": {
+      "bytes": 31270679,
+      "sha256": "ac04479a4c2af3a66f20aa6d24d24fb33005ecc5277c9cbbf28d76ce4537dfec"
+    },
+    "Data/restore_zoo_maindata.cam": {
+      "bytes": 54449521,
+      "sha256": "dc72a0550e778c3aaae6f04e204762cb43086a59c94f9f3beb79571c00584c87"
+    },
+    "Data/restore_zoo_miscdata.cam": {
+      "bytes": 5242,
+      "sha256": "dbde8abbb82afcacf52fa3e43baa47389ada97a3881015ec74586acc1051293c"
+    },
+    "Data/restore_zoo_textdata.cam": {
+      "bytes": 16121,
+      "sha256": "4529df7d8c57cdbf81b3577d36cfd113ceaa76238cb8fd0225fcaf7badc2e39e"
+    },
+    "Data/restore_zoo_units.xml": {
+      "bytes": 2898,
+      "sha256": "6c6c1312e610e787863d379c2544577aa7e794ef83df32cdae48fcf72d9b8c74"
+    },
+    "GPL/RestoreAbandonedZoo.gplproj": {
+      "bytes": 127,
+      "sha256": "ceeba9141b60c9127c090f0e2c6511c362c5687910acd82d942cfa20d931d8e4"
+    },
+    "GPL/RestoreAbandonedZoo_Building_Data.dat": {
+      "bytes": 1109,
+      "sha256": "bc4bb3d91e9e02edf7b4f654814311caba369dd1611d94e955de5348c482505b"
+    },
+    "GPL/RestoreAbandonedZoo_Capture.gpl": {
+      "bytes": 58440,
+      "sha256": "ad97d18c5731d39712a5b900a72d52fa497724267ea56bf1407185be3c4cbd3b"
+    },
+    "GPL/RestoreAbandonedZoo_Flag_Data.dat": {
+      "bytes": 241,
+      "sha256": "60f9f9cd846e2d2994875b3d760ace1054e1ac4ab59894a79371934c20a65bfc"
+    },
+    "RestoreAbandonedZoo.mmxml": {
+      "bytes": 1102,
+      "sha256": "51c1acf1d00dc370985798106c5c00cf4689490cf6accdf831176ffcfd306521"
+    },
+    "START HERE.txt": {
+      "bytes": 364,
+      "sha256": "abeeecb2895652f48c9777dad11f09aed424326a607cbbfdd7c7a9a8a3ddae2e"
+    },
+    "mod-definition.json": {
+      "bytes": 1811,
+      "sha256": "4b57db0c4192631cd6f1b15697bd41946a01d5c46acf9d0983d5e33d977e1120"
+    }
+  },
+  "packageInventorySha256": "1f57e765c12c68cd3232704983b73393de58c54c628dc20a79bfc761a48f5154",
+  "nativeHooksQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "mediaRedistribution": "Keep original media and source in private staging pending publication review; no blanket license inferred."
+}
