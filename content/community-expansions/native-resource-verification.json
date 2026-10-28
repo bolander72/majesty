@@ -1,0 +1,250 @@
+{
+  "format": "majesty-community-expansion-native-resource-verification-v1",
+  "date": "2026-10-28",
+  "status": "private-resources-encoded-and-assembled; native-gameplay-pending",
+  "sourceStage": {
+    "bytes": 283763,
+    "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
+  },
+  "nativeResourceStage": {
+    "bytes": 11610,
+    "sha256": "ecf0c632bf6a3868410952108ab55e84265a885382ea678971740f0d8fb1a2b7"
+  },
+  "nativePatchStage": {
+    "bytes": 8761,
+    "sha256": "76137645d47524f7ce767a4c4afacb8b97d0995314792a6bd5b6e447afe5fc78"
+  },
+  "mediaStage": {
+    "bytes": 339020,
+    "sha256": "f76c7bb0ddaf37e29195dc637d3a7e032a4fe2bfe98e3eb0248eae67d5a10cdd"
+  },
+  "counts": {
+    "Any": {
+      "units": 7,
+      "actions": 0
+    },
+    "MajestyExpansion": {
+      "units": 43,
+      "actions": 26
+    }
+  },
+  "pending": [],
+  "actorIdentities": {
+    "AGB1": "ABv1",
+    "ZOO1": "ABw1",
+    "ZOO2": "ABw2",
+    "ZOO3": "ABw3",
+    "necrERV3": "AV01",
+    "fiwiERV3": "AV11",
+    "dapaERV3": "AV21",
+    "MHcuhe1": "AV31",
+    "MHwimo1": "AV41",
+    "liloER": "AV51",
+    "dragER": "AV61",
+    "mhassassin1": "AV71",
+    "mhfallenangel1": "AV81",
+    "mhminstrel1": "AV91",
+    "mhshapeshifter1": "AVP1",
+    "erv5_mystic": "AVQ1",
+    "mh_timewalker1": "AVR1",
+    "ERV4Portal1": "AVS1",
+    "neabERV3": "AB01",
+    "teflERV3": "AB11",
+    "dapado1": "AB21",
+    "MHtemoag1": "AB31",
+    "MHwimoga1": "AB41",
+    "liloshMH": "AB51",
+    "drsaMH": "AB61",
+    "MHcebuilding": "AB71",
+    "mhspiritshrine1": "AB81",
+    "mhangelicgateway1": "AB91",
+    "mhassassinhideout1": "ABI1",
+    "mhtavern1": "ABK1",
+    "mhlabyrinth1": "ABZ1",
+    "erv5_mystic_keep": "ABi1",
+    "mh_time_sphere1": "ABy1"
+  },
+  "preservedPriorDescriptions": 162,
+  "allOriginalAndDeployedActorIdsPreserved": true,
+  "retiredIdentitiesReserved": true,
+  "actorAliasesCheckedAgainstRetailArt": true,
+  "helpCards": 31,
+  "authoredHelpTextAndColorMarkupConverted": true,
+  "art": {
+    "main": {
+      "imagesAdded": 6,
+      "tilesAdded": 303,
+      "palettesAdded": 0,
+      "deployedSlotsByteIdenticalExceptCursorExtension": true,
+      "deployedCursorSetsIdentical": true,
+      "cursorExtended": false
+    },
+    "interface": {
+      "imagesAdded": 10,
+      "tilesAdded": 130,
+      "palettesAdded": 0,
+      "deployedSlotsByteIdenticalExceptCursorExtension": true,
+      "deployedCursorSetsIdentical": true,
+      "cursorExtended": true
+    }
+  },
+  "palaceEmblems": {
+    "nativeSize": [
+      25,
+      25
+    ],
+    "newEmblems": 4,
+    "stockComparisonEmblems": 1,
+    "allOpaque": true,
+    "nativeRimVerified": true,
+    "contactSheet": {
+      "bytes": 5912,
+      "sha256": "ca2bf6c21cb2fd8f2b6547e4959d8a4c9e7a2dba482e785273c3bce10d7624b5"
+    },
+    "liveUiQualified": false
+  },
+  "patches": {
+    "Data/unittype.cam": {
+      "bytes": 200834,
+      "sha256": "2ae1c8ff57fcd92a53f699b52bbc39135be496a34af960e347ca0a23a758c6ad"
+    },
+    "DataMX/mx_unittype.cam": {
+      "bytes": 77639,
+      "sha256": "160c430d00021cc32edb3e9fa2cd1b335e287050448f5d73891c241a3f6d87bd"
+    },
+    "DataMX/mx_action.cam": {
+      "bytes": 27187,
+      "sha256": "c052f451330838d985897db46b9ab975ae85918451067396559b826d6a739f85"
+    },
+    "Data/sounddesc.cam": {
+      "bytes": 117695,
+      "sha256": "39d6e5a6d84d4d45e905f68be775de01029b0b104060abf94ae95030394f2497"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 29343096,
+      "sha256": "9a30fda158e382bf48d0564b3c4246daaf251dfd7a2f6d4c9328f3c1c8a8df76"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 29343096,
+      "sha256": "9a30fda158e382bf48d0564b3c4246daaf251dfd7a2f6d4c9328f3c1c8a8df76"
+    },
+    "Data/Community-interface.cam": {
+      "bytes": 8875135,
+      "sha256": "b7185b4213432bee4c0bfb199ab87a0ead65a5adcd8ec89a75e59e5e4d4197a5"
+    },
+    "DataMX/Community-interface.cam": {
+      "bytes": 8875135,
+      "sha256": "b7185b4213432bee4c0bfb199ab87a0ead65a5adcd8ec89a75e59e5e4d4197a5"
+    },
+    "Data/Community-audio.cam": {
+      "bytes": 7483938,
+      "sha256": "bbd08468db1712e8eddc649508c1da63f951b137294889c17b2d621b4db5334f"
+    },
+    "DataMX/Community-audio.cam": {
+      "bytes": 7483938,
+      "sha256": "bbd08468db1712e8eddc649508c1da63f951b137294889c17b2d621b4db5334f"
+    },
+    "Data/textdata.cam": {
+      "bytes": 412593,
+      "sha256": "ce9c7ad2d299e2c3a7ac98e63887011666060860a5be470261960291a9912d30"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 58920,
+      "sha256": "8549f661ae4930d6438289551f2bc51a8b81bbd28a0fce817492f15d4ea8020f"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 157268,
+      "sha256": "daf706a17afd953280226c58973c51bab7b50031a5dbaea006a3890e80ee625e"
+    },
+    "Data/Community-gpltext.cam": {
+      "bytes": 81168,
+      "sha256": "f45a6a272ecbfd9095a17c89ea4c646eb9e0cc982ee9a2b4c08d52ea7231a5b9"
+    },
+    "Data/miscdata.cam": {
+      "bytes": 10268,
+      "sha256": "0ecc187003bcc26cf7cf8cb187c60cb767362b32c6ee4592197b9e810136953e"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 37265667,
+      "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 896411,
+      "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1747460,
+      "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 199434,
+      "sha256": "b9ca6d6e44bdcfa85c34b8980cfaa0a1b2ade83087cbd423af74ecfca075002f"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 60364,
+      "sha256": "a371e5f8d497e470f5b85d430aba0ea592d3caddc93226399cc412d919a34a85"
+    },
+    "DataMX/mx_gpltext.cam": {
+      "bytes": 167444,
+      "sha256": "12805f60ff13fc62acaef19d2477ed331a200438263be9b8939fe06b9aab78c3"
+    },
+    "DataMX/Community-gpltext.cam": {
+      "bytes": 91766,
+      "sha256": "62dadc64c41f15c9767bf0e911719952fc9b3be40f5cbee047cfbc4d859c7fa6"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17210,
+      "sha256": "a52d44d784394074711337a4f8a1d6e59f76c0c906200688c419bcef04197f32"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 37265667,
+      "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 896411,
+      "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1747460,
+      "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683"
+    }
+  },
+  "sourcePolicies": {
+    "scripts/stage-community-expansion-native-resources.py": {
+      "bytes": 14666,
+      "sha256": "c12953e2ba80ddbe15d23aa66cf6da1bc8d2c5cc80dba2f728a223709a2b5516"
+    },
+    "scripts/prepare-community-expansion-native-patches.py": {
+      "bytes": 12146,
+      "sha256": "8c9f89a9cf38cc6a9cb68c43609c2a1d25a581d77f6c80953af0a9d092630365"
+    },
+    "scripts/prepare-community-guild-media.py": {
+      "bytes": 9554,
+      "sha256": "9c59610a277fa2e439adae693f91479e0cf8472f4f0e5e3bdbbfc04d59d49b8a"
+    },
+    "scripts/lib/community_expansion_media.py": {
+      "bytes": 9009,
+      "sha256": "e7cb160a46c1a43cdaaff1be9451704caaf9866973c7e59e52bb7193a3378c69"
+    },
+    "scripts/lib/community_building_icons.py": {
+      "bytes": 7529,
+      "sha256": "2853bb7dfbdbd44a6406f909c9cd093c9de74972cc033e90a06ab61e85eddde6"
+    },
+    "third_party/majesty-mod-manager/src/majesty_cam/art.py": {
+      "bytes": 71621,
+      "sha256": "35941b52034e60e3358ba614a36f1e69298b5accf13fe277856519c5c2ad9434"
+    }
+  },
+  "tests": {
+    "expansionBoundaryAndSource": 21,
+    "expansionMedia": 3,
+    "buildingEmblems": 3
+  },
+  "runtimeControllersQualified": false,
+  "nativeGameplayQualified": false,
+  "saveReloadQualified": false,
+  "coOpQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "productionUnchanged": true
+}

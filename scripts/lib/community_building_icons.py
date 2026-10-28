@@ -91,9 +91,12 @@ def pack_emblem(image, original_header):
     return bytes(header) + indices + palette
 
 
-def frame_guild_icons(raw, stock_main):
+def frame_guild_icons(raw, stock_main, images=None):
     from majesty_cam.cam import read_cam, CamArchive, CamSection, CamEntry
     from majesty_cam.art import parse_best_imag_tile_references
+    wanted = GUILD_IMAGES if images is None else set(images)
+    if not wanted or any(not isinstance(key, bytes) or len(key) != 4 for key in wanted):
+        raise ValueError('Require explicit four-character Palace emblem images')
     cam = read_cam(raw)
     sections = {s.extension: s for s in cam.sections}
     tiles = list(sections[b'TILE'].entries)
@@ -102,7 +105,7 @@ def frame_guild_icons(raw, stock_main):
     targets, found = {}, set()
     for image in sections[b'IMAG'].entries:
         key = image.name[:4]
-        if key not in GUILD_IMAGES:
+        if key not in wanted:
             continue
         parsed = parse_best_imag_tile_references(image.data, tile_count=len(tiles), entry_name=image.name)
         refs = [r for r in parsed.references if r.set_id == 1002]
@@ -110,8 +113,8 @@ def frame_guild_icons(raw, stock_main):
             raise ValueError('Unsupported Palace emblem frame binding: ' + key.decode())
         targets.setdefault(refs[0].tile_index, []).append(key.decode())
         found.add(key)
-    if found != GUILD_IMAGES:
-        raise ValueError('Require all six original guild image bindings')
+    if found != wanted:
+        raise ValueError('Require all selected guild image bindings')
     proof = []
     for index, images in sorted(targets.items()):
         original = tiles[index].data

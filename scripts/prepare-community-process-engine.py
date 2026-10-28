@@ -220,7 +220,7 @@ def prepare(args):
     vendor = ROOT / 'third_party/majesty-mod-manager/runtime'
     for path in vendor.glob('*.h'):
         shutil.copyfile(path, support / path.name)
-    for name in ['StockControllerRegistry.cpp', 'RuntimeFeatureRegistry.cpp']:
+    for name in ['StockControllerRegistry.cpp', 'RuntimeFeatureRegistry.cpp', 'BoundedMapQuery.cpp']:
         shutil.copyfile(vendor / name, support / name)
     shutil.copyfile(args.seed_mod / 'mod.toml', core / 'mod.toml')
     for name in ['features.bin','controllers.bin','shared-overrides.tsv']:

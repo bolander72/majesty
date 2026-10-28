@@ -48,6 +48,10 @@ def prepare(args):
     if not attribute_header.exists() and (core / 'support/gpl_attribute_bridge.h').is_file():
         attribute_header = core / 'support/gpl_attribute_bridge.h'
     shutil.copyfile(ROOT / 'native/community/gpl_attribute_bridge.h', attribute_header)
+    support = attribute_header.parent
+    shutil.copyfile(ROOT / 'native/community/gpl_world_queries.h', support / 'gpl_world_queries.h')
+    for name in ('BoundedMapQuery.h', 'BoundedMapQuery.cpp', 'MovementRate.h'):
+        shutil.copyfile(ROOT / 'third_party/majesty-mod-manager/runtime' / name, support / name)
     for name in ('game.toml', 'globals.toml'):
         shutil.copyfile(base / name, out / name)
     cfg = tomllib.loads((base / 'game.toml').read_text())['translate'].get('native', {})
@@ -68,7 +72,8 @@ def prepare(args):
     cmake = [
         'if(NOT EMSCRIPTEN OR TARGET recomp_app)',
         'message(FATAL_ERROR "Campaign compatibility stage requires browser app link")', 'endif()',
-        'add_library(campaign_core OBJECT ' + quote(core / 'alchemist_native_probe.cpp') + ')',
+        'add_library(campaign_core OBJECT ' + quote(core / 'alchemist_native_probe.cpp') +
+        ' ' + quote(support / 'BoundedMapQuery.cpp') + ')',
         'target_compile_options(campaign_core PRIVATE ' + ' '.join(map(quote, flags)) + ')',
         'add_executable(recomp_app\n' + '\n'.join(
             '$<TARGET_OBJECTS:campaign_core>' if p == removed[0] else quote(p) for p in objects) + '\n)',

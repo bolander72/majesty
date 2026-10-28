@@ -73,8 +73,8 @@
     "format": "majesty-community-original-sdk-compile-v1",
     "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
     "sourceStage": {
-      "bytes": 274058,
-      "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+      "bytes": 283763,
+      "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
     },
     "outputs": {
       "common": {
@@ -94,16 +94,16 @@
         "compiledDefinitions": 166
       },
       "expansion": {
-        "bytes": 476912,
-        "sha256": "4f0d780ccfd6170c218c00d93a4b05921e05a0d74a0f9c4b92ff0d27b96d282e",
+        "bytes": 1747460,
+        "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683",
         "exitCode": 0,
         "headerValid": true,
-        "sourceDefinitions": 66,
-        "compiledDefinitions": 66
+        "sourceDefinitions": 204,
+        "compiledDefinitions": 204
       }
     },
-    "elapsedSeconds": 26.18,
-    "peakRssMiB": 125.4,
+    "elapsedSeconds": 33.24,
+    "peakRssMiB": 122.8,
     "compiled": true,
     "compilerSourceDefinitionsQualified": true,
     "compiledBytesExportedQualified": true,
@@ -117,12 +117,12 @@
     "sha256": "08c627d8e9f49d057fd799c4e636244cdcf5ac7b3cdd82aeeccc558508d496ae"
   },
   "legacyStage": {
-    "bytes": 274058,
-    "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+    "bytes": 283763,
+    "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
   },
   "legacyRoutes": {
     "Majesty": 157,
-    "MajestyExpansion": 135
+    "MajestyExpansion": 158
   },
   "explicitAdditiveSourceResolutions": {
     "Random_Hero_Type": {
@@ -193,8 +193,9 @@
   "moreHeroesExpansionOnlyPoolPreserved": true,
   "resourceBindingsValid": true,
   "focusedTests": {
-    "total": 26,
-    "expansionBoundaryAndSource": 16,
+    "total": 34,
+    "expansionBoundaryAndSource": 21,
+    "expansionMedia": 3,
     "phantomResilience": 3,
     "existingGuildNamespace": 7
   },
@@ -219,8 +220,8 @@
       "sha256": "f5d205a294021a22068845e68738fdacd1ca4e3ccffd5f3a0cee4c66eb903cfa"
     },
     "scripts/stage-community-expansion-legacy-gpl.py": {
-      "bytes": 10631,
-      "sha256": "1131d3f4be488b27a9233b9ff50b20677d958d9b2ab412301dbe97d287a0b1c7"
+      "bytes": 13230,
+      "sha256": "20c187333ce14dedc004fcc45a59e56537fac50361456ef230add18755a17761"
     },
     "scripts/lib/community_expansion_source_resolutions.py": {
       "bytes": 3553,
@@ -229,17 +230,300 @@
     "scripts/compile-community-guild-gpl.py": {
       "bytes": 7648,
       "sha256": "86f3c6e6bb0dcc17d4f619735a71a84ac132b9e5bde25d8578f2a7ede6e7c950"
+    },
+    "scripts/stage-community-expansion-quest-gpl.py": {
+      "bytes": 8598,
+      "sha256": "cbc6ecc51173d7754b61951f83d1e494bc3a6dfb88cd3290d97a69aaa8193e23"
     }
   },
   "remainingAcceptance": [
     "Original 1.5.1.2 controller/panel lifecycles for quest board and Zoo",
     "Original-ABI map-fog and movement-query intrinsics, capture flags and follower speed synchronization",
-    "Native CAM/description/name/actor import preserving current IDs",
-    "More Heroes decision-tree quest participation",
     "Native-scale UI including Palace icon contract",
     "Paid gameplay, quest rewards, capture/taming/rental and death/teardown",
     "Live potion round trip and save/fresh reload/existing-save regressions",
     "Bounded paired co-op",
-    "Publication/media review and source-bound release gate"
-  ]
+    "Publication/media review and source-bound release gate",
+    "Native gameplay qualification of all imported descriptors and the 13 private quest trees"
+  ],
+  "priorCompiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 274058,
+      "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 476912,
+        "sha256": "4f0d780ccfd6170c218c00d93a4b05921e05a0d74a0f9c4b92ff0d27b96d282e",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 66,
+        "compiledDefinitions": 66
+      }
+    },
+    "elapsedSeconds": 26.18,
+    "peakRssMiB": 125.4,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "priorLegacyStage": {
+    "bytes": 274058,
+    "sha256": "6957fc58260c73788f2d442cc399e5afb3cb0046ce1089263343aff32c071dc1"
+  },
+  "standardLibraryCompletion": {
+    "sourceFiles": {
+      "GPL/MoreHeroes.gpl": {
+        "bytes": 116723,
+        "sha256": "1ca851fcd034fabb4072691c4b1a2e4711e3fdb986eafc5123192a38c3959aba"
+      },
+      "GPL/MoreHeroes_Data.dat": {
+        "bytes": 16270,
+        "sha256": "a6981a0175f0bbbf3dc4d189d9daabf02c0ecd981abbb4d599ba4ff82ec840ad"
+      },
+      "GPL/MoreHeroes_DecisionTrees.gpl": {
+        "bytes": 41987,
+        "sha256": "5be56b299c8df035b0826f0166d8403b4bf74e5df35cb7afe5d78041023db19d"
+      }
+    },
+    "importedDefinitions": [
+      "summon_undead1_effect",
+      "Animate_Zombie_Effect",
+      "Animate_Zombie_Callback",
+      "Dragonfire1_Hit",
+      "Dazzle_Hit",
+      "Life_Leach_Hit2",
+      "Exploding_Aura_Cast2",
+      "Exploding_Aura_Hit2",
+      "Necromancer_Birth",
+      "Fire_Witch_Birth",
+      "Dark_Paladin_Birth",
+      "Fallen_Angel_Birth",
+      "Assassin_Birth",
+      "Skeleton_Birth",
+      "monster_birth",
+      "MHB_Birth",
+      "Palace_Birth",
+      "Outpost_Birth",
+      "building_birth",
+      "GetProperUnitArt",
+      "Check_Mausoleum",
+      "Reset_Controlled",
+      "ChainLightning3_Begin",
+      "Lightning_Bolt_Hit2",
+      "summon_dragon1_effect",
+      "Embassy_Init",
+      "Embassy_Spawn",
+      "MH_RandomMonster",
+      "CE_Birth",
+      "Stealth_Effect_MH",
+      "Invisibility_brew_End",
+      "DragonRage_Begin",
+      "DragonRage_End",
+      "Patrol",
+      "RedBuff_Begin",
+      "RedBuff_End",
+      "BlueBuff_Begin",
+      "BlueBuff_End",
+      "GreenBuff_Begin",
+      "GreenBuff_End",
+      "Morph_Begin",
+      "Morph_End",
+      "RO_Birth",
+      "TS_Birth",
+      "mystic_birth",
+      "timewalker_birth",
+      "random1",
+      "MysticSpellChooser",
+      "Recall_Effect",
+      "Recall_Check",
+      "W_K_teleport_move",
+      "Blink_DoMove",
+      "Timelock_Effect2",
+      "Timelock_End",
+      "Divide_Effect2",
+      "TW_Portal_Spawn",
+      "ERV4Portal_Unit_Created",
+      "ERV4Portal_Active",
+      "Necromancer",
+      "Fire_Witch",
+      "Dark_Paladin",
+      "Cultist_Healer",
+      "Wild_Monk",
+      "Lightning_Lord",
+      "Dragoncaller",
+      "Assassin",
+      "Fallen_Angel",
+      "Minstrel",
+      "Shapeshifter",
+      "Mystic",
+      "Timewalker",
+      "ERV4Portal",
+      "Necromancer_Abode",
+      "Temple_Flame",
+      "Dark_Paladin_Domain",
+      "Temple_Mother_Agrela",
+      "Wild_Monk_Gardens",
+      "Lightning_Lord_Shrine",
+      "Dragoncaller_Sanctuary",
+      "CE_building",
+      "Angelic_Gateway",
+      "Spirit_Shrine",
+      "Assassin_Hideout",
+      "Tavern",
+      "Labyrinth",
+      "Mystic_Keep",
+      "Time_Sphere",
+      "RatmanShaman",
+      "Necromancer_tree_mh",
+      "Fire_Witch_tree_mh",
+      "Dark_Paladin_tree_mh",
+      "Lightning_Lord_tree_mh",
+      "Dragoncaller_tree_mh",
+      "Assassin_tree_mh",
+      "fallen_angel_tree_mh",
+      "minstrel_tree_mh",
+      "minstrel_eval_nearby",
+      "follow_support_check_mh",
+      "Follow_support2",
+      "Visit_Building",
+      "Build_Horde2mh",
+      "Cultist_Healer_tree_mh",
+      "cultist_healer_eval_nearby_mh",
+      "wild_monk_tree_mh",
+      "wild_monk_eval_nearby_mh",
+      "PC_Hunter",
+      "Sleeper_Raider",
+      "Sleeper_Robber",
+      "Sleeper_Robber_Eval_Enemies",
+      "ListLootablesInRadius",
+      "Bomber",
+      "shapeshifter_tree_mh",
+      "mystic_tree",
+      "mystic_eval_enemies_nearby",
+      "timewalker_tree"
+    ],
+    "preservedComposedDefinitions": [
+      "BuildingReachedMaxHP",
+      "Guild_Title",
+      "Shapeshift_Potion_Effect",
+      "Random_Hero_Type",
+      "spell_extra_value",
+      "hero_damage",
+      "Shapeshift_Potion_End"
+    ],
+    "standaloneDefinitionCount": 122,
+    "dataset": "MajestyExpansion",
+    "newStockAliases": 23
+  },
+  "commonAndBaseBytecodeUnchangedByStandardCompletion": true,
+  "preQuestCompiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 282293,
+      "sha256": "8f6fc92a9fb3e836186b8262cc3525d02cd2c02a363b9e2982ec3348047bb656"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 1742208,
+        "sha256": "25eea9c7dd47fc743926d07270bc787f849834ed09a8d29fd144e3a12667a909",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 204,
+        "compiledDefinitions": 204
+      }
+    },
+    "elapsedSeconds": 33.33,
+    "peakRssMiB": 124.7,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "moreHeroesQuestParticipation": {
+    "priorStage": {
+      "bytes": 282293,
+      "sha256": "8f6fc92a9fb3e836186b8262cc3525d02cd2c02a363b9e2982ec3348047bb656"
+    },
+    "policy": {
+      "bytes": 8598,
+      "sha256": "cbc6ecc51173d7754b61951f83d1e494bc3a6dfb88cd3290d97a69aaa8193e23"
+    },
+    "stockAnchorTrees": {
+      "necromancer_tree_mh": "mx_priestess",
+      "fire_witch_tree_mh": "mx_wizard",
+      "dark_paladin_tree_mh": "mx_paladin",
+      "lightning_lord_tree_mh": "mx_wizard",
+      "dragoncaller_tree_mh": "mx_cultist",
+      "assassin_tree_mh": "mx_rogue",
+      "minstrel_tree_mh": "mx_elf",
+      "cultist_healer_tree_mh": "mx_cultist",
+      "wild_monk_tree_mh": "mx_monk",
+      "shapeshifter_tree_mh": "mx_cultist"
+    },
+    "reviewedPrivateGaps": {
+      "fallen_angel_tree_mh": [
+        "Check_Nearby(ThisAgent)",
+        "Purchase_Bazaar(ThisAgent,10)"
+      ],
+      "mystic_tree": [
+        "Check_Nearby(ThisAgent)",
+        "Pursue_Entertainment(ThisAgent)"
+      ],
+      "timewalker_tree": [
+        "Check_Nearby(ThisAgent)",
+        "Purchase_Bazaar(ThisAgent,55)"
+      ]
+    },
+    "callbacks": [
+      "Adventurer_Guild_Hero_Decision",
+      "Adventurer_Guild_Hero_Consider"
+    ],
+    "heroTrees": 13,
+    "originalDecisionStructurePreserved": true,
+    "sharedResetAndDeathNotDuplicated": true,
+    "nativeGameplayQualified": false
+  }
 }

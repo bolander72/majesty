@@ -24,6 +24,8 @@ POLICY = load('expansion_inspection', 'inspect-community-expansion-package.py')
 COMPOSE = load('expansion_composition', 'prepare-community-expansion-gpl.py')
 LEGACY = load('expansion_legacy', 'stage-community-expansion-legacy-gpl.py')
 POTION = load('expansion_potion', 'stage-more-heroes-shapeshift.py')
+QUESTS = load('expansion_quests', 'stage-community-expansion-quest-gpl.py')
+NATIVE = load('expansion_native', 'stage-community-expansion-native-resources.py')
 
 
 class PackageTests(unittest.TestCase):
@@ -182,6 +184,111 @@ class NamespaceTests(unittest.TestCase):
 
 
 class GameplaySourceTests(unittest.TestCase):
+    def test_native_help_preserves_authored_text_and_color_boundaries(self):
+        self.assertEqual(NATIVE.native_help_text('Title[newline][color:7070ff]Lore[/color]'),
+                         'Title\n\x017070FFLore\x01FFFFFF')
+        for text in ('[color:7070ff]unclosed', '[/color]', '[image:remote]'):
+            with self.assertRaises(ValueError):
+                NATIVE.native_help_text(text)
+
+    def quest_tree(self):
+        from majesty_cam.gpl import parse_gpl
+        return parse_gpl('''function fallen_angel_tree_mh(agent ThisAgent)
+begin
+if ($Check_Nearby(ThisAgent) == False)
+begin
+if ($Check_rewards(ThisAgent,False) == False)
+if ($Rest(ThisAgent) == False)
+if ($Purchase_Bazaar(ThisAgent,10) == False)
+if ($Explore_Map(ThisAgent,10) == False)
+$Wander(ThisAgent);
+end
+else
+$CombatOwned(ThisAgent);
+end
+''').items[0]
+
+    def run_quest_tree(self, source, returns):
+        from majesty_cam.gpl_function_merge import _Parser
+        _, _, body = _Parser(source).function()
+        trace = []
+        def run(nodes):
+            for node in nodes:
+                if node.kind == 'if':
+                    call = node.head[2][1:].casefold()
+                    trace.append(call)
+                    run(node.otherwise if returns.get(call, False) else node.body)
+                else:
+                    trace.append(node.head[0][1:].casefold())
+        run(body)
+        return trace
+
+    def test_private_quest_guards_preserve_combat_and_own_entire_continuation(self):
+        tree = self.quest_tree()
+        updated = QUESTS.add_quest_hooks(tree)
+        self.assertEqual(self.run_quest_tree(updated, {'check_nearby': True}),
+                         ['check_nearby', 'combatowned'])
+        self.assertEqual(self.run_quest_tree(updated, {'adventurer_guild_hero_decision': True}),
+                         ['check_nearby', 'adventurer_guild_hero_decision'])
+        self.assertEqual(self.run_quest_tree(updated, {'adventurer_guild_hero_consider': True}),
+                         ['check_nearby', 'adventurer_guild_hero_decision', 'check_rewards',
+                          'rest', 'purchase_bazaar', 'adventurer_guild_hero_consider'])
+        trace = [call for call in self.run_quest_tree(updated, {}) if not call.startswith('adventurer_')]
+        self.assertEqual(trace, self.run_quest_tree(tree.text, {}))
+
+    def test_private_quest_guards_reject_reversed_or_changed_anchors(self):
+        from dataclasses import replace
+        tree = self.quest_tree()
+        for text in (tree.text.replace('Purchase_Bazaar(ThisAgent,10)', 'Purchase_Bazaar(ThisAgent,11)'),
+                     tree.text.replace('$Check_Nearby(ThisAgent)', '$DifferentCheck(ThisAgent)')):
+            with self.assertRaisesRegex(ValueError, 'continuation changed'):
+                QUESTS.add_quest_hooks(replace(tree, text=text))
+
+    def test_actor_aliases_cannot_claim_an_installed_or_retired_slot(self):
+        record = SimpleNamespace(to_element=lambda: SimpleNamespace(get=lambda key: 'Character'))
+        for occupied in ('AV01', 'AVz1'):
+            with self.assertRaisesRegex(ValueError, 'alias is occupied'):
+                if occupied == 'AV01':
+                    NATIVE.allocate_aliases({('Unit', 'necrERV3'): record},
+                                           {'Unit': {occupied}, 'Action': set()})
+                else:
+                    # A changed policy cannot silently revive the archived hero.
+                    original = NATIVE.ACTORS['necrERV3']
+                    try:
+                        NATIVE.ACTORS['necrERV3'] = occupied
+                        NATIVE.allocate_aliases({('Unit', 'necrERV3'): record},
+                                               {'Unit': NATIVE.RESERVED, 'Action': set()})
+                    finally:
+                        NATIVE.ACTORS['necrERV3'] = original
+
+    def test_standard_library_keeps_unique_functions_and_scoped_stock_overrides(self):
+        from majesty_cam.gpl import parse_gpl, DefinitionKind
+        original = 'function Recall_Check(agent Hero) is Boolean\nbegin\nreturn True;\nend\n'
+        unique = 'function NewHeroBirth(agent Hero)\nbegin\n$SetHP(Hero,30);\nend\n'
+        merged = 'function Hero_Damage(agent Hero)\nbegin\n$QuestCredit(Hero);\nend\n'
+        earlier = merged.replace('$QuestCredit(Hero);', '$OldDamage(Hero);')
+        raw = (original + unique + earlier).encode()
+        with tempfile.TemporaryDirectory() as folder:
+            package = Path(folder)
+            (package / 'GPL').mkdir()
+            (package / 'GPL/source.gpl').write_bytes(raw)
+            proof = dict(moreHeroesDatasetBases=['majestyexpansion'], moreHeroesCompatibility=True,
+                         moreHeroesNativeSources={'GPL/source.gpl': LEGACY.digest(raw)})
+            key = (DefinitionKind.FUNCTION, 'hero_damage')
+            base_key = ('Majesty', (DefinitionKind.FUNCTION, 'recall_check'))
+            final = {base_key: original.replace('True', 'False'),
+                     ('MajestyExpansion', key): merged}
+            composed = {('MajestyExpansion', key): object()}
+            result = LEGACY.complete_standard_sources(final, proof, package, composed)
+            self.assertEqual(len(result['importedDefinitions']), 2)
+            self.assertEqual(final[('MajestyExpansion', key)], merged)
+            self.assertIn('False', final[base_key])
+            self.assertEqual(final['MajestyExpansion', parse_gpl(original).items[0].key], original)
+            self.assertEqual(final['MajestyExpansion', parse_gpl(unique).items[0].key], unique)
+            (package / 'GPL/source.gpl').write_bytes(raw + b'changed')
+            with self.assertRaisesRegex(ValueError, 'Standard source changed'):
+                LEGACY.complete_standard_sources(final, proof, package, composed)
+
     def test_existing_health_guard_and_new_event_both_survive(self):
         base = 'function Effect(agent Hero)\ndeclare\nbegin\n$Apply(Hero);\nend\n'
         current = base.replace('$Apply(Hero);',

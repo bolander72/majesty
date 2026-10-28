@@ -55,6 +55,51 @@ def carry_function(ancestor, current, proposed):
                                      'Community expansion': proposed})
 
 
+def complete_standard_sources(final, candidate, package, composed):
+    """Materialize the Standard library beside the creator's merged exports.
+
+    Creator composition emits only the Standard functions it needed to merge.
+    Modern Majesty also loads the Standard package itself. Our single scoped
+    library must include that package's remaining functions and DAT blocks.
+    Never replace a merged export with the standalone package's earlier body.
+    """
+    if candidate.get('moreHeroesDatasetBases') != ['majestyexpansion']:
+        raise ValueError('More Heroes must retain its original expansion-only scope')
+    expected_files = candidate.get('moreHeroesNativeSources')
+    if not expected_files or not candidate.get('moreHeroesCompatibility'):
+        raise ValueError('Require source/bytecode-qualified Standard inputs')
+    imported, retained, seen = [], [], set()
+    for name, expected in expected_files.items():
+        path = Path(name)
+        if (len(path.parts) != 2 or path.parts[0] != 'GPL'
+                or path.suffix not in ('.gpl', '.dat')):
+            raise ValueError('Unexpected Standard source input')
+        source = package / path
+        if source.is_symlink():
+            raise ValueError('Linked Standard source input')
+        body = source.read_bytes()
+        if digest(body) != expected:
+            raise ValueError('Standard source changed: ' + name)
+        for item in (parse_dat if path.suffix == '.dat' else parse_gpl)(
+                body.decode('cp1252'), name).items:
+            if item.key in seen:
+                raise ValueError('Duplicate Standard definition: ' + item.name)
+            seen.add(item.key)
+            key = ('MajestyExpansion', item.key)
+            if ('Any', item.key) in final:
+                raise ValueError('Standard source requires a reviewed common scope split: ' + item.name)
+            if key in final:
+                if key not in composed:
+                    raise ValueError('Standard source collides outside creator composition: ' + item.name)
+                retained.append(item.name)
+            else:
+                final[key] = item.text
+                imported.append(item.name)
+    return dict(sourceFiles=expected_files, importedDefinitions=imported,
+                preservedComposedDefinitions=retained,
+                standaloneDefinitionCount=len(seen), dataset='MajestyExpansion')
+
+
 def stage(args):
     if args.out.exists() or args.out.is_symlink():
         raise ValueError('Preserve prior source stages; choose a fresh output')
@@ -120,6 +165,7 @@ def stage(args):
                         renamed(old_alias.text, previous.name), item.text)
                 final[scope, (DefinitionKind.FUNCTION, alias.casefold())] = renamed(alias_body, alias)
                 aliases[scope][item.name] = alias
+    standard = complete_standard_sources(final, candidate, args.standard_package, new)
     # Resolve newly imported stock symbols through the same original VM route
     # mechanism, without guessing any new native addresses.
     spec = importlib.util.spec_from_file_location('expansion_sdk_sources', ROOT / 'scripts/compose-alchemist-gameplay.py')
@@ -132,11 +178,12 @@ def stage(args):
             stock.update(item.normalized_name for item in parsed.items if item.kind is DefinitionKind.FUNCTION)
     if any(current['stockFixture']['inputs'].get(name) != record for name, record in captured.items()):
         raise ValueError('Original SDK source binding changed')
-    for (scope, identity), item in new.items():
+    for (scope, identity), body in list(final.items()):
         if identity[0] is not DefinitionKind.FUNCTION or identity[1] not in stock:
             continue
         if any(name.casefold() == identity[1] for name in aliases[scope]):
             continue
+        item = parse_gpl(body).items[0]
         alias = 'MJC_' + item.name
         alias_key = (scope, (DefinitionKind.FUNCTION, alias.casefold()))
         if alias_key in final:
@@ -180,6 +227,7 @@ def stage(args):
         communityExpansions=dict(priorStage=digest(current_raw), creatorStage=digest(candidate_raw),
             ancestorStage=digest(ancestor_raw), policy=digest(Path(__file__).read_bytes()),
             modifications=replacements, scopeMoves=moved, addedStockAliases=added,
+            standardSourceCompletion=standard,
             existingLegacyAdaptationsReapplied=True, sourceCompositionQualified=True),
         compiled=False, targetNativeABIQualified=False, browserPlayable=False, published=False)
     (args.out / 'source-stage.json').write_text(json.dumps(current, indent=2) + '\n')
@@ -189,6 +237,6 @@ def stage(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('creator-baseline', 'current', 'candidate', 'out'):
+    for name in ('creator-baseline', 'current', 'candidate', 'standard-package', 'out'):
         parser.add_argument('--' + name, type=Path, required=True)
     print(json.dumps(stage(parser.parse_args())))

@@ -3,7 +3,7 @@
 Adventurers Guild, The Royal Menagerie and More Heroes have been acquired and
 verified in private staging. Their shared source composes with the installed
 Alchemist Lab, Bards Hall and Phantoms Haunt. The original SDK compiles the
-adapted common/base/expansion libraries with all 1,338 expected definitions.
+adapted common/base/expansion libraries with all 1,476 expected definitions.
 This is source/compiler qualification, not playable native/browser integration.
 Production and player saves have not changed.
 
@@ -54,15 +54,44 @@ original compiler. Actual potion round-trip gameplay remains unqualified.
 into the new creator result using structural three-way merging. It updates
 both original exports and their first-wins VM aliases, moves edition-specific
 definitions out of the common library, and refuses unresolved edits or
-overlapping routes. Its route tables contain 157 base and 135 expansion entries,
+overlapping routes. Its route tables contain 157 base and 158 expansion entries,
 within the existing 256-entry bound. All six protected Phantom health/spell
 functions remain byte-for-byte identical, and Fire Balm retains its existing
 campaign guard alongside the new potion quest credit.
 
+The Standard package remains a separate input to creator composition, which
+emits only its merged exports. The legacy stage now materializes all 115
+remaining scoped definitions and adds 23 missing stock-function routes.
+Seven composed definitions retain their merged behavior. All 204 expansion
+definitions compile, while common and base bytecode remain exactly unchanged.
+
 The common compiler output is 37,265,667 bytes. The compiler wrapper therefore
 permits up to 64 MiB for compiler outputs while keeping source-input limits at
 16 MiB. Full container and definition-set checks still apply. Compilation peaked
-at 125.4 MiB RSS and completed in 26.18 seconds.
+at 122.8 MiB RSS and completed in 33.24 seconds with the private quest hooks.
+
+All 13 More Heroes decision trees now participate in Adventurers Guild quests.
+Ten retain the creator's exact stock anchor boundaries. Fallen Angel and
+Timewalker use their existing Bazaar continuations; Mystic resumes after its
+combat check and considers work after entertainment. Structural comparison
+unwraps the two new guards and reproduces each complete original tree, including
+else ownership and decision priority. Shared reset/death hooks are not duplicated.
+Native quest gameplay remains to be tested.
+
+The native resource stage encodes 50 units and 26 actions with no unsupported
+fields. It imports Standard descriptions only into the Northern Expansion,
+assigns 33 collision-checked actor identities, and converts all 31 help cards.
+All 162 prior community descriptions remain unchanged. A native-scale contact
+sheet verifies the four new Palace emblems beside a stock emblem: 25 by 25,
+opaque, and framed with the original native rim.
+
+The 26-file private patch set appends six world images and ten interface images
+to the deployed archives. Every prior image, tile and palette payload remains
+unchanged except CUR1's checked extension: all existing cursor animation sets
+retain their complete resolved bytes. Phantom's native spell glyphs, current
+voice corrections and campaign art remain in place. The new guild's original
+audio is appended without transcoding. `native-resource-verification.json`
+binds these inputs and outputs; it does not claim controller/gameplay acceptance.
 
 ## Verification and continuation
 
@@ -78,8 +107,9 @@ of the new guild actors, panels, saves, browser runtime or co-op.
 
 `source-integration-verification.json` binds the source stages, original
 compiler and outputs, exact package inspections, source policies and the
-remaining acceptance work. 26 focused tests pass: 16 new boundary/source tests,
-three Phantom resilience tests and seven existing namespace tests.
+remaining acceptance work. 34 focused tests pass: 21 expansion boundary/source
+tests, three media tests, three Phantom resilience tests and seven existing
+namespace tests. The three native building-emblem tests also pass.
 
 The new source/resources must not be put into the public collection yet.
 Required next work is the original 1.5.1.2 native controller and intrinsic port,

@@ -29,3 +29,7 @@ The unmodified portable `BoundedMapQuery.h`, `BoundedMapQuery.cpp` and
 `b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`. They supply the creator's bounded
 frontier traversal and movement-rate arithmetic. Their Windows address profiles
 are not used; the Old engine adapter traces its own layouts and native calls.
+
+The unmodified Python `art.py` codec comes from that same release commit. It
+parses audited image references for selective append-only media integration;
+existing deployed image, tile and palette slots remain authoritative.
