@@ -164,3 +164,45 @@ def append_waves(original, authored, wave_ids):
         raise ValueError('Missing, duplicate or occupied new waveform')
     return replace(original, sections=tuple(replace(part, entries=part.entries + additions)
         if part == section else part for part in original.sections))
+
+
+def repair_zoo_foundation_preview(archive):
+    """Use the acquired Zoo foundation for its empty native placement set."""
+    sections = {part.extension: part for part in archive.sections}
+    images = sections[b'IMAG'].entries
+    matches = [entry for entry in images if entry.name[:4] == b'ABn1']
+    if len(matches) != 1:
+        raise ValueError('Require one acquired Zoo image')
+    entry = matches[0]
+    parsed = parse_best_imag_tile_references(entry.data,
+        tile_count=len(sections[b'TILE'].entries), entry_name=entry.name)
+    preview = [ref for ref in parsed.references if ref.set_id == 0x50]
+    foundation = [ref for ref in parsed.references if ref.set_id == 0x51]
+    if (len(preview) != 1 or preview[0].tile_index != 0 or len(foundation) != 1
+            or not foundation[0].tile_index):
+        raise ValueError('Require an empty Zoo preview and an authored visible foundation')
+    before = image_sets(entry, sections)[1]
+    count = struct.unpack_from('<I', entry.data, 20)[0]
+    directory_end = 24 + count * 8
+    rows = [struct.unpack_from('<II', entry.data, 24 + i * 8) for i in range(count)]
+    offsets = sorted(offset for _, offset in rows)
+    if offsets[0] != directory_end:
+        raise ValueError('Unexpected Zoo image directory padding')
+    ends = dict(zip(offsets, offsets[1:] + [len(entry.data)]))
+    bodies = {key: entry.data[start:ends[start]] for key, start in rows}
+    bodies[0x50] = bodies[0x51]
+    raw = bytearray(entry.data[:directory_end])
+    for i, (key, _) in enumerate(rows):
+        struct.pack_into('<II', raw, 24 + i * 8, key, len(raw))
+        raw.extend(bodies[key])
+    repaired = replace(entry, data=bytes(raw))
+    after = image_sets(repaired, sections)[1]
+    if after[0x50] != before[0x51] or any(
+            after[key] != value for key, value in before.items() if key != 0x50):
+        raise ValueError('Zoo repair changed an unrelated image set')
+    result = replace(archive, sections=tuple(replace(part,
+        entries=tuple(repaired if value is entry else value for value in part.entries))
+        if part.extension == b'IMAG' else part for part in archive.sections))
+    return result, dict(image='ABn1', nativePlacementSet=0x50, authoredFoundationSet=0x51,
+        authoredPixelsReused=True, otherImageSetsUnchanged=True,
+        tilesAndPalettesUnchanged=True)

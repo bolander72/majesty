@@ -10,7 +10,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'third_party/majesty-mod-manager/src')]
 from lib.community_guild_composition import digest
-from lib.community_expansion_media import append_art, append_waves
+from lib.community_expansion_media import append_art, append_waves, repair_zoo_foundation_preview
 from lib.community_native_tables import merge_catalog, merge_dependencies, merge_strings
 from lib.legacy_description_wire import cam_payloads, encode_description_cam
 from lib.legacy_description_sound import sound_parts
@@ -116,6 +116,8 @@ def prepare(args):
                                      ('interface', 'merged_interface.cam', INTERFACE_IMAGES)]:
         archive, art[target] = append_art(read_cam(current('Data/Community-' + target + '.cam')),
             read_cam(media_files[authored]), images, extend_cursor=target == 'interface')
+        if target == 'main':
+            archive, art[target]['zooFoundationPreview'] = repair_zoo_foundation_preview(archive)
         raw = archive.to_bytes()
         for folder in ('Data', 'DataMX'):
             outputs[folder + '/Community-' + target + '.cam'] = raw

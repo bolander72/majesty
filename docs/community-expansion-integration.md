@@ -235,3 +235,32 @@ The corrected live20 passes the actual Back and Quest mouse inputs and reopens
 the two-row board. It also repeats all previous native controls and all13
 level1000 heroes; clean exit0 at101.4seconds and209.3MiB. The matching browser
 rebuild and ordinary paid-world verification remain pending.
+
+
+Browser single8 confirms the native return fix through actual controls. Ordinary
+paid construction completes for Adventurers Guild(2850gold/800HP), Assassin
+Hideout(1425gold/375HP) and Zoo(475gold/250HP). All five panels open, a board
+refresh debits exactly16445 to15945, and a paid600gold Assassin reaches
+level1000/2002HP through ordinary cheat input. Single9 starts a fresh browser
+and engine and restores the ordinary twelve-day save: all three buildings,
+four quest offers, Zoo rentON and Assassin2002HP remain. This establishes basic
+saved-state restoration, not full quest or capture lifecycle compatibility.
+Opening the Adventurers Guild for heroes then exposes a separate GPL exception
+(guest exit3765269347); native diagnostic trial21 is investigating that AI path.
+Both owned browsers were closed; host app remained alive, production unchanged.
+
+The acquired Zoo image ABn1 has an empty native placement set0x50, although
+its next construction set0x51 contains the creator's visible foundation.
+Private native-patches-v6 uses that complete authored set for0x50, retaining
+every other image set, tile and palette. Six focused media tests pass, including
+refusal to replace an already visible preview or use an empty foundation.
+The completed Zoo already renders correctly; live placement verification of
+the repaired set is pending.
+
+The exact owned12day save was exported through public OPFS APIs to a
+SHA-pinned loopback receiver, with no browser storage files read directly.
+Native22 and23 load that exact world with test-actor flags disabled and a
+read-only GPL diagnostic flag. Guild Open remains clean for30 and110
+simulation seconds respectively; native23 exits0 at170.37seconds/216.4MiB.
+This narrows the next reproduction to the browser runtime and does not clear
+the browser9 exception. The diagnostic flag is disabled by default.

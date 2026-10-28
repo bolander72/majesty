@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-native-runtime-verification-v1",
   "date": "2026-10-28",
-  "status": "native-real-mouse-navigation-regression-fixed-and-passed; browser-retest-full-gameplay-save-coop-pending",
+  "status": "native-mouse-return-fix-browser-confirmed; all-three-paid-world-restores; open-guild-AI-script-exception-under-investigation",
   "nativeBuild": {
     "command": [
       "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
@@ -153,7 +153,10 @@
     "live17": "All live16 controls repeated cleanly against the corrected canonical DataMX/mx_Unittype.cam catalog. Native exit0, 106.15seconds, 210.3MiB; all13 original heroes at level1000. Current MX records retained; no production change.",
     "live18": "Two test-only quest record rows render correctly, all previous native controls pass, exit0 at97.74seconds and194.5MiB. Direct-call controls do not cover real native input returns.",
     "live19": "Real mouse Back reproduces guest call00000202 at return0049e54f and guest exit3221225477. Returned helper fell through after a real translated CALL continuation. Test-only direct guest_call sentinels had hidden the second handler/RET.",
-    "live20": "After explicit C++ returns on all guest-return branches, actual native Back and Quest mouse clicks pass and reopen the populated two-row board. All prior five-panel, paid-control, 64-text and all13 level1000 checks also pass. Exit0, 101.4seconds, 209.3MiB; no guard stop."
+    "live20": "After explicit C++ returns on all guest-return branches, actual native Back and Quest mouse clicks pass and reopen the populated two-row board. All prior five-panel, paid-control, 64-text and all13 level1000 checks also pass. Exit0, 101.4seconds, 209.3MiB; no guard stop.",
+    "live21": "Fresh controlled kingdom with13 level1000 heroes and two synthetic presentation rows remains clean with guild open for30simulation seconds. It does not reproduce the actual saved-world quest activity failure.",
+    "live22": "Exact owned12day browser save loads natively, original Guild Open control works, then30simulation seconds remain clean. No test-actor flags enabled. Native exit0,91.37seconds,203.6MiB. A longer exact-world trial23 is pending; browser9 exception remains unresolved.",
+    "live23": "Exact owned12day browser save loads natively and remains clean with its guild open for110simulation seconds. No test-actor flags. Exit0,170.37seconds,216.4MiB. This does not explain or clear the browser9 GPL exception."
   },
   "remainingAcceptance": [
     "populated quest-board and actual native building preview/Palace icon inspection beside stock UI",
@@ -486,14 +489,182 @@
         "stockSaveReloaded": true,
         "moddedSaveReloadQualified": false,
         "reason": "quest board opened after ordinary paid construction; invalid callback raised guest access violation"
+      },
+      "single8": {
+        "endedAtUnix": 1793226903.340808,
+        "browserClosed": true,
+        "hostAppAlive": true,
+        "stopReason": null,
+        "privateOnly": true,
+        "productionChanged": false,
+        "engine": {
+          "bytes": 91071792,
+          "sha256": "0afd4adfb2ff9e0e25c239cbbc4407cf3ce21fccf4cfe7161be2f569f149e1d9"
+        },
+        "peakRssMiB": 1605.3,
+        "peakGpuFootprintMiB": 328.5,
+        "paidConstruction": [
+          "Adventurers Guild 2850 gold,800HP",
+          "Assassin Hideout 1425 gold,375HP",
+          "Zoo 475 gold,250HP"
+        ],
+        "normalQuestOffers": 4,
+        "paidBoardRefresh": {
+          "goldBefore": 16445,
+          "goldAfter": 15945
+        },
+        "allFivePanelsByRealMouse": true,
+        "paidAssassinRecruit": {
+          "gold": 600,
+          "name": "Zubba Badcredit",
+          "level": 1000,
+          "hp": 2002,
+          "maxHp": 2002
+        },
+        "zooRentSaved": "ON",
+        "saves": [
+          {
+            "name": "(Freestyle Game) 8 Days.GMP",
+            "bytes": 1389297,
+            "sha256": "a8eea4ab613f5af6624bff9350021f4072ae0abbb1f9fba2208b028bbf1fbc4d"
+          },
+          {
+            "name": "(Freestyle Game) 5 Days.GMP",
+            "bytes": 1365836,
+            "sha256": "630729b874d6f83e58aa2cc66eb8013dd884afd5e2a922755644e575ccacdda3"
+          },
+          {
+            "name": "(Freestyle Game) 12 Days.GMP",
+            "bytes": 1362233,
+            "sha256": "e5445eb88de60acc93b39cf23483850f9edd1d0c7ec57a73b58090d62c1bc94b"
+          }
+        ],
+        "moddedSaveReloadQualified": false,
+        "captureTameRentalGameplayQualified": false,
+        "knownIssue": "Zoo preview and construction stages invisible until completed art renders; requires fix"
+      },
+      "single9": {
+        "endedAtUnix": 1793227147.099471,
+        "stopReason": null,
+        "guestExitCode": 3765269347,
+        "hostAppAlive": true,
+        "browserClosed": true,
+        "privateOnly": true,
+        "productionChanged": false,
+        "peakRssMiB": 1638.4,
+        "peakGpuFootprintMiB": 309.6,
+        "savedWorldLoaded": true,
+        "zooSavedState": {
+          "hp": 250,
+          "rent": "ON"
+        },
+        "adventurersBoardLoaded": {
+          "offers": 4,
+          "hp": 800
+        },
+        "paidAssassinLoaded": {
+          "name": "Zubba Badcredit",
+          "level": 1000,
+          "hp": 2002,
+          "maxHp": 2002
+        },
+        "normalQuestGameplayQualified": false,
+        "failure": "Guild Open clicked; subsequent hero AI raised GPL exception. Save restored ordinary new guild, ledger and hero state before failure."
       }
     },
     "qualified": [
       "ordinary stock save reload under all three new runtime flags",
       "native Palace emblem at 25px beside existing list entries",
       "paid Adventurers Guild construction, 2850 gold, ordinary peasants complete 800HP",
-      "native main guild panel opens after construction"
+      "native main guild panel opens after construction",
+      "all three ordinary paid buildings and all five real mouse panels",
+      "native board refresh exactly16445 to15945 gold",
+      "paid More Heroes Assassin at level1000 with2002HP",
+      "fresh browser/engine reload restores all three ordinary buildings, four quest offers, Zoo rentON and Assassin2002HP"
     ],
-    "unresolved": "Opening populated quest board attached CGAQ then guest called00000202 at return0049e54f, exiting3221225477. Not a host app crash. Investigating ABI; no modded save or paired co-op qualification."
+    "unresolved": "Guild Open permits hero quest activity and later raises guest C++ exception3765269347. Native diagnostic trial21 is tracing the GPL stack. Zoo empty placement image repaired from its acquired foundation image in private native-patches-v6; live preview qualification pending. Capture/taming/rental, full abilities, long missions, existing Phantom save, paired co-op and publication remain pending.",
+    "fixedEngine": {
+      "stage": "expansion-browser-engine-v2",
+      "bytes": 91071792,
+      "sha256": "0afd4adfb2ff9e0e25c239cbbc4407cf3ce21fccf4cfe7161be2f569f149e1d9",
+      "officialBuild": {
+        "command": [
+          "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+          "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-browser-engine-v2/kit/tools/build.py",
+          "--game-dir",
+          "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-browser-engine-v2",
+          "--target",
+          "app",
+          "--jobs",
+          "1",
+          "--preset",
+          "alchemist1325-web"
+        ],
+        "startedAtUnix": 1793226322,
+        "terminal": true,
+        "peakOwnedRssMiB": 1687.5,
+        "rssCeilingMiB": 2048,
+        "stopReason": null,
+        "exitCode": 0,
+        "productionChanged": false,
+        "browserPlayable": false,
+        "ownedPid": 86726,
+        "endedAtUnix": 1793226366
+      }
+    }
+  },
+  "zooPreviewRepair": {
+    "patchStage": "native-patches-v6",
+    "image": "ABn1",
+    "emptyNativePlacementSet": 80,
+    "authoredFoundationSet": 81,
+    "authoredPixelsReused": true,
+    "allOtherImageSetsPreserved": true,
+    "tilesAndPalettesPreserved": true,
+    "focusedMediaTestsPassed": 6,
+    "livePreviewQualified": false
+  },
+  "ownedBrowserSaveNativeTransfer": {
+    "trial": "expansion-browser-single10",
+    "gameLaunched": false,
+    "source": "Public OPFS API of owned expansion-single6 profile only; pinned same-origin loopback receiver",
+    "bytes": 1362233,
+    "sha256": "e5445eb88de60acc93b39cf23483850f9edd1d0c7ec57a73b58090d62c1bc94b",
+    "browserClosed": true
+  },
+  "diagnosticRuntime": {
+    "build": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1793227614,
+      "terminal": true,
+      "peakOwnedRssMiB": 416.0,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 96085,
+      "endedAtUnix": 1793227618
+    },
+    "executableSha256": "1d24cca3aac7260b7f70e9329bb06659c6340c62da2350bc91cba00629b957bf",
+    "flag": "RECOMP_COMMUNITY_EXPANSION_GPL_TRACE=20261028",
+    "defaultEnabled": false,
+    "behavior": "Read-only GPL call stack and error-constructor format trace; no test actors or state mutation required",
+    "exactSavedWorldTrials": [
+      "expansion-runtime-live22",
+      "expansion-runtime-live23"
+    ],
+    "browserDiagnosticRebuildPending": true
   }
 }

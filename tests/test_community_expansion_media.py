@@ -1,12 +1,14 @@
 import struct
 import sys
+from dataclasses import replace
 from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'third_party/majesty-mod-manager/src')]
 from majesty_cam.cam import CamArchive, CamSection, CamEntry
-from lib.community_expansion_media import append_art, append_waves, image_sets
+from lib.community_expansion_media import (
+    append_art, append_waves, image_sets, repair_zoo_foundation_preview)
 
 
 def entry(name, data):
@@ -43,6 +45,35 @@ def archive(sets, tiles, palettes):
 
 
 class ExpansionMediaTests(unittest.TestCase):
+    def zoo(self, preview=0, foundation=1):
+        value = archive([(0x50, preview), (0x51, foundation), (0xc0, 2)],
+            [b'', tile(0, 4), tile(0, 5)], [b'palette'.ljust(1032, b'\0')])
+        return replace(value, sections=(CamSection(b'IMAG', (
+            entry(b'ABn1', value.sections[0].entries[0].data),
+            entry(b'KEEP', image([(0xc0, 2)])))), *value.sections[1:]))
+
+    def test_zoo_empty_placement_uses_authored_foundation_without_changing_other_art(self):
+        original = self.zoo()
+        repaired, proof = repair_zoo_foundation_preview(original)
+        before = {part.extension: part for part in original.sections}
+        after = {part.extension: part for part in repaired.sections}
+        old_sets = image_sets(before[b'IMAG'].entries[0], before)[1]
+        new_sets = image_sets(after[b'IMAG'].entries[0], after)[1]
+        self.assertEqual(new_sets[0x50], old_sets[0x51])
+        self.assertEqual(new_sets[0x51], old_sets[0x51])
+        self.assertEqual(new_sets[0xc0], old_sets[0xc0])
+        self.assertEqual(after[b'IMAG'].entries[1], before[b'IMAG'].entries[1])
+        self.assertEqual(repaired.sections[1:], original.sections[1:])
+        self.assertTrue(proof['authoredPixelsReused'])
+
+    def test_zoo_placement_refuses_to_replace_existing_visible_art(self):
+        with self.assertRaisesRegex(ValueError, 'empty Zoo preview'):
+            repair_zoo_foundation_preview(self.zoo(preview=2))
+
+    def test_zoo_placement_requires_visible_authored_foundation(self):
+        with self.assertRaisesRegex(ValueError, 'visible foundation'):
+            repair_zoo_foundation_preview(self.zoo(foundation=0))
+
     def inputs(self, changed_cursor=False):
         blue, red = b'blue'.ljust(1032, b'\0'), b'red'.ljust(1032, b'\0')
         old = archive([(1039, 1)], [b'', tile(0, 3)], [blue])

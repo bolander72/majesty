@@ -113,6 +113,7 @@ std::uint64_t privateIntentLookups = 0;
 bool expansionPanels = false;
 bool controlledExpansionPanels = false, controlledExpansionPanelsApplied = false;
 bool controlledExpansionPlay = false;
+bool traceExpansionGpl = false;
 void beginControlledExpansionPlay(std::uint32_t, std::uint32_t, std::uint32_t);
 void runControlledExpansionPlay();
 void runControlledExpansionPanels(std::uint32_t);
@@ -2113,7 +2114,23 @@ bool controlledMechanics = false;
 
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
-    if (controlledExpansionPlay && target == 0x00624850U) {
+    if ((controlledExpansionPlay || traceExpansionGpl) && target == 0x006293e0U) {
+        const auto format = read(cpu->esp + 16);
+        std::string message;
+        for (unsigned i = 0; format && i < 128; ++i) {
+            std::uint8_t value = 0;
+            if (host->guest_read_u8(host, format + i, &value) != POP_OK || !value)
+                break;
+            message += value >= 32 && value < 127 ? static_cast<char>(value) : '?';
+        }
+        std::fprintf(stderr, "[community-expansion-gpl-error] format=%s return=%08x\n",
+                     message.c_str(), read(cpu->esp));
+        for (const auto &name : expansionPlayGplStack)
+            std::fprintf(stderr, "[community-expansion-gpl-stack] %s\n", name.c_str());
+        next(inv, cpu);
+        return;
+    }
+    if ((controlledExpansionPlay || traceExpansionGpl) && target == 0x00624850U) {
         std::fprintf(stderr, "[community-expansion-type-error] value=%08x tag=%u return=%08x\n",
                      self, self ? read(self + 4) : ~0U, read(cpu->esp));
         for (const auto &name : expansionPlayGplStack)
@@ -3000,7 +3017,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             returned(cpu, 0);
             return;
         }
-        if (controlledExpansionPlay && expansionPlay.phase >= 5 && expansionPlay.phase < 9) {
+        if (traceExpansionGpl ||
+            (controlledExpansionPlay && expansionPlay.phase >= 5 && expansionPlay.phase <= 9)) {
             require(expansionPlayGplStack.size() < 128, "bounded owned GPL diagnostic stack");
             expansionPlayGplStack.push_back(guestString(self));
             next(inv, cpu);
@@ -3363,15 +3381,20 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         controlledExpansionPanels = expansionTest && !std::strcmp(expansionTest, "20261028");
         const auto *playTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PLAY");
         controlledExpansionPlay = playTest && !std::strcmp(playTest, "20261028");
+        const auto *gplTrace = std::getenv("RECOMP_COMMUNITY_EXPANSION_GPL_TRACE");
+        traceExpansionGpl = gplTrace && !std::strcmp(gplTrace, "20261028");
+        require(!traceExpansionGpl || expansionPanels, "owned GPL trace requires expansion runtime");
         require(!controlledExpansionPlay || controlledExpansionPanels,
                 "owned play trial requires panel controls");
-        if (controlledExpansionPlay) {
-            std::uint32_t id = 0;
-            const auto status = host->hook_install_ex(host, 0x00624850U, 0, hook, POP_HOOK_WRAP,
-                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
-            if (status != POP_OK)
-                return status;
-            hooks.push_back(id);
+        if (controlledExpansionPlay || traceExpansionGpl) {
+            for (const auto address : {0x00624850U, 0x006293e0U}) {
+                std::uint32_t id = 0;
+                const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                          POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+                if (status != POP_OK)
+                    return status;
+                hooks.push_back(id);
+            }
         }
         require(!controlledExpansionPanels || (expansionPanels && controlledBaseTiming),
                 "owned expansion test requires real controllers and native base trial");
