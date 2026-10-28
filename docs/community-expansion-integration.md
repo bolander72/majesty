@@ -112,9 +112,9 @@ tests, three media tests, three Phantom resilience tests and seven existing
 namespace tests. The three native building-emblem tests also pass.
 
 The new source/resources must not be put into the public collection yet.
-Required next work is the original 1.5.1.2 native controller and intrinsic port,
-resource/actor import, More Heroes quest participation, and ordinary gameplay
-acceptance. Verify native UI at stock scale, paid construction/recruitment,
+The original 1.5.1.2 intrinsic/resource port and More Heroes quest participation
+are staged. Required next work is ordinary gameplay acceptance and the remaining
+controller behavior. Verify native UI at stock scale, paid construction/recruitment,
 quest rewards, monster capture/taming/rental, death/teardown, potion expiry,
 save/fresh reload, existing saves and bounded paired co-op. Only then prepare
 the publication/media review and a source-bound deployment gate.
@@ -134,8 +134,8 @@ and ownership checks for five new panels, plus a clean native game control of
 all 61 AITX lookups, original string copies and stock namespace isolation. The
 first text trial crashed the owned game because a negative test passed a
 resource FourCC as a table pointer. The corrected three-argument ABI passes.
-Controller runtime behavior, whole-guild gameplay, reload and co-op remain
-unqualified; these component controls do not establish a playable release.
+Whole-guild gameplay, reload and co-op remain unqualified; these component
+controls do not establish a playable release.
 
 The private native runtime now links the five original controller classes,
 original queued payment/callback dispatch, original text-list rows, a separate
@@ -149,6 +149,32 @@ runtime compilation pass through the official tools.
 The edition route union is case insensitive like GPL, retains each exact
 exported MJC spelling, and rejects conflicting aliases. Two case spellings
 previously produced invalid duplicate native rows; the complete canonical union
-has 179 entries. Full controller/gameplay acceptance remains pending;
+has 179 entries. Full gameplay acceptance remains pending;
 `native-runtime-verification.json` distinguishes build/component evidence from
 failed or incomplete UI trials. No browser or production change has occurred.
+
+The clean `expansion-runtime-live12` trial now passes actual guild/Zoo births,
+all five native panels and Back to the owning building, with native exit zero
+and no resource guard stop. Public callbacks use registered import gateways;
+the mod API still rejects unregistered private-module addresses. Typed GPL
+agent results resolve original Unit pointers instead of confusing the separate
+GPL agent ID and native physical handle. Stock death notifications can retire
+an owned panel after its actor disappears without querying stale GPL state.
+
+`expansion-runtime-live14` also passes original building completion, exactly one
+500-gold queued refresh debit, queued open/close state for both new guilds,
+separate AP41 reward amounts and native capture mode arm/re-arm/Back. Completion
+uses the original script directly in this test; it does not establish paid
+construction. The empty board has no eligible heroes yet. Adventurers' saved
+coordinate attributes use the original type7 pool, virtual copy/reset and saved
+map ownership, with focused positive and wrong-initializer controls. The native
+Zoo-full message strip is implemented but still needs an actual capacity trial.
+All 13 More Heroes spawns return native actors, then an unresolved GPL integer
+conversion exception occurs before health/AI qualification. This remains a
+release blocker; the native gameplay gate is false.
+
+The new probe producer binds the qualified native host, 157 explicit original
+link inputs, original symbol manifest, canonical route union, source registries,
+compiler outputs and all game resources. A separate producer appends the tiny
+original-SDK GPL helper only inside the private test fixture. The helper and its
+load entries must never enter the published collection.

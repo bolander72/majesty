@@ -112,6 +112,9 @@ MajestyCommunity::PrivateIntentText privateIntentText;
 std::uint64_t privateIntentLookups = 0;
 bool expansionPanels = false;
 bool controlledExpansionPanels = false, controlledExpansionPanelsApplied = false;
+bool controlledExpansionPlay = false;
+void beginControlledExpansionPlay(std::uint32_t, std::uint32_t, std::uint32_t);
+void runControlledExpansionPlay();
 void runControlledExpansionPanels(std::uint32_t);
 std::map<std::uint32_t, MajestyCommunity::WorldQuery> worldQueryFunctions;
 bool researchQueryHelpers = false, controlledResearchQuery = false,
@@ -181,9 +184,12 @@ void write(std::uint32_t a, std::uint32_t v) {
 std::uint32_t call(std::uint32_t a, std::uint32_t self,
                    std::initializer_list<std::uint32_t> args = {}) {
     std::uint32_t v = 0;
-    require(host->guest_call(host, a, self, args.begin(), static_cast<std::uint32_t>(args.size()),
-                             &v) == POP_OK,
-            "original guest call");
+    const auto status =
+        host->guest_call(host, a, self, args.begin(), static_cast<std::uint32_t>(args.size()), &v);
+    if (status != POP_OK)
+        std::fprintf(stderr, "[community-call] target=%08x arguments=%zu status=%d\n", a,
+                     args.size(), static_cast<int>(status));
+    require(status == POP_OK, "original guest call");
     return v;
 }
 void next(PopHookInvocation *inv, pop_cpu_v1 *cpu) {
@@ -2046,12 +2052,17 @@ void runControlledExpansionPanels(std::uint32_t palace) {
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
     require(expansionPanels && controlledBaseTiming, "owned expansion controller trial");
     controlledExpansionPanelsApplied = true;
-    const auto world = read(read(0x0071c68cU) + 4);
-    const auto guildId =
-        mechanicsGpl("MM_Expansion_Probe_Spawn", {{palace}, {0, false, "AdventurerGuild1"}}, true);
-    const auto zooId =
-        mechanicsGpl("MM_Expansion_Probe_Spawn", {{palace}, {0, false, "Restore_Zoo1"}}, true);
-    const auto guild = call(0x005a10d0U, world, {guildId}), zoo = call(0x005a10d0U, world, {zooId});
+    const auto guild = mechanicsGpl("MM_Expansion_Probe_Spawn",
+                                    {{palace}, {0, false, "AdventurerGuild1"}, {0, true}}, true);
+    const auto zoo = mechanicsGpl("MM_Expansion_Probe_Spawn",
+                                  {{palace}, {0, false, "Restore_Zoo1"}, {0, true}}, true);
+    for (const auto actor : {guild, zoo})
+        if (actor)
+            std::fprintf(stderr,
+                         "[community-expansion-birth] unit=%08x id=%u prototype=%08x owner=%u "
+                         "factory=%08x global=%08x\n",
+                         actor, read(actor + 0x60), read(actor + 0x6c), read(actor + 0x70),
+                         read(actor + 0x84), read(read(0x0071c68cU) + 4));
     require(guild && zoo && (read(guild + 0x6c) & 0xffffffU) == 0x00764241U &&
                 (read(zoo + 0x6c) & 0xffffffU) == 0x00774241U,
             "actual source-backed new building births");
@@ -2064,7 +2075,7 @@ void runControlledExpansionPanels(std::uint32_t palace) {
         return controller;
     };
     const auto command = [&](std::uint32_t controller, std::uint32_t id) {
-        call(read(read(controller) + 12), controller, {id});
+        call(majesty_expansion_panel_bridge(14), 0, {controller, id});
     };
     const auto parent = open(guild, 0x47414743U);
     command(parent, 28929);
@@ -2089,16 +2100,27 @@ void runControlledExpansionPanels(std::uint32_t palace) {
     command(returnedGuild, 28929);
     host->log(host, "Controlled expansion panels: actual guild/Zoo births and all five native "
                     "panels, own-building Back and data-record list passed.");
+    if (controlledExpansionPlay)
+        beginControlledExpansionPlay(palace, guild, zoo);
 #else
     (void)palace;
     require(false, "expansion trial requires process-lived core");
 #endif
 }
+#include "expansion_play_probe.h"
 MechanicsProbe mechanicsProbe;
 bool controlledMechanics = false;
 
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (controlledExpansionPlay && target == 0x00624850U) {
+        std::fprintf(stderr, "[community-expansion-type-error] value=%08x tag=%u return=%08x\n",
+                     self, self ? read(self + 4) : ~0U, read(cpu->esp));
+        for (const auto &name : expansionPlayGplStack)
+            std::fprintf(stderr, "[community-expansion-gpl-stack] %s\n", name.c_str());
+        next(inv, cpu);
+        return;
+    }
     if (privateIntents && target == 0x004f2040U) {
         const auto id = read(cpu->esp + 12);
         if (MajestyIntentText::IsPrivateIntentId(id)) {
@@ -2585,6 +2607,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (controlledBaseTiming && !controlledBaseTimingApplied && state &&
             (read(state) == 3 || read(state) == 7) && !read(state + 4))
             runControlledBaseTiming();
+        if (controlledExpansionPlay && state && (read(state) == 3 || read(state) == 7) &&
+            !read(state + 4))
+            runControlledExpansionPlay();
         if (controlledSpellTiming && controlledSpellTimingApplied &&
             !controlledSpellExpiryApplied && state && (read(state) == 3 || read(state) == 7) &&
             !read(state + 4))
@@ -2975,6 +3000,13 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             returned(cpu, 0);
             return;
         }
+        if (controlledExpansionPlay && expansionPlay.phase >= 5 && expansionPlay.phase < 9) {
+            require(expansionPlayGplStack.size() < 128, "bounded owned GPL diagnostic stack");
+            expansionPlayGplStack.push_back(guestString(self));
+            next(inv, cpu);
+            expansionPlayGplStack.pop_back();
+            return;
+        }
         if (!traceRecruitment && !traceCombat) {
             next(inv, cpu);
             return;
@@ -3329,6 +3361,18 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         expansionPanels = expansionFlag && !std::strcmp(expansionFlag, "1");
         const auto *expansionTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PANELS");
         controlledExpansionPanels = expansionTest && !std::strcmp(expansionTest, "20261028");
+        const auto *playTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PLAY");
+        controlledExpansionPlay = playTest && !std::strcmp(playTest, "20261028");
+        require(!controlledExpansionPlay || controlledExpansionPanels,
+                "owned play trial requires panel controls");
+        if (controlledExpansionPlay) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, 0x00624850U, 0, hook, POP_HOOK_WRAP,
+                                                      POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
         require(!controlledExpansionPanels || (expansionPanels && controlledBaseTiming),
                 "owned expansion test requires real controllers and native base trial");
         if (expansionPanels) {

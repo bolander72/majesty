@@ -55,6 +55,8 @@ inline std::uint32_t AuthoredAttributeType(const std::string &name) {
         return 5;
     if (name == "boolean")
         return 6;
+    if (name == "coord")
+        return 7;
     return name == "function" ? 8 : 0;
 }
 

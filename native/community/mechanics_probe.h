@@ -30,6 +30,7 @@ std::uint32_t mechanicsGpl(const char *symbol, std::initializer_list<MechanicsAr
     require(binding && read(binding + 20) == expected, "mechanics original source binding");
     std::fprintf(stderr, "[mechanics-call] begin=%s\n", symbol);
     call(0x00629bf0U, evaluator);
+    const bool agentResult = !std::strcmp(symbol, "MM_Expansion_Probe_Spawn");
     const bool booleanResult =
         !std::strcmp(symbol, "Bards_Flourish_Hit") ||
         !std::strcmp(symbol, "Bards_Consume_Flourish") ||
@@ -38,14 +39,15 @@ std::uint32_t mechanicsGpl(const char *symbol, std::initializer_list<MechanicsAr
         !std::strcmp(symbol, "Bards_Hostile_Target") ||
         !std::strcmp(symbol, "Bards_Dancer_Level") || !std::strcmp(symbol, "CheckEffector") ||
         !std::strcmp(symbol, "Phantom_Icy_Touch_In_Range") || !std::strcmp(symbol, "MM_KR_Live");
-    if (booleanResult) {
+    if (booleanResult || agentResult) {
         //629BF0 installs an integer return slot. GPL booleans are a distinct
         // native type6; assigning one to that integer throws. Use the same
         // original drain/append/rebuild protocol as agent-valued callbacks.
         call(0x00637780U, evaluator + 8);
         const auto pool = read(read(read(0x007218b4U) + 0x10) + 0x1c);
-        const auto value = call(0x0062a810U, pool, {6});
-        require(value && read(value + 4) == 6, "original boolean return storage");
+        const auto resultTag = agentResult ? 5U : 6U;
+        const auto value = call(0x0062a810U, pool, {resultTag});
+        require(value && read(value + 4) == resultTag, "original typed mechanics return storage");
         call(read(read(value) + 0x10), value);
         call(0x00636bf0U, evaluator + 8, {value});
         call(0x00637e10U, evaluator + 0x1c, {evaluator + 8});
@@ -74,9 +76,13 @@ std::uint32_t mechanicsGpl(const char *symbol, std::initializer_list<MechanicsAr
     if (scalar) {
         const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
         require(begin && end - begin == (args.size() + 1) * 4 && read(read(begin)) &&
-                    (read(read(read(begin)) + 4) == 1 || read(read(read(begin)) + 4) == 6),
+                    (read(read(read(begin)) + 4) == 1 || read(read(read(begin)) + 4) == 6 ||
+                     (agentResult && read(read(read(begin)) + 4) == 5)),
                 "mechanics original typed scalar return and argument references");
-        if (booleanResult) {
+        if (agentResult) {
+            BaseTimingOps ops;
+            result = ops.unit(read(read(begin)));
+        } else if (booleanResult) {
             const auto value = read(read(begin));
             require(read(value + 4) == 6 && read(read(value) + 0x2c) == 0x00643940U,
                     "pinned Old GplBoolean getter, not integer conversion");

@@ -107,6 +107,7 @@ int main() {
                                                                 {"list", 4},
                                                                 {"agentref", 5},
                                                                 {"boolean", 6},
+                                                                {"coord", 7},
                                                                 {"function", 8}}) {
         Ops initialized(5, row.second);
         initialized.typeName = row.first;
@@ -118,6 +119,14 @@ int main() {
     nullAgent.typeName = "agentref";
     check(InstallAuthoredAttribute(nullAgent, 100) == AttributeInstall::Added);
     check(nullAgent.resets == 1 && !nullAgent.copies);
+    Ops emptyCoordinate(4, 7);
+    emptyCoordinate.typeName = "coord";
+    check(InstallAuthoredAttribute(emptyCoordinate, 100) == AttributeInstall::Added);
+    check(emptyCoordinate.resets == 1 && !emptyCoordinate.copies);
+    Ops wrongCoordinateInitializer(5, 1);
+    wrongCoordinateInitializer.typeName = "coord";
+    check(InstallAuthoredAttribute(wrongCoordinateInitializer, 100) == AttributeInstall::Invalid);
+    check(!wrongCoordinateInitializer.allocations);
     Ops emptyString(4, 3);
     emptyString.typeName = "string";
     check(InstallAuthoredAttribute(emptyString, 100) == AttributeInstall::Added);

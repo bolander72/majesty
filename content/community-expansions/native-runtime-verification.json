@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-native-runtime-verification-v1",
   "date": "2026-10-28",
-  "status": "private-native-runtime-built; live-controller-qualification-pending",
+  "status": "five-native-panels-and-paid-controls-passed; More-Heroes-script-type-failure-under-investigation",
   "nativeBuild": {
     "command": [
       "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
@@ -129,7 +129,11 @@
     "targetPlayer": "unit +70; Monster player 7",
     "flagRelation": "unit +94, 00599110",
     "attackQuote": "006d81f4",
-    "questVectorClear": "0048f090 raw-pointer prefix; end +2c = begin +28, preserve capacity +30"
+    "questVectorClear": "0048f090 raw-pointer prefix; end +2c = begin +28, preserve capacity +30",
+    "systemAlertOwner": "006d8324",
+    "prepareSystemAlert": "00484e00 thiscall owner, three arguments; original message control1",
+    "postLiteralSystemAlert": "00484f10 cdecl(text,-1,1); actual Zoo-full alert still unqualified",
+    "publicPrivateBoundary": "Registered MajestyCommunityExpansions import gateways use the actual X86 state; public mod API private-module rejection remains intact."
   },
   "historicalTrials": {
     "live1And2": "Fixture omitted original symbols manifest; did not load the core. Not integration evidence.",
@@ -137,20 +141,134 @@
     "live4": "Map/movement and all private text controls passed with combined resources. Spawn control used display titles instead of descriptor names, causing a GPL exception.",
     "live5And6": "Test input missed new-player name acceptance. No controller qualification.",
     "live7": "Readiness threshold 0.80 cannot accept dimmed name dialog (observed 0.5744). Stopped the invalid trial.",
-    "live8": "Uses initial 0.80 and modal 0.50 thresholds held for 40 actual presented frames; result pending."
+    "live8": "Static menu emits one presented frame, so a 40-frame hold reached the owned deadline. Cleaned up; no qualification.",
+    "live9": "GPL agent IDs were mistakenly treated as native physical handles; owned test assertion. Typed agent return now resolves the original native Unit.",
+    "live10": "Native births passed; public mod API correctly rejected an unregistered private-module factory address.",
+    "live11": "Registered import factory gateway opens CGAG; test-only direct private control address was correctly rejected.",
+    "live12": "Registered control gateway exercises the original virtual dispatch. All five native panels and own-building Back pass; native exit 0, no guard stop.",
+    "live13": "All panels pass; original building completion reaches unsupported coord-valued AddAttribute. Added type7 using the original pool/copy/reset/map path.",
+    "live14": "Coordinate state initializes. Paid refresh debits exactly 500; queued guild/Zoo toggles and private quote/mode/Back pass. All 13 hero spawns return; a subsequent GPL bad-conversion-to-int exception remains unresolved."
   },
   "remainingAcceptance": [
-    "actual controller setup/back/teardown and native-scale visual inspection",
-    "capture cursor, legal/illegal targets, no-capacity alert, payment, capture/taming/rental and cleanup",
-    "paid board refresh, normal quests, all 13 More Heroes and high-level stats",
+    "native populated-board and Palace building-icon visual inspection beside stock UI",
+    "legal/illegal/duplicate capture targets, Zoo-full alert, payment, capture/taming/rental and cleanup",
+    "normal quests, all 13 More Heroes birth/AI/high-level stats and abilities",
     "potion expiry, ordinary save/reload and existing save compatibility",
-    "browser and paired co-op verification",
+    "browser and bounded paired co-op verification",
     "source-bound publication and production verification"
   ],
-  "livePanelsQualified": false,
+  "livePanelsQualified": true,
   "nativeGameplayQualified": false,
   "saveReloadQualified": false,
   "coOpQualified": false,
   "browserPlayable": false,
-  "published": false
+  "published": false,
+  "cleanPanelTrial": {
+    "trial": "expansion-runtime-live12",
+    "terminal": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 107.91,
+      "peakRssMiB": 197.5,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live12/profile",
+      "sourceEngineSha256": "23efb25f3c400c419a78d09ae808ced7c5e0e6dc4357c90d9cd004ab02142e9e"
+    },
+    "receipt": {
+      "bytes": 425,
+      "sha256": "f25d363b804f2245844977a694209e40557c4a2ee89131a4ae0c7226d2c728d6"
+    },
+    "testOnly": true,
+    "paidConstructionQualified": false,
+    "populatedBoardQualified": false
+  },
+  "paidControlsTrial": {
+    "trial": "expansion-runtime-live14",
+    "terminal": {
+      "nativeExitCode": 1,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 91.98,
+      "peakRssMiB": 197.6,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live14/profile",
+      "sourceEngineSha256": "ed6f288a38d607154ee8e400ffb322e1b113499410fc34202c90a8c839074958"
+    },
+    "receipt": {
+      "bytes": 424,
+      "sha256": "7721685696c5fb8f9ac625047c7a13e7bbf17bd601d775ceadbd089f2ac2c346"
+    },
+    "executable": {
+      "bytes": 92624760,
+      "sha256": "ed6f288a38d607154ee8e400ffb322e1b113499410fc34202c90a8c839074958"
+    },
+    "engineStage": {
+      "bytes": 62560,
+      "sha256": "76d5a18e78daf1678423690c3b961d47c5c5f76d318a17db077d4ed3aa2b3d0a"
+    },
+    "controls": {
+      "bytes": 1856,
+      "sha256": "c5a21eb57856053853363af573e2105be0002f5a486f30869f1a8be036752f41"
+    },
+    "passed": [
+      "original BuildingReachedMaxHP completion initializes original birthScript2 state",
+      "one original queued refresh debit: 20000 to19500; board revision1 to2; zero rows with no eligible heroes",
+      "both new guilds simulation-queued open/close",
+      "AP41 plus/minus retain ordinary Attack Flag quote",
+      "private capture mode arm, re-arm and Back to Sele"
+    ],
+    "notQualified": [
+      "paid construction",
+      "legal/illegal flag placement or Zoo-full alert",
+      "capturing, taming or rental",
+      "More Heroes initial stats, AI or level1000"
+    ],
+    "testOnly": true
+  },
+  "coordinateAttributeControl": {
+    "nativeTag": 7,
+    "name": "coord",
+    "officialTest": {
+      "exitCode": 0,
+      "stopReason": null,
+      "elapsedSeconds": 5.69,
+      "peakRssMiB": 290.4,
+      "officialNativeTest": "community_gpl_attribute_tests",
+      "gameLaunched": false
+    },
+    "nativeStateInitializationObserved": true,
+    "nativePoolAndVirtualOwnershipRetained": true
+  },
+  "reproducibleProbe": {
+    "producer": {
+      "bytes": 9261,
+      "sha256": "11d9c2bb719e119ed9d72d4a2598ee76fd2c47d75b7b2f5a7f48828080a192af"
+    },
+    "controlsProducer": {
+      "bytes": 4652,
+      "sha256": "257a093e2948af62c25f5dd16a4bfe649be2e25fd1db581e6d953de7923f51ea"
+    },
+    "format": "majesty-community-expansion-runtime-probe-v2",
+    "frozenLinkInputs": 157,
+    "gamePatches": 53,
+    "productionHelperForbidden": true,
+    "originalSdkTestHelper": {
+      "bytes": 1314,
+      "sha256": "e7080080732bc3bbf809675fc80a8323ebc0e1b6eb40705bc0662777a010e42e"
+    },
+    "helperCompiler": {
+      "exitCode": 0,
+      "elapsedSeconds": 11.92,
+      "testOnly": true,
+      "bytecode": {
+        "bytes": 1314,
+        "sha256": "e7080080732bc3bbf809675fc80a8323ebc0e1b6eb40705bc0662777a010e42e"
+      }
+    }
+  }
 }

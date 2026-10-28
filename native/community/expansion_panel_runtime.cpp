@@ -1,5 +1,6 @@
 #include "expansion_panel_runtime.h"
 #include "runtime/memory.h"
+#include "runtime/imports.h"
 #include <cstdio>
 #include <cstdlib>
 #include <initializer_list>
@@ -23,6 +24,8 @@ constexpr unsigned captureValidatorIndex = captureActiveIndex + 1;
 constexpr unsigned questPopulateIndex = captureValidatorIndex + 1;
 constexpr unsigned bridgeCount = questPopulateIndex + 1;
 std::array<std::uint32_t, bridgeCount> addresses{};
+constexpr unsigned controlGatewayIndex = bridgeCount;
+std::array<std::uint32_t, bridgeCount + 1> gateways{};
 std::array<std::uint8_t, bridgeCount> hooked{};
 std::uint32_t executingSymbol = 0;
 std::map<std::uint32_t, std::uint32_t> actionSymbols;
@@ -147,8 +150,19 @@ struct Ops {
         captureZoo = s.unit;
         captureZooId = s.identity;
         captureWorld = read(read(0x0071c68cU) + 4);
-        if (!captureAvailable())
+        if (!captureAvailable()) {
+            // Old.exe's system-alert owner and literal presenter retain the
+            // stock message strip, colour and player filtering.
+            if (capture && capture->hasAvailabilityGate) {
+                const auto &text = capture->unavailableAlertText;
+                require(!text.empty() && text.size() < 512, "declared capture availability alert");
+                for (unsigned i = 0; i <= text.size(); ++i)
+                    wr8(scratch + 192 + i, text.c_str()[i]);
+                call(0x00484e00U, read(0x006d8324U), {1, 0x8000ff00U, 255});
+                call(0x00484f10U, 0, {scratch + 192, ~0U, 1});
+            }
             return;
+        }
         ensureCaptureMode();
         call(0x004380c0U, read(0x006d84b8U), {capture->privateMode, captureAmount});
         require(captureActive(), "native private reward cursor selected");
@@ -384,7 +398,20 @@ template <ExpansionPanelEntry Entry> void panelBody(X86 *cpu) {
         require(owner->detach(ops, s.controller, s.generation), "retire exact panel generation");
         returned(cpu, 1, ops.call(s.plan.profile->methods[0], s.controller, {flags}));
     } else {
-        require(owner->alive(ops, s), "live panel actor association");
+        if (!owner->alive(ops, s)) {
+            // The stock death/removal notification can outlive its actor.
+            // Let the original event retire its still-owned window, but never
+            // query GPL, submit an action or reopen the destroyed building.
+            if constexpr (Entry == ExpansionPanelEntry::Event) {
+                if (ops.valid(s.controller, 36) && ops.read(s.controller) == s.table &&
+                    ops.read(s.controller + 0x14) == s.window)
+                    ops.original(s, 8, {read(sp + 4), read(sp + 8), read(sp + 12), read(sp + 16)});
+                returned(cpu, 4);
+            } else if constexpr (Entry == ExpansionPanelEntry::Control)
+                returned(cpu, 1);
+            else
+                returned(cpu, 0);
+        }
         if constexpr (Entry == ExpansionPanelEntry::Setup) {
             ops.original(s, 1);
             ops.refresh(s);
@@ -450,10 +477,11 @@ void resetBody(X86 *cpu) {
 void questPopulate(X86 *cpu) {
     Ops ops(cpu);
     const auto s = owner->find(cpu->r[R_ECX]);
-    require(s.plan.kind == ExpansionPanelKind::QuestRecords && owner->alive(ops, s),
-            "owned data-record population");
-    ops.emptyRecordVector(s);
-    presentations.erase(s.controller);
+    require(s.plan.kind == ExpansionPanelKind::QuestRecords, "owned data-record population");
+    if (owner->alive(ops, s)) {
+        ops.emptyRecordVector(s);
+        presentations.erase(s.controller);
+    }
     returned(cpu, 0);
 }
 void captureFilter(X86 *cpu) {
@@ -557,6 +585,38 @@ RecompModule module{"majesty_expansion_panels",
                     nullptr,
                     0,
                     nullptr};
+// The mod API accepts original entries and registered import gateways, not
+// private RecompModule addresses. Keep its public-symbol boundary unchanged.
+constexpr unsigned gatewayCount = 5;
+constexpr unsigned gatewayIndices[gatewayCount] = {0, paidDispatchIndex, resetIndex,
+                                                   captureFilterIndex, captureActiveIndex};
+constexpr unsigned gatewayArguments[gatewayCount] = {4, 4, 0, 1, 0};
+constexpr unsigned gatewayCleanup[gatewayCount] = {4, 0, 0, 0, 0};
+constexpr const char *gatewayNames[gatewayCount] = {"Factory", "Command", "Reset", "CaptureTarget",
+                                                    "CaptureActive"};
+template <unsigned Index> void gateway(X86 *cpu) {
+    require(cpu && cpu->r[R_ESP] >= 1024 &&
+                gm_valid(cpu->r[R_ESP], 4 + gatewayArguments[Index] * 4),
+            "original import gateway frame");
+    std::uint32_t args[4]{};
+    for (unsigned i = 0; i < gatewayArguments[Index]; ++i)
+        args[i] = read(cpu->r[R_ESP] + 4 + i * 4);
+    X86 extra = *cpu;
+    extra.r[R_ESP] -= 512;
+    cpu->r[R_EAX] =
+        guest_call(&extra, addresses[gatewayIndices[Index]], args, gatewayArguments[Index]);
+}
+void (*const gatewayBodies[gatewayCount])(X86 *) = {gateway<0>, gateway<1>, gateway<2>, gateway<3>,
+                                                    gateway<4>};
+void controlGateway(X86 *cpu) {
+    Ops ops(cpu);
+    const auto controller = read(cpu->r[R_ESP] + 4), command = read(cpu->r[R_ESP] + 8);
+    const auto session = owner->find(controller);
+    require(session.plan.profile && owner->alive(ops, session), "owned virtual control gateway");
+    // Exact virtual dispatch used by a native button. A component trial uses
+    // this import instead of calling a private vtable entry through the mod API.
+    cpu->r[R_EAX] = ops.call(read(read(controller) + 12), controller, {command});
+}
 } // namespace
 
 extern "C" bool
@@ -614,10 +674,26 @@ majesty_configure_expansion_panels(const MajestyStockControllers::Registry *reco
     module.base = base;
     module.end = base + bridgeCount * 16;
     recomp_module_register(&module);
+    for (unsigned i = 0; i < gatewayCount; ++i) {
+        require(!imports_trampoline_for("MajestyCommunityExpansions", gatewayNames[i]),
+                "unique expansion import gateway");
+        const auto entry = imports_alloc_trampoline("MajestyCommunityExpansions", gatewayNames[i],
+                                                    gatewayBodies[i],
+                                                    static_cast<std::uint8_t>(gatewayCleanup[i]));
+        require(entry && imports_describe(entry) && imports_argc(entry) == gatewayCleanup[i],
+                "registered original expansion import gateway");
+        gateways[gatewayIndices[i]] = entry;
+    }
+    require(!imports_trampoline_for("MajestyCommunityExpansions", "PanelControl"),
+            "unique virtual control gateway");
+    gateways[controlGatewayIndex] =
+        imports_alloc_trampoline("MajestyCommunityExpansions", "PanelControl", controlGateway, 0);
+    require(gateways[controlGatewayIndex] && imports_describe(gateways[controlGatewayIndex]),
+            "registered virtual control gateway");
     return true;
 }
 extern "C" std::uint32_t majesty_expansion_panel_bridge(unsigned index) {
-    return owner && index < bridgeCount ? addresses[index] : 0;
+    return owner && index < gateways.size() ? gateways[index] : 0;
 }
 extern "C" bool majesty_is_expansion_dialog(std::uint32_t dialog) {
     return owner && owner->plan(dialog).profile;
