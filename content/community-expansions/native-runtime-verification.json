@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-native-runtime-verification-v1",
   "date": "2026-10-28",
-  "status": "native-mouse-return-fix-browser-confirmed; all-three-paid-world-restores; open-guild-AI-script-exception-under-investigation",
+  "status": "missing-marker-crash-repaired; native-lifecycle-and-browser-saved-world-victory-passed; capture-quest-coop-pending",
   "nativeBuild": {
     "command": [
       "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
@@ -293,162 +293,16 @@
     "correctedLiveTrialPassed": true
   },
   "latestControlledTrial": {
-    "trial": "expansion-runtime-live20",
-    "terminal": {
-      "nativeExitCode": 0,
-      "nativeSessionTerminal": true,
-      "stopReason": null,
-      "elapsedSeconds": 101.4,
-      "peakRssMiB": 209.3,
-      "worldQueriesQualified": true,
-      "privateIntentsQualified": true,
-      "audioMuted": true,
-      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live20/profile",
-      "sourceEngineSha256": "bef3f2e0131914e7ab8dc29de15a2d0ec2e45700562f41ab59f6fb969c423f7b"
-    },
-    "receipt": {
-      "bytes": 424,
-      "sha256": "c957b1bcbb6502ed0822b128967b6aafa355311a19e4587a2a2ea277fceeb1be"
-    },
-    "engineStage": {
-      "bytes": 62417,
-      "sha256": "cb833cd25061ba98c80cf964b98595bd14a6853371a55d6708dead4e349aa2ee"
-    },
-    "controls": {
-      "bytes": 1709,
-      "sha256": "aba8308bc1f37e50eb21d33c9d3796609710db8f5c638205df0761ed838ed0e7"
-    },
-    "executable": {
-      "bytes": 92627432,
-      "sha256": "bef3f2e0131914e7ab8dc29de15a2d0ec2e45700562f41ab59f6fb969c423f7b"
-    },
-    "build": {
-      "command": [
-        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
-        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
-        "--game-dir",
-        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
-        "--target",
-        "smoke",
-        "--jobs",
-        "1",
-        "--preset",
-        "alchemist1009-probe"
-      ],
-      "startedAtUnix": 1793226156,
-      "terminal": true,
-      "peakOwnedRssMiB": 296.0,
-      "rssCeilingMiB": 2048,
-      "stopReason": null,
-      "exitCode": 0,
-      "productionChanged": false,
-      "browserPlayable": false,
-      "ownedPid": 85384,
-      "endedAtUnix": 1793226159
-    },
-    "moreHeroes": [
-      {
-        "id": 557,
-        "level": 1000,
-        "hp": 2010,
-        "maxHp": 2010,
-        "initialMaxHp": 12
-      },
-      {
-        "id": 559,
-        "level": 1000,
-        "hp": 2010,
-        "maxHp": 2010,
-        "initialMaxHp": 12
-      },
-      {
-        "id": 562,
-        "level": 1000,
-        "hp": 8017,
-        "maxHp": 8017,
-        "initialMaxHp": 25
-      },
-      {
-        "id": 564,
-        "level": 1000,
-        "hp": 2006,
-        "maxHp": 2006,
-        "initialMaxHp": 8
-      },
-      {
-        "id": 566,
-        "level": 1000,
-        "hp": 6498,
-        "maxHp": 6498,
-        "initialMaxHp": 17
-      },
-      {
-        "id": 568,
-        "level": 1000,
-        "hp": 4994,
-        "maxHp": 4994,
-        "initialMaxHp": 10
-      },
-      {
-        "id": 571,
-        "level": 1000,
-        "hp": 6493,
-        "maxHp": 6493,
-        "initialMaxHp": 26
-      },
-      {
-        "id": 573,
-        "level": 1000,
-        "hp": 2002,
-        "maxHp": 2002,
-        "initialMaxHp": 4
-      },
-      {
-        "id": 575,
-        "level": 1000,
-        "hp": 7994,
-        "maxHp": 7994,
-        "initialMaxHp": 45
-      },
-      {
-        "id": 577,
-        "level": 1000,
-        "hp": 3513,
-        "maxHp": 3513,
-        "initialMaxHp": 14
-      },
-      {
-        "id": 580,
-        "level": 1000,
-        "hp": 3508,
-        "maxHp": 3508,
-        "initialMaxHp": 10
-      },
-      {
-        "id": 582,
-        "level": 1000,
-        "hp": 3516,
-        "maxHp": 3516,
-        "initialMaxHp": 12
-      },
-      {
-        "id": 584,
-        "level": 1000,
-        "hp": 5027,
-        "maxHp": 5027,
-        "initialMaxHp": 10
-      }
-    ],
-    "testOnly": true,
-    "paidConstructionQualified": false,
-    "completeAbilityCoverageQualified": false,
-    "realMouseNavigationQualified": true,
-    "mouseInput": {
-      "bytes": 971,
-      "sha256": "87ce2a5be3256480b6fa966aecf66585ae6e6e3d8e62b5448a421a64d5b4b0ce"
-    },
-    "populatedTestRows": 2,
-    "normalQuestGameplayQualified": false
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "stopReason": null,
+    "elapsedSeconds": 102.59,
+    "peakRssMiB": 189.9,
+    "worldQueriesQualified": true,
+    "privateIntentsQualified": true,
+    "audioMuted": true,
+    "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live29/profile",
+    "sourceEngineSha256": "2560abd0da32ccfeb49ea4b9ce39d262b71c2bf1555f45550e70af164e9ea28f"
   },
   "browserTrials": {
     "engine": {
@@ -570,6 +424,52 @@
         },
         "normalQuestGameplayQualified": false,
         "failure": "Guild Open clicked; subsequent hero AI raised GPL exception. Save restored ordinary new guild, ledger and hero state before failure."
+      },
+      "single11": {
+        "endedAtUnix": 1793228744.178119,
+        "hostAppAlive": true,
+        "browserClosed": true,
+        "stopReason": null,
+        "privateOnly": true,
+        "productionChanged": false,
+        "peakRssMiB": 1583.1,
+        "peakGpuFootprintMiB": 320.5,
+        "exactTwelveDaySaveLoaded": true,
+        "privateGplTraceEnabled": true,
+        "gplExceptionReproduced": false,
+        "zooPreviewLiveQualified": true,
+        "ordinaryTwoFileArtUpdateApplied": true,
+        "allPriorSavesPreserved": true,
+        "activeGuildSaved": true,
+        "normalQuestCompletionQualified": false,
+        "saves": [
+          {
+            "name": "(Freestyle Game) 8 Days.GMP",
+            "bytes": 1389297,
+            "sha256": "a8eea4ab613f5af6624bff9350021f4072ae0abbb1f9fba2208b028bbf1fbc4d"
+          },
+          {
+            "name": "(Freestyle Game) 5 Days.GMP",
+            "bytes": 1365836,
+            "sha256": "630729b874d6f83e58aa2cc66eb8013dd884afd5e2a922755644e575ccacdda3"
+          },
+          {
+            "name": "(Freestyle Game) 19 Days.GMP",
+            "bytes": 1348174,
+            "sha256": "b3d7e569977f5483e54901564a3233f3b9bbd5056a14163d221071c556934b69"
+          },
+          {
+            "name": "(Freestyle Game) 12 Days.GMP",
+            "bytes": 1362233,
+            "sha256": "e5445eb88de60acc93b39cf23483850f9edd1d0c7ec57a73b58090d62c1bc94b"
+          }
+        ],
+        "observations": [
+          "guild open from13days through18days",
+          "four original offers reduced to two by15days; completion not yet established",
+          "Molliya native roster intent Going to the Adventurers Guild at16days",
+          "paid Assassin alive at1000/2002HP; a stock Rogue was dead, cause not established"
+        ]
       }
     },
     "qualified": [
@@ -582,7 +482,7 @@
       "paid More Heroes Assassin at level1000 with2002HP",
       "fresh browser/engine reload restores all three ordinary buildings, four quest offers, Zoo rentON and Assassin2002HP"
     ],
-    "unresolved": "Guild Open permits hero quest activity and later raises guest C++ exception3765269347. Native diagnostic trial21 is tracing the GPL stack. Zoo empty placement image repaired from its acquired foundation image in private native-patches-v6; live preview qualification pending. Capture/taming/rental, full abilities, long missions, existing Phantom save, paired co-op and publication remain pending.",
+    "unresolved": "Browser9 GPL exception has not reproduced with full call tracing. Exact native saved-world open-guild trials30/110simulation seconds are clean; traced browser11 advances to19days, reopens board while open, saves successfully, and shows a hero Going to the Adventurers Guild. Error-only diagnostics and untraced-path trial pending. Normal quest completion, actual capture/taming/rental, long mission/representative abilities, old Phantom save, paired co-op and publication remain pending.",
     "fixedEngine": {
       "stage": "expansion-browser-engine-v2",
       "bytes": 91071792,
@@ -611,6 +511,35 @@
         "ownedPid": 86726,
         "endedAtUnix": 1793226366
       }
+    },
+    "thirdEngine": {
+      "bytes": 91072887,
+      "sha256": "9d72155a46192e79b6bafb2191d58e3e84f92069a8cca0de8852ce4d44fd990d",
+      "nativeTrial": "expansion-runtime-live24",
+      "build": {
+        "command": [
+          "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+          "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-browser-engine-v3/kit/tools/build.py",
+          "--game-dir",
+          "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-browser-engine-v3",
+          "--target",
+          "app",
+          "--jobs",
+          "1",
+          "--preset",
+          "alchemist1325-web"
+        ],
+        "startedAtUnix": 1793228172,
+        "terminal": true,
+        "peakOwnedRssMiB": 1691.8,
+        "rssCeilingMiB": 2048,
+        "stopReason": null,
+        "exitCode": 0,
+        "productionChanged": false,
+        "browserPlayable": false,
+        "ownedPid": 98940,
+        "endedAtUnix": 1793228215
+      }
     }
   },
   "zooPreviewRepair": {
@@ -622,7 +551,12 @@
     "allOtherImageSetsPreserved": true,
     "tilesAndPalettesPreserved": true,
     "focusedMediaTestsPassed": 6,
-    "livePreviewQualified": false
+    "livePreviewQualified": true,
+    "trial": "expansion-browser-single11",
+    "screenshot": {
+      "bytes": 1380785,
+      "sha256": "c23cf5d7a191cb841e56e757014aae5dc1be2b511205840f35e6420cd27aeb4d"
+    }
   },
   "ownedBrowserSaveNativeTransfer": {
     "trial": "expansion-browser-single10",
@@ -665,6 +599,179 @@
       "expansion-runtime-live22",
       "expansion-runtime-live23"
     ],
-    "browserDiagnosticRebuildPending": true
+    "browserDiagnosticRebuildPending": true,
+    "errorOnlyMode": "RECOMP_COMMUNITY_EXPANSION_GPL_TRACE=errors; no normal function call tracing"
+  },
+  "followerMarkerRepair": {
+    "cause": "Generated Royal Menagerie stock monster-death cleanup checks four overlays omitted by the native composition adapter",
+    "failingTrial": "expansion-browser-single13",
+    "nativeExceptionType": ".?AVGplException@@",
+    "message": "CheckEffector( false, Zombie#132, MCF2419816A7F251 ): couldn't find effector named MCF2419816A7F251",
+    "markers": [
+      "MCF2419816A7F251",
+      "MCF2419816A7F252",
+      "MCF2419816A7F253",
+      "MCF2419816A7F254"
+    ],
+    "sourceCorrection": {
+      "format": "majesty-controlled-follower-marker-repair-v1",
+      "priorCreatorStage": {
+        "bytes": 9009,
+        "sha256": "c2b5abc52ff1d4f23a1c543a9aa6aeea9d01f9f005051bbfa0feb22371e282e4"
+      },
+      "priorSourceStage": {
+        "bytes": 285520,
+        "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+      },
+      "acquiredDefinition": {
+        "bytes": 1811,
+        "sha256": "4b57db0c4192631cd6f1b15697bd41946a01d5c46acf9d0983d5e33d977e1120"
+      },
+      "managerCommit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+      "markers": [
+        "MCF2419816A7F251",
+        "MCF2419816A7F252",
+        "MCF2419816A7F253",
+        "MCF2419816A7F254"
+      ],
+      "originalDescriptionsUnchanged": true,
+      "originalSdkSourcesUnchanged": true,
+      "policy": {
+        "bytes": 5607,
+        "sha256": "185e493891f85e157be84ce09a855ee744aeaa5b113d713cacb594bc738bb24e"
+      }
+    },
+    "nativeTrial26": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 98.82,
+      "peakRssMiB": 222.8,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live26/profile",
+      "sourceEngineSha256": "22a19d6365f569f33ab17b23a2606d6fd7c06b898ac518b93aa6c324589dd351"
+    },
+    "nativeMarkerLifecycleQualified": true,
+    "savedWorldCrashRegressionQualified": true,
+    "rentalGameplayQualified": false,
+    "published": false,
+    "nativeMarkerLifecycleEvidence": "expansion-runtime-live29: all four absent/create/present/delete/retired checks passed through original native effectors",
+    "stockWireComparison": {
+      "markers": [
+        "MF00",
+        "MF01",
+        "MF02",
+        "MF03"
+      ],
+      "reference": "stock CRB2 vines_icon",
+      "enginePrimByteIdentical": true,
+      "gameSecdByteIdentical": true,
+      "onlyHeaderIdentityAndNameDiffer": true
+    },
+    "invalidImmediateRetirementTrials": {
+      "live27": "Used a building and assumed DeleteEffector is synchronous; row-control assertion refused, no missing-definition exception",
+      "live28": "Repeated on a Zombie; same invalid immediate-retirement assumption; assertion refused"
+    },
+    "correctedTest": "Original DeleteEffector starts the native exit animation; bounded 250ms polling with a 6000ms deadline checks actual retirement",
+    "nativeMarkerTrial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 102.59,
+      "peakRssMiB": 189.9,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live29/profile",
+      "sourceEngineSha256": "2560abd0da32ccfeb49ea4b9ce39d262b71c2bf1555f45550e70af164e9ea28f"
+    },
+    "nativeBuild": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1793231044,
+      "terminal": true,
+      "peakOwnedRssMiB": 418.8,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 21765,
+      "endedAtUnix": 1793231048
+    },
+    "nativeEngine": {
+      "bytes": 92626280,
+      "sha256": "2560abd0da32ccfeb49ea4b9ce39d262b71c2bf1555f45550e70af164e9ea28f"
+    },
+    "probeStage": {
+      "bytes": 63270,
+      "sha256": "0f722e093509670ba18fc95e16ee2343a24e8ec9108c9fe6e3841ffb92a5168e"
+    },
+    "testControls": {
+      "bytes": 1709,
+      "sha256": "039e3060581987ddbbcb0e145e025f467eff7cccedde977394801e28b56a0277"
+    },
+    "savedWorldTrial14": {
+      "browserClosed": true,
+      "gameVictoryAtDay": 16,
+      "loadedOwnedSaveDays": 12,
+      "noNativeException": true,
+      "fullCaptureLifecycleQualified": false,
+      "productionChanged": false,
+      "resources": {
+        "gpuFootprintMiB": 305.7,
+        "peakGpuFootprintMiB": 324.1,
+        "peakRssMiB": 1521.3,
+        "lastRssMiB": 687.4,
+        "phase": {
+          "phase": "blank"
+        },
+        "largestProcesses": [
+          {
+            "pid": 23480,
+            "rssMiB": 200.5,
+            "process": "Google Chrome Helper (Renderer)"
+          },
+          {
+            "pid": 23359,
+            "rssMiB": 170.8,
+            "process": "Google Chrome"
+          },
+          {
+            "pid": 23366,
+            "rssMiB": 104.2,
+            "process": "Google Chrome Helper (GPU)"
+          },
+          {
+            "pid": 23367,
+            "rssMiB": 79.1,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 23859,
+            "rssMiB": 64.9,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 23368,
+            "rssMiB": 59.9,
+            "process": "Google Chrome Helper"
+          }
+        ]
+      }
+    },
+    "priorOwnedSaveHashesUnchanged": true
   }
 }

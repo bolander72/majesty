@@ -12,6 +12,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from lib.community_guild_composition import digest, json_value, stock_named_resources
+from lib.community_follower_markers import validate as validate_follower_markers
 
 PARENTS = dict(alchemist=b'CG01', bards=b'CGBD', phantom=b'CGPH', adventurers=b'CGAG', menagerie=b'CGZM')
 CHILDREN = {('alchemist', 'brewing'): b'CG02', ('bards', 'bards_recruitment'): b'CGBC',
@@ -105,8 +106,15 @@ def compose(fixture, inventories, texts, resolutions, standard_inputs=(), review
         stock_named_resources=named)
     bdep = c.merge_bdep_resource(fixture, inventories)
     stock = {key: value[0] for key, value in c._load_effective_stock_descriptions(fixture).items()}
+    follower_markers = tuple(marker for inventory in inventories
+        for feature in inventory.selected.package.definition.runtime_features
+        if isinstance(feature, c.StockControlledFollowerSpeedSync)
+        for marker in c._controlled_follower_markers(
+            c._normalized_mod_uuid(inventory.selected.package.mod_id), feature.feature_key))
     descriptions, patches, external = prepare_description_views(fixture, inventories, standard_inputs,
-        review, None, dialog_resolutions=dialogs)
+        review, None, dialog_resolutions=dialogs,
+        controlled_follower_markers=follower_markers,
+        reserved_description_keys=tuple(stock))
     descriptions = c.filter_passthrough_descriptions(descriptions, inventories, stock_records=stock)
     c.validate_controller_stock_evidence(fixture, inventories, controllers.registry,
         controller_panels=controllers.panels, controller_toggles=controllers.toggles,
@@ -121,6 +129,9 @@ def compose(fixture, inventories, texts, resolutions, standard_inputs=(), review
         semantic_resolutions=resolutions, spell_policy_plan=spells,
         source_context_descriptions=descriptions, potion_plan=potions,
         standard_script_inputs=standard_inputs, script_review=review)
+    validate_follower_markers(descriptions.document,
+        [text for scope, result in bundle.outputs
+         for name, text in result.source_set.files.items() if name.endswith('.gpl')])
     interceptors = tuple(feature for inventory in inventories
         for feature in inventory.selected.package.definition.runtime_features
         if isinstance(feature, c.ProjectileInterception))

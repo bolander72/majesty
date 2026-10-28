@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-source-integration-verification-v1",
   "date": "2026-10-28",
-  "status": "native-panels-and-paid-controls-passed; named-activity-script-port-compiled; gameplay-qualification-pending",
+  "status": "original-follower-marker-overlays-restored; native-and-saved-world-regression-pending",
   "packages": {
     "adventurers-guild": {
       "format": "majesty-community-expansion-package-inspection-v1",
@@ -73,8 +73,8 @@
     "format": "majesty-community-original-sdk-compile-v1",
     "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
     "sourceStage": {
-      "bytes": 285520,
-      "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+      "bytes": 286433,
+      "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
     },
     "outputs": {
       "common": {
@@ -110,15 +110,33 @@
     "playerProfilesAccessed": false,
     "nativeRuntimeQualified": false,
     "browserPlayable": false,
-    "published": false
+    "published": false,
+    "resourceOnlyRebind": {
+      "priorCompilerProof": {
+        "bytes": 1306,
+        "sha256": "6a88a6a1ae8f73613b7f6dde7b9daff304e97d439dcb76c3bd27b2daa1d3ae4f"
+      },
+      "priorSourceStage": {
+        "bytes": 285520,
+        "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+      },
+      "originalSdkSourceFilesByteIdentical": true,
+      "editionRoutesByteIdentical": true,
+      "compilerRerun": false,
+      "metricsFromOriginalCompilation": true,
+      "policy": {
+        "bytes": 4288,
+        "sha256": "e4c076923e7d3d7bc1f2fdb4ac2f0d142fb03c73d5078af059f32e7d40b5061b"
+      }
+    }
   },
   "creatorStage": {
-    "bytes": 9009,
-    "sha256": "c2b5abc52ff1d4f23a1c543a9aa6aeea9d01f9f005051bbfa0feb22371e282e4"
+    "bytes": 9922,
+    "sha256": "80909d183c1ad9fe6be52f0efc6b7bbb0c40151516867377bd763776a1041be4"
   },
   "legacyStage": {
-    "bytes": 285520,
-    "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+    "bytes": 286433,
+    "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
   },
   "legacyRoutes": {
     "Majesty": 157,
@@ -734,7 +752,91 @@
     }
   },
   "latestFocusedExpansionTests": {
-    "command": "python3 -m unittest discover -s tests -p 'test_community_expansion_*.py' -q",
-    "passed": 29
+    "command": "python3 -m unittest tests.test_community_follower_markers tests.test_community_expansion_packages tests.test_community_expansion_named_activity tests.test_community_expansion_routes tests.test_community_expansion_media",
+    "passed": 36
+  },
+  "preFollowerMarkerCompiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 285520,
+      "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 1748226,
+        "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 207,
+        "compiledDefinitions": 207
+      }
+    },
+    "elapsedSeconds": 36.46,
+    "peakRssMiB": 125.4,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "preFollowerMarkerCreatorStage": {
+    "bytes": 9009,
+    "sha256": "c2b5abc52ff1d4f23a1c543a9aa6aeea9d01f9f005051bbfa0feb22371e282e4"
+  },
+  "preFollowerMarkerLegacyStage": {
+    "bytes": 285520,
+    "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+  },
+  "followerMarkerRepair": {
+    "format": "majesty-controlled-follower-marker-repair-v1",
+    "priorCreatorStage": {
+      "bytes": 9009,
+      "sha256": "c2b5abc52ff1d4f23a1c543a9aa6aeea9d01f9f005051bbfa0feb22371e282e4"
+    },
+    "priorSourceStage": {
+      "bytes": 285520,
+      "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+    },
+    "acquiredDefinition": {
+      "bytes": 1811,
+      "sha256": "4b57db0c4192631cd6f1b15697bd41946a01d5c46acf9d0983d5e33d977e1120"
+    },
+    "managerCommit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+    "markers": [
+      "MCF2419816A7F251",
+      "MCF2419816A7F252",
+      "MCF2419816A7F253",
+      "MCF2419816A7F254"
+    ],
+    "originalDescriptionsUnchanged": true,
+    "originalSdkSourcesUnchanged": true,
+    "policy": {
+      "bytes": 5607,
+      "sha256": "185e493891f85e157be84ce09a855ee744aeaa5b113d713cacb594bc738bb24e"
+    },
+    "nativeResources": {
+      "bytes": 11832,
+      "sha256": "61772be19319ee7bf65dd68f70cd0935820922ed37474adb597185dae6ea3c70"
+    },
+    "nativePending": []
   }
 }

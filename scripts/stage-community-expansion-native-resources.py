@@ -19,6 +19,7 @@ from lib.legacy_description_engine import descriptor
 from lib.legacy_description_game import encode_character, encode_building, encode_overlay
 from lib.legacy_description_action import action_descriptor
 from majesty_cam.descriptions import parse_descriptions
+from lib.community_follower_markers import validate as validate_follower_markers
 
 # IDs are separate from the creator's artwork IDs and GPL titles. These slots
 # were checked against both retail editions and the complete current collection.
@@ -125,6 +126,11 @@ def stage(args):
         prior['resourceFiles']['merged_descriptions.xml'])).index
     composed = parse_descriptions(checked(args.creator / 'resources/merged_descriptions.xml',
         creator['resourceFiles']['merged_descriptions.xml'])).index
+    follower_markers = validate_follower_markers(
+        parse_descriptions(checked(args.creator / 'resources/merged_descriptions.xml',
+            creator['resourceFiles']['merged_descriptions.xml'])),
+        [checked(args.source / 'sources' / name, expected).decode('cp1252')
+         for name, expected in source['files'].items() if name.endswith('.gpl')])
     if not original.keys() <= composed.keys() or any(
             ET.tostring(record.to_element()) != ET.tostring(composed[key].to_element())
             for key, record in original.items()):
@@ -248,6 +254,7 @@ def stage(args):
         sourceInputs=inputs, actorIdentities=ACTORS, resourceAliases=aliases,
         preservedPriorDescriptions=len(original), scopedStockReplacements=[list(k) for k in sorted(allowed)],
         counts=counts, pending=pending, files={name: digest(raw) for name, raw in payloads.items()},
+        controlledFollowerMarkers=follower_markers,
         nativeRuntimeQualified=False, mediaQualified=False, browserPlayable=False, published=False)
     args.out.mkdir()
     for name, raw in payloads.items():

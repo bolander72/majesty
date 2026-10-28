@@ -63,7 +63,7 @@ void beginControlledExpansionPlay(std::uint32_t palace, std::uint32_t guild, std
 void runControlledExpansionPlay() {
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
     auto &p = expansionPlay;
-    if (!p.phase || p.phase == 9 || p.busy)
+    if (!p.phase || p.phase == 10 || p.busy)
         return;
     p.busy = true;
     const auto guild = expansionProbeUnit(p.guild), zoo = expansionProbeUnit(p.zoo);
@@ -212,6 +212,21 @@ void runControlledExpansionPlay() {
         host->log(host, "Controlled quest presentation: two test-only record rows opened through "
                         "the native parent control; normal quest gameplay remains unqualified.");
         p.phase = 9;
+        p.started = now;
+    } else if (p.phase == 9 && now - p.started >= 250) {
+        // DeleteEffector finishes the native overlay exit animation first.
+        // Check retirement on later updates, as the existing mechanics probe does.
+        bool pending = false;
+        for (const auto *marker : {"MCF2419816A7F251", "MCF2419816A7F252",
+                                   "MCF2419816A7F253", "MCF2419816A7F254"})
+            pending |= mechanicsGpl("CheckEffector", {{guild}, {0, false, marker}}, true) != 0;
+        if (pending) {
+            require(now - p.started < 6000, "follower marker native exit-animation deadline");
+        } else {
+            host->log(host, "Controlled follower markers: all four absent/create/present/delete/"
+                            "retired checks passed through original native effectors.");
+            p.phase = 10;
+        }
     }
     p.busy = false;
 #endif

@@ -246,7 +246,7 @@ and engine and restores the ordinary twelve-day save: all three buildings,
 four quest offers, Zoo rentON and Assassin2002HP remain. This establishes basic
 saved-state restoration, not full quest or capture lifecycle compatibility.
 Opening the Adventurers Guild for heroes then exposes a separate GPL exception
-(guest exit3765269347); native diagnostic trial21 is investigating that AI path.
+(guest exit3765269347); browser13 later identifies the missing shared follower markers.
 Both owned browsers were closed; host app remained alive, production unchanged.
 
 The acquired Zoo image ABn1 has an empty native placement set0x50, although
@@ -262,5 +262,55 @@ SHA-pinned loopback receiver, with no browser storage files read directly.
 Native22 and23 load that exact world with test-actor flags disabled and a
 read-only GPL diagnostic flag. Guild Open remains clean for30 and110
 simulation seconds respectively; native23 exits0 at170.37seconds/216.4MiB.
-This narrows the next reproduction to the browser runtime and does not clear
-the browser9 exception. The diagnostic flag is disabled by default.
+These clean native runs do not isolate the issue to the browser: browser13
+later identifies missing shared source resources. They do not clear browser9. The diagnostic flag is disabled by default.
+
+Browser11 applies the two art files through the ordinary verified updater,
+retains the exact5/8/12day saves and visibly renders the Zoo foundation in
+placement mode. The same twelve-day world, with full read-only GPL tracing,
+advances with the guild open through19days and saves again. Its board can
+reopen while open, and the native roster shows a hero Going to the Adventurers
+Guild. No GPL error reproduces in that run; normal quest completion is still
+unqualified. The next diagnostic mode logs only actual error construction,
+leaving normal function calls untraced, to avoid mistaking a tracing-dependent
+clean run for resolution of browser9.
+
+Browser13's existing native exception trace identifies the intermittent failure:
+`CheckEffector(false, Zombie#132, MCF2419816A7F251)` cannot resolve its named
+effector. This is not specific to the Guild Open control. The composition
+adapter omitted the pinned manager's generated follower overlay descriptions,
+while retaining the Royal Menagerie stock monster-death cleanup references.
+`stage-community-follower-markers.py` restores the pinned manager's four exact
+hidden, persistent, callback-free MFxx overlay definitions, checks them against
+the acquired rental-speed feature and generated GPL, and preserves every prior
+description and all GPL/DAT bytes. The normal composer now supplies the missing
+feature input; native staging rejects missing, orphaned or malformed markers.
+Four focused regression tests pass. The original SDK bytecode is reused with
+identical-source verification; all artwork is unchanged. Native26 repeats the
+full controls and all13 level1000 heroes, exiting0 at98.82seconds/222.8MiB.
+Marker creation/deletion, the failing saved world and rental gameplay still
+require runtime verification before this issue can be considered closed.
+
+Native27/28 initially rejected a test that assumed synchronous DeleteEffector;
+this was an invalid test expectation, not a missing-definition exception.
+The existing mechanics probe documents native exit animations before retirement.
+The corrected helper checks absent/create/present/delete, and the C++ test
+waits for retirement on later updates (250ms polling, 6000ms deadline). Native29
+passes all four full marker lifecycles plus the prior hero/panel controls, exits0
+at102.59seconds/189.9MiB. Each generated marker's PRIM and SECD bytes also match
+the stock CRB2 vines_icon exactly; only its private header identity/name differ.
+The release builder now supports the56-file expansion selection only behind
+separate source/engine-bound gameplay, saved-world and paired co-op gates.
+The existing54-file live descriptor remains unchanged. Six release tests pass.
+
+Browser14 applies the five changed descriptor/text files through the ordinary
+verified updater and loads the exact12day owned save. All three structures
+restore; the Guild opens and its four-offer board works. With native exception
+tracing enabled and GPL call tracing disabled, the world advances to a native
+victory at16days without an exception. The level1000 heroes kill the remaining
+monsters before a positive capture can be placed; none is claimed. A normal
+Timewalker death is observed (its level/HP are not established), so this is
+not evidence that all naturally recruited heroes are invulnerable. All four
+prior5/8/12/19day save hashes remain exact. The browser closes normally, with
+peak aggregate owned RSS1521.3MiB and GPU footprint320MiB; host app remains alive.
+Capture/tame/rental and normal quest completion still need separate trials.

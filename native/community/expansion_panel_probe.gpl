@@ -6,10 +6,30 @@ begin
     return Created;
 end
 
+function MM_Expansion_Probe_Marker(agent Guild, string Marker) is boolean
+declare
+begin
+    if ($CheckEffector(Guild, Marker))
+        return FALSE;
+    $CreateEffector(Guild, Marker, 1, "infinite");
+    if ($CheckEffector(Guild, Marker) == FALSE)
+        return FALSE;
+    $DeleteEffector(Guild, Marker);
+    return TRUE;
+end
+
 function MM_Expansion_Probe_Rows(agent Guild)
 declare
     list Keys, Kinds, Rewards;
 begin
+    if ($MM_Expansion_Probe_Marker(Guild, "MCF2419816A7F251") == FALSE)
+        return;
+    if ($MM_Expansion_Probe_Marker(Guild, "MCF2419816A7F252") == FALSE)
+        return;
+    if ($MM_Expansion_Probe_Marker(Guild, "MCF2419816A7F253") == FALSE)
+        return;
+    if ($MM_Expansion_Probe_Marker(Guild, "MCF2419816A7F254") == FALSE)
+        return;
     Keys << 1;
     Keys << 2;
     Kinds << 1;

@@ -14,6 +14,41 @@ SPEC.loader.exec_module(BUILD)
 
 
 class CommunityReleaseTests(unittest.TestCase):
+    def test_expansions_require_matching_sources_and_every_gameplay_gate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'deploy').mkdir()
+            identities = ['adventurers-guild', 'more-heroes', 'royal-menagerie']
+            contracts = {}
+            for name in identities:
+                path = root / 'content/community-expansions' / name / 'source-contract.json'
+                path.parent.mkdir(parents=True)
+                path.write_text(json.dumps({'id': name}))
+                contracts[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+            proof = dict(format='majesty-community-expansions-release-qualification-v1',
+                engineSha256='b' * 64, sourceContracts=contracts)
+            gates = ['followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',
+                'menagerieCaptureTameRentalQualified', 'moreHeroesGameplayQualified',
+                'browserSavedWorldRegressionQualified', 'coOpQualified',
+                'originalProfileAndPhantomPreserved']
+            proof.update({key: True for key in gates})
+            path = root / 'deploy/community-expansions-verification.json'
+            content = {'communityExpansions': identities}
+            with patch.object(BUILD, 'ROOT', root):
+                self.assertFalse(BUILD.qualify_community_expansions({}, 'b' * 64))
+                for gate in gates:
+                    path.write_text(json.dumps({**proof, gate: False}))
+                    with self.assertRaises(ValueError):
+                        BUILD.qualify_community_expansions(content, 'b' * 64)
+                path.write_text(json.dumps(proof))
+                self.assertTrue(BUILD.qualify_community_expansions(content, 'b' * 64))
+                with self.assertRaises(ValueError):
+                    BUILD.qualify_community_expansions(content, 'c' * 64)
+                changed = root / 'content/community-expansions/royal-menagerie/source-contract.json'
+                changed.write_text('{}')
+                with self.assertRaises(ValueError):
+                    BUILD.qualify_community_expansions(content, 'b' * 64)
+
     def fixture(self, path):
         root = Path(path)
         (root / 'deploy').mkdir()

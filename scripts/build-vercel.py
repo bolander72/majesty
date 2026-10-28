@@ -359,6 +359,28 @@ def qualify_campaign_resource_release(content, engine):
         raise ValueError('Campaign resources differ from the qualified original SDK outputs')
 
 
+def qualify_community_expansions(content, engine):
+    identities = content.get('communityExpansions')
+    if identities is None:
+        return False
+    expected = ['adventurers-guild', 'more-heroes', 'royal-menagerie']
+    if identities != expected:
+        raise ValueError('Require the exact reviewed community expansion selection')
+    proof = json.loads((ROOT / 'deploy/community-expansions-verification.json').read_text())
+    required = ['followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',
+                'menagerieCaptureTameRentalQualified', 'moreHeroesGameplayQualified',
+                'browserSavedWorldRegressionQualified', 'coOpQualified',
+                'originalProfileAndPhantomPreserved']
+    contracts = {name: hashlib.sha256((ROOT / 'content/community-expansions' / name /
+                                     'source-contract.json').read_bytes()).hexdigest()
+                 for name in expected}
+    if (proof.get('format') != 'majesty-community-expansions-release-qualification-v1'
+            or proof.get('engineSha256') != engine or proof.get('sourceContracts') != contracts
+            or any(proof.get(key) is not True for key in required)):
+        raise ValueError('Require source-bound native, saved-world and paired expansion qualification')
+    return True
+
+
 def install_community_guilds_release(static):
     """Mount only the composed, engine-qualified community resource set."""
     descriptor = ROOT / 'deploy/community-guilds-release.json'
@@ -381,9 +403,12 @@ def install_community_guilds_release(static):
         return json.loads(module.split('export const COMMUNITY_' + name + ' = Object.freeze(', 1)[1].split(');', 1)[0])
     bindings, sizes = binding('FILES'), binding('SIZES')
     patches = content.get('patches', [])
-    if (len(bindings) != 54 or len(patches) != len(bindings)
+    expansions = qualify_community_expansions(content, engine)
+    if (len(bindings) != (56 if expansions else 54) or len(patches) != len(bindings)
             or {p.get('path') for p in patches} != set(bindings)):
         raise ValueError('Require every source-bound composed resource exactly once')
+    if expansions and not {'Data/MMMIntentText.bin', 'DataMX/MMMIntentText.bin'} <= set(bindings):
+        raise ValueError('Require both source-bound private activity registries')
     for patch in patches:
         if (bindings[patch['path']] != patch.get('sha256')
                 or sizes[patch['path']] != patch.get('bytes')
@@ -396,6 +421,9 @@ def install_community_guilds_release(static):
         'RECOMP_COMMUNITY_SPELL_ORIGIN', 'RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS',
         'RECOMP_COMMUNITY_SPELL_TIMING_HELPERS', 'RECOMP_COMMUNITY_HERO_UI',
         'RECOMP_COMMUNITY_PHANTOM_UI']}
+    if expansions:
+        environment.update({name: '1' for name in ['RECOMP_COMMUNITY_PRIVATE_INTENTS',
+            'RECOMP_COMMUNITY_WORLD_QUERY_HELPERS', 'RECOMP_COMMUNITY_EXPANSION_PANELS']})
     if content.get('additionalRuntimeEnvironment') != environment:
         raise ValueError('Community environment differs or enables fixture/diagnostic controls')
     # Validate the native startup anchor before writing any collection metadata.

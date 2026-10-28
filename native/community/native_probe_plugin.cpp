@@ -114,6 +114,7 @@ bool expansionPanels = false;
 bool controlledExpansionPanels = false, controlledExpansionPanelsApplied = false;
 bool controlledExpansionPlay = false;
 bool traceExpansionGpl = false;
+bool traceExpansionGplCalls = false;
 void beginControlledExpansionPlay(std::uint32_t, std::uint32_t, std::uint32_t);
 void runControlledExpansionPlay();
 void runControlledExpansionPanels(std::uint32_t);
@@ -3017,7 +3018,7 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             returned(cpu, 0);
             return;
         }
-        if (traceExpansionGpl ||
+        if (traceExpansionGplCalls ||
             (controlledExpansionPlay && expansionPlay.phase >= 5 && expansionPlay.phase <= 9)) {
             require(expansionPlayGplStack.size() < 128, "bounded owned GPL diagnostic stack");
             expansionPlayGplStack.push_back(guestString(self));
@@ -3382,7 +3383,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         const auto *playTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PLAY");
         controlledExpansionPlay = playTest && !std::strcmp(playTest, "20261028");
         const auto *gplTrace = std::getenv("RECOMP_COMMUNITY_EXPANSION_GPL_TRACE");
-        traceExpansionGpl = gplTrace && !std::strcmp(gplTrace, "20261028");
+        traceExpansionGplCalls = gplTrace && !std::strcmp(gplTrace, "20261028");
+        traceExpansionGpl = traceExpansionGplCalls || (gplTrace && !std::strcmp(gplTrace, "errors"));
         require(!traceExpansionGpl || expansionPanels, "owned GPL trace requires expansion runtime");
         require(!controlledExpansionPlay || controlledExpansionPanels,
                 "owned play trial requires panel controls");
