@@ -131,10 +131,12 @@ class ExpansionPanelOwner {
     template <class Ops>
     bool attach(Ops &ops, std::uint32_t controller, std::uint32_t dialog, std::uint32_t window,
                 std::uint32_t expectedUnit,
-                const std::array<std::uint32_t, expansionPanelEntryCount> &bridges) {
+                const std::array<std::uint32_t, expansionPanelEntryCount> &bridges,
+                std::uint32_t recordPopulate = 0) {
         const auto selected = plan(dialog);
-        if (!selected.profile || !controller || !window || !expectedUnit ||
-            sessions.count(controller) || sessions.size() >= 16 ||
+        if (!selected.profile ||
+            (selected.kind == ExpansionPanelKind::QuestRecords && !recordPopulate) || !controller ||
+            !window || !expectedUnit || sessions.count(controller) || sessions.size() >= 16 ||
             generation == std::numeric_limits<std::uint64_t>::max() || !ops.valid(controller, 36) ||
             ops.read(controller + 0x14) != window)
             return false;
@@ -163,6 +165,8 @@ class ExpansionPanelOwner {
         for (unsigned i = 0; i < expansionPanelEntryCount; ++i)
             if (slots[i] < profile.entries)
                 ops.write(table + slots[i] * 4, bridges[i]);
+        if (selected.kind == ExpansionPanelKind::QuestRecords)
+            ops.write(table + 11 * 4, recordPopulate);
         sessions.emplace(controller, ExpansionPanelSession{selected, controller, dialog, window,
                                                            ops.read(controller + 0x18), unit,
                                                            ops.read(unit + 0x60), original, table,

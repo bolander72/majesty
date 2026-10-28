@@ -1,0 +1,8 @@
+function MM_Expansion_Probe_Spawn(agent Palace, string TypeName) is integer
+declare
+    agent Created;
+begin
+    Created = $SpawnUnit(Palace, TypeName, $RandomCoord(Palace, 160, 480), #Player_1, "Override");
+    if ($IsValidGamePiece(Created) == False) return 0;
+    return $GetAttribute(Created, #ATTRIB_AgentID);
+end

@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'third_party/majesty-mod-manager/src'))
 from majesty_cam.cam import CamArchive, read_cam
+from lib.community_guild_composition import merge_shared_function_routes
 
 
 def digest(raw):
@@ -155,17 +156,8 @@ def prepare(args):
         runtime['routes-' + edition + '.tsv'] = read(args.legacy / 'routes' / edition / 'shared-overrides.tsv', expected)
     # Targets have the same MJC name in both editions; absent edition aliases
     # fall through to the original VM. Refuse any inconsistent common target.
-    union = {}
-    for raw in runtime.values():
-        if not raw.startswith(b'majesty-community-shared-gpl-v2\n'):
-            continue
-        for line in raw.splitlines()[1:]:
-            name, target = line.split(b'\t')
-            if name in union and union[name] != target:
-                raise ValueError('Conflicting edition route target')
-            union[name] = target
-    runtime['shared-overrides.tsv'] = b'majesty-community-shared-gpl-v2\n' + b''.join(
-        name + b'\t' + union[name] + b'\n' for name in sorted(union, key=bytes.lower))
+    runtime['shared-overrides.tsv'] = merge_shared_function_routes(
+        raw for name, raw in runtime.items() if name.startswith('routes-'))
     args.out.mkdir(parents=True); game = args.out / 'game'; game.mkdir()
     for directory in ['Data', 'DataMX', 'Quests', 'QuestsMX', 'Music']:
         for path in (args.game / directory).rglob('*'):

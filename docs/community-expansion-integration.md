@@ -136,3 +136,19 @@ first text trial crashed the owned game because a negative test passed a
 resource FourCC as a table pointer. The corrected three-argument ABI passes.
 Controller runtime behavior, whole-guild gameplay, reload and co-op remain
 unqualified; these component controls do not establish a playable release.
+
+The private native runtime now links the five original controller classes,
+original queued payment/callback dispatch, original text-list rows, a separate
+AP41 capture quote and a native Fl00-shaped capture mode. New building open/close
+commands use the simulation queue. The quest panel owns slot 11 as well as
+refresh: it clears only MX05's non-owning Unit-pointer vector through the exact
+Old48f090 clear prefix, preserving allocation and native destruction. Actual
+occupants cannot become quest records. The expanded ownership test and native
+runtime compilation pass through the official tools.
+
+The edition route union is case insensitive like GPL, retains each exact
+exported MJC spelling, and rejects conflicting aliases. Two case spellings
+previously produced invalid duplicate native rows; the complete canonical union
+has 179 entries. Full controller/gameplay acceptance remains pending;
+`native-runtime-verification.json` distinguishes build/component evidence from
+failed or incomplete UI trials. No browser or production change has occurred.

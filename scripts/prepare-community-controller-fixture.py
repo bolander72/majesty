@@ -69,6 +69,14 @@ def add_expansion_panel_fixture(output, pe):
     (output / 'expansion-controller-tables.bin').write_bytes(b'EPCT' + struct.pack('<I', len(rows)) + b''.join(rows))
     with (output / 'tests/CMakeLists.txt').open('a') as cmake:
         cmake.write('''
+add_library(community_expansion_runtime_check OBJECT
+  ${RECOMP_GAME_DIR}/source/native/community/expansion_panel_runtime.cpp)
+target_include_directories(community_expansion_runtime_check PRIVATE
+  ${POP_ROOT} ${POP_ROOT}/runtime
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_expansion_runtime_check PRIVATE cxx_std_17)
+target_compile_options(community_expansion_runtime_check PRIVATE ${POP_WARN_STRICT})
 add_executable(community_expansion_panel_tests
   ${RECOMP_GAME_DIR}/source/native/community/expansion_panel_owner_tests.cpp
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
@@ -77,6 +85,7 @@ target_include_directories(community_expansion_panel_tests PRIVATE
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
 target_compile_features(community_expansion_panel_tests PRIVATE cxx_std_17)
 target_compile_options(community_expansion_panel_tests PRIVATE ${POP_WARN_STRICT})
+add_dependencies(community_expansion_panel_tests community_expansion_runtime_check)
 pop_test_binary(community_expansion_panel_tests)
 add_test(NAME community_expansion_panel_tests COMMAND community_expansion_panel_tests
   ${RECOMP_GAME_DIR}/controllers.bin ${RECOMP_GAME_DIR}/expansion-controller-tables.bin)

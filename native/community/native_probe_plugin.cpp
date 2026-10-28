@@ -22,6 +22,7 @@
 #include "resource_meter.h"
 #include "shared_function_routes.h"
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+#include "expansion_panel_runtime.h"
 #include "guild_gameplay_runtime.h"
 #include "hero_ui_runtime.h"
 #include "movement_runtime.h"
@@ -109,6 +110,9 @@ bool privateIntents = false, controlledPrivateIntents = false,
      controlledPrivateIntentsApplied = false;
 MajestyCommunity::PrivateIntentText privateIntentText;
 std::uint64_t privateIntentLookups = 0;
+bool expansionPanels = false;
+bool controlledExpansionPanels = false, controlledExpansionPanelsApplied = false;
+void runControlledExpansionPanels(std::uint32_t);
 std::map<std::uint32_t, MajestyCommunity::WorldQuery> worldQueryFunctions;
 bool researchQueryHelpers = false, controlledResearchQuery = false,
      controlledResearchQueryApplied = false;
@@ -1879,6 +1883,8 @@ void runControlledBaseTiming() {
         runControlledWorldQueries(moving);
     if (controlledPrivateIntents && !controlledPrivateIntentsApplied)
         runControlledPrivateIntents();
+    if (controlledExpansionPanels && !controlledExpansionPanelsApplied)
+        runControlledExpansionPanels(palace);
     controlledBaseTimingApplied = true;
     host->log(host, "Controlled community base timing: original action/worker "
                     "getters and negative "
@@ -2036,6 +2042,58 @@ void registerAttributes() {
 }
 #include "research_visual_lifecycle.h"
 #include "mechanics_probe.h"
+void runControlledExpansionPanels(std::uint32_t palace) {
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
+    require(expansionPanels && controlledBaseTiming, "owned expansion controller trial");
+    controlledExpansionPanelsApplied = true;
+    const auto world = read(read(0x0071c68cU) + 4);
+    const auto guildId =
+        mechanicsGpl("MM_Expansion_Probe_Spawn", {{palace}, {0, false, "AdventurerGuild1"}}, true);
+    const auto zooId =
+        mechanicsGpl("MM_Expansion_Probe_Spawn", {{palace}, {0, false, "Restore_Zoo1"}}, true);
+    const auto guild = call(0x005a10d0U, world, {guildId}), zoo = call(0x005a10d0U, world, {zooId});
+    require(guild && zoo && (read(guild + 0x6c) & 0xffffffU) == 0x00764241U &&
+                (read(zoo + 0x6c) & 0xffffffU) == 0x00774241U,
+            "actual source-backed new building births");
+    const auto manager = call(0x00415b40U, 0);
+    const auto open = [&](std::uint32_t unit, std::uint32_t dialog) {
+        call(0x00416890U, manager, {dialog, unit, 0, 0});
+        const auto controller = majesty_expansion_panel_for_unit(unit, dialog);
+        require(controller && call(0x00481ec0U, controller) == unit,
+                "actual private native window and parent");
+        return controller;
+    };
+    const auto command = [&](std::uint32_t controller, std::uint32_t id) {
+        call(read(read(controller) + 12), controller, {id});
+    };
+    const auto parent = open(guild, 0x47414743U);
+    command(parent, 28929);
+    auto child = majesty_expansion_panel_for_unit(guild, 0x51414743U);
+    require(child && read(child + 0x28) == read(child + 0x2c),
+            "quest board uses zero synthetic agents");
+    command(child, 0x1f4dU);
+    require(majesty_expansion_panel_for_unit(guild, 0x47414743U) != 0,
+            "quest board Back returns its own guild");
+    auto zooParent = open(zoo, 0x4d5a4743U);
+    command(zooParent, 5001);
+    child = majesty_expansion_panel_for_unit(zoo, 0x435a4743U);
+    require(child != 0, "native Zoo reward child");
+    command(child, 0x1f4dU);
+    zooParent = majesty_expansion_panel_for_unit(zoo, 0x4d5a4743U);
+    require(zooParent != 0, "reward Back returns its own Zoo");
+    command(zooParent, 10800);
+    child = majesty_expansion_panel_for_unit(zoo, 0x545a4743U);
+    require(child != 0, "native Zoo taming child");
+    command(child, 0x1f4dU);
+    const auto returnedGuild = open(guild, 0x47414743U);
+    command(returnedGuild, 28929);
+    host->log(host, "Controlled expansion panels: actual guild/Zoo births and all five native "
+                    "panels, own-building Back and data-record list passed.");
+#else
+    (void)palace;
+    require(false, "expansion trial requires process-lived core");
+#endif
+}
 MechanicsProbe mechanicsProbe;
 bool controlledMechanics = false;
 
@@ -2159,6 +2217,13 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     }
     if (communityProcess && target == 0x004ca4f0U) {
         const auto args = cpu->esp + 4, requested = read(args);
+        if (expansionPanels && majesty_is_expansion_dialog(requested)) {
+            const auto result = call(majesty_expansion_panel_bridge(0), self,
+                                     {requested, read(args + 4), read(args + 8), read(args + 12)});
+            require(host->hook_return(host, cpu, result, 16) == POP_OK,
+                    "native expansion factory RET16");
+            return;
+        }
         static unsigned factoryReports = 0;
         if (std::getenv("RECOMP_COMMUNITY_TRACE_GUILD_UI") && factoryReports++ < 24)
             std::fprintf(stderr,
@@ -2185,6 +2250,42 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                     "original private factory RET16");
             return;
         }
+    }
+    if (expansionPanels && target == 0x00496990U &&
+        majesty_is_expansion_paid_command(read(cpu->esp + 4))) {
+        const auto result = call(
+            majesty_expansion_panel_bridge(7), self,
+            {read(cpu->esp + 4), read(cpu->esp + 8), read(cpu->esp + 12), read(cpu->esp + 16)});
+        require(host->hook_return(host, cpu, result, 0) == POP_OK,
+                "native expansion paid dispatch cdecl");
+        return;
+    }
+    if (expansionPanels && target == 0x004e3520U && read(cpu->esp) == 0x0049726dU &&
+        majesty_expansion_action_symbol()) {
+        write(cpu->esp + 4, majesty_expansion_action_symbol());
+        next(inv, cpu);
+        return;
+    }
+    if (expansionPanels && target == 0x0043ee80U && call(majesty_expansion_panel_bridge(11), 0)) {
+        next(inv, cpu);
+        if (cpu->eax)
+            cpu->eax = call(majesty_expansion_panel_bridge(10), 0, {cpu->eax});
+        return;
+    }
+    if (expansionPanels && target == 0x0043ef50U && read(cpu->esp) == 0x0043f2fbU &&
+        call(majesty_expansion_panel_bridge(11), 0)) {
+        const auto argument = cpu->esp + 4, original = read(argument),
+                   targetUnit = read(argument + 4);
+        require(original == 0x006bdbc4U, "original Fl00 Flag_Attack prototype call site");
+        if (!call(majesty_expansion_panel_bridge(10), 0, {targetUnit})) {
+            require(host->hook_return(host, cpu, 0, 0) == POP_OK,
+                    "private capture rejected before native creation/debit");
+            return;
+        }
+        write(argument, majesty_expansion_capture_prototype());
+        next(inv, cpu);
+        write(argument, original);
+        return;
     }
     if (communityProcess && target == 0x004abf70U) {
         const auto unit = read(cpu->esp + 8);
@@ -2245,6 +2346,8 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     if ((researchBridge || sharedFunctions || communityProcess) && target == 0x00628e60U) {
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
         if (communityProcess) {
+            if (expansionPanels)
+                call(majesty_expansion_panel_bridge(9), 0);
             const auto entry = majesty_guild_process_bridge(3);
             require(entry != 0, "process-lived panel reset before original world disposal");
             call(entry, 0);
@@ -3222,6 +3325,25 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         require(services &&
                     majesty_configure_recruitment_panels(&communityRecipes, &binding, 1, services),
                 "four real private guild services and original AP52 owner");
+        const auto *expansionFlag = std::getenv("RECOMP_COMMUNITY_EXPANSION_PANELS");
+        expansionPanels = expansionFlag && !std::strcmp(expansionFlag, "1");
+        const auto *expansionTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PANELS");
+        controlledExpansionPanels = expansionTest && !std::strcmp(expansionTest, "20261028");
+        require(!controlledExpansionPanels || (expansionPanels && controlledBaseTiming),
+                "owned expansion test requires real controllers and native base trial");
+        if (expansionPanels) {
+            require(privateIntents &&
+                        majesty_configure_expansion_panels(&communityRecipes, &privateIntentText),
+                    "source-bound native expansion controllers and private texts");
+            for (const auto address : {0x00496990U, 0x004e3520U, 0x0043ee80U, 0x0043ef50U}) {
+                std::uint32_t id = 0;
+                const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                          POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+                if (status != POP_OK)
+                    return status;
+                hooks.push_back(id);
+            }
+        }
         const char *movementFlag = std::getenv("RECOMP_COMMUNITY_MOVEMENT_SCALE");
         movementScale = movementFlag && !std::strcmp(movementFlag, "1");
         if (movementScale) {

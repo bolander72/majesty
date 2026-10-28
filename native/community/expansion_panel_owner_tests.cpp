@@ -111,20 +111,25 @@ int main(int argc, char **argv) {
         const auto plan = owner.plan(dialog);
         assert(plan.profile);
         Ops ops(plan);
-        assert(!owner.attach(ops, 0x2000, dialog, 0x6001, 0x1000, bridges));
+        assert(!owner.attach(ops, 0x2000, dialog, 0x6001, 0x1000, bridges, 0x900000f0));
         assert(ops.allocated.empty());
         const auto original = ops.read(plan.profile->vtable + 8);
         ops.write(plan.profile->vtable + 8, original + 1);
-        assert(!owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges));
+        assert(!owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges, 0x900000f0));
         ops.write(plan.profile->vtable + 8, original);
-        assert(owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges));
+        if (plan.kind == ExpansionPanelKind::QuestRecords)
+            assert(!owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges));
+        assert(owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges, 0x900000f0));
         const auto first = owner.find(0x2000);
         assert(first.context == 0x7000 && first.unit == 0x1000 && first.identity == 41);
         assert(owner.alive(ops, first));
-        assert(!owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges));
+        assert(!owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges, 0x900000f0));
         constexpr unsigned slots[] = {0, 1, 3, 8, 14};
         for (unsigned i = 0; i < plan.profile->entries; ++i) {
             auto expected = plan.profile->methods[i];
+            if (plan.kind == ExpansionPanelKind::QuestRecords && i == 11)
+                expected = 0x900000f0;
+
             for (unsigned j = 0; j < expansionPanelEntryCount; ++j)
                 if (i == slots[j])
                     expected = bridges[j];
@@ -145,7 +150,7 @@ int main(int argc, char **argv) {
         ops.write(0x2018, 0x7000);
         assert(owner.detach(ops, 0x2000, first.generation));
         assert(ops.read(0x2000) == plan.profile->vtable && ops.allocated.empty());
-        assert(owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges));
+        assert(owner.attach(ops, 0x2000, dialog, 0x6000, 0x1000, bridges, 0x900000f0));
         const auto replacement = owner.find(0x2000);
         assert(replacement.generation > first.generation);
         assert(!owner.detach(ops, 0x2000, first.generation));

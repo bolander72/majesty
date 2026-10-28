@@ -222,3 +222,35 @@ def compose_views(fixture, inventories, texts, resolutions):
     contract = json_value(dict(dialogs=dialogs, controllers=controllers,
                                features=features, projectileBindings=impacts))
     return bundle, payloads, contract
+
+
+def merge_shared_function_routes(inputs):
+    """Fold GPL's case-insensitive source names to each exact exported alias."""
+    prefix = b'majesty-community-shared-gpl-v2\n'
+    union = {}
+    for raw in inputs:
+        if len(raw) > 65536 or b'\0' in raw or not raw.startswith(prefix):
+            raise ValueError('Invalid bounded shared route input')
+        for line in raw[len(prefix):].splitlines():
+            parts = line.split(b'\t')
+            if len(parts) != 2:
+                raise ValueError('Invalid shared route row')
+            name, target = parts
+            if (not 1 <= len(name) <= 100 or len(target) >= 128
+                    or not target.startswith(b'MJC_')
+                    or target[4:].lower() != name.lower()
+                    or any(c not in b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789'
+                           for c in name)):
+                raise ValueError('Shared route changes function identity')
+            key = name.lower()
+            if key in union and union[key] != target:
+                raise ValueError('Conflicting exact exported alias for shared function')
+            union[key] = target
+            if len(union) > 256:
+                raise ValueError('Shared route union exceeds native bound')
+    if not union:
+        raise ValueError('Empty shared route union')
+    # Native v2 deliberately requires exact MJC_ + spelling. Retain the
+    # compiler's alias spelling, with one row per case-insensitive function.
+    return prefix + b''.join(union[key][4:] + b'\t' + union[key] + b'\n'
+                             for key in sorted(union))

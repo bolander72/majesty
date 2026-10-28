@@ -214,7 +214,7 @@ def prepare(args):
     shutil.copyfile(native / 'native_probe_plugin.cpp', core / 'alchemist_native_probe.cpp')
     for path in native.glob('*.h'):
         shutil.copyfile(path, support / path.name)
-    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp', 'movement_runtime.cpp',
+    for name in ['private_template_bank.cpp', 'recruitment_panel_runtime.cpp', 'guild_gameplay_runtime.cpp', 'expansion_panel_runtime.cpp', 'movement_runtime.cpp',
                  'hero_ui_runtime.cpp', 'hero_ui_presenter.cpp']:
         shutil.copyfile(native / name, support / name)
     vendor = ROOT / 'third_party/majesty-mod-manager/runtime'

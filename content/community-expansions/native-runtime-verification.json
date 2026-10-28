@@ -1,0 +1,156 @@
+{
+  "format": "majesty-community-expansion-native-runtime-verification-v1",
+  "date": "2026-10-28",
+  "status": "private-native-runtime-built; live-controller-qualification-pending",
+  "nativeBuild": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v3/kit/tools/build.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v3",
+      "--target",
+      "smoke",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1793218847,
+    "terminal": true,
+    "peakOwnedRssMiB": 427.1,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 75099,
+    "endedAtUnix": 1793218852
+  },
+  "executable": {
+    "bytes": 92578536,
+    "sha256": "85e3e6dfe68fb570b8fe7b1fe61822d10fd190fcc7f2890a9fcd7599b592067b"
+  },
+  "engineStage": {
+    "bytes": 19851,
+    "sha256": "6d481eee6c4892fad8c6fa4dce3143604fde6017a6938793cc5163e9a8f178da"
+  },
+  "testControls": {
+    "bytes": 1160,
+    "sha256": "4c5b1c24798cd5be6819e6eeaacdeeed314ef609d5559017868953057c3a71a5"
+  },
+  "routeUnion": {
+    "format": "majesty-expansion-native-route-union-v1",
+    "policySha256": "9a71c28879e8ddda264dc0946e3fd52b797d0e4552337da1fe4d9697147aced7",
+    "inputRoutes": {
+      "Majesty": "683755f5ab24cf3216f37919cc2a2fffcfdf16b738f292993d6c9b6714609062",
+      "MajestyExpansion": "213379d06fb0b0dd533d2105b6627885c61bf9a30efe9b8b089fc302152876c5"
+    },
+    "output": {
+      "bytes": 6536,
+      "sha256": "bc7907d85b882aaf650111dbf688a597b0d424d01d90fd86ae56c3b527889753"
+    },
+    "routes": 179,
+    "originalCompilerOutputsUnchanged": true
+  },
+  "officialControllerTest": {
+    "exitCode": 0,
+    "stopReason": null,
+    "elapsedSeconds": 2.36,
+    "peakRssMiB": 191.0,
+    "officialNativeTest": "community_expansion_panel_tests",
+    "gameLaunched": false
+  },
+  "sourceFiles": {
+    "native/community/expansion_panel_owner.h": {
+      "bytes": 10799,
+      "sha256": "c698db685d2eb7a7aa126d494c9aee01c4bf0d512aa80ef810296715e3dc4bfb"
+    },
+    "native/community/expansion_panel_owner_tests.cpp": {
+      "bytes": 7267,
+      "sha256": "12a1577943609348bf8648878b5c2d3c2f438fd26ed01b4742d82a910c7d9df3"
+    },
+    "native/community/expansion_panel_runtime.cpp": {
+      "bytes": 30450,
+      "sha256": "752d75d7a4046c5b5bb9360d790b9e4dbce62ddccdefe34ce7862b843c3feb29"
+    },
+    "native/community/expansion_panel_runtime.h": {
+      "bytes": 920,
+      "sha256": "3046e42256986aa5cd4393e337c03f637510b0f93f03c2d47ba0df5bb41c7ceb"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 187376,
+      "sha256": "654de1a890eda9c96334d893d95563fc7cd7b12892f6f5ed4f971ae407c421c6"
+    },
+    "native/community/expansion_panel_probe.gpl": {
+      "bytes": 319,
+      "sha256": "f61987f3db71a42d004e0b61563737c36c140369d2a867d5e7de9ea8befb0104"
+    },
+    "scripts/lib/community_guild_composition.py": {
+      "bytes": 13706,
+      "sha256": "9a71c28879e8ddda264dc0946e3fd52b797d0e4552337da1fe4d9697147aced7"
+    },
+    "scripts/prepare-community-native-candidate.py": {
+      "bytes": 12440,
+      "sha256": "d660cc2ea3aa8ef978f0b2bde5bf9a29f77584f56d0666afa6a8a68bad51b17a"
+    },
+    "scripts/prepare-community-controller-fixture.py": {
+      "bytes": 17081,
+      "sha256": "142f6d80fed2ba590dc907558aa25b08b88fe234f1154834a761f1da65d44fe3"
+    },
+    "scripts/prepare-community-process-engine.py": {
+      "bytes": 21187,
+      "sha256": "8442cd6d635f62f0158aed77745a7eb73ec68776a3adf7b0f1952052777327ec"
+    },
+    "scripts/prepare-community-campaign-browser-engine.py": {
+      "bytes": 6806,
+      "sha256": "d03772fe32564657f509c729209f51e15c2e09d2f7476051de69040ecfdb4f4d"
+    }
+  },
+  "implemented": [
+    "five original controller classes with exact actor/generation ownership",
+    "native text rows and selection keys without artificial agents or occupant rows",
+    "native paid command debit/callback lifecycle",
+    "simulation-queued open/close commands for both new guilds",
+    "private Fl00-shaped capture mode, native hostile-monster classifier, duplicate flag/gate checks",
+    "stock AP41 formatting with separate capture quote; original Attack Flag quote preserved"
+  ],
+  "nativeAbi": {
+    "captureModeConstructor": "005cdd20",
+    "modeRegistry": "005cd600 -> vtable +60/+64",
+    "modeOwner": "006d84b8",
+    "modeManager": "00437de0 -> +10 selected mode",
+    "validator": "0043efc0; private process-lived callback, not a non-hookable block hook",
+    "completion": "0043f140",
+    "completionTarget": "0043ee80",
+    "flagCreation": "0043ef50 at return 0043f2fb",
+    "stockPrototype": "006bdbc4 Flag_Attack",
+    "targetOffset": "48",
+    "displayClassifier": "004c8fc0; 4 means original Monster",
+    "targetPlayer": "unit +70; Monster player 7",
+    "flagRelation": "unit +94, 00599110",
+    "attackQuote": "006d81f4",
+    "questVectorClear": "0048f090 raw-pointer prefix; end +2c = begin +28, preserve capacity +30"
+  },
+  "historicalTrials": {
+    "live1And2": "Fixture omitted original symbols manifest; did not load the core. Not integration evidence.",
+    "live3": "Native parser rejected duplicate case spellings in a route union. Canonical union now has 179 exact exported aliases.",
+    "live4": "Map/movement and all private text controls passed with combined resources. Spawn control used display titles instead of descriptor names, causing a GPL exception.",
+    "live5And6": "Test input missed new-player name acceptance. No controller qualification.",
+    "live7": "Readiness threshold 0.80 cannot accept dimmed name dialog (observed 0.5744). Stopped the invalid trial.",
+    "live8": "Uses initial 0.80 and modal 0.50 thresholds held for 40 actual presented frames; result pending."
+  },
+  "remainingAcceptance": [
+    "actual controller setup/back/teardown and native-scale visual inspection",
+    "capture cursor, legal/illegal targets, no-capacity alert, payment, capture/taming/rental and cleanup",
+    "paid board refresh, normal quests, all 13 More Heroes and high-level stats",
+    "potion expiry, ordinary save/reload and existing save compatibility",
+    "browser and paired co-op verification",
+    "source-bound publication and production verification"
+  ],
+  "livePanelsQualified": false,
+  "nativeGameplayQualified": false,
+  "saveReloadQualified": false,
+  "coOpQualified": false,
+  "browserPlayable": false,
+  "published": false
+}
