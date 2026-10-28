@@ -28,6 +28,7 @@ pop_add_plugin(community_gpl_probe SOURCE
   OUTPUT_DIR ${POP_OUT}/private-plugins OUTPUT_NAME community_gpl_probe WARNINGS ${POP_WARN_HOST})
 target_sources(community_gpl_probe PRIVATE
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/BoundedMapQuery.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/IntentTextRegistry.cpp
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/RuntimeFeatureRegistry.cpp
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
 target_include_directories(community_gpl_probe PRIVATE
@@ -50,6 +51,63 @@ set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIME
     add_kingdom_descriptor_fixture(output)
     with (output / 'tests/CMakeLists.txt').open('a') as cmake:
         cmake.write('include("${RECOMP_GAME_DIR}/source/native/community/optional_expansion_effectors.cmake")\n')
+
+
+def add_expansion_panel_fixture(output, pe):
+    rows, evidence = [], []
+    for name, address, count, constructor in [
+            ('AP08', 0x006816b4, 13, 0x0046b340),
+            ('MX09', 0x006828f8, 13, 0x004903c0),
+            ('AP41', 0x00681cf8, 11, 0x004762a0),
+            ('MX05', 0x006827e0, 15, 0x0048ebb0)]:
+        raw = pe.get_data(address - pe.OPTIONAL_HEADER.ImageBase, count * 4)
+        if len(raw) != count * 4:
+            raise ValueError('Original expansion controller table is truncated')
+        rows.append(name.encode('ascii') + struct.pack('<II', address, count) + raw)
+        evidence.append(dict(selector=name, vtable=f'{address:08x}', entries=count,
+            constructor=f'{constructor:08x}', sha256=hashlib.sha256(raw).hexdigest()))
+    (output / 'expansion-controller-tables.bin').write_bytes(b'EPCT' + struct.pack('<I', len(rows)) + b''.join(rows))
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_expansion_panel_tests
+  ${RECOMP_GAME_DIR}/source/native/community/expansion_panel_owner_tests.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
+target_include_directories(community_expansion_panel_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_expansion_panel_tests PRIVATE cxx_std_17)
+target_compile_options(community_expansion_panel_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_expansion_panel_tests)
+add_test(NAME community_expansion_panel_tests COMMAND community_expansion_panel_tests
+  ${RECOMP_GAME_DIR}/controllers.bin ${RECOMP_GAME_DIR}/expansion-controller-tables.bin)
+set_tests_properties(community_expansion_panel_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+    return evidence
+
+
+def add_private_intent_fixture(output, intents):
+    raw = intents.read_bytes()
+    if not 12 <= len(raw) <= 16 * 1024 * 1024 or raw[:8] != b'MMTX\x01\0\0\0':
+        raise ValueError('Require the creator MMTX v1 registry')
+    (output / 'MMMIntentText.bin').write_bytes(raw)
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_private_intent_tests
+  ${RECOMP_GAME_DIR}/source/native/community/private_intent_text_tests.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/IntentTextRegistry.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
+target_include_directories(community_private_intent_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_private_intent_tests PRIVATE cxx_std_17)
+target_compile_options(community_private_intent_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_private_intent_tests)
+add_dependencies(community_private_intent_tests community_gpl_probe)
+add_test(NAME community_private_intent_tests COMMAND community_private_intent_tests
+  ${RECOMP_GAME_DIR}/controllers.bin ${RECOMP_GAME_DIR}/MMMIntentText.bin)
+set_tests_properties(community_private_intent_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+    return dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
 
 
 def add_equipment_fixture(output):
@@ -136,7 +194,7 @@ set_tests_properties(community_kingdom_research_descriptors_tests PROPERTIES LAB
 ''')
 
 
-def prepare(game, controllers, output, shared_source=None, legacy_routes=None):
+def prepare(game, controllers, output, shared_source=None, legacy_routes=None, intents=None):
     if output.exists() or output.is_symlink():
         raise ValueError('Preserve existing fixture; choose a fresh output')
     config = tomllib.loads((game / 'game.toml').read_text())
@@ -221,6 +279,9 @@ set_tests_properties(community_shared_routes_tests PROPERTIES LABELS nogame TIME
         command=['tools/test.py', '--game-dir', str(output), '--native-test',
                  'community_recruitment_tests', '--jobs', '1'])
     add_gpl_fixture(output)
+    report['expansionControllerTables'] = add_expansion_panel_fixture(output, pe)
+    if intents:
+        report['intentRegistry'] = add_private_intent_fixture(output, intents)
     (output / 'fixture.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
@@ -231,6 +292,7 @@ if __name__ == '__main__':
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--shared-source', type=Path)
     parser.add_argument('--legacy-routes', type=Path)
+    parser.add_argument('--intents', type=Path)
     args = parser.parse_args()
-    prepare(args.game, args.controllers, args.out, args.shared_source, args.legacy_routes)
+    prepare(args.game, args.controllers, args.out, args.shared_source, args.legacy_routes, args.intents)
     print('Private native recruitment fixture staged; no engine launched')

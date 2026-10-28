@@ -33,3 +33,7 @@ are not used; the Old engine adapter traces its own layouts and native calls.
 The unmodified Python `art.py` codec comes from that same release commit. It
 parses audited image references for selective append-only media integration;
 existing deployed image, tile and palette slots remain authoritative.
+
+`IntentTextRegistry.h/.cpp` are also unmodified portable sources from release
+`b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`. They validate the creator's MMTX
+activity/quest text wire format; the Old adapter provides its own string views.

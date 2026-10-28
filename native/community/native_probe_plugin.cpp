@@ -13,6 +13,7 @@
 #include "gpl_spell_timing_helpers.h"
 #include "movement_scale.h"
 #include "name_registration.h"
+#include "private_intent_text.h"
 #include "optional_expansion_effectors.h"
 #include "optional_expansion_spells.h"
 #include "pop_mod_api.h"
@@ -104,6 +105,10 @@ MajestyRuntimeFeatures::Registry timingFeatures;
 std::map<std::uint32_t, MajestyCommunity::SpellTimingHelper> spellTimingFunctions;
 bool worldQueryHelpers = false;
 bool controlledWorldQueries = false, controlledWorldQueriesApplied = false;
+bool privateIntents = false, controlledPrivateIntents = false,
+     controlledPrivateIntentsApplied = false;
+MajestyCommunity::PrivateIntentText privateIntentText;
+std::uint64_t privateIntentLookups = 0;
 std::map<std::uint32_t, MajestyCommunity::WorldQuery> worldQueryFunctions;
 bool researchQueryHelpers = false, controlledResearchQuery = false,
      controlledResearchQueryApplied = false;
@@ -226,6 +231,17 @@ struct DispatchOps {
     }
     void release(std::uint32_t address) {
         require(host->guest_free(host, address) == POP_OK, "private dispatch release");
+    }
+};
+struct IntentTextOps : DispatchOps {
+    bool valid(std::uint32_t address, std::uint32_t bytes) {
+        std::uint32_t ignored = 0;
+        return address && bytes >= 4 && address <= UINT32_MAX - bytes &&
+               host->guest_read_u32(host, address, &ignored) == POP_OK &&
+               host->guest_read_u32(host, address + bytes - 4, &ignored) == POP_OK;
+    }
+    void writeByte(std::uint32_t address, unsigned char value) {
+        require(host->guest_write_u8(host, address, value) == POP_OK, "private intent bytes");
     }
 };
 struct ResearchOps {
@@ -1771,6 +1787,40 @@ void runControlledWorldQueries(std::uint32_t worker) {
               "Controlled world queries: original map masks, bounded frontier, native movement "
               "rates and invalid-input controls passed.");
 }
+void runControlledPrivateIntents() {
+    require(controlledPrivateIntents && !privateIntentText.records().empty(),
+            "owned private intent control");
+    const auto runtime = call(0x00623b20U, 0), table = read(runtime + 0x28);
+    require(table != 0, "original active AITX table");
+    const auto stock = call(0x004f2040U, 0, {table, 0xffffffffU, 1});
+    for (const auto &record : privateIntentText.records()) {
+        const auto view = call(0x004f2040U, 0, {table, 0xffffffffU, record.id});
+        require(view && view == privateIntentText.view(record.id) &&
+                    guestString(view) == record.text,
+                "actual original STRT accessor returns private view");
+        std::uint32_t copy = 0;
+        require(host->guest_alloc(host, 12, &copy) == POP_OK, "native intent copy storage");
+        call(0x004e35f0U, copy, {view});
+        require(guestString(copy) == record.text && read(copy) != read(view),
+                "original TString copy owns separate exact text");
+        call(0x004e3820U, copy);
+        require(host->guest_free(host, copy) == POP_OK, "native intent copy release");
+    }
+    require(call(0x004f2040U, 0, {table, 0xffffffffU, 1}) == stock,
+            "original stock activity entry remains identical");
+    const auto &first = privateIntentText.records().front();
+    require(call(0x004f2040U, 0, {0, 0x58544941U, first.id}) == privateIntentText.view(first.id),
+            "native AITX resource-ID lookup agrees with table-pointer lookup");
+    const auto hits = privateIntentLookups;
+    call(0x004f2040U, 0, {0, 0x4e544e55U, first.id}); // UNTN is a separate namespace.
+    require(privateIntentLookups == hits, "private activity text never changes unit titles");
+    controlledPrivateIntentsApplied = true;
+    std::fprintf(
+        stderr, "[community-private-intents] records=%zu native-owned-copies=1 stock-unchanged=1\n",
+        privateIntentText.records().size());
+    host->log(host, "Controlled private intents: original AITX pointer/ID lookup and native string "
+                    "copies passed.");
+}
 void runControlledBaseTiming() {
     const auto manager = call(0x00415b40U, 0), player = read(manager + 0x24);
     const auto palace = call(0x00418b50U, manager, {player});
@@ -1827,6 +1877,8 @@ void runControlledBaseTiming() {
         runControlledResearchQuery(palace);
     if (controlledWorldQueries && !controlledWorldQueriesApplied)
         runControlledWorldQueries(moving);
+    if (controlledPrivateIntents && !controlledPrivateIntentsApplied)
+        runControlledPrivateIntents();
     controlledBaseTimingApplied = true;
     host->log(host, "Controlled community base timing: original action/worker "
                     "getters and negative "
@@ -1989,6 +2041,22 @@ bool controlledMechanics = false;
 
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (privateIntents && target == 0x004f2040U) {
+        const auto id = read(cpu->esp + 12);
+        if (MajestyIntentText::IsPrivateIntentId(id)) {
+            IntentTextOps ops;
+            const auto view =
+                privateIntentText.lookup(ops, read(cpu->esp + 4), read(cpu->esp + 8), id);
+            if (view) {
+                ++privateIntentLookups;
+                require(host->hook_return(host, cpu, view, 0) == POP_OK,
+                        "original private STRT lookup cdecl return");
+                return;
+            }
+        }
+        next(inv, cpu);
+        return;
+    }
 #if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
     if (researchVisuals && target == 0x00416c30U) {
         // Audited Old world entry, called by415e7a after new/load setup.
@@ -3006,6 +3074,12 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     controlledWorldQueries = worldQueryTest && !std::strcmp(worldQueryTest, "20261028");
     require(!controlledWorldQueries || (worldQueryHelpers && controlledBaseTiming),
             "controlled world queries require an owned native worker timing trial");
+    const char *intentFlag = std::getenv("RECOMP_COMMUNITY_PRIVATE_INTENTS");
+    privateIntents = intentFlag && !std::strcmp(intentFlag, "1");
+    const char *intentTest = std::getenv("RECOMP_COMMUNITY_TEST_PRIVATE_INTENTS");
+    controlledPrivateIntents = intentTest && !std::strcmp(intentTest, "20261028");
+    require(!controlledPrivateIntents || (privateIntents && controlledBaseTiming),
+            "private intent control requires an owned worker timing trial");
     require(!controlledSpellTiming || controlledBaseTiming,
             "controlled spell timing requires the actual worker timing trial");
     const char *researchQueries = std::getenv("RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS");
@@ -3052,6 +3126,18 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     const auto n = file("features.bin", 1024 * 1024),
                c = file("controllers.bin", MajestyStockControllers::kMaximumRegistryBytes);
     std::string error;
+    if (privateIntents) {
+        const auto raw = file("MMMIntentText.bin", MajestyIntentText::kMaximumRegistryBytes);
+        IntentTextOps ops;
+        require(privateIntentText.initialize(ops, raw.data(), raw.size(), error),
+                "source-bound MMTX and original borrowed string views");
+        std::uint32_t id = 0;
+        const auto status = host->hook_install_ex(host, 0x004f2040U, 0, hook, POP_HOOK_WRAP,
+                                                  POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+        if (status != POP_OK)
+            return status;
+        hooks.push_back(id);
+    }
     require(n.size() >= 8 && n[4] == 1 && !n[5] && !n[6] && !n[7], "MMFR version");
     require(c.size() >= 8 && c[4] == 20 && !c[5] && !c[6] && !c[7], "MMCR version");
     require(MajestyRuntimeFeatures::ParseRegistry(n.data(), n.size(), &features, &error),
@@ -3359,6 +3445,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     for (const auto id : hooks)
         host->hook_remove(host, id);
     hooks.clear();
+    IntentTextOps intentOps;
+    privateIntentText.clear(intentOps);
+    privateIntents = controlledPrivateIntents = controlledPrivateIntentsApplied = false;
+    privateIntentLookups = 0;
     sharedResolved.clear();
     sharedAliases.clear();
     sharedLookupDepth = 0;

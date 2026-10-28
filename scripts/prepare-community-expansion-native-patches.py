@@ -88,6 +88,10 @@ def prepare(args):
         inputs[name] = digest(raw)
         return raw
     outputs, catalogs = {}, {}
+    intent_name = 'MMMIntentText.bin'
+    intents = read(args.creator / 'resources' / intent_name, creator['resourceFiles'][intent_name])
+    for directory in ('Data', 'DataMX'):
+        outputs[directory + '/' + intent_name] = intents
     for name, kind, overlay, allowed in [
             ('Data/unittype.cam', b'DUNT', 'Any-unittype.cam', ()),
             ('DataMX/mx_unittype.cam', b'DUNT', 'MajestyExpansion-unittype.cam', (b'ABr1',)),

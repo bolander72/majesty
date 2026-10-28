@@ -1,0 +1,159 @@
+{
+  "format": "majesty-community-expansion-native-component-verification-v1",
+  "date": "2026-10-28",
+  "status": "native-text-component-qualified; panel-runtime-pending",
+  "controllerOwner": {
+    "officialTest": {
+      "exitCode": 0,
+      "stopReason": null,
+      "elapsedSeconds": 65.13,
+      "peakRssMiB": 186.7,
+      "officialNativeTest": "community_expansion_panel_tests",
+      "gameLaunched": false
+    },
+    "originalTables": [
+      {
+        "selector": "AP08",
+        "vtable": "006816b4",
+        "entries": 13,
+        "constructor": "0046b340",
+        "sha256": "473fcc0693422992353b6c2890fa41035254ce6d455ee7a96e9703d7b9d22009"
+      },
+      {
+        "selector": "MX09",
+        "vtable": "006828f8",
+        "entries": 13,
+        "constructor": "004903c0",
+        "sha256": "cae3926a504edda70441b275b288eed69dd3310dae253c9a7a6a8467272d0a4e"
+      },
+      {
+        "selector": "AP41",
+        "vtable": "00681cf8",
+        "entries": 11,
+        "constructor": "004762a0",
+        "sha256": "95466a8188b7c4c4872ca82388733d100382fb428b0a5658f5daa65a5981b29a"
+      },
+      {
+        "selector": "MX05",
+        "vtable": "006827e0",
+        "entries": 15,
+        "constructor": "0048ebb0",
+        "sha256": "7c1198018c5ccd191e6faf0c2b60d89dbe9c47b04d2739ed7ac7ced791784cd0"
+      }
+    ],
+    "scope": "Five panels: ownership, complete native tables, generation and teardown controls; no live controller qualification"
+  },
+  "privateIntentTexts": {
+    "officialTest": {
+      "exitCode": 0,
+      "stopReason": null,
+      "elapsedSeconds": 4.77,
+      "peakRssMiB": 420.3,
+      "officialNativeTest": "community_private_intent_tests",
+      "gameLaunched": false
+    },
+    "stage": {
+      "format": "majesty-private-intent-native-live-stage-v1",
+      "module": {
+        "bytes": 651336,
+        "sha256": "77295fe3ee694d986257732a35a8b06029f7570f039a69de275098ca09d24775"
+      },
+      "intentRegistry": {
+        "bytes": 1907,
+        "sha256": "570f71bcf6f8d885d3a5763d4bf2c4b15e4f1e75a565e0c9176d117788bcc1e3"
+      },
+      "sourceFiles": {
+        "native/community/native_probe_plugin.cpp": {
+          "bytes": 180919,
+          "sha256": "f3aef1fda74851187a756aef1b149f99419ed837552d18f297eadb96c1226258"
+        },
+        "native/community/private_intent_text.h": {
+          "bytes": 4313,
+          "sha256": "d1786a72c6a072d064ff5db7ddc2fbef21d5b2d18182e659c430c913fe9b3115"
+        },
+        "third_party/majesty-mod-manager/runtime/IntentTextRegistry.h": {
+          "bytes": 950,
+          "sha256": "a3fe7aabd6cfc87f9ac941836729280cc12046dd1318a92a1b69795deee5f2e1"
+        },
+        "third_party/majesty-mod-manager/runtime/IntentTextRegistry.cpp": {
+          "bytes": 4543,
+          "sha256": "42b27ec627dc303ac714738bf1913cd3dfeba2244b68371b1b449498269b0e9b"
+        }
+      },
+      "nativeGuildActorsInstalled": false,
+      "freshOwnedProfile": true,
+      "published": false,
+      "correctedResourceGetterAbi": {
+        "tablePointer": [
+          "table",
+          "language",
+          "row"
+        ],
+        "resourceId": [
+          0,
+          "AITX",
+          "row"
+        ]
+      }
+    },
+    "liveControl": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 43.37,
+      "peakRssMiB": 180.9,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/private-intent-native-live2/profile",
+      "sourceEngineSha256": "332f2605d9577a43362154c4dcd88ab0ecd467d19c5a14bb833ce7bfdfaa0303"
+    },
+    "firstTrial": {
+      "nativeExitCode": -11,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 43.95,
+      "peakRssMiB": 146.8,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": false,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/private-intent-native-live1/profile",
+      "sourceEngineSha256": "332f2605d9577a43362154c4dcd88ab0ecd467d19c5a14bb833ce7bfdfaa0303"
+    },
+    "firstTrialFailure": "Owned native game SIGSEGV: negative control used UNTN FourCC as first-argument table pointer. Corrected resource form is (0, tableId, rowId); pointer form is (table, language, rowId).",
+    "records": 61,
+    "stockTextIsolation": true,
+    "nativeOwnedCopies": true
+  },
+  "sourceFiles": {
+    "native/community/expansion_panel_owner.h": {
+      "bytes": 10545,
+      "sha256": "98755347ae5abb646990daaaa265302820bec261e9c44498b224f31c43600afd"
+    },
+    "native/community/expansion_panel_owner_tests.cpp": {
+      "bytes": 6953,
+      "sha256": "1efb8b960fafe36bf2f611e419101fa511fd03acd17705d25a5a39d996efcba8"
+    },
+    "native/community/private_intent_text.h": {
+      "bytes": 4313,
+      "sha256": "d1786a72c6a072d064ff5db7ddc2fbef21d5b2d18182e659c430c913fe9b3115"
+    },
+    "native/community/private_intent_text_tests.cpp": {
+      "bytes": 4765,
+      "sha256": "208c1c371e4edff5e6af47c1c4a0edf2aa18b53614e918532106950c9205164a"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 180919,
+      "sha256": "f3aef1fda74851187a756aef1b149f99419ed837552d18f297eadb96c1226258"
+    },
+    "scripts/prepare-community-controller-fixture.py": {
+      "bytes": 16490,
+      "sha256": "d1a1c9e188089c045000a0a6bd696cb258e20cfc9a3877fff6b4030147984823"
+    }
+  },
+  "newGuildGameplayQualified": false,
+  "saveReloadQualified": false,
+  "coOpQualified": false,
+  "browserPlayable": false,
+  "published": false
+}

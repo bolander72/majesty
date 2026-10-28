@@ -3,20 +3,20 @@
   "date": "2026-10-28",
   "status": "private-resources-encoded-and-assembled; native-gameplay-pending",
   "sourceStage": {
-    "bytes": 283763,
-    "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
+    "bytes": 283901,
+    "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
   },
   "nativeResourceStage": {
     "bytes": 11610,
-    "sha256": "ecf0c632bf6a3868410952108ab55e84265a885382ea678971740f0d8fb1a2b7"
+    "sha256": "25bd705cb9303a186e02a2d57977494667f3d6fd817d3e9d81540d37b6659475"
   },
   "nativePatchStage": {
-    "bytes": 8761,
-    "sha256": "76137645d47524f7ce767a4c4afacb8b97d0995314792a6bd5b6e447afe5fc78"
+    "bytes": 9049,
+    "sha256": "fe209ea38d01bfdc2d55867be1801a1e93638484154a468428db28acf8a56366"
   },
   "mediaStage": {
     "bytes": 339020,
-    "sha256": "f76c7bb0ddaf37e29195dc637d3a7e032a4fe2bfe98e3eb0248eae67d5a10cdd"
+    "sha256": "d1ec21ef38e154be220ba852b5d3d5bb3533a718f26e516efa4fcc4bffdd9318"
   },
   "counts": {
     "Any": {
@@ -246,5 +246,13 @@
   "coOpQualified": false,
   "browserPlayable": false,
   "published": false,
-  "productionUnchanged": true
+  "productionUnchanged": true,
+  "intentTextAddition": {
+    "newFiles": [
+      "Data/MMMIntentText.bin",
+      "DataMX/MMMIntentText.bin"
+    ],
+    "prior26PatchesByteIdentical": true,
+    "totalPatches": 28
+  }
 }

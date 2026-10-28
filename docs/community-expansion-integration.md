@@ -122,3 +122,17 @@ the publication/media review and a source-bound deployment gate.
 Private stages use separate directories and preserve all originals. Never
 resume retired Lost Trail/Wayfinder content or substitute stock reskins for
 the acquired mechanics and artwork.
+
+The creator stage now materializes all 61 private intent strings (33 quest-board
+literals and 28 activity labels). The original GPL/DAT files and all three
+qualified BCD outputs are byte identical; the resource-only compiler rebind
+checks exported source inputs, scoped routes, the SDK hash and output hashes.
+Both edition patches carry MMTX. All previous 26 native patches are unchanged.
+
+`native-component-verification.json` records complete original controller-table
+and ownership checks for five new panels, plus a clean native game control of
+all 61 AITX lookups, original string copies and stock namespace isolation. The
+first text trial crashed the owned game because a negative test passed a
+resource FourCC as a table pointer. The corrected three-argument ABI passes.
+Controller runtime behavior, whole-guild gameplay, reload and co-op remain
+unqualified; these component controls do not establish a playable release.

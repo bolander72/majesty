@@ -136,7 +136,9 @@ def compose(fixture, inventories, texts, resolutions, standard_inputs=(), review
         'merged_gpltext.cam': text.gpltext_archive.to_bytes(),
         'merged_miscdata.cam': bdep.archive.to_bytes(),
         'merged_descriptions.xml': descriptions.payload,
-        'controllers.bin': controller_bytes, 'features.bin': feature_bytes}
+        'controllers.bin': controller_bytes, 'features.bin': feature_bytes,
+        'MMMIntentText.bin': c.encode_intent_registry(
+            (*text.private_activity_texts, *controllers.private_texts))}
     payloads.update({f'merged_descriptions-{scope}.xml': result.payload
                      for scope, result in patches.items()})
     contract = json_value(dict(dialogs=dialogs, controllers=controllers,

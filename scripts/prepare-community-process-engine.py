@@ -220,13 +220,19 @@ def prepare(args):
     vendor = ROOT / 'third_party/majesty-mod-manager/runtime'
     for path in vendor.glob('*.h'):
         shutil.copyfile(path, support / path.name)
-    for name in ['StockControllerRegistry.cpp', 'RuntimeFeatureRegistry.cpp', 'BoundedMapQuery.cpp']:
+    for name in ['StockControllerRegistry.cpp', 'RuntimeFeatureRegistry.cpp', 'BoundedMapQuery.cpp',
+                 'IntentTextRegistry.cpp']:
         shutil.copyfile(vendor / name, support / name)
     shutil.copyfile(args.seed_mod / 'mod.toml', core / 'mod.toml')
     for name in ['features.bin','controllers.bin','shared-overrides.tsv']:
         shutil.copyfile(args.seed_mod / name, core / name)
     shutil.copyfile(routes, core / 'shared-overrides.tsv')
     shutil.copyfile(args.controllers, core / 'community-controllers.bin')
+    intents = args.source / 'resources/MMMIntentText.bin'
+    if 'MMMIntentText.bin' in source['resourceFiles']:
+        if digest_file(intents) != source['resourceFiles']['MMMIntentText.bin']:
+            raise ValueError('Private activity/quest text differs from source')
+        shutil.copyfile(intents, core / 'MMMIntentText.bin')
     shutil.copyfile(names, core / 'community-name-bindings.bin')
     if hero_ui:
         shutil.copyfile(args.hero_ui_bindings, core / 'hero-info-bindings.bin')
