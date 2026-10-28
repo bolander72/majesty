@@ -7,6 +7,7 @@ struct ExpansionPlayProbe {
     std::uint32_t guild = 0, zoo = 0, palace = 0, started = 0;
     std::uint32_t gold = 0, revision = 0, stockQuote = 0;
     std::vector<std::uint32_t> heroes;
+    std::vector<std::uint32_t> startingMaxHp;
 } expansionPlay;
 std::vector<std::string> expansionPlayGplStack;
 
@@ -27,6 +28,20 @@ std::uint32_t expansionProbeOpen(std::uint32_t actor, std::uint32_t dialog) {
 void expansionProbeControl(std::uint32_t controller, std::uint32_t command) {
     require(controller != 0, "live expansion play control target");
     call(majesty_expansion_panel_bridge(14), 0, {controller, command});
+}
+void expansionProbeLevelCheat() {
+    require(read(0x006d87a0U) && read(read(0x006d87a0U) + 0x9c),
+            "owned Freestyle trial permits ordinary cheat input");
+    std::uint32_t text = 0;
+    require(host->guest_alloc(host, 128, &text) == POP_OK, "owned native cheat string");
+    constexpr char phrase[] = "level 1000";
+    for (unsigned i = 0; i < sizeof(phrase); ++i)
+        require(host->guest_write_u8(host, text + 32 + i, phrase[i]) == POP_OK,
+                "native cheat phrase bytes");
+    call(0x004e3520U, text, {text + 32});
+    require(call(0x00480e00U, 0, {text}) == 1, "original native cheat input recognized");
+    call(0x004e3820U, text);
+    require(host->guest_free(host, text) == POP_OK, "native cheat string release");
 }
 #endif
 void beginControlledExpansionPlay(std::uint32_t palace, std::uint32_t guild, std::uint32_t zoo) {
@@ -146,12 +161,48 @@ void runControlledExpansionPlay() {
             const auto hp = call(0x005a1c40U, hero, {0x00555041U, 0});
             const auto maximum = call(0x005a1c40U, hero, {0x01555041U, 0});
             require(hp && maximum && hp <= maximum, "living More Heroes initial health");
+            p.startingMaxHp.push_back(maximum);
             std::fprintf(stderr, "[community-more-hero] id=%u prototype=%08x hp=%u/%u\n", id,
                          read(hero + 0x6c), hp, maximum);
         }
         require(p.heroes.size() == 13, "all 13 original More Heroes classes");
         host->log(host, "Controlled More Heroes births: all 13 original native heroes, owner, hero "
                         "classification and initial health passed.");
+        expansionProbeLevelCheat();
+        p.phase = 7;
+        p.started = now;
+    } else if (p.phase == 7) {
+        bool ready = true;
+        for (const auto id : p.heroes) {
+            const auto hero = expansionProbeUnit(id);
+            require(hero != 0, "More Heroes actor survives native instant leveling");
+            ready = ready && call(0x005a1c40U, hero, {0x0b565041U, 0}) == 1000;
+        }
+        if (ready) {
+            for (unsigned i = 0; i < p.heroes.size(); ++i) {
+                const auto hero = expansionProbeUnit(p.heroes[i]);
+                const auto hp = call(0x005a1c40U, hero, {0x00555041U, 0});
+                const auto maximum = call(0x005a1c40U, hero, {0x01555041U, 0});
+                require(hp && hp <= maximum && maximum > p.startingMaxHp[i],
+                        "native level-1000 health growth for every original More Heroes class");
+                std::fprintf(
+                    stderr,
+                    "[community-more-hero-level] id=%u level=1000 hp=%u/%u originalMax=%u\n",
+                    p.heroes[i], hp, maximum, p.startingMaxHp[i]);
+            }
+            host->log(host, "Controlled More Heroes leveling: original native level-1000 cheat, "
+                            "all 13 classes, living health and normal HP growth passed.");
+            p.phase = 8;
+            p.started = now;
+        }
+    } else if (p.phase == 8 && now - p.started >= 5000) {
+        for (const auto id : p.heroes) {
+            const auto hero = expansionProbeUnit(id);
+            require(hero && call(0x005a1c40U, hero, {0x00555041U, 0}),
+                    "all original More Heroes remain alive after high-level AI updates");
+        }
+        host->log(host, "Controlled More Heroes high-level AI: all 13 remain alive through five "
+                        "simulation seconds.");
         p.phase = 9;
     }
     p.busy = false;

@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-source-integration-verification-v1",
   "date": "2026-10-28",
-  "status": "private-source-compiled; native-integration-pending",
+  "status": "native-panels-and-paid-controls-passed; named-activity-script-port-compiled; gameplay-qualification-pending",
   "packages": {
     "adventurers-guild": {
       "format": "majesty-community-expansion-package-inspection-v1",
@@ -73,8 +73,8 @@
     "format": "majesty-community-original-sdk-compile-v1",
     "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
     "sourceStage": {
-      "bytes": 283901,
-      "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+      "bytes": 285520,
+      "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
     },
     "outputs": {
       "common": {
@@ -94,49 +94,31 @@
         "compiledDefinitions": 166
       },
       "expansion": {
-        "bytes": 1747460,
-        "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683",
+        "bytes": 1748226,
+        "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679",
         "exitCode": 0,
         "headerValid": true,
-        "sourceDefinitions": 204,
-        "compiledDefinitions": 204
+        "sourceDefinitions": 207,
+        "compiledDefinitions": 207
       }
     },
-    "elapsedSeconds": 33.24,
-    "peakRssMiB": 122.8,
+    "elapsedSeconds": 36.46,
+    "peakRssMiB": 125.4,
     "compiled": true,
     "compilerSourceDefinitionsQualified": true,
     "compiledBytesExportedQualified": true,
     "playerProfilesAccessed": false,
     "nativeRuntimeQualified": false,
     "browserPlayable": false,
-    "published": false,
-    "resourceOnlyRebind": {
-      "priorCompilerProof": {
-        "bytes": 1306,
-        "sha256": "3ab47626f8ecbae0c0668ac1a104eb044c1f16120a0fdff7a6de8656f4986702"
-      },
-      "priorSourceStage": {
-        "bytes": 283763,
-        "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
-      },
-      "originalSdkSourceFilesByteIdentical": true,
-      "editionRoutesByteIdentical": true,
-      "compilerRerun": false,
-      "metricsFromOriginalCompilation": true,
-      "policy": {
-        "bytes": 4288,
-        "sha256": "e4c076923e7d3d7bc1f2fdb4ac2f0d142fb03c73d5078af059f32e7d40b5061b"
-      }
-    }
+    "published": false
   },
   "creatorStage": {
-    "bytes": 7390,
-    "sha256": "b783c778f3f8bed8b251eac5cbe6c08f3198dad17cfa1a1dc6a122b911f69a4d"
+    "bytes": 9009,
+    "sha256": "c2b5abc52ff1d4f23a1c543a9aa6aeea9d01f9f005051bbfa0feb22371e282e4"
   },
   "legacyStage": {
-    "bytes": 283901,
-    "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+    "bytes": 285520,
+    "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
   },
   "legacyRoutes": {
     "Majesty": 157,
@@ -219,7 +201,7 @@
   },
   "originalPackagesAndPlayerSavesUnmodified": true,
   "productionReleaseUnchanged": true,
-  "nativeEngineBuilt": false,
+  "nativeEngineBuilt": true,
   "browserGamesLaunched": false,
   "nativeRuntimeQualified": false,
   "browserPlayable": false,
@@ -252,6 +234,14 @@
     "scripts/stage-community-expansion-quest-gpl.py": {
       "bytes": 8598,
       "sha256": "cbc6ecc51173d7754b61951f83d1e494bc3a6dfb88cd3290d97a69aaa8193e23"
+    },
+    "scripts/lib/community_named_activity.py": {
+      "bytes": 2291,
+      "sha256": "62f001848d592051e61d8f516d380dc998dc80863c147c007bf9beed962f7ec9"
+    },
+    "scripts/stage-community-named-activities.py": {
+      "bytes": 6943,
+      "sha256": "914297941cd96475d094346e9ce1f845a94826add4ab9172a000344cde1b5a88"
     }
   },
   "remainingAcceptance": [
@@ -596,6 +586,87 @@
     "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
   },
   "privateIntentTexts": {
+    "records": 64,
+    "boardLiterals": 33,
+    "activities": 31,
+    "registry": {
+      "bytes": 1985,
+      "sha256": "72598fcbcd0cefb5cc18be367dac4a1369e1826569b33a51bf47085eaafeace5"
+    },
+    "existing61RowsUnchanged": true,
+    "compilerRerun": true,
+    "commonAndBaseBytecodeUnchanged": true
+  },
+  "preNamedActivityCompiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 283901,
+      "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 1747460,
+        "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 204,
+        "compiledDefinitions": 204
+      }
+    },
+    "elapsedSeconds": 33.24,
+    "peakRssMiB": 122.8,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "resourceOnlyRebind": {
+      "priorCompilerProof": {
+        "bytes": 1306,
+        "sha256": "3ab47626f8ecbae0c0668ac1a104eb044c1f16120a0fdff7a6de8656f4986702"
+      },
+      "priorSourceStage": {
+        "bytes": 283763,
+        "sha256": "4fe219f0957c7a7c0638908fdbc3f2de339f0aadf32d2c66f81aac9775132be5"
+      },
+      "originalSdkSourceFilesByteIdentical": true,
+      "editionRoutesByteIdentical": true,
+      "compilerRerun": false,
+      "metricsFromOriginalCompilation": true,
+      "policy": {
+        "bytes": 4288,
+        "sha256": "e4c076923e7d3d7bc1f2fdb4ac2f0d142fb03c73d5078af059f32e7d40b5061b"
+      }
+    }
+  },
+  "preNamedActivityCreatorStage": {
+    "bytes": 7390,
+    "sha256": "b783c778f3f8bed8b251eac5cbe6c08f3198dad17cfa1a1dc6a122b911f69a4d"
+  },
+  "preNamedActivityLegacyStage": {
+    "bytes": 283901,
+    "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+  },
+  "preNamedActivityPrivateIntentTexts": {
     "records": 61,
     "boardLiterals": 33,
     "activities": 28,
@@ -606,5 +677,64 @@
     "sourceDefinitionsByteIdenticalToPreIntent": true,
     "allThreeBytecodesUnchanged": true,
     "compilerRerun": false
+  },
+  "moreHeroesNamedActivityPort": {
+    "format": "majesty-more-heroes-named-activity-port-v1",
+    "originalInputs": {
+      "Data/MoreHeroes_Text.xml": {
+        "bytes": 12990,
+        "sha256": "d43d843fd8efeccab92466a471223e75414c899f3d837b34b4d052c61ea72bac"
+      },
+      "GPL/MoreHeroes.gpl": {
+        "bytes": 114689,
+        "sha256": "1dd7115fd2aa164699d3069032e2a7c6c0dd08d0757a15ba2e21038bdefc85df"
+      },
+      "GPL/MoreHeroes_DecisionTrees.gpl": {
+        "bytes": 41987,
+        "sha256": "5be56b299c8df035b0826f0166d8403b4bf74e5df35cb7afe5d78041023db19d"
+      }
+    },
+    "priorCreatorStage": {
+      "bytes": 7390,
+      "sha256": "b783c778f3f8bed8b251eac5cbe6c08f3198dad17cfa1a1dc6a122b911f69a4d"
+    },
+    "priorSourceStage": {
+      "bytes": 283901,
+      "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+    },
+    "bindings": {
+      "FAPATROL": {
+        "id": 1629177815,
+        "text": "Searching for Lost Souls"
+      },
+      "MPATROL": {
+        "id": 1767204994,
+        "text": "Singing a Melody"
+      },
+      "TWLOCKED": {
+        "id": 1691892285,
+        "text": "Locked in Time"
+      }
+    },
+    "callSites": {
+      "MajestyExpansion/Merged.gpl": {
+        "FAPATROL": 2,
+        "MPATROL": 2,
+        "TWLOCKED": 1
+      }
+    },
+    "stockAndExistingPrivateTextUnchanged": true,
+    "sourcePolicy": {
+      "bytes": 2291,
+      "sha256": "62f001848d592051e61d8f516d380dc998dc80863c147c007bf9beed962f7ec9"
+    },
+    "stagePolicy": {
+      "bytes": 6943,
+      "sha256": "914297941cd96475d094346e9ce1f845a94826add4ab9172a000344cde1b5a88"
+    }
+  },
+  "latestFocusedExpansionTests": {
+    "command": "python3 -m unittest discover -s tests -p 'test_community_expansion_*.py' -q",
+    "passed": 29
   }
 }

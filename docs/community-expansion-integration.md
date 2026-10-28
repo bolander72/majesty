@@ -169,9 +169,21 @@ construction. The empty board has no eligible heroes yet. Adventurers' saved
 coordinate attributes use the original type7 pool, virtual copy/reset and saved
 map ownership, with focused positive and wrong-initializer controls. The native
 Zoo-full message strip is implemented but still needs an actual capacity trial.
-All 13 More Heroes spawns return native actors, then an unresolved GPL integer
-conversion exception occurs before health/AI qualification. This remains a
-release blocker; the native gameplay gate is false.
+All 13 More Heroes spawns return native actors. The subsequent integer conversion
+exception was traced to Fallen Angel's patrol calling the old integer-only
+`SpecifyIntent` API with the named string `FAPATROL`. The Standard package also
+uses `MPATROL` and `TWLOCKED`. `stage-community-named-activities.py` binds those
+three references to their exact acquired XML text, assigns collision-checked
+private IDs, and lowers only the five literal call arguments (including routed
+aliases). It preserves the other GPL instructions and all previous 61 private
+text rows. The original SDK now compiles 207 expansion definitions; common and
+base bytecode is byte identical. The 64-row registry and expansion BCD are the
+only changed native patch payloads. The corrected `expansion-runtime-live16` exits cleanly: all 64 native text/copy
+controls, five panels, paid controls and all 13 More Heroes births pass. The
+ordinary native level-1000 cheat gives each original class normal HP growth
+(roughly 2,000–8,000 HP); all remain alive through five simulation seconds. This
+does not establish longer missions, complete ability coverage, paid construction,
+capture/taming/rental, save/reload or co-op. The full native gameplay gate is false.
 
 The new probe producer binds the qualified native host, 157 explicit original
 link inputs, original symbol manifest, canonical route union, source registries,

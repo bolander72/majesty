@@ -3,20 +3,20 @@
   "date": "2026-10-28",
   "status": "private-resources-encoded-and-assembled; native-gameplay-pending",
   "sourceStage": {
-    "bytes": 283901,
-    "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+    "bytes": 285520,
+    "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
   },
   "nativeResourceStage": {
     "bytes": 11610,
-    "sha256": "25bd705cb9303a186e02a2d57977494667f3d6fd817d3e9d81540d37b6659475"
+    "sha256": "fd7762662dae6eecd29c691237ec5d46089a350631cdc02859d1e6513101d8d0"
   },
   "nativePatchStage": {
     "bytes": 9049,
-    "sha256": "fe209ea38d01bfdc2d55867be1801a1e93638484154a468428db28acf8a56366"
+    "sha256": "9ec56777f93ecfb74e03b5b46f040848e589d71ed40f5724c37cf19267afa0e7"
   },
   "mediaStage": {
     "bytes": 339020,
-    "sha256": "d1ec21ef38e154be220ba852b5d3d5bb3533a718f26e516efa4fcc4bffdd9318"
+    "sha256": "a880dc797272c8474dce590faa8df55a29018783f4fe40a4cd49e39cd70284f9"
   },
   "counts": {
     "Any": {
@@ -104,6 +104,14 @@
     "liveUiQualified": false
   },
   "patches": {
+    "Data/MMMIntentText.bin": {
+      "bytes": 1985,
+      "sha256": "72598fcbcd0cefb5cc18be367dac4a1369e1826569b33a51bf47085eaafeace5"
+    },
+    "DataMX/MMMIntentText.bin": {
+      "bytes": 1985,
+      "sha256": "72598fcbcd0cefb5cc18be367dac4a1369e1826569b33a51bf47085eaafeace5"
+    },
     "Data/unittype.cam": {
       "bytes": 200834,
       "sha256": "2ae1c8ff57fcd92a53f699b52bbc39135be496a34af960e347ca0a23a758c6ad"
@@ -173,8 +181,8 @@
       "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
     },
     "Data/Community_Expansion.bcd": {
-      "bytes": 1747460,
-      "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683"
+      "bytes": 1748226,
+      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
     },
     "DataMX/mx_textdata.cam": {
       "bytes": 199434,
@@ -205,8 +213,8 @@
       "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
     },
     "DataMX/Community_Expansion.bcd": {
-      "bytes": 1747460,
-      "sha256": "3d3641ad3705980932b110085906442a9738439260c701eff48159e1bf7bb683"
+      "bytes": 1748226,
+      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
     }
   },
   "sourcePolicies": {
@@ -238,7 +246,9 @@
   "tests": {
     "expansionBoundaryAndSource": 21,
     "expansionMedia": 3,
-    "buildingEmblems": 3
+    "buildingEmblems": 3,
+    "namedActivity": 3,
+    "routeUnion": 2
   },
   "runtimeControllersQualified": false,
   "nativeGameplayQualified": false,
@@ -247,7 +257,35 @@
   "browserPlayable": false,
   "published": false,
   "productionUnchanged": true,
-  "intentTextAddition": {
+  "preNamedActivitySourceStage": {
+    "bytes": 283901,
+    "sha256": "6e7c13363e917384728b2c77217c50a582d3b8aeac7f505efb600faa6c9d2081"
+  },
+  "preNamedActivityNativeResourceStage": {
+    "bytes": 11610,
+    "sha256": "25bd705cb9303a186e02a2d57977494667f3d6fd817d3e9d81540d37b6659475"
+  },
+  "preNamedActivityNativePatchStage": {
+    "bytes": 9049,
+    "sha256": "fe209ea38d01bfdc2d55867be1801a1e93638484154a468428db28acf8a56366"
+  },
+  "preNamedActivityMediaStage": {
+    "bytes": 339020,
+    "sha256": "d1ec21ef38e154be220ba852b5d3d5bb3533a718f26e516efa4fcc4bffdd9318"
+  },
+  "namedActivityResourcePort": {
+    "changedPatches": [
+      "Data/MMMIntentText.bin",
+      "DataMX/MMMIntentText.bin",
+      "Data/Community_Expansion.bcd",
+      "DataMX/Community_Expansion.bcd"
+    ],
+    "unchangedPatches": 24,
+    "allNativeActorArtAudioMenuHelpFilesByteIdentical": true,
+    "existingActivityRowsPreserved": true,
+    "records": 64
+  },
+  "historicalInitialIntentTextAddition": {
     "newFiles": [
       "Data/MMMIntentText.bin",
       "DataMX/MMMIntentText.bin"
