@@ -66,6 +66,16 @@ at 125.4 MiB RSS and completed in 26.18 seconds.
 
 ## Verification and continuation
 
+The four map/movement intrinsics now have an original 1.5.1.2 native adapter.
+`world-query-verification.json` binds the isolated official native tests and a
+controlled native game run: actual map masks and unit/type movement rates
+matched the original objects, a bounded frontier search found an unexplored
+cell, and invalid inputs preserved output values. That owned game exited
+normally after 43 seconds at 160.9 MiB peak RSS. The live module predates final
+formatting; the formatted source separately passes the official native tests.
+This is a component control with legacy bootstrap registries, not qualification
+of the new guild actors, panels, saves, browser runtime or co-op.
+
 `source-integration-verification.json` binds the source stages, original
 compiler and outputs, exact package inspections, source policies and the
 remaining acceptance work. 26 focused tests pass: 16 new boundary/source tests,

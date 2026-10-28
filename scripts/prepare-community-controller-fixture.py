@@ -27,6 +27,7 @@ pop_add_plugin(community_gpl_probe SOURCE
   ${RECOMP_GAME_DIR}/source/native/community/native_probe_plugin.cpp
   OUTPUT_DIR ${POP_OUT}/private-plugins OUTPUT_NAME community_gpl_probe WARNINGS ${POP_WARN_HOST})
 target_sources(community_gpl_probe PRIVATE
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/BoundedMapQuery.cpp
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/RuntimeFeatureRegistry.cpp
   ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/StockControllerRegistry.cpp)
 target_include_directories(community_gpl_probe PRIVATE
@@ -44,6 +45,7 @@ set_tests_properties(community_gpl_attribute_tests PROPERTIES LABELS nogame TIME
 ''')
     add_equipment_fixture(output)
     add_integer_fixture(output)
+    add_world_query_fixture(output)
     add_research_query_fixture(output)
     add_kingdom_descriptor_fixture(output)
     with (output / 'tests/CMakeLists.txt').open('a') as cmake:
@@ -79,6 +81,24 @@ pop_test_binary(community_integer_helpers_tests)
 add_dependencies(community_integer_helpers_tests community_gpl_probe)
 add_test(NAME community_integer_helpers_tests COMMAND community_integer_helpers_tests)
 set_tests_properties(community_integer_helpers_tests PROPERTIES LABELS nogame TIMEOUT 15)
+''')
+
+
+def add_world_query_fixture(output):
+    with (output / 'tests/CMakeLists.txt').open('a') as cmake:
+        cmake.write('''
+add_executable(community_world_query_tests
+  ${RECOMP_GAME_DIR}/source/native/community/gpl_world_queries_tests.cpp
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime/BoundedMapQuery.cpp)
+target_include_directories(community_world_query_tests PRIVATE
+  ${RECOMP_GAME_DIR}/source/native/community
+  ${RECOMP_GAME_DIR}/source/third_party/majesty-mod-manager/runtime)
+target_compile_features(community_world_query_tests PRIVATE cxx_std_17)
+target_compile_options(community_world_query_tests PRIVATE ${POP_WARN_STRICT})
+pop_test_binary(community_world_query_tests)
+add_dependencies(community_world_query_tests community_gpl_probe)
+add_test(NAME community_world_query_tests COMMAND community_world_query_tests)
+set_tests_properties(community_world_query_tests PROPERTIES LABELS nogame TIMEOUT 15)
 ''')
 
 

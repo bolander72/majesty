@@ -1,0 +1,120 @@
+{
+  "format": "majesty-community-world-query-verification-v1",
+  "date": "2026-10-28",
+  "status": "native-component-qualified; full-mod-integration-pending",
+  "pinnedOriginalExecutable": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "sourceFiles": {
+    "native/community/gpl_world_queries.h": {
+      "bytes": 8370,
+      "sha256": "a6b16e2d57466ad6f801c19a7a11c7fb9175e0c8c6d875cc89fea444162ff3d6"
+    },
+    "native/community/gpl_world_queries_tests.cpp": {
+      "bytes": 7921,
+      "sha256": "24f16f9b3339688f1d319ff255dcfb8d18cd07894f81bc961236cc71e790d28a"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 176085,
+      "sha256": "dac7ac9723d4a40b10fd5bff5d0d73b51a3d2a23e8b61b499a2afd63360e0955"
+    },
+    "scripts/prepare-community-controller-fixture.py": {
+      "bytes": 12817,
+      "sha256": "f6212475807502a9d6bd6baec1d49051d11aa805e164f7dea1c1e1f5cf98afc9"
+    },
+    "third_party/majesty-mod-manager/runtime/BoundedMapQuery.h": {
+      "bytes": 1478,
+      "sha256": "d20872f9950d18b496743529ab047198ec9caf68f603abf14de651d511d062df"
+    },
+    "third_party/majesty-mod-manager/runtime/BoundedMapQuery.cpp": {
+      "bytes": 6565,
+      "sha256": "984da5ee55ec844db41aac2a83ffe9ac61dcb456df9adbf77f5e10a226b8a730"
+    },
+    "third_party/majesty-mod-manager/runtime/MovementRate.h": {
+      "bytes": 1160,
+      "sha256": "f314ca24b1782383b63d83c27537469d3ce52d1f823378d55f2064f1e8d05c4b"
+    }
+  },
+  "officialNativeTest": {
+    "exitCode": 0,
+    "stopReason": null,
+    "elapsedSeconds": 4.77,
+    "peakRssMiB": 415.2,
+    "officialNativeTest": "community_world_query_tests",
+    "gameLaunched": false
+  },
+  "liveNativeControl": {
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "stopReason": null,
+    "elapsedSeconds": 43.0,
+    "peakRssMiB": 160.9,
+    "worldQueriesQualified": true,
+    "audioMuted": true,
+    "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/world-query-native-live3/profile",
+    "sourceEngineSha256": "332f2605d9577a43362154c4dcd88ab0ecd467d19c5a14bb833ce7bfdfaa0303"
+  },
+  "liveModuleStage": {
+    "format": "majesty-community-world-query-live-stage-v1",
+    "module": {
+      "bytes": 643544,
+      "sha256": "c2b4d513fb69bae9ce0feebf7be271d676a0e552fcaf6cd5a8b0f784f836ffaa"
+    },
+    "sourceFiles": {
+      "native/community/native_probe_plugin.cpp": {
+        "bytes": 175912,
+        "sha256": "1edcff6597c409ec658e191fd8f45985cf49a57d305f2cae2fd25b4b53314dc4"
+      },
+      "native/community/gpl_world_queries.h": {
+        "bytes": 8365,
+        "sha256": "b188eb9c615732a3050f2a62849e2702204e1ba5906022567e70648848354d29"
+      }
+    },
+    "newGuildActorsInstalled": false,
+    "freshOwnedProfile": true,
+    "published": false,
+    "browserPlayable": false,
+    "registryFiles": {
+      "features.bin": {
+        "bytes": 16,
+        "sha256": "4703c1de2a46600e98c1d457bc3db868a95ca6df2337f5fb0250afaf32da5965"
+      },
+      "controllers.bin": {
+        "bytes": 687,
+        "sha256": "82a7ae9a2f79bd11aa57b2a2f7df98295f2995b2ab42131e724bf466e2fa5f7c"
+      }
+    },
+    "customGuildRegistriesRequiredForThisProbe": false,
+    "scope": "Direct native helper component control; legacy bootstrap registries, no new guild runtime enabled"
+  },
+  "liveControlPrecedesFormatting": true,
+  "oldAbi": {
+    "exploredMapRoot": "0071c68c -> +10 -> +80",
+    "mapOffsets": {
+      "width": "30",
+      "height": "34",
+      "stride": "38",
+      "rows": "3c",
+      "cells": "4c",
+      "cellBytes": 24,
+      "exploredMask": "04"
+    },
+    "nativePosition": "005ad740",
+    "effectiveInterval": "00430770",
+    "baseInterval": "005a1a30",
+    "typeLookup": "0059c060",
+    "typeAttachment": "005a1920",
+    "movementVtable": "0068b250",
+    "clock": "0071c634 -> +20"
+  },
+  "controls": [
+    "native explored-cell masks per player and invalid bounds",
+    "bounded frontier found unexplored cell; invalid budget preserves output",
+    "unit nominal/effective and type rates match original native objects",
+    "missing units/types, malformed modes, bad cursor and arithmetic bounds"
+  ],
+  "originalPackagesUnchanged": true,
+  "newGuildGameplayQualified": false,
+  "saveReloadQualified": false,
+  "coOpQualified": false,
+  "browserPlayable": false,
+  "published": false
+}

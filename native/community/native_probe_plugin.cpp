@@ -7,6 +7,7 @@
 #include "equipment_registration.h"
 #include "gpl_attribute_bridge.h"
 #include "gpl_base_timing_helpers.h"
+#include "gpl_world_queries.h"
 #include "gpl_integer_helpers.h"
 #include "gpl_research_helpers.h"
 #include "gpl_spell_timing_helpers.h"
@@ -101,6 +102,9 @@ std::uint32_t controlledSpellUnit = 0, controlledSpellIdentity = 0, controlledSp
               controlledSpellSourceValue = 0;
 MajestyRuntimeFeatures::Registry timingFeatures;
 std::map<std::uint32_t, MajestyCommunity::SpellTimingHelper> spellTimingFunctions;
+bool worldQueryHelpers = false;
+bool controlledWorldQueries = false, controlledWorldQueriesApplied = false;
+std::map<std::uint32_t, MajestyCommunity::WorldQuery> worldQueryFunctions;
 bool researchQueryHelpers = false, controlledResearchQuery = false,
      controlledResearchQueryApplied = false;
 MajestyRuntimeFeatures::Registry researchQueryFeatures;
@@ -1157,6 +1161,35 @@ struct BaseTimingOps : IntegerOps {
         return catalog ? call(0x0059c060U, catalog, {read(string)}) : 0;
     }
 };
+struct WorldQueryOps : BaseTimingOps {
+    std::uint32_t point(std::uint32_t value) {
+        const auto coordinate = valueRef(value, 0x58);
+        if (!valid(coordinate, 8) || read(coordinate + 4) != 7)
+            return 0;
+        return valueRef(coordinate, 0x3c);
+    }
+    std::uint32_t unitType(std::uint32_t value) {
+        const auto string = valueRef(value, 0x30);
+        if (!valid(string, 12) || !read(string + 8) || read(string + 8) > 128)
+            return 0;
+        const auto catalog = ::read(0x0071c6c8U);
+        return catalog ? call(0x0059c060U, catalog, {read(string)}) : 0;
+    }
+    int attribute(std::uint32_t unit, std::uint32_t id) {
+        return MajestyCommunity::NativeSignedInteger(call(0x005a1c40U, unit, {id, 0}));
+    }
+    int interval(std::uint32_t unit) {
+        return MajestyCommunity::NativeSignedInteger(call(0x00430770U, unit, {}));
+    }
+    bool hasEffector(std::uint32_t unit, std::uint32_t overlay) {
+        return call(0x005b4570U, unit, {overlay}) != 0;
+    }
+    int distance(std::uint32_t unit, int base) {
+        return movementScale ? MajestyCommunity::CurrentMovementStep(
+                                   *this, unit, base, 0, researchQueryFeatures.movementScales)
+                             : base;
+    }
+};
 struct SpellTimingOps : BaseTimingOps {
     std::uint32_t timingDescription(std::uint32_t value, bool spell, int &status) {
         status = MajestyNativeTiming::kInvalid;
@@ -1603,6 +1636,141 @@ void runControlledSpellTiming(std::uint32_t worker, std::uint32_t palace) {
                     "cooldown, availability "
                     "and actual effect timeout passed.");
 }
+struct WorldQueryTestArgument {
+    unsigned type = 1;
+    std::uint32_t first = 0, second = 0;
+    const char *text = nullptr;
+};
+std::vector<std::array<std::uint32_t, 2>>
+evaluateWorldQuery(const char *symbol, std::initializer_list<WorldQueryTestArgument> arguments) {
+    require(controlledWorldQueries && arguments.size() <= 5, "owned world-query test only");
+    std::uint32_t memory = 0;
+    require(host->guest_alloc(host, 512, &memory) == POP_OK, "world-query evaluator storage");
+    const auto text = [&](std::uint32_t at, const char *input) {
+        require(input && std::strlen(input) < 128, "world-query test text bound");
+        for (unsigned i = 0; i <= std::strlen(input); ++i)
+            require(host->guest_write_u8(host, at + i, input[i]) == POP_OK,
+                    "world-query test text");
+    };
+    text(memory + 128, symbol);
+    call(0x004e3520U, memory, {memory + 128});
+    const auto evaluator = memory + 32;
+    call(0x00629910U, evaluator, {memory});
+    call(0x004e3820U, memory);
+    const auto binding = read(evaluator + 4);
+    require(binding && worldQueryFunctions.count(binding) && read(binding + 20) == 0x005a9600U,
+            "actual registered native world-query binding");
+    call(0x00629bf0U, evaluator);
+    WorldQueryOps ops;
+    for (const auto &arg : arguments) {
+        if (arg.type == 1) {
+            call(0x00629a40U, evaluator, {arg.first});
+        } else if (arg.type == 5) {
+            call(0x00629a20U, evaluator, {arg.first});
+        } else {
+            require(arg.type == 3 || arg.type == 7, "world-query test argument type");
+            const auto runtime = read(read(0x007218b4U) + 0x10), pool = read(runtime + 0x1c);
+            const auto value = call(0x0062a810U, pool, {arg.type});
+            require(value && read(value + 4) == arg.type,
+                    "original world-query typed value allocation");
+            if (arg.type == 3) {
+                text(memory + 256, arg.text);
+                call(0x004e3520U, memory + 80, {memory + 256});
+                call(0x004e4180U, valueRef(value, 0x30), {memory + 80});
+                call(0x004e3820U, memory + 80);
+            } else {
+                const auto coordinate = ops.point(value);
+                require(ops.valid(coordinate, 8), "original coordinate getter ABI");
+                write(coordinate, arg.first);
+                write(coordinate + 4, arg.second);
+            }
+            call(0x00636bf0U, evaluator + 8, {value});
+        }
+    }
+    call(0x00629c40U, evaluator);
+    const auto begin = read(evaluator + 0x20), end = read(evaluator + 0x24);
+    require(begin && end - begin == (arguments.size() + 1) * 4, "native world-query argument span");
+    std::vector<std::array<std::uint32_t, 2>> result;
+    for (unsigned i = 0; i <= arguments.size(); ++i) {
+        const auto value = read(read(begin + i * 4)), kind = read(value + 4);
+        if (kind == 1)
+            result.push_back({read(ops.integer(value)), 0});
+        else if (kind == 7) {
+            const auto point = ops.point(value);
+            result.push_back({read(point), read(point + 4)});
+        } else
+            result.push_back({0, 0});
+    }
+    require(call(0x00629c10U, evaluator) == result[0][0], "native world-query result accessor");
+    call(0x006299b0U, evaluator);
+    require(host->guest_free(host, memory) == POP_OK, "world-query evaluator release");
+    std::fprintf(stderr, "[community-world-query] symbol=%s result=%d\n", symbol,
+                 MajestyCommunity::NativeSignedInteger(result[0][0]));
+    return result;
+}
+void runControlledWorldQueries(std::uint32_t worker) {
+    WorldQueryOps ops;
+    const auto result = [&](const char *name, std::initializer_list<WorldQueryTestArgument> args) {
+        return evaluateWorldQuery(name, args)[0][0];
+    };
+    const auto descriptor = read(worker + 0x44), engine = read(descriptor + 0x14);
+    const auto distance = read(engine + 0x10), interval = call(0x00430770U, worker);
+    const auto nominal = result("MM_UnitMovementRate", {{5, worker}, {1, 0}});
+    require(interval && nominal == (distance << 11) / interval && nominal > 0,
+            "worker nominal rate equals original movement getter");
+    require(result("MM_UnitMovementRate", {{5, worker}, {1, 1}}) == nominal,
+            "unmodified worker effective movement equals nominal");
+    require(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Peasant"}}) == nominal,
+            "loaded worker type rate equals actual worker rate");
+    require(static_cast<int>(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Healer"}})) > 0,
+            "loaded Healer movement attachment is queried");
+    require(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Missing_Community_Type_Control"}}) ==
+                UINT32_MAX,
+            "missing movement type retains invalid result");
+    require(result("MM_UnitMovementRate", {{5, 0}, {1, 0}}) == UINT32_MAX &&
+                result("MM_UnitMovementRate", {{5, worker}, {1, 2}}) == UINT32_MAX,
+            "native invalid movement inputs");
+    std::uint32_t position = 0;
+    require(host->guest_alloc(host, 8, &position) == POP_OK, "owned worker position storage");
+    call(0x005ad740U, worker, {position});
+    const auto x = read(position), y = read(position + 4), player = read(worker + 0x70);
+    require(host->guest_free(host, position) == POP_OK, "owned worker position release");
+    const auto map = read(read(read(0x0071c68cU) + 0x10) + 0x80);
+    const auto stride = read(map + 0x38), cells = read(map + 0x4c);
+    require(x / 32 < read(map + 0x30) && y / 32 < read(map + 0x34), "actual worker map position");
+    const auto mask = read(cells + (y / 32 * stride + x / 32) * 24 + 4);
+    require(result("MM_MapFog", {{1, player}, {7, x, y}}) == ((mask >> player) & 1U),
+            "native fog query equals original explored cell mask");
+    require(result("MM_MapFog", {{1, 32}, {7, x, y}}) == UINT32_MAX &&
+                result("MM_MapFog", {{1, player}, {7, UINT32_MAX, y}}) == UINT32_MAX,
+            "native map player and coordinate bounds");
+    std::uint32_t cursor = 0;
+    bool found = false;
+    for (unsigned attempt = 0; attempt < 128 && !found; ++attempt) {
+        const auto frontier = evaluateWorldQuery(
+            "MM_MapNextFrontier", {{1, player}, {7, x, y}, {1, cursor}, {1, 256}, {7, 0, 0}});
+        require(frontier[0][0] <= 2 && frontier[3][0] >= cursor && frontier[3][0] - cursor <= 256,
+                "bounded native frontier cursor progress");
+        cursor = frontier[3][0];
+        if (frontier[0][0] == 1) {
+            const auto point = frontier[5];
+            require(result("MM_MapFog", {{1, player}, {7, point[0], point[1]}}) == 0,
+                    "actual frontier result is an unexplored map cell");
+            found = true;
+        } else if (frontier[0][0] == 2)
+            break;
+    }
+    require(found, "fresh controlled world contains a discoverable frontier");
+    const auto invalid = evaluateWorldQuery(
+        "MM_MapNextFrontier", {{1, player}, {7, x, y}, {1, 17}, {1, 257}, {7, 101, 202}});
+    require(invalid[0][0] == UINT32_MAX && invalid[3][0] == 17 && invalid[5][0] == 101 &&
+                invalid[5][1] == 202,
+            "invalid native frontier leaves caller cursor/output intact");
+    controlledWorldQueriesApplied = true;
+    host->log(host,
+              "Controlled world queries: original map masks, bounded frontier, native movement "
+              "rates and invalid-input controls passed.");
+}
 void runControlledBaseTiming() {
     const auto manager = call(0x00415b40U, 0), player = read(manager + 0x24);
     const auto palace = call(0x00418b50U, manager, {player});
@@ -1657,6 +1825,8 @@ void runControlledBaseTiming() {
         runControlledSpellTiming(moving, palace);
     if (controlledResearchQuery && !controlledResearchQueryApplied)
         runControlledResearchQuery(palace);
+    if (controlledWorldQueries && !controlledWorldQueriesApplied)
+        runControlledWorldQueries(moving);
     controlledBaseTimingApplied = true;
     host->log(host, "Controlled community base timing: original action/worker "
                     "getters and negative "
@@ -1744,6 +1914,24 @@ void registerAttributes() {
             require(function && read(function + 20) == 0x005a9600U &&
                         integerFunctions.emplace(function, entry.second).second,
                     "community integer function-scoped dispatch identity");
+        }
+    }
+    if (worldQueryHelpers) {
+        worldQueryFunctions.clear();
+        using Kind = MajestyCommunity::WorldQuery;
+        for (const auto &entry : std::vector<std::pair<const char *, Kind>>{
+                 {"MM_MapFog", Kind::Fog},
+                 {"MM_MapNextFrontier", Kind::Frontier},
+                 {"MM_UnitMovementRate", Kind::UnitMovement},
+                 {"MM_UnitTypeMovementRate", Kind::TypeMovement}}) {
+            prepareName(entry.first);
+            call(0x00631c00U, read(runtime + 8), {scratch + 96, 0x005a9600U, 1, 0, 0});
+            require(call(0x00631ba0U, read(runtime + 8), {scratch + 96}) == 1,
+                    "native world-query integer return type");
+            const auto function = call(0x00631b40U, read(runtime + 8), {scratch + 96});
+            require(function && read(function + 20) == 0x005a9600U &&
+                        worldQueryFunctions.emplace(function, entry.second).second,
+                    "native world-query function identity");
         }
     }
     if (baseTimingHelpers) {
@@ -2565,6 +2753,15 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                 return;
             }
         }
+        const auto worldQuery = worldQueryFunctions.find(self);
+        if (worldQueryHelpers && worldQuery != worldQueryFunctions.end()) {
+            WorldQueryOps ops;
+            require(MajestyCommunity::ExecuteWorldQuery(ops, worldQuery->second,
+                                                        read(cpu->esp + 4) + 0x14),
+                    "native world-query argument/reference contract");
+            returned(cpu, 0);
+            return;
+        }
         const auto researchQuery = researchQueryFunctions.find(self);
         if (researchQueryHelpers && researchQuery != researchQueryFunctions.end()) {
             ResearchQueryOps ops;
@@ -2790,6 +2987,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     baseTimingHelpers = timing && !std::strcmp(timing, "1");
     require(!baseTimingHelpers || integerHelpers,
             "base timing helpers require checked integer bridge");
+    const char *worldQueries = std::getenv("RECOMP_COMMUNITY_WORLD_QUERY_HELPERS");
+    worldQueryHelpers = worldQueries && !std::strcmp(worldQueries, "1");
+    require(!worldQueryHelpers || integerHelpers,
+            "world queries require checked native registration and integer bridge");
     const char *spellTiming = std::getenv("RECOMP_COMMUNITY_SPELL_TIMING_HELPERS");
     spellTimingHelpers = spellTiming && !std::strcmp(spellTiming, "1");
     require(!spellTimingHelpers || integerHelpers,
@@ -2801,6 +3002,10 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
     const char *baseTimingTest = std::getenv("RECOMP_COMMUNITY_TEST_BASE_TIMING_GPL");
     controlledBaseTiming =
         baseTimingHelpers && baseTimingTest && !std::strcmp(baseTimingTest, "1941");
+    const char *worldQueryTest = std::getenv("RECOMP_COMMUNITY_TEST_WORLD_QUERIES");
+    controlledWorldQueries = worldQueryTest && !std::strcmp(worldQueryTest, "20261028");
+    require(!controlledWorldQueries || (worldQueryHelpers && controlledBaseTiming),
+            "controlled world queries require an owned native worker timing trial");
     require(!controlledSpellTiming || controlledBaseTiming,
             "controlled spell timing requires the actual worker timing trial");
     const char *researchQueries = std::getenv("RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS");
@@ -3128,6 +3333,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
             hooks.push_back(id);
         }
     }
+#if defined(RECOMP_PRIVATE_TEMPLATE_PROCESS_LIFETIME)
     if (communityProcess) {
         require(read(0x00682f58U) == 0x004ac2f0U, "original research slot before activation");
         communityResearchEntry = majesty_guild_process_bridge(1);
@@ -3135,6 +3341,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         host->log(host, "Process-lived community guild services, original AP52 templates and "
                         "research dispatcher installed; paid guild play is not yet qualified.");
     }
+#endif
     return POP_OK;
 }
 extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
@@ -3177,6 +3384,8 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_exit() {
     controlledBaseTimingApplied = false;
     spellTimingFunctions.clear();
     timingFeatures = {};
+    worldQueryFunctions.clear();
+    controlledWorldQueriesApplied = false;
     controlledSpellTimingApplied = false;
     controlledSpellExpiryApplied = false;
     controlledSpellUnit = controlledSpellIdentity = controlledSpellStarted = 0;

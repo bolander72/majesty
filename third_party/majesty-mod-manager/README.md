@@ -23,3 +23,9 @@ creator's release commit`b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`.
 Their source hashes are recorded in
 `content/community-mods/integer-helper-source.json`. The Old adapter uses
 their actual clock-wrap, overflow-cap and fractional-carry arithmetic.
+
+The unmodified portable `BoundedMapQuery.h`, `BoundedMapQuery.cpp` and
+`MovementRate.h` also come from release commit
+`b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb`. They supply the creator's bounded
+frontier traversal and movement-rate arithmetic. Their Windows address profiles
+are not used; the Old engine adapter traces its own layouts and native calls.
