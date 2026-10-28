@@ -190,3 +190,48 @@ link inputs, original symbol manifest, canonical route union, source registries,
 compiler outputs and all game resources. A separate producer appends the tiny
 original-SDK GPL helper only inside the private test fixture. The helper and its
 load entries must never enter the published collection.
+
+
+The canonical MX catalog is `DataMX/mx_Unittype.cam`. The private patch producer
+now rejects a case-variant path rather than silently choosing the stock fallback.
+The corrected catalog contains336 records and retains all294 current records;
+293 are byte identical and the intended original More Heroes Embassy change
+accounts for the other one. Native live17 repeats the live16 controls cleanly.
+
+A source-bound private browser engine uses the same core and retains the
+qualified host/presenter objects and source registries. A complete fixture needs
+165 original files, including the pinned UI layout DAT and non-CAM constants;
+the derived candidate has208 files. Two earlier incomplete fixtures reached
+the owned RSS guard during startup. These failures do not establish a host-app
+crash fix. An unsupported inspection accessor also aborted an owned guest; it
+is not used again. The ordinary five-day stock save reloads under the candidate.
+Paid Adventurers Guild placement debits2850 gold and peasants complete its
+800HP construction. Its native main panel opens correctly. Opening the quest
+board then attaches CGAQ and the guest calls00000202 at return0049e54f, exiting
+with access violation3221225477. The host app remained alive and the owned
+browser was closed. The populated board, modded save/reload, capture/taming
+and paired co-op remain unqualified. Nothing has been published.
+
+The collection updater now accepts the bound resource set as well as scripts,
+adds the two verified intent registries to older collections, admits the larger
+common bytecode, and removes only a newly created interrupted registry on retry.
+All15 focused JavaScript updater tests pass, including refusal of an unknown
+pre-existing registry and preservation of already completed resources.
+
+
+A two-row native presentation control (`MM_Expansion_Probe_Rows`, test helper
+only) renders correctly in live18. The real mouse Back sequence in live19
+reproduces the browser guest failure, so it is not specific to the browser.
+The adapter's `returned` helper may return normally to a translated CALL
+continuation; only a `guest_call` sentinel unwinds its host frame. Several
+handled command branches had relied on that unwind and fell through to another
+handler, performing a second guest RET. Explicit C++ returns now terminate
+each handled branch. `native/community/expansion_panel_mouse.script` reproduces
+the original menu route, test setup and actual Back/Quest mouse sequence at
+800x600. It requires the explicit private expansion test flags and isolated
+profile. It is not a production script or normal quest-completion evidence.
+
+The corrected live20 passes the actual Back and Quest mouse inputs and reopens
+the two-row board. It also repeats all previous native controls and all13
+level1000 heroes; clean exit0 at101.4seconds and209.3MiB. The matching browser
+rebuild and ordinary paid-world verification remain pending.

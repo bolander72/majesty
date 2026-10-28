@@ -23,10 +23,11 @@ function fixture(contents = ['old', 'old']) {
   function directory(path = '') {
     return {
       async getDirectoryHandle(name) { return directory(path + name + '/'); },
+      async removeEntry(name) { data.delete(path + name); },
       async getFileHandle(name, options) {
         const full = path + name;
         if (!data.has(full)) {
-          if (!options?.create) throw Error('not found');
+          if (!options?.create) throw new DOMException('not found', 'NotFoundError');
           put(full, '');
         }
         return {
@@ -201,4 +202,65 @@ test('interrupted resource update retries without rewriting verified scripts', a
   assert.equal(await refreshCommunityScripts(f.options), true);
   assert.equal(f.data.get(prefix + paths[0]), first);
   assert.equal(await f.data.get(prefix + f.path).text(), 'resnew');
+});
+
+function intentFixture() {
+  const f = fixture(), added = ['Data/MMMIntentText.bin', 'DataMX/MMMIntentText.bin'];
+  const target = 'e'.repeat(64), recipe = f.options.loadRecipe;
+  const hash = f.options.hashFile, fetchFile = f.options.fetchFile;
+  for (const path of added) {
+    f.options.files[path] = target;
+    f.options.sizes[path] = 3;
+  }
+  f.options.hashFile = async blob => await blob.text() === 'txt' ? target : hash(blob);
+  f.options.fetchFile = async url => {
+    if (url.endsWith('intent.bin')) { f.counts.fetch++; return new Response('txt'); }
+    return fetchFile(url);
+  };
+  f.options.loadRecipe = async () => ({patches: [
+    ...(await recipe()).patches,
+    ...added.map(path => ({path, sha256: target, bytes: 3,
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'b'.repeat(40)
+        + '/assets/content/resources/intent.bin'})),
+  ]});
+  return {...f, added};
+}
+
+test('adds both bound intent registries to an older collection and keeps saves', async () => {
+  const f = intentFixture(), saved = f.data.get('majesty/profile/player/SaveGame/keep.GMP');
+  assert.equal(await refreshCommunityScripts(f.options), true);
+  const manifest = JSON.parse(await f.data.get(prefix + '.manifest.json').text());
+  for (const path of f.added) {
+    assert.equal(await f.data.get(prefix + path).text(), 'txt');
+    assert.equal(manifest.files[path].size, 3);
+  }
+  assert.equal(f.data.get('majesty/profile/player/SaveGame/keep.GMP'), saved);
+  assert.equal(f.counts.fetch, 2);
+});
+
+test('an unknown pre-existing intent file blocks all writes and downloads', async () => {
+  const f = intentFixture(); f.put(prefix + f.added[0], 'custom');
+  await assert.rejects(refreshCommunityScripts(f.options), /Customized/);
+  assert.deepEqual(f.writes, []);
+  assert.equal(f.counts.fetch, 0);
+  assert.equal(f.data.has(prefix + f.added[1]), false);
+});
+
+test('an interrupted new registry is removed and retries without replacing completed scripts', async () => {
+  const f = intentFixture(); f.fail(f.added[0]);
+  await assert.rejects(refreshCommunityScripts(f.options), /interrupted/);
+  assert.equal(f.data.has(prefix + f.added[0]), false);
+  const completed = f.data.get(prefix + paths[0]);
+  assert.equal(await refreshCommunityScripts(f.options), true);
+  assert.equal(f.data.get(prefix + paths[0]), completed);
+  for (const path of f.added) assert.equal(await f.data.get(prefix + path).text(), 'txt');
+});
+
+test('a completed exact registry survives retry before its manifest was committed', async () => {
+  const f = intentFixture(); f.put(prefix + f.added[0], 'txt');
+  const completed = f.data.get(prefix + f.added[0]);
+  assert.equal(await refreshCommunityScripts(f.options), true);
+  assert.equal(f.data.get(prefix + f.added[0]), completed);
+  const manifest = JSON.parse(await f.data.get(prefix + '.manifest.json').text());
+  assert.equal(manifest.files[f.added[0]].size, 3);
 });

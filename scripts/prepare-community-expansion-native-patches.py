@@ -79,8 +79,13 @@ def prepare(args):
     release_raw = read(ROOT / 'deploy/community-guilds-release.json')
     release = json.loads(release_raw)
     expected = {row['path']: {key: row[key] for key in ('bytes', 'sha256')} for row in release['patches']}
+    folded = {name.casefold(): name for name in expected}
+    if len(folded) != len(expected):
+        raise ValueError('Deployed resource paths collide by Windows filename case')
     inputs = {}
     def current(name):
+        if name.casefold() in folded and folded[name.casefold()] != name:
+            raise ValueError('Use the exact deployed resource path: ' + folded[name.casefold()])
         if name in expected:
             raw = read(args.current / name, expected[name])
         else:
@@ -94,7 +99,7 @@ def prepare(args):
         outputs[directory + '/' + intent_name] = intents
     for name, kind, overlay, allowed in [
             ('Data/unittype.cam', b'DUNT', 'Any-unittype.cam', ()),
-            ('DataMX/mx_unittype.cam', b'DUNT', 'MajestyExpansion-unittype.cam', (b'ABr1',)),
+            ('DataMX/mx_Unittype.cam', b'DUNT', 'MajestyExpansion-unittype.cam', (b'ABr1',)),
             ('DataMX/mx_action.cam', b'DACT', 'MajestyExpansion-action.cam', (b'NRj1',))]:
         archive, catalogs[name] = merge_catalog(read_cam(current(name)),
             [read_cam(native_files[overlay])], kind, allowed)

@@ -203,6 +203,14 @@ void runControlledExpansionPlay() {
         }
         host->log(host, "Controlled More Heroes high-level AI: all 13 remain alive through five "
                         "simulation seconds.");
+        mechanicsGpl("MM_Expansion_Probe_Rows", {{guild}});
+        require(mechanicsGpl(board->rowCountCallbackSymbol.c_str(), {{guild}}, true) == 2,
+                "two isolated quest presentation control rows");
+        const auto parent = expansionProbeOpen(guild, board->parentDialogId);
+        expansionProbeControl(parent, board->openCommandId);
+        require(panel(guild, board->childDialogId) != 0, "populated native quest board opens");
+        host->log(host, "Controlled quest presentation: two test-only record rows opened through "
+                        "the native parent control; normal quest gameplay remains unqualified.");
         p.phase = 9;
     }
     p.busy = false;

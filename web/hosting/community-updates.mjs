@@ -47,15 +47,76 @@ const PREVIOUS = Object.freeze({
   "Data/Community-audio.cam": [
     "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24",
     "b8c926f48dd4b542aa2e6626930c08ec360efcb79a885f4a947ff5a462be45ae"
+  ],
+  "DataMX/mx_Unittype.cam": [
+    "acda26fc5b35ec80f9e8de39bf99ba174517a13df115fb6bd5538acaeaf916f2"
+  ],
+  "DataMX/mx_action.cam": [
+    "2488afeaf0f6fcd51852bf6f2590bace6838824e0868ed95de87126fc27af8f0"
+  ],
+  "DataMX/Community-main.cam": [
+    "8ebaafa2c1a4ea31bbd5a85213c5e8a01160f7aee75a5be9227e5ca7be854bff"
+  ],
+  "Data/Community-interface.cam": [
+    "8625dd23f263283efb504fd93437c82a3a0e1f5b5d4cfac611e9027ed354a36b"
+  ],
+  "DataMX/Community-interface.cam": [
+    "8625dd23f263283efb504fd93437c82a3a0e1f5b5d4cfac611e9027ed354a36b"
+  ],
+  "DataMX/Community-audio.cam": [
+    "7eed3cff385468632419c7d1428eafed414057c02083343bc7d294c99cc51c24"
+  ],
+  "Data/textdata.cam": [
+    "9db43f20e7e6ff150b44c761d6beada13b34498f15b9388e54c3c245ac90dcb5"
+  ],
+  "Data/Community-textdata.cam": [
+    "bb205a93cbb7e46f3edd4393352897807d59daa567b551c619476fc43e4c24c4"
+  ],
+  "Data/gpltext.cam": [
+    "7d684ef93be8e91d4bb508534af66eea56212624be7041bec3b643a1ee8033ec"
+  ],
+  "Data/Community-gpltext.cam": [
+    "5b3069151d6fc83791f43849855cf5ef046a29754e6e3f9a89175a152122c640"
+  ],
+  "Data/miscdata.cam": [
+    "8036b0c5ee3f172278fa91b09a4d05a0a2b81eba1170a2c2a74def3c24dc80c6"
+  ],
+  "Data/Community_Expansion.bcd": [
+    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa"
+  ],
+  "DataMX/mx_textdata.cam": [
+    "6f84dc4447447d5c1af6460e54ebd4c7cd041c4d22d7681a869d4e5a3010e0fd"
+  ],
+  "DataMX/Community-textdata.cam": [
+    "71ade0c1d8d0c073773f1e5f160510ae647bfcb96e38355caaac7584262d9aff"
+  ],
+  "DataMX/mx_gpltext.cam": [
+    "d20bd0b235140ff134f708e9dcc5a7ffc3b8c1a785c02dae0b11b3448e61fc00"
+  ],
+  "DataMX/Community-gpltext.cam": [
+    "693bc741d266d252ee43351596d32c8898af8b6e33cc9722433fdd11b449fa48"
+  ],
+  "DataMX/mx_miscdata.cam": [
+    "325b03b936c0d8fa4e96295309b1cc0b290f07ba1d6890f8e996003fce6268b8"
+  ],
+  "DataMX/Community_Expansion.bcd": [
+    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa"
   ]
 });
 const MARKER = '.community-script-revision.json';
 const FORMAT = 'majesty-community-script-revision-v1';
+const ADDED = new Set(['Data/MMMIntentText.bin', 'DataMX/MMMIntentText.bin']);
 
-async function fileHandle(root, path) {
+async function fileHandle(root, path, create = false) {
   const parts = path.split('/'), name = parts.pop();
   for (const part of parts) root = await root.getDirectoryHandle(part);
-  return root.getFileHandle(name);
+  return root.getFileHandle(name, {create});
+}
+
+async function removeCreatedFile(root, path) {
+  const parts = path.split('/'), name = parts.pop();
+  for (const part of parts) root = await root.getDirectoryHandle(part);
+  await root.removeEntry(name);
 }
 
 async function write(handle, data, signal) {
@@ -101,9 +162,11 @@ export async function refreshCommunityScripts({storage, locks, fetchFile = fetch
   const changes = Object.entries(PREVIOUS).filter(([path, prior]) =>
     Object.hasOwn(files, path) && files[path] !== prior[0])
     .map(([path, priors]) => ({path, priors, sha256: files[path], bytes: sizes[path]}));
+  for (const path of ADDED) if (Object.hasOwn(files, path))
+    changes.push({path, priors: [], sha256: files[path], bytes: sizes[path], added: true});
   if (!changes.length) return false;
   if (changes.some(p => !/^[a-f0-9]{64}$/.test(p.sha256) || !Number.isSafeInteger(p.bytes)
-      || p.bytes < 1 || p.bytes > 32 * 1024 * 1024)) throw Error('Invalid content update binding.');
+      || p.bytes < 1 || p.bytes > 64 * 1024 * 1024)) throw Error('Invalid content update binding.');
   if (!locks?.request) throw Error('This browser cannot safely update game content.');
   return locks.request('majesty-automatic-game-assets', {mode: 'exclusive', signal}, async () => {
     signal?.throwIfAborted();
@@ -113,15 +176,21 @@ export async function refreshCommunityScripts({storage, locks, fetchFile = fetch
     let marker;
     try {
       const file = await (await game.getFileHandle(MARKER)).getFile();
-      if (file.size <= 4096) marker = JSON.parse(await file.text());
+      if (file.size <= 64 * 1024) marker = JSON.parse(await file.text());
     } catch { /* An older or interrupted installation has no trusted marker. */ }
     const current = [];
     for (const patch of changes) {
-      const handle = await fileHandle(game, patch.path);
-      current.push({...patch, handle, file: await handle.getFile()});
+      let handle = null, file = null;
+      try {
+        handle = await fileHandle(game, patch.path);
+        file = await handle.getFile();
+      } catch (error) {
+        if (!patch.added || error.name !== 'NotFoundError') throw error;
+      }
+      current.push({...patch, handle, file});
     }
     if (marker?.format === FORMAT && marker.revision === revision && current.every(p =>
-      p.file.lastModified > 0 && p.file.size === p.bytes && marker.files?.[p.path]?.size === p.file.size
+      p.file && p.file.lastModified > 0 && p.file.size === p.bytes && marker.files?.[p.path]?.size === p.file.size
         && marker.files[p.path].modified === p.file.lastModified)) return false;
     const manifestHandle = await game.getFileHandle('.manifest.json');
     const manifestFile = await manifestHandle.getFile();
@@ -130,12 +199,14 @@ export async function refreshCommunityScripts({storage, locks, fetchFile = fetch
     const recipe = await loadRecipe();
     // Validate every existing file before fetching or replacing any of them.
     for (const patch of current) {
-      if (!manifest.files?.[patch.path]) throw Error('Incomplete game manifest; it was preserved.');
+      if (!manifest.files?.[patch.path] && !patch.added)
+        throw Error('Incomplete game manifest; it was preserved.');
       const source = recipe.patches.filter(p => p.path === patch.path);
       if (source.length !== 1 || source[0].sha256 !== patch.sha256 || source[0].bytes !== patch.bytes)
         throw Error('The content update differs from its source binding.');
       patch.source = source[0];
-      patch.have = await hashFile(patch.file);
+      patch.have = patch.file ? await hashFile(patch.file) : null;
+      if (!patch.file && patch.added) continue;
       if (!patch.priors.includes(patch.have) && patch.have !== patch.sha256)
         throw Error('Customized game content was preserved; automatic update refused.');
     }
@@ -146,7 +217,16 @@ export async function refreshCommunityScripts({storage, locks, fetchFile = fetch
     }
     const stamps = {};
     for (const patch of current) {
-      if (patch.have !== patch.sha256) await write(patch.handle, blobs.get(patch.sha256), signal);
+      const created = !patch.handle;
+      if (created) patch.handle = await fileHandle(game, patch.path, true);
+      try {
+        if (patch.have !== patch.sha256) await write(patch.handle, blobs.get(patch.sha256), signal);
+      } catch (error) {
+        // Remove only a resource this locked update created. Existing files
+        // retain the ordinary resumable known-hash update behavior.
+        if (created) await removeCreatedFile(game, patch.path).catch(() => {});
+        throw error;
+      }
       const file = await patch.handle.getFile();
       manifest.files[patch.path] = {...manifest.files[patch.path], size: file.size, mtime: file.lastModified};
       stamps[patch.path] = {size: file.size, modified: file.lastModified};

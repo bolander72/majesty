@@ -5,3 +5,19 @@ begin
     Created = $SpawnUnit(Palace, TypeName, $RandomCoord(Palace, 160, 480), NewOwnerNumber, "Override");
     return Created;
 end
+
+function MM_Expansion_Probe_Rows(agent Guild)
+declare
+    list Keys, Kinds, Rewards;
+begin
+    Keys << 1;
+    Keys << 2;
+    Kinds << 1;
+    Kinds << 4;
+    Rewards << 100;
+    Rewards << 200;
+    Guild's "AGUIRowKeys" = Keys;
+    Guild's "AGUIRowKinds" = Kinds;
+    Guild's "AGUIRowRewards" = Rewards;
+    Guild's "AGRevision" += 1;
+end

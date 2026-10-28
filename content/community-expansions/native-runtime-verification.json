@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-native-runtime-verification-v1",
   "date": "2026-10-28",
-  "status": "native-panels-paid-controls-and-all13-More-Heroes-level1000-controls-passed; whole-gameplay-save-coop-pending",
+  "status": "native-real-mouse-navigation-regression-fixed-and-passed; browser-retest-full-gameplay-save-coop-pending",
   "nativeBuild": {
     "command": [
       "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
@@ -70,20 +70,20 @@
       "sha256": "12a1577943609348bf8648878b5c2d3c2f438fd26ed01b4742d82a910c7d9df3"
     },
     "native/community/expansion_panel_runtime.cpp": {
-      "bytes": 30450,
-      "sha256": "752d75d7a4046c5b5bb9360d790b9e4dbce62ddccdefe34ce7862b843c3feb29"
+      "bytes": 35323,
+      "sha256": "8f3871766550076e8e1add25b17a0e4190d227a918950a1ec93b017dc32e5c8b"
     },
     "native/community/expansion_panel_runtime.h": {
       "bytes": 920,
       "sha256": "3046e42256986aa5cd4393e337c03f637510b0f93f03c2d47ba0df5bb41c7ceb"
     },
     "native/community/native_probe_plugin.cpp": {
-      "bytes": 187376,
-      "sha256": "654de1a890eda9c96334d893d95563fc7cd7b12892f6f5ed4f971ae407c421c6"
+      "bytes": 189777,
+      "sha256": "0d8e282e614811db55e8147bb48e27ebc86334c9d5cc5af22fd5045f6b7e2855"
     },
     "native/community/expansion_panel_probe.gpl": {
-      "bytes": 319,
-      "sha256": "f61987f3db71a42d004e0b61563737c36c140369d2a867d5e7de9ea8befb0104"
+      "bytes": 598,
+      "sha256": "82d1dbd2908fb9121320e24da37fa9e9e4bc2b7c12e1d2085924866bd9af0f18"
     },
     "scripts/lib/community_guild_composition.py": {
       "bytes": 13706,
@@ -149,7 +149,11 @@
     "live13": "All panels pass; original building completion reaches unsupported coord-valued AddAttribute. Added type7 using the original pool/copy/reset/map path.",
     "live14": "Coordinate state initializes. Paid refresh debits exactly 500; queued guild/Zoo toggles and private quote/mode/Back pass. All 13 hero spawns return; a subsequent GPL bad-conversion-to-int exception remains unresolved.",
     "live15": "Bounded GPL call-stack diagnostic identifies tag3 at00421989 in fallen_angel_tree_mh -> MJC_Patrol -> SpecifyIntent. Old integer-only API receives FAPATROL. The source-bound named-activity port lowers all three acquired named labels to private IDs; corrected live trial pending.",
-    "live16": "Clean native exit0, no guard stop, 114.25 seconds, 204.2MiB. All64 native texts/copies, all5 panels, original500-gold refresh, queued toggles, separate capture quote/mode/Back, all13 More Heroes births and level1000 health growth pass. All13 remain alive through five simulation seconds; not a long mission or ability/capture/save/co-op qualification."
+    "live16": "Clean native exit0, no guard stop, 114.25 seconds, 204.2MiB. All64 native texts/copies, all5 panels, original500-gold refresh, queued toggles, separate capture quote/mode/Back, all13 More Heroes births and level1000 health growth pass. All13 remain alive through five simulation seconds; not a long mission or ability/capture/save/co-op qualification.",
+    "live17": "All live16 controls repeated cleanly against the corrected canonical DataMX/mx_Unittype.cam catalog. Native exit0, 106.15seconds, 210.3MiB; all13 original heroes at level1000. Current MX records retained; no production change.",
+    "live18": "Two test-only quest record rows render correctly, all previous native controls pass, exit0 at97.74seconds and194.5MiB. Direct-call controls do not cover real native input returns.",
+    "live19": "Real mouse Back reproduces guest call00000202 at return0049e54f and guest exit3221225477. Returned helper fell through after a real translated CALL continuation. Test-only direct guest_call sentinels had hidden the second handler/RET.",
+    "live20": "After explicit C++ returns on all guest-return branches, actual native Back and Quest mouse clicks pass and reopen the populated two-row board. All prior five-panel, paid-control, 64-text and all13 level1000 checks also pass. Exit0, 101.4seconds, 209.3MiB; no guard stop."
   },
   "remainingAcceptance": [
     "populated quest-board and actual native building preview/Palace icon inspection beside stock UI",
@@ -258,19 +262,19 @@
     },
     "format": "majesty-community-expansion-runtime-probe-v2",
     "frozenLinkInputs": 157,
-    "gamePatches": 53,
+    "gamePatches": 52,
     "productionHelperForbidden": true,
     "originalSdkTestHelper": {
-      "bytes": 1314,
-      "sha256": "e7080080732bc3bbf809675fc80a8323ebc0e1b6eb40705bc0662777a010e42e"
+      "bytes": 2682,
+      "sha256": "bbd59cc198636ce2a71d479bc9730a637277ef7febcefd63e5f8376d04d623f6"
     },
     "helperCompiler": {
       "exitCode": 0,
-      "elapsedSeconds": 11.92,
+      "elapsedSeconds": 10.46,
       "testOnly": true,
       "bytecode": {
-        "bytes": 1314,
-        "sha256": "e7080080732bc3bbf809675fc80a8323ebc0e1b6eb40705bc0662777a010e42e"
+        "bytes": 2682,
+        "sha256": "bbd59cc198636ce2a71d479bc9730a637277ef7febcefd63e5f8376d04d623f6"
       }
     }
   },
@@ -286,41 +290,41 @@
     "correctedLiveTrialPassed": true
   },
   "latestControlledTrial": {
-    "trial": "expansion-runtime-live16",
+    "trial": "expansion-runtime-live20",
     "terminal": {
       "nativeExitCode": 0,
       "nativeSessionTerminal": true,
       "stopReason": null,
-      "elapsedSeconds": 114.25,
-      "peakRssMiB": 204.2,
+      "elapsedSeconds": 101.4,
+      "peakRssMiB": 209.3,
       "worldQueriesQualified": true,
       "privateIntentsQualified": true,
       "audioMuted": true,
-      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live16/profile",
-      "sourceEngineSha256": "8c534281f1d47592d3ee34f70bcd347b2e9b88497211af0ef2728f8d69263e01"
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live20/profile",
+      "sourceEngineSha256": "bef3f2e0131914e7ab8dc29de15a2d0ec2e45700562f41ab59f6fb969c423f7b"
     },
     "receipt": {
-      "bytes": 425,
-      "sha256": "60d8f44d8603226a758dfe0dcebdcce7c4683b8413237d659235e9651f1b4ceb"
+      "bytes": 424,
+      "sha256": "c957b1bcbb6502ed0822b128967b6aafa355311a19e4587a2a2ea277fceeb1be"
     },
     "engineStage": {
-      "bytes": 62561,
-      "sha256": "07ac7411d3a814702c65b3e41b64d4ca26d5192977e21d6a19de8035b59a9bc7"
+      "bytes": 62417,
+      "sha256": "cb833cd25061ba98c80cf964b98595bd14a6853371a55d6708dead4e349aa2ee"
     },
     "controls": {
       "bytes": 1709,
-      "sha256": "77d55ee24a0bc4738f7c47dcf1094800e417407f8e889459a39892f7508831fa"
+      "sha256": "aba8308bc1f37e50eb21d33c9d3796609710db8f5c638205df0761ed838ed0e7"
     },
     "executable": {
-      "bytes": 92627160,
-      "sha256": "8c534281f1d47592d3ee34f70bcd347b2e9b88497211af0ef2728f8d69263e01"
+      "bytes": 92627432,
+      "sha256": "bef3f2e0131914e7ab8dc29de15a2d0ec2e45700562f41ab59f6fb969c423f7b"
     },
     "build": {
       "command": [
         "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
-        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v5/kit/tools/build.py",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
         "--game-dir",
-        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v5",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
         "--target",
         "smoke",
         "--jobs",
@@ -328,104 +332,104 @@
         "--preset",
         "alchemist1009-probe"
       ],
-      "startedAtUnix": 1793222216,
+      "startedAtUnix": 1793226156,
       "terminal": true,
-      "peakOwnedRssMiB": 401.1,
+      "peakOwnedRssMiB": 296.0,
       "rssCeilingMiB": 2048,
       "stopReason": null,
       "exitCode": 0,
       "productionChanged": false,
       "browserPlayable": false,
-      "ownedPid": 23792,
-      "endedAtUnix": 1793222256
+      "ownedPid": 85384,
+      "endedAtUnix": 1793226159
     },
     "moreHeroes": [
       {
-        "id": 2539,
+        "id": 557,
         "level": 1000,
         "hp": 2010,
         "maxHp": 2010,
         "initialMaxHp": 12
       },
       {
-        "id": 2541,
+        "id": 559,
         "level": 1000,
         "hp": 2010,
         "maxHp": 2010,
         "initialMaxHp": 12
       },
       {
-        "id": 2544,
+        "id": 562,
         "level": 1000,
-        "hp": 8018,
-        "maxHp": 8018,
+        "hp": 8017,
+        "maxHp": 8017,
         "initialMaxHp": 25
       },
       {
-        "id": 2546,
+        "id": 564,
         "level": 1000,
         "hp": 2006,
         "maxHp": 2006,
         "initialMaxHp": 8
       },
       {
-        "id": 2548,
+        "id": 566,
         "level": 1000,
         "hp": 6498,
         "maxHp": 6498,
         "initialMaxHp": 17
       },
       {
-        "id": 2550,
+        "id": 568,
         "level": 1000,
-        "hp": 4993,
-        "maxHp": 4993,
+        "hp": 4994,
+        "maxHp": 4994,
         "initialMaxHp": 10
       },
       {
-        "id": 2553,
+        "id": 571,
         "level": 1000,
         "hp": 6493,
         "maxHp": 6493,
         "initialMaxHp": 26
       },
       {
-        "id": 2555,
+        "id": 573,
         "level": 1000,
         "hp": 2002,
         "maxHp": 2002,
         "initialMaxHp": 4
       },
       {
-        "id": 2557,
+        "id": 575,
         "level": 1000,
-        "hp": 7992,
-        "maxHp": 7992,
+        "hp": 7994,
+        "maxHp": 7994,
         "initialMaxHp": 45
       },
       {
-        "id": 2559,
+        "id": 577,
         "level": 1000,
-        "hp": 3512,
-        "maxHp": 3512,
+        "hp": 3513,
+        "maxHp": 3513,
         "initialMaxHp": 14
       },
       {
-        "id": 2562,
+        "id": 580,
         "level": 1000,
         "hp": 3508,
         "maxHp": 3508,
         "initialMaxHp": 10
       },
       {
-        "id": 2564,
+        "id": 582,
         "level": 1000,
-        "hp": 3517,
-        "maxHp": 3517,
+        "hp": 3516,
+        "maxHp": 3516,
         "initialMaxHp": 12
       },
       {
-        "id": 2566,
+        "id": 584,
         "level": 1000,
         "hp": 5027,
         "maxHp": 5027,
@@ -434,6 +438,62 @@
     ],
     "testOnly": true,
     "paidConstructionQualified": false,
-    "completeAbilityCoverageQualified": false
+    "completeAbilityCoverageQualified": false,
+    "realMouseNavigationQualified": true,
+    "mouseInput": {
+      "bytes": 971,
+      "sha256": "87ce2a5be3256480b6fa966aecf66585ae6e6e3d8e62b5448a421a64d5b4b0ce"
+    },
+    "populatedTestRows": 2,
+    "normalQuestGameplayQualified": false
+  },
+  "browserTrials": {
+    "engine": {
+      "sha256": "5083e4df4a1598079fc5106e76fc80792dca321f4a25075c12f9949c668e086c",
+      "bytes": 91071241
+    },
+    "privateOnly": true,
+    "productionChanged": false,
+    "fixture": {
+      "originalFiles": 165,
+      "derivedFiles": 208,
+      "source": "clean stock CAMs, complete original quests/music, required UI layout/dat/rgs/txt resources, bound candidate patches"
+    },
+    "history": {
+      "single1": "Incomplete baseline CAM fixture; owned 2400MiB RSS guard stopped trial. No gameplay. Host app alive.",
+      "single3": "Missing stock UI layout files caused viewport initialization retry loop; owned RSS guard stopped trial. Host app alive.",
+      "single5": "Gameplay reached; unsupported diagnostic memory accessor aborted the owned guest. Closed browser. No mod gameplay qualification.",
+      "single6": "Stock world played five days and ordinary save succeeded. Root player lacked the three new runtime flags; no expansion runtime qualification. Closed browser.",
+      "single7": {
+        "trial": "expansion-browser-single7",
+        "endedAtUnix": 1793225589.365173,
+        "privateOnly": true,
+        "productionChanged": false,
+        "hostAppAlive": true,
+        "browserClosed": true,
+        "nativeExitCode": 3221225477,
+        "invalidCall": "00000202",
+        "returnAddress": "0049e54f",
+        "lastPanel": "CGAQ",
+        "actor": 2795,
+        "paidConstruction": {
+          "guild": "Adventurers Guild",
+          "goldBefore": 20570,
+          "goldAfter": 17720,
+          "price": 2850,
+          "completedHP": 800
+        },
+        "stockSaveReloaded": true,
+        "moddedSaveReloadQualified": false,
+        "reason": "quest board opened after ordinary paid construction; invalid callback raised guest access violation"
+      }
+    },
+    "qualified": [
+      "ordinary stock save reload under all three new runtime flags",
+      "native Palace emblem at 25px beside existing list entries",
+      "paid Adventurers Guild construction, 2850 gold, ordinary peasants complete 800HP",
+      "native main guild panel opens after construction"
+    ],
+    "unresolved": "Opening populated quest board attached CGAQ then guest called00000202 at return0049e54f, exiting3221225477. Not a host app crash. Investigating ABI; no modded save or paired co-op qualification."
   }
 }

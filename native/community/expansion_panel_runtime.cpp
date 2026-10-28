@@ -55,6 +55,9 @@ std::uint32_t read(std::uint32_t address) {
     return rd32(address);
 }
 void returned(X86 *cpu, unsigned count, std::uint32_t value = 0) {
+    // A real translated caller resumes normally here. Only an isolated
+    // guest_call sentinel unwinds the host frame, so every caller must return
+    // explicitly rather than falling through to a second handler/guest RET.
     cpu->eip = read(cpu->r[R_ESP]);
     cpu->r[R_ESP] += 4 + count * 4;
     cpu->r[R_EAX] = value;
@@ -396,7 +399,7 @@ template <ExpansionPanelEntry Entry> void panelBody(X86 *cpu) {
         const auto flags = read(sp + 4);
         presentations.erase(s.controller);
         require(owner->detach(ops, s.controller, s.generation), "retire exact panel generation");
-        returned(cpu, 1, ops.call(s.plan.profile->methods[0], s.controller, {flags}));
+        return returned(cpu, 1, ops.call(s.plan.profile->methods[0], s.controller, {flags}));
     } else {
         if (!owner->alive(ops, s)) {
             // The stock death/removal notification can outlive its actor.
@@ -406,61 +409,61 @@ template <ExpansionPanelEntry Entry> void panelBody(X86 *cpu) {
                 if (ops.valid(s.controller, 36) && ops.read(s.controller) == s.table &&
                     ops.read(s.controller + 0x14) == s.window)
                     ops.original(s, 8, {read(sp + 4), read(sp + 8), read(sp + 12), read(sp + 16)});
-                returned(cpu, 4);
+                return returned(cpu, 4);
             } else if constexpr (Entry == ExpansionPanelEntry::Control)
-                returned(cpu, 1);
+                return returned(cpu, 1);
             else
-                returned(cpu, 0);
+                return returned(cpu, 0);
         }
         if constexpr (Entry == ExpansionPanelEntry::Setup) {
             ops.original(s, 1);
             ops.refresh(s);
-            returned(cpu, 0);
+            return returned(cpu, 0);
         } else if constexpr (Entry == ExpansionPanelEntry::Control) {
             const auto command = read(sp + 4);
             if (const auto child = owner->child(s, command))
-                returned(cpu, 1, ops.call(0x0047c5c0U, s.controller, {child, 0}));
+                return returned(cpu, 1, ops.call(0x0047c5c0U, s.controller, {child, 0}));
             if (ops.toggle(s, command))
-                returned(cpu, 1);
+                return returned(cpu, 1);
             if (s.plan.child() && command == 0x1f4dU) {
                 if (s.plan.kind == ExpansionPanelKind::Rewards)
                     ops.call(0x004380c0U, ops.read(0x006d84b8U), {NativeFourCC("Sele"), 0});
                 const auto manager = ops.call(0x00415b40U, 0);
                 ops.method(s.window, 0x14);
                 ops.call(0x00416890U, manager, {s.plan.parentDialog, s.unit, 0, 0});
-                returned(cpu, 1, 1);
+                return returned(cpu, 1, 1);
             }
             if (s.plan.kind == ExpansionPanelKind::Rewards) {
                 if (command == 5002) {
                     ops.armCapture(s);
-                    returned(cpu, 1);
+                    return returned(cpu, 1);
                 }
                 const auto result = ops.original(s, 3, {command});
                 if ((command == 10 || command == 11) && ops.captureActive())
                     ops.armCapture(s);
-                returned(cpu, 1, result);
+                return returned(cpu, 1, result);
             }
             if (s.plan.kind == ExpansionPanelKind::QuestRecords ||
                 s.plan.kind == ExpansionPanelKind::Occupants) {
                 if (command == 5003) {
                     ops.submit(s);
-                    returned(cpu, 1);
+                    return returned(cpu, 1);
                 }
                 if (command == 5000) {
                     ops.quote(s);
-                    returned(cpu, 1);
+                    return returned(cpu, 1);
                 }
             }
-            returned(cpu, 1, ops.call(s.plan.profile->methods[3], s.controller, {command}));
+            return returned(cpu, 1, ops.call(s.plan.profile->methods[3], s.controller, {command}));
         } else if constexpr (Entry == ExpansionPanelEntry::Event) {
             ops.original(s, 8, {read(sp + 4), read(sp + 8), read(sp + 12), read(sp + 16)});
             ops.refresh(s);
-            returned(cpu, 4);
+            return returned(cpu, 4);
         } else {
             if (s.plan.kind != ExpansionPanelKind::QuestRecords)
                 ops.call(s.plan.profile->methods[14], s.controller);
             ops.refresh(s);
-            returned(cpu, 0);
+            return returned(cpu, 0);
         }
     }
 }
@@ -472,7 +475,7 @@ void originalDispatch(X86 *cpu) {
 }
 void resetBody(X86 *cpu) {
     majesty_reset_expansion_panels(cpu);
-    returned(cpu, 0);
+    return returned(cpu, 0);
 }
 void questPopulate(X86 *cpu) {
     Ops ops(cpu);
@@ -482,22 +485,22 @@ void questPopulate(X86 *cpu) {
         ops.emptyRecordVector(s);
         presentations.erase(s.controller);
     }
-    returned(cpu, 0);
+    return returned(cpu, 0);
 }
 void captureFilter(X86 *cpu) {
     Ops ops(cpu);
     const auto actor = read(cpu->r[R_ESP] + 4);
-    returned(cpu, 0, ops.captureTarget(actor) ? actor : 0);
+    return returned(cpu, 0, ops.captureTarget(actor) ? actor : 0);
 }
 void captureActive(X86 *cpu) {
     Ops ops(cpu);
-    returned(cpu, 0, ops.captureActive() ? 1U : 0U);
+    return returned(cpu, 0, ops.captureActive() ? 1U : 0U);
 }
 void captureValidator(X86 *cpu) {
     Ops ops(cpu);
     const auto context = read(cpu->r[R_ESP] + 4);
     const auto stock = ops.call(0x0043efc0U, 0, {context});
-    returned(cpu, 0, stock ? stock : ops.captureTarget(ops.read(context + 0x48)) ? 0U : 1U);
+    return returned(cpu, 0, stock ? stock : ops.captureTarget(ops.read(context + 0x48)) ? 0U : 1U);
 }
 void factory(X86 *cpu) {
     Ops ops(cpu);
@@ -513,7 +516,7 @@ void factory(X86 *cpu) {
             "native controller capture");
     std::fprintf(stderr, "[community-expansion-panel] attached dialog=%08x actor=%u\n", dialog,
                  read(actor + 0x60));
-    returned(cpu, 4, controller);
+    return returned(cpu, 4, controller);
 }
 void paidDispatch(X86 *cpu) {
     Ops ops(cpu);
@@ -536,7 +539,7 @@ void paidDispatch(X86 *cpu) {
             for (const auto &s : owner->forUnit(actor))
                 ops.refresh(s);
         }
-        returned(cpu, 0);
+        return returned(cpu, 0);
     }
     const auto symbol = actionSymbols.find(command);
     require(symbol != actionSymbols.end(), "declared queued paid command");
@@ -551,7 +554,7 @@ void paidDispatch(X86 *cpu) {
     if (actor)
         for (const auto &s : owner->forUnit(actor))
             ops.refresh(s);
-    returned(cpu, 0, result);
+    return returned(cpu, 0, result);
 }
 void (*const bodies[bridgeCount])(X86 *) = {factory,
                                             panelBody<ExpansionPanelEntry::Destroy>,

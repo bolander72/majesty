@@ -1,0 +1,61 @@
+await picture>0.80 for 2000 within 90000
+move 90 548
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 1800
+move 300 428
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 2200
+move 400 403
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 1800
+move 400 578
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 1800
+move 400 237
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 7000
+move 400 578
+wait 250
+button left down
+wait 300
+button left up
+await picture>0.50 for 50 within 60000
+wait 20000
+dump native-equipment-world
+wait 3000
+dump native-equipment-checked
+
+move 16 414
+wait 250
+button left down
+wait 300
+button left up
+wait 1000
+dump native-real-back
+move 57 384
+wait 250
+button left down
+wait 300
+button left up
+wait 2500
+dump native-real-quest
