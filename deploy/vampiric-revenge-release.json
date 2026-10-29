@@ -1,6 +1,6 @@
 {
   "format": "majesty-vampiric-revenge-release-v1",
-  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
   "storageId": "majesty-alchemist-demo-v1",
   "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
   "nativeId": "XQD3",
@@ -260,5 +260,14 @@
     "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
   },
   "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
-  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "expansionCompatibility": {
+    "priorSourceCommit": "bf9136a32026a425200d556aa7797742ecbcd393",
+    "priorEngineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+    "newRegressionProof": "deploy/community-expansions-verification.json",
+    "sourcePreservationProof": "content/community-expansions/source-integration-verification.json",
+    "scope": "Inherited baseline mechanics qualification plus current native and browser expansion/save regression. Historical ability, migration and performance measurements remain bound to the engine in the archived record; they were not all repeated. Original engine translations and renderer retained; protected Phantom functions and Fire Balm guard/quest credit preserved.",
+    "historicalRecord": "deploy/history/expansions20261028/vampiric-revenge-release.json",
+    "historicalRecordSha256": "f4bfc637c07d9fb13b98e7232f6cecbbbc88619ef45a960e41c62b0b8e32b4e6"
+  }
 }

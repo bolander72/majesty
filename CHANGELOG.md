@@ -1,6 +1,6 @@
 # Changelog
 
-## Community expansions and single-player delivery — unreleased
+## Community expansions and single-player delivery — October 28, 2026
 
 - Integrate Adventurers Guild, The Royal Menagerie and all 13 classes from the original More Heroes Standard package alongside the existing guilds.
 - Restore the four shared follower markers and preserve void callbacks in generated native action bridges, fixing saved-world monster deaths and paid taming exceptions.

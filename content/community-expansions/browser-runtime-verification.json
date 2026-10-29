@@ -1,0 +1,110 @@
+{
+  "format": "majesty-community-expansion-browser-verification-v1",
+  "date": "2026-10-28",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
+  "nativeTrial": 47,
+  "artifacts": {
+    "MajestyRecomp.wasm": {
+      "bytes": 91086297,
+      "sha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd"
+    },
+    "MajestyRecomp.js": {
+      "bytes": 473610,
+      "sha256": "3e96eeab864367f986e76177e9d8555bfcf058b7bdfcff0b1adf6d5c1dbfb27d"
+    },
+    "MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    },
+    "MajestyRecomp.wasm.br": {
+      "bytes": 6804216,
+      "sha256": "13e0339b289e4d965653b120a4894cb1b3ed8b5e30ee2a8cae767ac6f4d4a7f3"
+    }
+  },
+  "evidence": {
+    "expansion-browser-single16-stage.json": {
+      "bytes": 46245,
+      "sha256": "988b4729280975359d8522fe014b92056316f346bc07cec088a89077f1b48718"
+    },
+    "expansion-browser-single16-compact-captive-list.png": {
+      "bytes": 1337965,
+      "sha256": "d00f2991ba0c0297f55a59b2792154ddcb813a8ab48ab5ed1b8d50b2491827f5"
+    },
+    "expansion-browser-single16-compact-paid-tame.png": {
+      "bytes": 1384377,
+      "sha256": "6050e46563e875eddf81ec16ba02ffb934489f813e986f62d177e8839635c10d"
+    },
+    "expansion-browser-single16-compact-save-dialog.png": {
+      "bytes": 580978,
+      "sha256": "1fd0cc5b5265e88e764b20d4b985abee40bee1fe7fefdd108b022ccdb3eb946e"
+    },
+    "expansion-browser-single16-compact-reload-current.png": {
+      "bytes": 1454493,
+      "sha256": "10fe4f6de88a2dc304bcdf800c6921c076263554718a6e49657713660430b89a"
+    },
+    "expansion-browser-single16-compact-reload-current.json": {
+      "bytes": 12637,
+      "sha256": "f1bfb1386b1177d8441db7767bfed0b2e918761200b17c6d7e3dd78173b86ec6"
+    },
+    "expansion-browser-single16-saves-after.json": {
+      "bytes": 1252,
+      "sha256": "f4e175bd24d174328d53050adbb2ad0dce5fadf5e79065516e800cf8698afe1a"
+    },
+    "expansion-browser-single16-resources.json": {
+      "bytes": 580,
+      "sha256": "1563d5f9de04047e431a375bd48a74697fbd5a35c6c379f36d66cea567011ef0"
+    }
+  },
+  "readableCaptiveName": "Ratman",
+  "paidTameCost": 1000,
+  "saveNameSuffix": "compact",
+  "savedTownReloaded": true,
+  "sevenExistingSaveHashesPreserved": true,
+  "ownedBrowserClosed": true,
+  "guardStopped": false,
+  "resources": {
+    "gpuFootprintMiB": 310.8,
+    "peakGpuFootprintMiB": 322.0,
+    "peakRssMiB": 1370.4,
+    "lastRssMiB": 557.8,
+    "phase": {
+      "phase": "compact-captive-row-restore"
+    },
+    "largestProcesses": [
+      {
+        "pid": 3364,
+        "rssMiB": 236.8,
+        "process": "Google Chrome Helper (Renderer)"
+      },
+      {
+        "pid": 1456,
+        "rssMiB": 115.7,
+        "process": "Google Chrome"
+      },
+      {
+        "pid": 1462,
+        "rssMiB": 77.2,
+        "process": "Google Chrome Helper (GPU)"
+      },
+      {
+        "pid": 1463,
+        "rssMiB": 48.4,
+        "process": "Google Chrome Helper"
+      },
+      {
+        "pid": 4580,
+        "rssMiB": 37.8,
+        "process": "Google Chrome Helper"
+      },
+      {
+        "pid": 1480,
+        "rssMiB": 34.0,
+        "process": "Google Chrome Helper"
+      }
+    ]
+  },
+  "networkImportsAbsent": true,
+  "nativeMultiplayerHidden": true,
+  "priorMainMenuAndLegacyInviteChecks": "browser15",
+  "limitations": "Bounded single-player regressions; no co-op trial requested or performed."
+}

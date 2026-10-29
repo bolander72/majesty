@@ -1,6 +1,6 @@
 {
   "format": "majesty-community-campaign-resource-qualification-v1",
-  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
   "nativeStringAttributesQualified": true,
   "sharedHelpersInCommonQualified": true,
   "nativeFireBalmLifecycleQualified": true,
@@ -8,8 +8,8 @@
   "browserFiveCommunityClassesSaveReloadQualified": true,
   "originalSaveProfilePreserved": true,
   "sourcePolicies": {
-    "native/community/gpl_attribute_bridge.h": "dae7c0518b18a5f64c149ceafff76efa126a64b2eea501ce0e0e9666320dddde",
-    "scripts/prepare-community-campaign-browser-engine.py": "80b27bcd818c42b757ed0036e30626b5e0ea36944be8ba79bb08f43a300242da",
+    "native/community/gpl_attribute_bridge.h": "168dc8aec7a4c393a0c6e4014a1d42fe5490587582be8a5a1315491f1a259724",
+    "scripts/prepare-community-campaign-browser-engine.py": "d03772fe32564657f509c729209f51e15c2e09d2f7476051de69040ecfdb4f4d",
     "scripts/prepare-community-campaign-resources.py": "7328e454c8b4787a4e854462644cdb94d7bf59b9ff23ed5e58af2488fb4e4c85",
     "scripts/lib/community_resource_closure.py": "8314c2fbe4355a379cfef9673727a426cacd4831e57f3483dff256b0fcd9a2c5",
     "scripts/lib/community_campaign_resources.py": "a37acdb8e739d57649164d4753ea36285fe2ac89ede5ed634d71ab6976cc8d93",
@@ -18,40 +18,40 @@
   },
   "files": {
     "Data/unittype.cam": {
-      "bytes": 198259,
-      "sha256": "3340443dd4b61276d159d3c5f146f819c8e1a56e5724a4ac06655861ba3031f3"
+      "bytes": 201806,
+      "sha256": "bc35215e9a64fabba05ef97001557f4e6ee4935225fa7ade23041502e85ea0e3"
     },
     "Data/action.cam": {
       "bytes": 33109,
       "sha256": "e5091b452752bb8d4026928d597efcef9c44b422dc3a9b2e2c4895281b99e6cb"
     },
     "Data/sounddesc.cam": {
-      "bytes": 116905,
-      "sha256": "72f0d7de39a0b7758083a9587c677c2d95f18789ed5b534c547a79417459edf1"
+      "bytes": 117695,
+      "sha256": "39d6e5a6d84d4d45e905f68be775de01029b0b104060abf94ae95030394f2497"
     },
     "Data/Community-main.cam": {
-      "bytes": 24693464,
-      "sha256": "4843477a418197d8576ee2648fe7397da28b6b612dcbc26455bed52193d9efb6"
+      "bytes": 29343080,
+      "sha256": "29ca407ad666f2d26371904474464e16acbbcfc5507077a36894f06a1a304ac4"
     },
     "Data/Community-audio.cam": {
-      "bytes": 7404486,
-      "sha256": "b8c926f48dd4b542aa2e6626930c08ec360efcb79a885f4a947ff5a462be45ae"
+      "bytes": 7483938,
+      "sha256": "bbd08468db1712e8eddc649508c1da63f951b137294889c17b2d621b4db5334f"
     },
     "Data/Community_Common.bcd": {
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     },
     "DataMX/Community_Common.bcd": {
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     },
     "Data/Community_Base.bcd": {
-      "bytes": 214283,
-      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61"
+      "bytes": 896411,
+      "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
     },
     "DataMX/Community_Base.bcd": {
-      "bytes": 214283,
-      "sha256": "132349d9a66592fa07000a78af99c80f97813bfcb1066636903f1c0798b5ce61"
+      "bytes": 896411,
+      "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76"
     }
   },
   "runtime": {
@@ -319,5 +319,14 @@
     "Historical advanced mechanics qualify unchanged bodies/retained objects; no claim every ability was retested here"
   ],
   "published": true,
-  "assetsCommit": "d33977c5fe3859238ef850ce957ef85fd51bb3a1"
+  "assetsCommit": "d33977c5fe3859238ef850ce957ef85fd51bb3a1",
+  "expansionCompatibility": {
+    "priorSourceCommit": "bf9136a32026a425200d556aa7797742ecbcd393",
+    "priorEngineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+    "newRegressionProof": "deploy/community-expansions-verification.json",
+    "sourcePreservationProof": "content/community-expansions/source-integration-verification.json",
+    "scope": "Inherited baseline mechanics qualification plus current native and browser expansion/save regression. Historical ability, migration and performance measurements remain bound to the engine in the archived record; they were not all repeated. Original engine translations and renderer retained; protected Phantom functions and Fire Balm guard/quest credit preserved.",
+    "historicalRecord": "deploy/history/expansions20261028/community-campaign-resource-verification.json",
+    "historicalRecordSha256": "52d271943a988ed91f68b01541cabde336996d23bd0946b44bd6ad98dbd707ad"
+  }
 }

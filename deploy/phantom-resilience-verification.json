@@ -1,7 +1,7 @@
 {
   "format": "majesty-phantom-resilience-qualification-v1",
   "date": "2026-10-28",
-  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
   "existingHeroMigrationQualified": true,
   "freshReloadIdempotent": true,
   "newRecruitQualified": true,
@@ -14,22 +14,22 @@
   },
   "priorFiles": {
     "Data/Community_Common.bcd": {
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     },
     "DataMX/Community_Common.bcd": {
-      "bytes": 15661240,
-      "sha256": "6dc93fc046c2195ab4ca51fed88f5b2e07ae9fab2c6acfc3ff1cca7481efe6ce"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     }
   },
   "files": {
     "Data/Community_Common.bcd": {
-      "bytes": 15671601,
-      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     },
     "DataMX/Community_Common.bcd": {
-      "bytes": 15671601,
-      "sha256": "2d710dd86725483615feca5190b9083d085c214d3caf0de4a1675ba2c757c278"
+      "bytes": 37265541,
+      "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2"
     }
   },
   "cause": {
@@ -194,5 +194,16 @@
     "guardStopped": false
   },
   "assetsCommit": "7f81bd3567cda2b23b9f43f374701e0a7acff1d7",
-  "publicationScope": "Immutable compiled asset; deployment state is tracked by the source release and hosting service"
+  "publicationScope": "Immutable compiled asset; deployment state is tracked by the source release and hosting service",
+  "expansionCompatibility": {
+    "priorSourceCommit": "bf9136a32026a425200d556aa7797742ecbcd393",
+    "priorEngineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+    "newRegressionProof": "deploy/community-expansions-verification.json",
+    "sourcePreservationProof": "content/community-expansions/source-integration-verification.json",
+    "scope": "Inherited baseline mechanics qualification plus current native and browser expansion/save regression. Historical ability, migration and performance measurements remain bound to the engine in the archived record; they were not all repeated. Original engine translations and renderer retained; protected Phantom functions and Fire Balm guard/quest credit preserved.",
+    "historicalRecord": "deploy/history/expansions20261028/phantom-resilience-verification.json",
+    "historicalRecordSha256": "fdd43b1382de1d11c42f94c1b4fb5057b77a1cd50942322c9bd46cb6d570e275",
+    "resilienceReapplied": false,
+    "protectedFunctionsByteIdentical": true
+  }
 }

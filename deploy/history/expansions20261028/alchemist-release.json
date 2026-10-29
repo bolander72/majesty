@@ -1,0 +1,229 @@
+{
+  "format": "majesty-alchemist-content-release-v1",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "storageId": "majesty-alchemist-v1-campaign3",
+  "canonicalGuid": "{42ba4603-2b13-446d-a2a4-6cf3a55ddac3}",
+  "nativeMechanicsQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "browserSovereignActionsQualified": true,
+  "browserPhoenixSaveQualified": true,
+  "originalCampaignEntryQualified": true,
+  "requiredRuntimeEnvironment": {
+    "RECOMP_RULE_INVENTORY_COMPAT": "1",
+    "RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT": "1",
+    "RECOMP_ALCHEMIST_PANEL_BRIDGE": "1",
+    "RECOMP_ALCHEMIST_RESEARCH_BRIDGE": "1",
+    "RECOMP_ALCHEMIST_ACTION_BRIDGE": "1",
+    "RECOMP_ALCHEMIST_TARGET_BRIDGE": "1",
+    "RECOMP_ALCHEMIST_SHARED_FUNCTIONS": "1"
+  },
+  "patches": [
+    {
+      "path": "DataMX/mx_gpltext.cam",
+      "bytes": 141743,
+      "sha256": "74ac6d42e175f17750afa22ee2d37084ff2213a24ab120a060763a8a6e19023d",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_gpltext.cam"
+    },
+    {
+      "path": "DataMX/mx_Unittype.cam",
+      "bytes": 68145,
+      "sha256": "37bb5755cf18e79f6d7029f730cd5b5b10c90f2fa557fa2bd8ea27de25fa87d8",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_Unittype.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist-native-units.cam"
+    },
+    {
+      "path": "DataMX/mx_miscdata.cam",
+      "bytes": 17391,
+      "sha256": "96c8223273ea8ecc45f42e7e19350b64a97330616c1b0b5b450923979b396e90",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_miscdata.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/DataMX/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "DataMX/Alchemist_Composed.bcd",
+      "bytes": 2067851,
+      "sha256": "2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0914992d11c5fb57dd46c30b9873b0f0bcbc851e/assets/content/alchemist-v1-campaign3/DataMX/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "DataMX/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "DataMX/mx_action.cam",
+      "bytes": 15138,
+      "sha256": "e7d994815467576eb9ffb4bbd1061bf4fe380eddbc6a93c060e3f5e7df631079",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_action.cam"
+    },
+    {
+      "path": "DataMX/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_maindata.cam"
+    },
+    {
+      "path": "DataMX/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_audio.cam"
+    },
+    {
+      "path": "DataMX/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "DataMX/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-units.cam"
+    },
+    {
+      "path": "Data/unittype.cam",
+      "bytes": 157112,
+      "sha256": "2215a41da881fa7ace6fcfd95abf14f9cb5718ece354085ab291d9f299f36efd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/unittype.cam"
+    },
+    {
+      "path": "Data/gpltext.cam",
+      "bytes": 142359,
+      "sha256": "41c0e5604f0e2970acbdfd69360ce4216c0e22d82ed030f2dd1a22094862356f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/gpltext.cam"
+    },
+    {
+      "path": "Data/textdata.cam",
+      "bytes": 363958,
+      "sha256": "a88f2c8be3e775fb8bf4fecd37396c50d1dff036115b549d9eb3c16bda6c626f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/textdata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "Data/Alchemist_Composed.bcd",
+      "bytes": 701264,
+      "sha256": "98d726c14289ff0ca64adb147d2d922c8d2fdb893ad29f1ca593280edebfac93",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "Data/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "Data/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_maindata.cam"
+    },
+    {
+      "path": "Data/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_audio.cam"
+    },
+    {
+      "path": "Data/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "Data/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/action.cam",
+      "bytes": 25830,
+      "sha256": "983ad9518614e2b425717c7bcb50e71c100e86960489c72c2ef8d8c02144876a",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/action.cam"
+    },
+    {
+      "path": "Data/miscdata.cam",
+      "bytes": 10328,
+      "sha256": "91213b525e813f5c8caf567c4e9a93f8b827bbc93f73b27a5dcd7fae52995533",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/miscdata.cam"
+    }
+  ],
+  "limitations": [
+    "Single-player community mechanics qualified; multiplayer synchronization is unverified.",
+    "Vigor effects survive saves; optional progress display is not reconstructed after reload."
+  ],
+  "creator": "Phantomstar721",
+  "credits": "CREDITS.md",
+  "displayLabelsRevision": 2,
+  "priorQualifiedEngineSha256": "f571183dad41932feba8b586f4042d495771d1e6bb2dc78b0f01cf0807078efb",
+  "browserMapSelectionQualified": true,
+  "mapSelectionVerification": "native direct selection of both heroes; normal browser direct selection, Stats, generated Day13 save and reload",
+  "baseCampaignRecruitmentSaveReloadQualified": true,
+  "campaignCompatibilityRevision": 3,
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
+  "browserFogRevealQualified": true,
+  "fogRevealVerification": "deploy/alchemist-fog-verification.json",
+  "browserPresentationQualified": true,
+  "presentationVerification": "deploy/gameplay-performance-verification.json",
+  "browserInstantHeroLevelQualified": true,
+  "instantHeroLevelVerification": "deploy/instant-level-verification.json",
+  "pixelComparisonVerification": "deploy/wide-pixel-compare-verification.json",
+  "presentBaselineReuseVerification": "deploy/present-baseline-reuse-verification.json",
+  "exactPixelMaskVerification": "deploy/exact-pixel-mask-verification.json",
+  "cpuSnapshotVerification": "deploy/cpu-snapshot-verification.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "compositePoolVerification": "deploy/composite-pool-verification.json",
+  "priorCompatibilityRelink": {
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+  },
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+}

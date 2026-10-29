@@ -1,0 +1,79 @@
+{
+  "format": "majesty-community-expansions-release-qualification-v1",
+  "date": "2026-10-28",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
+  "sourceCommit": "a6e1b87",
+  "sourceContracts": {
+    "adventurers-guild": "9ecab7a98cc42a1bdc0958b6bfe20839db8b29401dd22f28cd1f5a27c3de24bc",
+    "more-heroes": "c7005fde782df4b2782abedbe4e82b85726e2fa2a9b4f99a6d93ded7d427d14d",
+    "royal-menagerie": "f3767f0da8377a68e84f7bda6f14416ca9306cbf8da5fa81bb6189dc2c58ad52"
+  },
+  "followerMarkerLifecycleQualified": true,
+  "adventurerQuestLifecycleQualified": true,
+  "menagerieCaptureTameRentalQualified": true,
+  "moreHeroesGameplayQualified": true,
+  "browserSavedWorldRegressionQualified": true,
+  "singlePlayerOnlyQualified": true,
+  "originalProfileAndPhantomPreserved": true,
+  "sourceProof": {
+    "bytes": 29641,
+    "sha256": "2f80b7d5f8db23e296041fb5337d8eefa7b7fd637d275ee4b34625c089857eb8"
+  },
+  "nativeProof": {
+    "bytes": 50369,
+    "sha256": "3584445ad1e9e1ddd857d00aa3692fca9ee7197684ec11b977b97d1757e396fc"
+  },
+  "browserProof": {
+    "bytes": 3471,
+    "sha256": "b455c4eaa1e963b2af1eeb8d4960ce3161e791c010403393e2d0cfddfcb283c2"
+  },
+  "nativeAcceptedTrials": [
+    29,
+    40,
+    41,
+    42,
+    46,
+    47
+  ],
+  "browserAcceptedTrials": [
+    15,
+    16
+  ],
+  "browserEngine": {
+    "MajestyRecomp.wasm": {
+      "bytes": 91086297,
+      "sha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd"
+    },
+    "MajestyRecomp.js": {
+      "bytes": 473610,
+      "sha256": "3e96eeab864367f986e76177e9d8555bfcf058b7bdfcff0b1adf6d5c1dbfb27d"
+    },
+    "MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    },
+    "MajestyRecomp.wasm.br": {
+      "bytes": 6804216,
+      "sha256": "13e0339b289e4d965653b120a4894cb1b3ed8b5e30ee2a8cae767ac6f4d4a7f3"
+    }
+  },
+  "testGplIncluded": false,
+  "testRuntimeFlagsEnabled": false,
+  "coOpRequirementWithdrawn": true,
+  "moreHeroesScope": "Original Standard 13 classes in Northern/Freestyle availability; authored scope preserved.",
+  "historicalBaseline": {
+    "priorSourceCommit": "bf9136a32026a425200d556aa7797742ecbcd393",
+    "priorEngineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+    "newRegressionProof": "deploy/community-expansions-verification.json",
+    "sourcePreservationProof": "content/community-expansions/source-integration-verification.json",
+    "scope": "Inherited baseline mechanics qualification plus current native and browser expansion/save regression. Historical ability, migration and performance measurements remain bound to the engine in the archived record; they were not all repeated. Original engine translations and renderer retained; protected Phantom functions and Fire Balm guard/quest credit preserved."
+  },
+  "publicationPending": false,
+  "publicationAssetsCommit": "295905557742dbdb190424821d7a56368f4cb772",
+  "publicAssetsVerification": {
+    "objects": 29,
+    "allSizesAndHashesMatched": true,
+    "corsAllowOrigin": "*"
+  },
+  "productionVerification": "Recorded separately after deployment in the private release receipt."
+}

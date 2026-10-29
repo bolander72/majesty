@@ -1,6 +1,6 @@
 {
   "format": "majesty-vampiric-revenge-verification-v1",
-  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
   "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
   "nativeId": "XQD3",
   "originalTemplateBodyPreserved": true,
@@ -150,5 +150,14 @@
   "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
   "priorQualification": "deploy/vampiric-revenge-verification-enginecf2.json",
   "healerCampaignVerification": "deploy/healer-campaign-verification.json",
-  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json",
+  "expansionCompatibility": {
+    "priorSourceCommit": "bf9136a32026a425200d556aa7797742ecbcd393",
+    "priorEngineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+    "newRegressionProof": "deploy/community-expansions-verification.json",
+    "sourcePreservationProof": "content/community-expansions/source-integration-verification.json",
+    "scope": "Inherited baseline mechanics qualification plus current native and browser expansion/save regression. Historical ability, migration and performance measurements remain bound to the engine in the archived record; they were not all repeated. Original engine translations and renderer retained; protected Phantom functions and Fire Balm guard/quest credit preserved.",
+    "historicalRecord": "deploy/history/expansions20261028/vampiric-revenge-verification.json",
+    "historicalRecordSha256": "22d3790c06049732ab344c221bf1811eb6aa96c0f2f5d7be390deb0e4213b2c8"
+  }
 }

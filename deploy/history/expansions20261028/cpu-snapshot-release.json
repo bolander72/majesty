@@ -1,0 +1,43 @@
+{
+  "format": "majesty-cpu-snapshot-release-v1",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "requiredRuntimeEnvironment": {
+    "RECOMP_DDRAW_CPU_SNAPSHOT_ONLY": "1"
+  },
+  "verification": "deploy/cpu-snapshot-verification.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "compositePoolVerification": "deploy/composite-pool-verification.json",
+  "priorCompatibilityRelink": {
+    "priorEngineSha256": "dfa3925ee946db85d79dbf62a12a3824c7a674c00a9f94fc511abf6db04e387a",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedResources": [],
+    "allOther169ObjectsAndAllGameResourcesRetained": true,
+    "newRegressionProof": "deploy/healer-campaign-verification.json",
+    "scope": "Only original-campaign availability of the undefined Northern turn_undead_healer spell. Existing optional effect checks, renderer pooling, audio, scheduler, translations and all game resources are retained. Historical mechanics/performance measurements remain bound to their actual prior engines."
+  },
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json"
+}

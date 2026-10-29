@@ -379,7 +379,7 @@ def qualify_community_expansions(content, engine):
     if (proof.get('format') != 'majesty-community-expansions-release-qualification-v1'
             or proof.get('engineSha256') != engine or proof.get('sourceContracts') != contracts
             or any(proof.get(key) is not True for key in required)):
-        raise ValueError('Require source-bound native, saved-world and paired expansion qualification')
+        raise ValueError('Require source-bound native, saved-world and single-player expansion qualification')
     return True
 
 

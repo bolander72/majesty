@@ -72,6 +72,25 @@ class CommunityReleaseTests(unittest.TestCase):
                    'patches': [{'path': p, 'sha256': h, 'bytes': sizes[p],
                                 'url': 'https://raw.githubusercontent.com/bolander72/majesty/' +
                                        'a' * 40 + '/assets/content/community/' + p} for p, h in files.items()]}
+        identities = ['adventurers-guild', 'more-heroes', 'royal-menagerie']
+        contracts = {}
+        for name in identities:
+            contract = root / 'content/community-expansions' / name / 'source-contract.json'
+            contract.parent.mkdir(parents=True)
+            contract.write_text(json.dumps({'id': name}))
+            contracts[name] = hashlib.sha256(contract.read_bytes()).hexdigest()
+        content['communityExpansions'] = identities
+        environment.update({name: '1' for name in [
+            'RECOMP_COMMUNITY_PRIVATE_INTENTS', 'RECOMP_COMMUNITY_WORLD_QUERY_HELPERS',
+            'RECOMP_COMMUNITY_EXPANSION_PANELS']})
+        expansion_proof = dict(format='majesty-community-expansions-release-qualification-v1',
+            engineSha256=engine, sourceContracts=contracts)
+        expansion_proof.update({key: True for key in [
+            'followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',
+            'menagerieCaptureTameRentalQualified', 'moreHeroesGameplayQualified',
+            'browserSavedWorldRegressionQualified', 'singlePlayerOnlyQualified',
+            'originalProfileAndPhantomPreserved']})
+        (root / 'deploy/community-expansions-verification.json').write_text(json.dumps(expansion_proof))
         (root / 'deploy/community-guilds-release.json').write_text(json.dumps(content))
         proof = {name: True for name in ['nativePaidGuildsQualified', 'nativeAdvancedAbilitiesQualified',
                  'browserNativeUiQualified', 'browserWorldSaveReloadQualified',
@@ -102,7 +121,7 @@ class CommunityReleaseTests(unittest.TestCase):
             assets = json.loads((static / 'hosting/automatic-assets.json').read_text())['games']
             self.assertEqual(assets['majesty'], {'original': True})
             self.assertEqual(assets['majesty-alchemist-demo-v1'], {'preserved': True})
-            self.assertEqual(len(assets['majesty-community-guilds-v1']['patches']), 54)
+            self.assertEqual(len(assets['majesty-community-guilds-v1']['patches']), 56)
             player = (static / 'majesty/index.html').read_text()
             self.assertTrue(player.startswith('<canvas></canvas>\n'))
             self.assertEqual(player.count('m.ENV.RECOMP_COMMUNITY_PROCESS_GUILDS = "1";'), 1)

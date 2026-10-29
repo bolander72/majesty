@@ -1,0 +1,131 @@
+{
+  "format": "majesty-community-guilds-verification-v1",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "nativePaidGuildsQualified": true,
+  "nativeAdvancedAbilitiesQualified": true,
+  "browserNativeUiQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "originalSaveProfilePreserved": true,
+  "rootDefaultIntegrationQualified": true,
+  "sourceProofs": {
+    "native-recruitment-verification.json": {
+      "bytes": 2555,
+      "sha256": "9167b3eb87684020ce6c712a4fa0702c72490627436c9dbd55453fff48ec9364"
+    },
+    "advanced-ability-verification.json": {
+      "bytes": 3246,
+      "sha256": "ac6383bc19484ba70144719f1c46f875fca4199a3133de4e794a30474bc6b54f"
+    },
+    "research-visual-verification.json": {
+      "bytes": 1988,
+      "sha256": "db2cef4cce0b4c3f70587c553adb6821d6ccb64aa36482b77722842c193b4515"
+    },
+    "browser-abilities-verification.json": {
+      "bytes": 5172,
+      "sha256": "38d0807a962a21abc8bd3c595397febbe1f943ecd07ca159835fc0b0298cb227"
+    }
+  },
+  "rootPlayerSource": {
+    "bytes": 1840,
+    "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+  },
+  "publicAssetsCommit": "20829cb662a679af829f9aebf77e92c80d7c980d",
+  "publicAssetsVerified": {
+    "files": 23,
+    "bytes": 62704338,
+    "sha256": "e43614ad71cfde367c70032d2e497f832a0a8c8d56ebb0a2e3bcc6f383ff7a38"
+  },
+  "originalGameDataAndPlayerProfilesPreserved": true,
+  "productionRenderer": {
+    "unchangedObjectRelink": false,
+    "qualification": "deploy/composite-pool-verification.json"
+  },
+  "limits": [
+    "Bounded browser original-campaign reproduction and regression trials; no whole-Mac hard-reset reproduction or universal crash-free guarantee.",
+    "Detailed advanced combat/ability qualification remains archived under its actual prior engine; defined effect dispatch and other native objects are retained.",
+    "No new huge-kingdom CPU benchmark, 4K qualification or internet co-op claim."
+  ],
+  "publicationState": "Active release selection is controlled by deploy/hosted-release.json and the Vercel production deployment; this file records qualification.",
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorQualification": "deploy/community-guilds-verification-enginecf2.json",
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "priorRootQualification": {
+    "trials": [
+      "freeze2469",
+      "freeze2470"
+    ],
+    "rootPath": "/",
+    "mission": "Vengeance of the Liche Queen",
+    "originalProfileIdentity": "majesty",
+    "ordinarySave": {
+      "name": "(Vengeance of the Liche Queen) 6 Days.GMP",
+      "bytes": 1372167,
+      "sha256": "bceb661fde7348690ee28b9dd13298ba3b0e1488e3d14263206b9cf018d7a66d"
+    },
+    "freshProfileReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
+  },
+  "root": {
+    "trials": [
+      "freeze2550",
+      "freeze2555",
+      "freeze2564",
+      "freeze2569"
+    ],
+    "rootPath": "/",
+    "originalProfileIdentity": "majesty",
+    "originalAndNorthernQualified": true,
+    "fiveCommunityClassesSaveReloadQualified": true,
+    "ordinarySave": {
+      "name": "(Rise of the Ratmen) 6 Days.GMP",
+      "bytes": 1369396,
+      "sha256": "4be2f320f2546d7f009f9e0b532f558369a3bcf5da882674d288e73ab3fe315c"
+    },
+    "freshBrowserReloadQualified": true,
+    "terminalErrors": [],
+    "installedCacheUpdateQualified": true
+  },
+  "priorRootScreenshots": {
+    "community2379-root-menu": {
+      "bytes": 427474,
+      "sha256": "80893f01cd00e826b14f239ae625654b0fe9a2fadd591be1741d51bd65e9fb21"
+    },
+    "community2379-reloaded-world": {
+      "bytes": 776218,
+      "sha256": "f3e3bcd31c56741c13ec43640d1307350f1389497f37a0f3c76ec5e902901d0a"
+    },
+    "community2379-ice-lance-tooltip": {
+      "bytes": 791221,
+      "sha256": "cec2ae87310a1a9570a51213f1b89990ed16f1237a3281e81631d17fd89260df"
+    },
+    "community2380-root-saved": {
+      "bytes": 789538,
+      "sha256": "bc043edfb2671bd0e8d2df01175374e3465155051fa1039693ca29273f324636"
+    }
+  },
+  "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
+}

@@ -1,0 +1,49 @@
+{
+  "format": "majesty-cpu-snapshot-verification-v1",
+  "status": "169 native objects retained; original/Northern guild/cheat save-reload qualified",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorQualification": "deploy/cpu-snapshot-verification-enginecf2.json",
+  "nativeControlsQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "browserInteractionQualified": true,
+  "engine": {
+    "wasm": {
+      "bytes": 90973456,
+      "sha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8"
+    },
+    "js": {
+      "bytes": 473413,
+      "sha256": "5cf983b616bfc599c2d5d276b6c1724f42b977e2473453f390eb89292b74c4bb"
+    },
+    "data": {
+      "bytes": 5105139,
+      "sha256": "1b54650d9349e24afa4529b72f98067e1da5c0ded2c20c4de983ff67009fdaa0"
+    }
+  },
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "performanceMeasurements": "No new benchmark; historical measurements retain their actual engines.",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
+}

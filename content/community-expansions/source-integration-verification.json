@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-source-integration-verification-v1",
   "date": "2026-10-28",
-  "status": "void-action-bridge-original-sdk-and-native-paid-tame-passed; rental-and-full-release-pending",
+  "status": "source-native-and-browser-qualified; publication-pending",
   "packages": {
     "adventurers-guild": {
       "format": "majesty-community-expansion-package-inspection-v1",
@@ -203,8 +203,8 @@
   "productionReleaseUnchanged": true,
   "nativeEngineBuilt": true,
   "browserGamesLaunched": false,
-  "nativeRuntimeQualified": false,
-  "browserPlayable": false,
+  "nativeRuntimeQualified": true,
+  "browserPlayable": true,
   "published": false,
   "sourcePolicies": {
     "scripts/inspect-community-expansion-package.py": {
@@ -245,14 +245,7 @@
     }
   },
   "remainingAcceptance": [
-    "Original 1.5.1.2 controller/panel lifecycles for quest board and Zoo",
-    "Original-ABI map-fog and movement-query intrinsics, capture flags and follower speed synchronization",
-    "Native-scale UI including Palace icon contract",
-    "Paid gameplay, quest rewards, capture/taming/rental and death/teardown",
-    "Live potion round trip and save/fresh reload/existing-save regressions",
-    "Bounded paired co-op",
-    "Publication/media review and source-bound release gate",
-    "Native gameplay qualification of all imported descriptors and the 13 private quest trees"
+    "Publish immutable assets and deploy source; verify production."
   ],
   "priorCompiler": {
     "format": "majesty-community-original-sdk-compile-v1",

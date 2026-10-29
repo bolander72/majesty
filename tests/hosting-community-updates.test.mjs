@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {refreshCommunityScripts} from '../web/hosting/community-updates.mjs';
-import {COMMUNITY_FILES} from '../web/content/community-files.mjs';
+// Last public resource identity; a new release must still admit this predecessor.
+const releasedUnitType = '3340443dd4b61276d159d3c5f146f819c8e1a56e5724a4ac06655861ba3031f3';
 
 const paths = ['Data/Community_Common.bcd', 'DataMX/Community_Common.bcd'];
 const prior = '9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a';
@@ -138,7 +139,7 @@ function resourceFixture(custom = false) {
     const text = await blob.text();
     if (text === 'resold' || text === 'resnew') {
       f.counts.hash++;
-      return text === 'resold' ? COMMUNITY_FILES[path] : target;
+      return text === 'resold' ? releasedUnitType : target;
     }
     return hash(blob);
   };

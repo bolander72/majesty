@@ -433,3 +433,22 @@ controller-context override was not used. Native47 checks the compact row
 geometry and exact original Unit-vector/list count, then passes paid taming and
 rental again. Exit0 in191.84seconds, peak151.5MiB. Browser engine7 is bound to
 these exact native47 sources; readable row inspection remains pending.
+
+
+Final browser16 qualification uses engine7 and the exact compiler10 resource
+set. The Zoo displays the native captive name “Ratman” in the compact list,
+with the original1000-gold Tame quote. Paid taming completes; the town saves
+under a unique “compact” suffix and reloads to continued gameplay. All seven
+input saves retain their exact SHA256 identities. The trial ends normally,
+with peak1370.4MiB owned RSS and322.0MiB GPU footprint; no guard stop.
+The timed wait used an incorrect readiness predicate and timed out; the
+subsequent screenshot and native log show that the saved town loaded and
+continued normally. No game restart was inferred from that tool timeout.
+
+The final package passes60 focused Python checks and29 JavaScript checks,
+including save-preserving resource updates and old-invitation sanitization.
+All29 new public resource/bundle objects match their sizes, hashes and CORS
+contracts. The original169 non-plugin native objects remain retained; old
+mechanics/performance/migration qualification records are archived under
+`deploy/history/expansions20261028/` with explicit inheritance scope. These
+historical tests are not represented as rerun measurements under engine7.

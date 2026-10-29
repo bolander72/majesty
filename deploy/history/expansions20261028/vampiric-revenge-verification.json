@@ -1,0 +1,154 @@
+{
+  "format": "majesty-vampiric-revenge-verification-v1",
+  "engineSha256": "b9950b0efd4c7f19fdc1ee099795d2d3d9847b09db5cf4d9148762418fa884a3",
+  "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
+  "nativeId": "XQD3",
+  "originalTemplateBodyPreserved": true,
+  "originalScriptsUnmodified": true,
+  "browserNativeSelectionQualified": true,
+  "browserWorldSaveReloadQualified": true,
+  "browserOriginalDemoRestrictionsQualified": true,
+  "browserProgressQualified": true,
+  "originalCompiler": {
+    "sha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "bridgeBytes": 616,
+    "bridgeSha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657",
+    "sourceSha256": {
+      "VampiricRevengeBridge.gpl": "d5e6d42e50228b2c18b012cc31d01251b5f902a5147e262f1008295ef9a41339",
+      "VampiricRevengeBridge.gplproj": "0fdfbb7a49562576aac92e017e12ab6c752876a09f90733cf5677a6780fe71ea"
+    }
+  },
+  "ordinarySave": {
+    "bytes": 346547,
+    "sha256": "8e3fda02ddd12e7cfa380acbc520285888567f48e4ba695ebd18841ae6ccc8d5",
+    "originalVictoryCondition": true,
+    "demoInitializer": false,
+    "originalEvents": true,
+    "ordinarySaveGenerated": true
+  },
+  "progressDay": 2,
+  "nativeVictoryDialogVerified": false,
+  "limitations": [
+    "Original Cyberlore demo limitations are retained.",
+    "A complete victory playthrough has not been repeated.",
+    "The native bonus medallion and generic Ardania scenery are reused; no new mission artwork is claimed."
+  ],
+  "trials": [
+    {
+      "name": "demo1804",
+      "peakRssMiB": 1467.0,
+      "muted": true,
+      "closedNormally": true
+    },
+    {
+      "name": "demo1807",
+      "peakRssMiB": 2396.0,
+      "muted": true,
+      "closedNormally": true
+    },
+    {
+      "name": "demo1808",
+      "peakRssMiB": 2015.5,
+      "muted": true,
+      "closedNormally": true
+    },
+    {
+      "name": "demo1810",
+      "peakRssMiB": 2351.0,
+      "muted": true,
+      "closedNormally": true
+    }
+  ],
+  "overlay": {
+    "Data/miscdata.cam": {
+      "bytes": 10570,
+      "sha256": "b19ccf49a72229b20de652b9b4f80d53611f24743426a4464a614e52cd2688b2"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17857,
+      "sha256": "4b14d31f1cd65969739484671db7459f6c1304a5a499ca759dfe746ea6cb0279"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 139122,
+      "sha256": "54d8f1784adf210e17a135b0fee0a1a699f0c7c33dcb18eea2f6703a730298bd"
+    },
+    "Data/mx_textdata.cam": {
+      "bytes": 139122,
+      "sha256": "54d8f1784adf210e17a135b0fee0a1a699f0c7c33dcb18eea2f6703a730298bd"
+    },
+    "DataMX/mx_gpltext.cam": {
+      "bytes": 141746,
+      "sha256": "71ba4e34bc8cf617e7864b90ee782f25b817b56e5af53c6b376ce23772738f08"
+    },
+    "Data/mx_gpltext.cam": {
+      "bytes": 141746,
+      "sha256": "71ba4e34bc8cf617e7864b90ee782f25b817b56e5af53c6b376ce23772738f08"
+    },
+    "Quests/VampiricRevengeLegacy.q": {
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f"
+    },
+    "Quests/VampiricRevengeLegacy.qdd": {
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6"
+    },
+    "QuestsMX/VampiricRevengeLegacy.q": {
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f"
+    },
+    "QuestsMX/VampiricRevengeLegacy.qdd": {
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6"
+    },
+    "Data/VampiricRevenge-menu.cam": {
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc"
+    },
+    "Data/VampiricRevengeBridge.bcd": {
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657"
+    },
+    "DataMX/VampiricRevenge-menu.cam": {
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc"
+    },
+    "DataMX/VampiricRevengeBridge.bcd": {
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657"
+    }
+  },
+  "browserRootAutomaticImportQualified": true,
+  "rootCollection": "majesty-alchemist-demo-v1",
+  "sameOriginalSaveProfileQualified": true,
+  "progressSave": {
+    "bytes": 365871,
+    "name": "(Vampiric Revenge) 2 Days.GMP",
+    "sha256": "6a1cd483c646237c2cd6f65c79c86c46eaba0629d7dae3828fbdc817225aed66"
+  },
+  "compatibilityRelink": {
+    "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+    "changedObjects": [
+      "alchemist_native_probe.cpp.o"
+    ],
+    "changedImplementation": "Original native VM type3 string allocation/assignment/reset in gpl_attribute_bridge.h",
+    "retainedObjectCount": 169,
+    "allOther169ObjectsRetained": true,
+    "changedResources": [
+      "Data/Community-audio.cam",
+      "Data/Community-main.cam",
+      "Data/Community_Base.bcd",
+      "Data/Community_Common.bcd",
+      "Data/action.cam",
+      "Data/sounddesc.cam",
+      "Data/unittype.cam",
+      "DataMX/Community_Base.bcd",
+      "DataMX/Community_Common.bcd"
+    ],
+    "newRegressionProof": "deploy/community-campaign-resource-verification.json",
+    "scope": "Original/Northern resource closure, shared Fire Balm eligibility/initialization and original save/reload. All other native objects retained. Historical mechanics/performance measurements remain under their actual engines."
+  },
+  "priorEngineSha256": "cf2c23ccb484ebe095e5b7b0d5fab15afaaf7d5a7a8ec641d0e76b4186c7cbd8",
+  "priorQualification": "deploy/vampiric-revenge-verification-enginecf2.json",
+  "healerCampaignVerification": "deploy/healer-campaign-verification.json",
+  "campaignResourceVerification": "deploy/community-campaign-resource-verification.json"
+}

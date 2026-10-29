@@ -10,7 +10,7 @@ Revenge demo mission are joined by Phantomstar’s Bards Hall and Phantoms Haunt
 The composed release adds Blade Dancers, Troubadours, Spellsingers and Phantoms
 with their original artwork, voices and gameplay, plus native ability icons.
 
-The current candidate is single-player. Co-op launchers, invitations and the
+The current release is single-player. Co-op launchers, invitations and the
 native Multiplayer entry are removed at Mike's request. Earlier network sources,
 trial records and player progress remain archived. The historical host-app crash
 cause remains unresolved; bounded testing precautions still apply.
@@ -25,12 +25,11 @@ translations and local trial output are excluded. See
 ## Current content milestone
 
 Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
-sources and prior saves are preserved. The active milestone integrates
+sources and prior saves are preserved. The current release integrates
 Adventurers Guild, The Royal Menagerie and More Heroes alongside Bards Hall,
 Phantoms Haunt and Alchemist Lab. More Heroes retains its Standard package's
-Northern/Freestyle scope. The three additions have passed native gameplay and
-stateful save/reload checks; final browser presentation and release verification
-are in progress. See [expansion integration](docs/community-expansion-integration.md).
+Northern/Freestyle scope. The three additions have passed native gameplay, browser presentation and
+stateful save/reload checks. See [expansion integration](docs/community-expansion-integration.md).
 Earlier guild qualification follows.
 Original packages and creator redistribution permission are confirmed. Combined
 scripts compile with the official SDK. Paid guilds, combat/effect controls,
