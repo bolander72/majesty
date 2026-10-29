@@ -49,7 +49,8 @@ const PREVIOUS = Object.freeze({
     "b8c926f48dd4b542aa2e6626930c08ec360efcb79a885f4a947ff5a462be45ae"
   ],
   "DataMX/mx_Unittype.cam": [
-    "acda26fc5b35ec80f9e8de39bf99ba174517a13df115fb6bd5538acaeaf916f2"
+    "acda26fc5b35ec80f9e8de39bf99ba174517a13df115fb6bd5538acaeaf916f2",
+    "b2b42031c56fbd89fa6cd3e87eefedfbd778aadb1d91400f17a1a3fc812f9faf"
   ],
   "DataMX/mx_action.cam": [
     "2488afeaf0f6fcd51852bf6f2590bace6838824e0868ed95de87126fc27af8f0"
@@ -82,7 +83,8 @@ const PREVIOUS = Object.freeze({
     "8036b0c5ee3f172278fa91b09a4d05a0a2b81eba1170a2c2a74def3c24dc80c6"
   ],
   "Data/Community_Expansion.bcd": [
-    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa"
+    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+    "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
   ],
   "DataMX/mx_textdata.cam": [
     "6f84dc4447447d5c1af6460e54ebd4c7cd041c4d22d7681a869d4e5a3010e0fd"
@@ -100,7 +102,8 @@ const PREVIOUS = Object.freeze({
     "325b03b936c0d8fa4e96295309b1cc0b290f07ba1d6890f8e996003fce6268b8"
   ],
   "DataMX/Community_Expansion.bcd": [
-    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa"
+    "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+    "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
   ]
 });
 const MARKER = '.community-script-revision.json';

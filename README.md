@@ -26,10 +26,13 @@ translations and local trial output are excluded. See
 
 Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
 sources and prior saves are preserved. The current release integrates
-Adventurers Guild, The Royal Menagerie and More Heroes alongside Bards Hall,
-Phantoms Haunt and Alchemist Lab. More Heroes retains its Standard package's
-Northern/Freestyle scope. The three additions have passed native gameplay, browser presentation and
-stateful save/reload checks. See [expansion integration](docs/community-expansion-integration.md).
+Adventurers Guild and The Royal Menagerie alongside Bards Hall,
+Phantoms Haunt and Alchemist Lab. More Heroes was retired on October 29, 2026
+at Mike's request because its reused stock imagery did not provide sufficiently
+distinct characters. New More Heroes construction, recruitment and random
+arrivals are disabled; existing actor definitions remain for save compatibility.
+Use a fresh game when comparing the two retained additions for exceptions.
+The earlier all-three gameplay qualification remains historical evidence. See [expansion integration](docs/community-expansion-integration.md).
 Earlier guild qualification follows.
 Original packages and creator redistribution permission are confirmed. Combined
 scripts compile with the official SDK. Paid guilds, combat/effect controls,

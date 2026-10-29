@@ -108,6 +108,45 @@ class CommunityReleaseTests(unittest.TestCase):
         (static / 'majesty/index.html').write_text('<canvas></canvas>\n      m.ENV.RECOMP_GUEST_ARGS = "-nointro";\n')
         return root, static
 
+    def test_retirement_requires_exact_selection_resources_and_every_save_gate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, static = self.fixture(temp)
+            p = root / 'deploy/community-guilds-release.json'
+            content = json.loads(p.read_text())
+            content['communityExpansions'] = ['adventurers-guild', 'royal-menagerie']
+            content['retiredCommunityExpansions'] = ['more-heroes']
+            policies = ['scripts/lib/community_more_heroes_retirement.py',
+                        'scripts/prepare-more-heroes-retirement.py']
+            bindings = {}
+            for name in policies:
+                policy = root / name
+                policy.parent.mkdir(parents=True, exist_ok=True)
+                policy.write_bytes(b'qualified retirement policy')
+                bindings[name] = hashlib.sha256(policy.read_bytes()).hexdigest()
+            gates = ['moreHeroesBuildAndRecruitmentDisabled', 'randomAdmissionPoolRestored',
+                     'saveDefinitionsRetained', 'existingWorldReloadQualified',
+                     'adventurersAndMenageriePreserved', 'playerSaveHashesPreserved']
+            paths = {'DataMX/mx_Unittype.cam', 'Data/Community_Expansion.bcd',
+                     'DataMX/Community_Expansion.bcd'}
+            proof = dict(format='majesty-more-heroes-retirement-qualification-v1',
+                engineSha256='b' * 64, sourcePolicies=bindings,
+                files={r['path']:{k:r[k] for k in ('bytes','sha256')}
+                       for r in content['patches'] if r['path'] in paths})
+            proof.update({key:True for key in gates})
+            audit = root / 'deploy/more-heroes-retirement-verification.json'
+            with patch.object(BUILD, 'ROOT', root):
+                audit.write_text(json.dumps(proof))
+                self.assertTrue(BUILD.qualify_community_expansions(content, 'b' * 64))
+                for key in gates:
+                    audit.write_text(json.dumps({**proof, key:False}))
+                    with self.assertRaises(ValueError):
+                        BUILD.qualify_community_expansions(content, 'b' * 64)
+                audit.write_text(json.dumps(proof))
+                content['patches'][next(i for i,r in enumerate(content['patches'])
+                    if r['path']=='DataMX/mx_Unittype.cam')]['bytes'] += 1
+                with self.assertRaises(ValueError):
+                    BUILD.qualify_community_expansions(content, 'b' * 64)
+
     def test_default_mount_preserves_original_identity_prior_collections_and_native_player(self):
         with tempfile.TemporaryDirectory() as temp:
             root, static = self.fixture(temp)

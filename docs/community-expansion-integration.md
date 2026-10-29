@@ -452,3 +452,26 @@ contracts. The original169 non-plugin native objects remain retained; old
 mechanics/performance/migration qualification records are archived under
 `deploy/history/expansions20261028/` with explicit inheritance scope. These
 historical tests are not represented as rerun measurements under engine7.
+
+
+## More Heroes retirement — October 29, 2026
+
+Mike requested a simpler live comparison after an exception in a town with
+Adventurers Guild, the Zoo and roughly ten More Heroes buildings. The cause
+is unconfirmed. More Heroes admissions are retired; the other two remain.
+All15 related building definitions receive the native NotBuildable flag;
+the13 hero identities leave all native production vectors, including Embassy.
+Both Northern random-hero entry points use the existing original-edition pool,
+including the Phantom/Alchemist and placed-Haunt restrictions. All207 Northern
+script definitions and every actor descriptor remain for old saves.
+
+Only three deployed resources change. The engine, Common and Base bytecode,
+Adventurers Guild/Zoo scripts and protected Phantom functions are byte-identical.
+Official SDK compilation succeeds; the isolated muted browser verifies the
+exact installed update, an existing mixed town, its level2 palace build list
+and Adventurers quest panel. The town continues to ordinary freestyle victory.
+All eight input saves remain unchanged; no new save roundtrip is claimed.
+The owned browser closes without a guard stop. Qualification is bound in
+`deploy/more-heroes-retirement-verification.json`. Start a fresh game for the
+exception comparison, since saved More Heroes actors are preserved. Artwork
+work follows the user's one-complete-hero-first preference after this rollback.

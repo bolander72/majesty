@@ -1,5 +1,11 @@
 # Changelog
 
+## More Heroes retirement — October 29, 2026
+
+- Keep Adventurers Guild and The Royal Menagerie active. Disable More Heroes construction and recruitment and restore the earlier random hero pool.
+- Preserve all existing hero definitions, artwork and scripts for older saves. Fresh games provide a clean comparison for the reported exception; its cause has not been established.
+- Retain the existing single-player engine and Phantom fixes. Distinct character and native UI artwork is required before any future More Heroes reintroduction.
+
 ## Community expansions and single-player delivery — October 28, 2026
 
 - Integrate Adventurers Guild, The Royal Menagerie and all 13 classes from the original More Heroes Standard package alongside the existing guilds.

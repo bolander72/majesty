@@ -1,0 +1,220 @@
+{
+  "format": "majesty-more-heroes-retirement-qualification-v1",
+  "date": "2026-10-29",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
+  "engineChanged": false,
+  "activeExpansions": [
+    "adventurers-guild",
+    "royal-menagerie"
+  ],
+  "retiredExpansions": [
+    "more-heroes"
+  ],
+  "moreHeroesBuildAndRecruitmentDisabled": true,
+  "randomAdmissionPoolRestored": true,
+  "saveDefinitionsRetained": true,
+  "existingWorldReloadQualified": true,
+  "adventurersAndMenageriePreserved": true,
+  "playerSaveHashesPreserved": true,
+  "sourcePolicies": {
+    "scripts/lib/community_more_heroes_retirement.py": "f6e56d07df41779aa5bc4628ecd51dbf83e658943d3db5dd2de88b47f5bb7e24",
+    "scripts/prepare-more-heroes-retirement.py": "20ef2d4414aaf8c60da494a2988160f247f26798321e7c57df6ee83cf3369579"
+  },
+  "files": {
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1736754,
+      "sha256": "15655276e460588cba30bfb7cb554a4c09c0804e969f19489d4fdc25731581a2"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1736754,
+      "sha256": "15655276e460588cba30bfb7cb554a4c09c0804e969f19489d4fdc25731581a2"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 120535,
+      "sha256": "5de6b5afa75fae94c70b914c8f3ca1a6cb449c0308bfbb17d06723b310bf20a2"
+    }
+  },
+  "priorFiles": {
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1748226,
+      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1748226,
+      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 120691,
+      "sha256": "b2b42031c56fbd89fa6cd3e87eefedfbd778aadb1d91400f17a1a3fc812f9faf"
+    }
+  },
+  "sourceStage": {
+    "bytes": 289747,
+    "sha256": "1f7055650ed026e94bc49e5c6ceb9e9798e3f83b357f1e9d8c6199f4d7f62b32"
+  },
+  "compiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 289747,
+      "sha256": "1f7055650ed026e94bc49e5c6ceb9e9798e3f83b357f1e9d8c6199f4d7f62b32"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265541,
+        "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 1736754,
+        "sha256": "15655276e460588cba30bfb7cb554a4c09c0804e969f19489d4fdc25731581a2",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 207,
+        "compiledDefinitions": 207
+      }
+    },
+    "elapsedSeconds": 39.61,
+    "peakRssMiB": 124.5,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "staticPreservation": {
+    "changedFunctions": [
+      [
+        "MajestyExpansion",
+        "random_hero_type"
+      ],
+      [
+        "MajestyExpansion",
+        "mjc_random_hero_type"
+      ]
+    ],
+    "changedUnitRecords": [
+      "ABr1",
+      "AB01",
+      "AB11",
+      "AB21",
+      "AB31",
+      "AB41",
+      "AB51",
+      "AB61",
+      "AB71",
+      "AB81",
+      "AB91",
+      "ABI1",
+      "ABK1",
+      "ABZ1",
+      "ABi1",
+      "ABy1"
+    ],
+    "allActorDescriptorsByteIdentical": true,
+    "all207ExpansionDefinitionsRetained": true,
+    "commonAndBaseBytecodeByteIdentical": true,
+    "engineUnchanged": true
+  },
+  "browser": {
+    "ownedTrial": "retirement-browser1",
+    "engineUnchanged": true,
+    "allThreeInstalledResourceHashesVerified": true,
+    "existingNativeIntegrationSaveLoaded": true,
+    "existingLevel1000HeroActorsContinued": true,
+    "palaceUpgradedFrom1To2": true,
+    "level2BuildMenuExcludesMoreHeroes": true,
+    "adventurersQuestPanelOpened": true,
+    "originalTownContinuedToFreestyleVictory": true,
+    "preservedInputSaveCount": 8,
+    "newSaveRoundTripPerformed": false,
+    "ownedBrowserClosed": true,
+    "guardStopped": false,
+    "resources": {
+      "gpuFootprintMiB": 316.8,
+      "peakGpuFootprintMiB": 335.0,
+      "peakRssMiB": 1651.1,
+      "lastRssMiB": 653.8,
+      "phase": {
+        "phase": "blank"
+      },
+      "largestProcesses": [
+        {
+          "pid": 87941,
+          "rssMiB": 251.1,
+          "process": "Google Chrome Helper (Renderer)"
+        },
+        {
+          "pid": 87771,
+          "rssMiB": 124.6,
+          "process": "Google Chrome"
+        },
+        {
+          "pid": 87780,
+          "rssMiB": 91.5,
+          "process": "Google Chrome Helper (GPU)"
+        },
+        {
+          "pid": 87781,
+          "rssMiB": 62.8,
+          "process": "Google Chrome Helper"
+        },
+        {
+          "pid": 88107,
+          "rssMiB": 57.7,
+          "process": "Google Chrome Helper"
+        },
+        {
+          "pid": 87790,
+          "rssMiB": 52.7,
+          "process": "Google Chrome Helper"
+        }
+      ]
+    },
+    "evidence": {
+      "installed-resource-hashes.json": {
+        "bytes": 466,
+        "sha256": "79545a36e529d6fb6dc68dbf8800cdf73fdd548b1cb385d73b6791587067f8a2"
+      },
+      "retirement-browser1-existing-world-ready.png": {
+        "bytes": 1407932,
+        "sha256": "0b8337554552bf3684eb5ee1028178370e15445e59cd519bb8629e69f7db76fb"
+      },
+      "retirement-browser1-building-list-level2.png": {
+        "bytes": 1357734,
+        "sha256": "ccb9c7fac8f6671e9b7d6467b607ce6fb427c0a228a2f55640494fe2162ed3a0"
+      },
+      "retirement-browser1-adventurers-board.png": {
+        "bytes": 1374996,
+        "sha256": "cb0b69462db88add60ddbf89d4dbc98ca93df478598428cb3b07e8e67f929655"
+      },
+      "saves-before.json": {
+        "bytes": 1252,
+        "sha256": "f4e175bd24d174328d53050adbb2ad0dce5fadf5e79065516e800cf8698afe1a"
+      },
+      "saves-after.json": {
+        "bytes": 1252,
+        "sha256": "f4e175bd24d174328d53050adbb2ad0dce5fadf5e79065516e800cf8698afe1a"
+      },
+      "retirement-browser1-final-state.json": {
+        "bytes": 12489,
+        "sha256": "f8af259a4baca1995bbdaffd52c333b56431c1df4020e3ee67c8a8c435acdb7e"
+      }
+    }
+  },
+  "scope": "Resource-only retirement of new construction, recruitment entries and random arrivals. Retain all saved hero definitions and behavior; old towns may still contain More Heroes actors. Fresh games isolate Adventurers Guild and Royal Menagerie. No claim that the reported exception cause is established or fixed.",
+  "assetsCommit": "2895609634bc778d8b292bc010408462fe0b9676"
+}

@@ -49,3 +49,11 @@ continuations.
 # Retired content
 
 - Lost Trail, Wayfinder and Trail Lodge were removed at the user's request on October 13, 2026. Preserve their archived sources and existing player saves, but do not reactivate them or resume their narration/content work unless explicitly requested. Live game launches use the original Majesty collection. Prioritize substantive, compatible community content over renamed stock classes.
+
+- More Heroes was retired at Mike's request on October 29, 2026 because its
+  reused stock art did not meet the desired character/UI distinction. Keep
+  Adventurers Guild and The Royal Menagerie active. Preserve More Heroes
+  sources and saved actor definitions, but do not restore new construction,
+  recruitment or random arrivals without an explicit request. Reintroduction
+  requires distinct artwork and native-scale UI review; see
+  `docs/more-heroes-art-direction.md`.

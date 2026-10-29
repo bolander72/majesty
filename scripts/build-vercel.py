@@ -361,12 +361,39 @@ def qualify_campaign_resource_release(content, engine):
         raise ValueError('Campaign resources differ from the qualified original SDK outputs')
 
 
+def qualify_more_heroes_retirement(content, engine):
+    """Keep the two authored guilds active and retain old actor definitions."""
+    if (content.get('retiredCommunityExpansions') != ['more-heroes'] or
+            content.get('communityExpansions') != ['adventurers-guild', 'royal-menagerie']):
+        raise ValueError('Unexpected community retirement selection')
+    proof = json.loads((ROOT / 'deploy/more-heroes-retirement-verification.json').read_text())
+    checks = ['moreHeroesBuildAndRecruitmentDisabled', 'randomAdmissionPoolRestored',
+              'saveDefinitionsRetained', 'existingWorldReloadQualified',
+              'adventurersAndMenageriePreserved', 'playerSaveHashesPreserved']
+    paths = {'DataMX/mx_Unittype.cam', 'Data/Community_Expansion.bcd',
+             'DataMX/Community_Expansion.bcd'}
+    actual = {p['path']: {k:p[k] for k in ('bytes','sha256')}
+              for p in content['patches'] if p['path'] in paths}
+    policies = ['scripts/lib/community_more_heroes_retirement.py',
+                'scripts/prepare-more-heroes-retirement.py']
+    if (proof.get('format') != 'majesty-more-heroes-retirement-qualification-v1' or
+            proof.get('engineSha256') != engine or
+            any(proof.get(k) is not True for k in checks) or
+            proof.get('files') != actual or set(actual) != paths or
+            proof.get('sourcePolicies') != {n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest()
+                                          for n in policies}):
+        raise ValueError('Require source-bound, save-compatible More Heroes retirement')
+
+
 def qualify_community_expansions(content, engine):
     identities = content.get('communityExpansions')
     if identities is None:
         return False
     expected = ['adventurers-guild', 'more-heroes', 'royal-menagerie']
-    if identities != expected:
+    retired = content.get('retiredCommunityExpansions', [])
+    if retired:
+        qualify_more_heroes_retirement(content, engine)
+    if sorted(identities + retired) != expected or len(set(identities + retired)) != 3:
         raise ValueError('Require the exact reviewed community expansion selection')
     proof = json.loads((ROOT / 'deploy/community-expansions-verification.json').read_text())
     required = ['followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',

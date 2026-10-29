@@ -86,9 +86,9 @@
     },
     {
       "path": "Data/Community_Expansion.bcd",
-      "bytes": 1748226,
-      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/295905557742dbdb190424821d7a56368f4cb772/assets/content/community-expansions-v1/Data/Community_Expansion.bcd"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2895609634bc778d8b292bc010408462fe0b9676/assets/content/more-heroes-retired-v1/Data/Community_Expansion.bcd",
+      "bytes": 1736754,
+      "sha256": "15655276e460588cba30bfb7cb554a4c09c0804e969f19489d4fdc25731581a2"
     },
     {
       "path": "Data/MMMIntentText.bin",
@@ -248,9 +248,9 @@
     },
     {
       "path": "DataMX/Community_Expansion.bcd",
-      "bytes": 1748226,
-      "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/295905557742dbdb190424821d7a56368f4cb772/assets/content/community-expansions-v1/DataMX/Community_Expansion.bcd"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2895609634bc778d8b292bc010408462fe0b9676/assets/content/more-heroes-retired-v1/DataMX/Community_Expansion.bcd",
+      "bytes": 1736754,
+      "sha256": "15655276e460588cba30bfb7cb554a4c09c0804e969f19489d4fdc25731581a2"
     },
     {
       "path": "DataMX/MMMIntentText.bin",
@@ -296,9 +296,9 @@
     },
     {
       "path": "DataMX/mx_Unittype.cam",
-      "bytes": 120691,
-      "sha256": "b2b42031c56fbd89fa6cd3e87eefedfbd778aadb1d91400f17a1a3fc812f9faf",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/295905557742dbdb190424821d7a56368f4cb772/assets/content/community-expansions-v1/DataMX/mx_Unittype.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2895609634bc778d8b292bc010408462fe0b9676/assets/content/more-heroes-retired-v1/DataMX/mx_Unittype.cam",
+      "bytes": 120535,
+      "sha256": "5de6b5afa75fae94c70b914c8f3ca1a6cb449c0308bfbb17d06723b310bf20a2"
     },
     {
       "path": "DataMX/mx_action.cam",
@@ -360,7 +360,7 @@
     "bytes": 287604,
     "sha256": "e9b32dc13378a3a412b8dba7e4f916ff7934fab701425124974327bb05a2a6df"
   },
-  "publicAssetsCommit": "295905557742dbdb190424821d7a56368f4cb772",
+  "publicAssetsCommit": "2895609634bc778d8b292bc010408462fe0b9676",
   "compositePoolVerification": "deploy/composite-pool-verification.json",
   "campaignCompatibilityVerification": "deploy/community-campaign-compat-verification.json",
   "healerCampaignVerification": "deploy/healer-campaign-verification.json",
@@ -409,8 +409,11 @@
   },
   "communityExpansions": [
     "adventurers-guild",
-    "more-heroes",
     "royal-menagerie"
   ],
-  "expansionVerification": "deploy/community-expansions-verification.json"
+  "expansionVerification": "deploy/community-expansions-verification.json",
+  "retiredCommunityExpansions": [
+    "more-heroes"
+  ],
+  "moreHeroesRetirementVerification": "deploy/more-heroes-retirement-verification.json"
 }
