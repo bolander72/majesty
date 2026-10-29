@@ -1,5 +1,12 @@
 # Changelog
 
+## Community expansions and single-player delivery — unreleased
+
+- Integrate Adventurers Guild, The Royal Menagerie and all 13 classes from the original More Heroes Standard package alongside the existing guilds.
+- Restore the four shared follower markers and preserve void callbacks in generated native action bridges, fixing saved-world monster deaths and paid taming exceptions.
+- Use native framed menus, building emblems, quest rows and a compact captive list. Preserve original quest, capture, rental and taming mechanics and prices.
+- Remove co-op launchers, invitations, network startup settings and the native Multiplayer entry. Preserve single-player worlds, profiles, backups and archived shared progress.
+
 ## Phantom survivability and Eternal Soul — October 28, 2026
 
 - Fix Eternal Soul's high-level HP multiplication overflowing the original GPL expression accumulator and killing its caster. Scale current HP with bounded integer long division, preserve exact rounded health proportions, and keep a living one-HP hero alive when the effect begins or expires.

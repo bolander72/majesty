@@ -30,7 +30,8 @@ std::uint32_t mechanicsGpl(const char *symbol, std::initializer_list<MechanicsAr
     require(binding && read(binding + 20) == expected, "mechanics original source binding");
     std::fprintf(stderr, "[mechanics-call] begin=%s\n", symbol);
     call(0x00629bf0U, evaluator);
-    const bool agentResult = !std::strcmp(symbol, "MM_Expansion_Probe_Spawn");
+    const bool agentResult = !std::strcmp(symbol, "MM_Expansion_Probe_Spawn") ||
+                             !std::strcmp(symbol, "MM_Expansion_Probe_FirstCaptive");
     const bool booleanResult =
         !std::strcmp(symbol, "Bards_Flourish_Hit") ||
         !std::strcmp(symbol, "Bards_Consume_Flourish") ||

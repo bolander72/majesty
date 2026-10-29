@@ -5,9 +5,11 @@ import io
 import json
 from pathlib import Path, PurePosixPath
 import re
+import runpy
 import shutil
 import tarfile
 import urllib.request
+install_single_player = runpy.run_path(str(Path(__file__).parent / 'lib/single_player_release.py'))['install']
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -369,7 +371,7 @@ def qualify_community_expansions(content, engine):
     proof = json.loads((ROOT / 'deploy/community-expansions-verification.json').read_text())
     required = ['followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',
                 'menagerieCaptureTameRentalQualified', 'moreHeroesGameplayQualified',
-                'browserSavedWorldRegressionQualified', 'coOpQualified',
+                'browserSavedWorldRegressionQualified', 'singlePlayerOnlyQualified',
                 'originalProfileAndPhantomPreserved']
     contracts = {name: hashlib.sha256((ROOT / 'content/community-expansions' / name /
                                      'source-contract.json').read_bytes()).hexdigest()
@@ -699,6 +701,7 @@ def build(destination=None):
         raise ValueError('Original loading artwork failed integrity verification')
     (static / 'hosting/original-loading.jpg').write_bytes(data)
     (static / 'index.html').write_text(root_player((static / 'majesty/index.html').read_text(), versions, artwork))
+    install_single_player(static)
     worker = static / 'worker.js'
     worker_html = worker.read_text()
     old = 'async status({ game }) {'
@@ -714,6 +717,8 @@ def build(destination=None):
     root_index = next(i for i, route in enumerate(config['routes']) if route.get('src') == '/')
     config['routes'].insert(root_index, {'src': '/',
         'has': [{'type': 'query', 'key': 'setup', 'value': '1'}], 'dest': '/setup.html'})
+    config['routes'].insert(0, {'src': '/(?:multiplayer|campaign)(?:/.*)?',
+        'status': 302, 'headers': {'Location': '/'}})
     for name, version in versions.items():
         route = {'src': '/majesty/' + name.replace('.', r'\.'),
             'has': [{'type': 'query', 'key': 'v', 'value': version}],

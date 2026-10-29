@@ -10,10 +10,10 @@ Revenge demo mission are joined by Phantomstar’s Bards Hall and Phantoms Haunt
 The composed release adds Blade Dancers, Troubadours, Spellsingers and Phantoms
 with their original artwork, voices and gameplay, plus native ability icons.
 
-Local two-player co-op save/resume and experimental regional world travel have
-been exercised in bounded trials. Separate-network full matches, seamless
-regional travel and the historical host-app crash cause remain unverified.
-Later sections retain individual qualification limits.
+The current candidate is single-player. Co-op launchers, invitations and the
+native Multiplayer entry are removed at Mike's request. Earlier network sources,
+trial records and player progress remain archived. The historical host-app crash
+cause remains unresolved; bounded testing precautions still apply.
 
 The public repository contains the authored browser source, tooling, tests,
 content and patches on `main`. Distribution assets are on
@@ -26,7 +26,12 @@ translations and local trial output are excluded. See
 
 Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
 sources and prior saves are preserved. The active milestone integrates
-Phantomstar's authentic Bards Hall and Phantoms Haunt alongside Alchemist Lab.
+Adventurers Guild, The Royal Menagerie and More Heroes alongside Bards Hall,
+Phantoms Haunt and Alchemist Lab. More Heroes retains its Standard package's
+Northern/Freestyle scope. The three additions have passed native gameplay and
+stateful save/reload checks; final browser presentation and release verification
+are in progress. See [expansion integration](docs/community-expansion-integration.md).
+Earlier guild qualification follows.
 Original packages and creator redistribution permission are confirmed. Combined
 scripts compile with the official SDK. Paid guilds, combat/effect controls,
 native ability UI, ordinary browser saving/fresh reload and root automatic
@@ -34,11 +39,8 @@ import are qualified in bounded trials. Individual edge-case and network
 limits remain documented. See [guild integration status](docs/community-guild-integration.md)
 and [creator credits](CREDITS.md).
 
-Co-op joining, shared saves and resume have already been exercised. Completing
-the restored Chapter 3 mission is deferred and is not a prerequisite for this
-content milestone. Full-match and separate-network verification remain open
-work, to be revisited when a content or network change requires it. Preserve
-existing campaign progress and checkpoints while developing new content.
+Co-op is outside the current milestone and must not be reactivated without a
+new request. Preserve existing progress and checkpoints in player backups.
 
 ## Hosted game
 

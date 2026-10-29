@@ -6,6 +6,100 @@ begin
     return Created;
 end
 
+function MM_Expansion_Probe_Captives(agent Zoo) is integer
+declare
+    agent Visitor;
+    integer Count;
+begin
+    Count = 0;
+    foreach Visitor in Zoo's "Occupants" do
+        if ($Restore_Zoo_Is_Stored_Captive(Visitor, Zoo))
+            Count += 1;
+    return Count;
+end
+
+function MM_Expansion_Probe_FirstCaptive(agent Zoo) is agent
+declare
+    agent Visitor, Selected;
+begin
+    Selected = $NullAgent();
+    foreach Visitor in Zoo's "Occupants" do
+        if ($Restore_Zoo_Is_Stored_Captive(Visitor, Zoo))
+            if ($IsValidGamePiece(Selected) == FALSE)
+                Selected = Visitor;
+    return Selected;
+end
+
+function MM_Expansion_Probe_Tamed(agent Beast) is integer
+declare
+begin
+    if ($IsValidGamePiece(Beast) == FALSE)
+        return 0;
+    if ($IsDead(Beast))
+        return 0;
+    if (Beast's "Type" != "Hero")
+        return 0;
+    if (Beast's "Original_Type" != "Hero")
+        return 0;
+    if (Beast's "SubType" != "Controlled")
+        return 0;
+    if (Beast's "EnemyType" != "Monster")
+        return 0;
+    if ($IsValidGamePiece($GetBuildingContainer(Beast)))
+        return 0;
+    return 1;
+end
+
+function MM_Expansion_Probe_FundBuyer(agent Buyer)
+declare
+begin
+    $Give_Gold(Buyer, 1000);
+end
+
+function MM_Expansion_Probe_BuyerGold(agent Buyer) is integer
+declare
+begin
+    return $Total_Gold(Buyer);
+end
+
+function MM_Expansion_Probe_ConsiderRental(agent Buyer) is integer
+declare
+begin
+    if ($Restore_Zoo_Rental_Check(Buyer))
+        begin
+            Buyer's "ActiveScript" = $Use_Building;
+            return 1;
+        end
+    return 0;
+end
+
+function MM_Expansion_Probe_Rented(agent Beast, agent Buyer) is integer
+declare
+begin
+    if ($IsValidGamePiece(Beast) == FALSE)
+        return 0;
+    if ($IsDead(Beast))
+        return 0;
+    if (Beast's "leader" != Buyer)
+        return 0;
+    if (Beast's "Type" != "Hero")
+        return 0;
+    if (Beast's "Original_Type" != "Hero")
+        return 0;
+    if (Beast's "SubType" != "Controlled")
+        return 0;
+    if (Beast's "EnemyType" != "Monster")
+        return 0;
+    if (Buyer's "Num_Followers" < 1)
+        return 0;
+    if ((Beast's "BackScript" != $Restore_Zoo_Rented_Monster_Follow) &&
+        (Beast's "BasicScript" != $Restore_Zoo_Rented_Monster_Follow))
+        return 0;
+    if ($IsValidGamePiece($GetBuildingContainer(Beast)))
+        return 0;
+    return 1;
+end
+
 function MM_Expansion_Probe_Marker(agent Guild, string Marker) is boolean
 declare
 begin

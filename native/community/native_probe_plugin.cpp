@@ -113,10 +113,15 @@ std::uint64_t privateIntentLookups = 0;
 bool expansionPanels = false;
 bool controlledExpansionPanels = false, controlledExpansionPanelsApplied = false;
 bool controlledExpansionPlay = false;
+bool controlledExpansionReload = false;
+bool controlledExpansionQuestRefresh = false;
+bool singlePlayerOnly = false;
+bool controlledSinglePlayer = false;
 bool traceExpansionGpl = false;
 bool traceExpansionGplCalls = false;
 void beginControlledExpansionPlay(std::uint32_t, std::uint32_t, std::uint32_t);
 void runControlledExpansionPlay();
+void runControlledExpansionReload();
 void runControlledExpansionPanels(std::uint32_t);
 std::map<std::uint32_t, MajestyCommunity::WorldQuery> worldQueryFunctions;
 bool researchQueryHelpers = false, controlledResearchQuery = false,
@@ -1748,8 +1753,11 @@ void runControlledWorldQueries(std::uint32_t worker) {
             "worker nominal rate equals original movement getter");
     require(result("MM_UnitMovementRate", {{5, worker}, {1, 1}}) == nominal,
             "unmodified worker effective movement equals nominal");
-    require(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Peasant"}}) == nominal,
-            "loaded worker type rate equals actual worker rate");
+    // The live actor may use another movement attachment or animation form.
+    // Keep its original-getter comparison above independent from the pinned
+    // stock Peasant descriptor (122 in the Old engine's integer rate units).
+    require(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Peasant"}}) == 122,
+            "loaded Peasant descriptor retains its pinned original movement rate");
     require(static_cast<int>(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Healer"}})) > 0,
             "loaded Healer movement attachment is queried");
     require(result("MM_UnitTypeMovementRate", {{3, 0, 0, "Missing_Community_Type_Control"}}) ==
@@ -2115,6 +2123,45 @@ bool controlledMechanics = false;
 
 void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
     const auto target = cpu->target, self = cpu->ecx;
+    if (singlePlayerOnly && target == 0x0045fd40U) {
+        // The original multiplayer service-selection path returns AP29 on
+        // cancellation. Keep that return contract without attaching a service.
+        require(host->hook_return(host, cpu, 0x39325041U, 0) == POP_OK,
+                "original zero-argument multiplayer return discipline");
+        return;
+    }
+    if (singlePlayerOnly && (target == 0x00487c80U || target == 0x00489130U)) {
+        const auto dialog = target == 0x00487c80U ? read(cpu->esp + 4) :
+            (read(self + 4) ? read(read(self + 4) + 0x2c) : 0);
+        const auto hide = [&]() {
+            const auto window = read(self + 4);
+            if (dialog == 0x39325041U && window) {
+                // AP29's original framed Multiplayer button is control5003.
+                // Its native visibility API removes drawing and hit testing.
+                call(read(read(self) + 0x20), self, {5003, 0});
+            }
+        };
+        if (target == 0x00489130U)
+            hide();
+        next(inv, cpu);
+        if (target == 0x00487c80U && dialog == 0x39325041U) {
+            hide();
+            host->log(host, "Single-player menu: original Multiplayer control hidden.");
+            if (controlledSinglePlayer) {
+                const auto window = read(self + 4);
+                std::fprintf(stderr, "[single-player-menu] dialog=%08x window=%08x "
+                                     "visibility-method=%08x\n", dialog, window,
+                             read(read(self) + 0x20));
+                require(call(0x0045fd40U, 0) == 0x39325041U,
+                        "single-player entry refuses original multiplayer service attachment");
+                host->log(host, "Controlled single-player menu: original multiplayer entry "
+                                "returns to AP29 without a network service.");
+            }
+        }
+        if (target == 0x00489130U && dialog == 0x39325041U && cpu->eax == 5003)
+            cpu->eax = 0;
+        return;
+    }
     if ((controlledExpansionPlay || traceExpansionGpl) && target == 0x006293e0U) {
         const auto format = read(cpu->esp + 16);
         std::string message;
@@ -2582,7 +2629,7 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         next(inv, cpu);
         return;
     }
-    if ((researchBridge || controlledCommunityGpl || controlledEquipment || controlledIntegers ||
+    if ((researchBridge || controlledExpansionReload || controlledCommunityGpl || controlledEquipment || controlledIntegers ||
          controlledBaseTiming) &&
         target == 0x005d9680U) {
         // Optional isolated test setup: use the already implemented ordinary
@@ -2628,6 +2675,9 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
         if (controlledExpansionPlay && state && (read(state) == 3 || read(state) == 7) &&
             !read(state + 4))
             runControlledExpansionPlay();
+        if (controlledExpansionReload && state && (read(state) == 3 || read(state) == 7) &&
+            !read(state + 4))
+            runControlledExpansionReload();
         if (controlledSpellTiming && controlledSpellTimingApplied &&
             !controlledSpellExpiryApplied && state && (read(state) == 3 || read(state) == 7) &&
             !read(state + 4))
@@ -3019,11 +3069,30 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
             return;
         }
         if (traceExpansionGplCalls ||
-            (controlledExpansionPlay && expansionPlay.phase >= 5 && expansionPlay.phase <= 9)) {
+            ((controlledExpansionPlay || controlledExpansionReload) && ((expansionPlay.phase >= 5 && expansionPlay.phase <= 9) ||
+                                        expansionPlay.phase == 19))) {
             require(expansionPlayGplStack.size() < 128, "bounded owned GPL diagnostic stack");
-            expansionPlayGplStack.push_back(guestString(self));
+            const auto name = guestString(self);
+            const auto lower = [](std::string text) {
+                for (auto &c : text)
+                    if (c >= 'A' && c <= 'Z')
+                        c = char(c + ('a' - 'A'));
+                return text;
+            };
+            const auto normalized = lower(name);
+            bool questPayout = false;
+            if ((controlledExpansionPlay || controlledExpansionReload) && expansionPlay.phase == 19 &&
+                (normalized == "give_gold" || normalized == "mjc_give_gold"))
+                for (const auto &caller : expansionPlayGplStack)
+                    questPayout |= lower(caller) == "adventurer_guild_complete_return";
+            expansionPlayGplStack.push_back(name);
             next(inv, cpu);
             expansionPlayGplStack.pop_back();
+            if (questPayout) {
+                expansionPlay.questAwarded = true;
+                host->log(host, "Observed original Adventurer_Guild_Complete_Return -> give_gold "
+                                "normal return; no quest completion or payout was injected.");
+            }
             return;
         }
         if (!traceRecruitment && !traceCombat) {
@@ -3191,6 +3260,22 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         !api->guest_call || !api->hook_install_ex)
         return POP_E_ABI;
     host = api;
+    const auto *solo = std::getenv("RECOMP_SINGLE_PLAYER_ONLY");
+    singlePlayerOnly = solo && !std::strcmp(solo, "1");
+    const auto *soloTest = std::getenv("RECOMP_COMMUNITY_TEST_SINGLE_PLAYER");
+    controlledSinglePlayer = soloTest && !std::strcmp(soloTest, "20261028");
+    require(!controlledSinglePlayer || singlePlayerOnly,
+            "single-player menu test requires single-player mode");
+    if (singlePlayerOnly) {
+        for (const auto address : {0x00487c80U, 0x00489130U, 0x0045fd40U}) {
+            std::uint32_t id = 0;
+            const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
+                                                       POP_HOOK_NO_GAME_VIEW, nullptr, &id);
+            if (status != POP_OK)
+                return status;
+            hooks.push_back(id);
+        }
+    }
     const char *trace = std::getenv("RECOMP_ALCHEMIST_RECRUIT_TRACE");
     traceRecruitment = trace && !std::strcmp(trace, "1");
     const char *combat = std::getenv("RECOMP_ALCHEMIST_COMBAT_TRACE");
@@ -3382,13 +3467,21 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         controlledExpansionPanels = expansionTest && !std::strcmp(expansionTest, "20261028");
         const auto *playTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_PLAY");
         controlledExpansionPlay = playTest && !std::strcmp(playTest, "20261028");
+        const auto *reloadTest = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_RELOAD");
+        controlledExpansionReload = reloadTest && !std::strcmp(reloadTest, "20261028");
+        const auto *questRefresh = std::getenv("RECOMP_COMMUNITY_TEST_EXPANSION_QUEST_REFRESH");
+        controlledExpansionQuestRefresh = questRefresh && !std::strcmp(questRefresh, "20261028");
+        require(!controlledExpansionQuestRefresh || controlledExpansionReload,
+                "paid quest refresh requires the isolated saved-world trial");
+        require(!controlledExpansionReload || !controlledExpansionPlay,
+                "read-only reload trial cannot spawn a second test city");
         const auto *gplTrace = std::getenv("RECOMP_COMMUNITY_EXPANSION_GPL_TRACE");
         traceExpansionGplCalls = gplTrace && !std::strcmp(gplTrace, "20261028");
         traceExpansionGpl = traceExpansionGplCalls || (gplTrace && !std::strcmp(gplTrace, "errors"));
         require(!traceExpansionGpl || expansionPanels, "owned GPL trace requires expansion runtime");
         require(!controlledExpansionPlay || controlledExpansionPanels,
                 "owned play trial requires panel controls");
-        if (controlledExpansionPlay || traceExpansionGpl) {
+        if (controlledExpansionPlay || controlledExpansionReload || traceExpansionGpl) {
             for (const auto address : {0x00624850U, 0x006293e0U}) {
                 std::uint32_t id = 0;
                 const auto status = host->hook_install_ex(host, address, 0, hook, POP_HOOK_WRAP,
@@ -3526,7 +3619,7 @@ extern "C" POP_MOD_EXPORT PopModStatus pop_mod_init(const PopModApi *api) {
         host->log(host, "Private research route enabled through original "
                         "queue/update/event2009.");
     }
-    if ((controlledCommunityGpl || controlledEquipment || controlledIntegers ||
+    if ((controlledExpansionReload || controlledCommunityGpl || controlledEquipment || controlledIntegers ||
          controlledBaseTiming) &&
         !researchBridge) {
         std::uint32_t id = 0;

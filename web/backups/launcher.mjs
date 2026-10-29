@@ -22,7 +22,7 @@ $('export').onclick=()=>operation('Reading saved kingdoms and progress…',async
   anchor.href=url;anchor.download=`Majesty player backup ${new Date().toISOString().slice(0,10)}.zip`;anchor.click();
   // Release the archive reference when the browser has accepted the download.
   setTimeout(()=>URL.revokeObjectURL(url),60000);
-  status.textContent=`Player backup ready: ${result.nativeCount} native files and ${result.databaseCount} campaign/Atlas databases.`;
+  status.textContent=`Player backup ready: ${result.nativeCount} native files and ${result.databaseCount} progress databases.`;
 });
 $('choose').onclick=()=>{if(!busy&&stopped.checked)$('file').click();};
 $('clear').onclick=()=>operation('Clearing the temporary archive after your download…',async()=>{
@@ -37,7 +37,7 @@ $('file').onchange=()=>{
 };
 $('restore').onclick=()=>operation('Restoring the checked player backup…',async()=>{
   const result=await request('restore',selected);checked=false;
-  status.textContent=`Restored ${result.nativeCount} native files and ${result.databaseCount} progress databases. Import your game files separately, then choose your restored profile in the campaign or multiplayer launcher.`;
+  status.textContent=`Restored ${result.nativeCount} native files and ${result.databaseCount} progress databases. Import your game files separately, then open your restored player profile.`;
 });
 $('recovery').onclick=()=>operation('Discarding only the interrupted restore…',async()=>{
   const result=await request('discard');$('recovery').hidden=true;

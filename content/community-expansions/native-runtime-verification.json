@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-native-runtime-verification-v1",
   "date": "2026-10-28",
-  "status": "missing-marker-crash-repaired; native-lifecycle-and-browser-saved-world-victory-passed; capture-quest-coop-pending",
+  "status": "native-capture-and-paid-taming-passed; rental-quest-persistence-coop-pending",
   "nativeBuild": {
     "command": [
       "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
@@ -168,8 +168,8 @@
     "source-bound publication and production verification"
   ],
   "livePanelsQualified": true,
-  "nativeGameplayQualified": false,
-  "saveReloadQualified": false,
+  "nativeGameplayQualified": true,
+  "saveReloadQualified": true,
   "coOpQualified": false,
   "browserPlayable": false,
   "published": false,
@@ -540,6 +540,61 @@
         "ownedPid": 98940,
         "endedAtUnix": 1793228215
       }
+    },
+    "single15": {
+      "engineSha256": "88bb5d2a249ce7c617acf80e892ccc8ef558b28efa7844677608f639e2e9252a",
+      "singlePlayerMenuQualified": true,
+      "oldInvitationSanitizedToSolo": true,
+      "sharedSessionImportsAbsent": true,
+      "old19DaySaveContinuedTo20": true,
+      "native40SaveRestoredWithoutTestGpl": true,
+      "paidTameCompletedWithoutException": true,
+      "savedNativeStateDay3": true,
+      "allFiveInputSaveHashesUnchanged": true,
+      "ownedEngineAndBrowserClosed": true,
+      "resources": {
+        "gpuFootprintMiB": 257.8,
+        "peakGpuFootprintMiB": 324.3,
+        "peakRssMiB": 1385.3,
+        "lastRssMiB": 515.6,
+        "phase": {
+          "phase": "native40-stateful-restore"
+        },
+        "largestProcesses": [
+          {
+            "pid": 90722,
+            "rssMiB": 197.8,
+            "process": "Google Chrome"
+          },
+          {
+            "pid": 90732,
+            "rssMiB": 111.5,
+            "process": "Google Chrome Helper (GPU)"
+          },
+          {
+            "pid": 90733,
+            "rssMiB": 80.2,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 91089,
+            "rssMiB": 61.9,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 90734,
+            "rssMiB": 55.5,
+            "process": "Google Chrome Helper"
+          },
+          {
+            "pid": 90721,
+            "rssMiB": 8.6,
+            "process": "agent-browser-darwin-arm64"
+          }
+        ]
+      },
+      "readableCaptiveRowsQualified": false,
+      "published": false
     }
   },
   "zooPreviewRepair": {
@@ -773,5 +828,318 @@
       }
     },
     "priorOwnedSaveHashesUnchanged": true
+  },
+  "controlledCaptureEncounter": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 170.05,
+      "peakRssMiB": 187.0,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live30/profile",
+      "sourceEngineSha256": "7c77e5e3ede373567ac0bbae7a23fe84590f88a883d466294c2c10fd31f4a5be"
+    },
+    "testTargets": "Three ordinary Ratmen, hostile owner7, spawned with the existing isolated test helper",
+    "entry": "Native capture target filter, then original six-word flag queue at0043ef50 with2000gold per target",
+    "positiveCaptureQualified": true,
+    "stockLethalCaptureRollAndDeliveryQualified": true,
+    "captiveInventedOrOutcomeForced": false,
+    "tameRentalAndPersistenceQualified": false,
+    "logEvidence": "Controlled native capture: original reward queue, lethal stock capture roll and Hooligan delivery produced a real stored Zoo captive."
+  },
+  "voidActionBridgeFailure": {
+    "trials": [
+      "expansion-runtime-live31",
+      "expansion-runtime-live32"
+    ],
+    "exception": "bad conversion to bool&",
+    "interpretedStack": [
+      "MM_Action_1184ab6762f8f73bd9570525"
+    ],
+    "cause": "Generated integer action bridge evaluated the void Restore_Zoo_Tame_Beast callback as a boolean",
+    "repair": "Call the unchanged void callback once, discard its void result, return the native integer sentinel1",
+    "paidTameRegressionQualified": true,
+    "originalTameCallbackAndPriceUnchanged": true
+  },
+  "paidTameTrial34": {
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "stopReason": null,
+    "elapsedSeconds": 168.67,
+    "peakRssMiB": 238.7,
+    "worldQueriesQualified": true,
+    "privateIntentsQualified": true,
+    "audioMuted": true,
+    "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live34/profile",
+    "sourceEngineSha256": "5bda324b722392719d418d1235e8145bd80c60f99231731e881baf21c83b45d6",
+    "cost": 1000,
+    "treasuryBefore": 13550,
+    "treasuryAfter": 12550,
+    "sourceGuardianReleaseQualified": true,
+    "nativeOccupantSelectionQualified": true
+  },
+  "testWorkerSelectionFailure": {
+    "trial33": "Unconstrained first mobile actor had nominal rate409; Peasant descriptor rate122",
+    "correction": "Select exact pinned AVj1 Peasant when the world-query control is enabled",
+    "trial34Passed": true,
+    "laterCorrection": "Compare the live actor to its own original movement getter, and independently verify the pinned Peasant descriptor rate122; do not require one exact graphics/animation identity."
+  },
+  "captureTameRentalTrial40": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 168.57,
+      "peakRssMiB": 208.1,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live40/profile",
+      "sourceEngineSha256": "417961ae1c09e84162e27d95fc4f73a47b6f05174157e40db4840bb009ae16c9"
+    },
+    "build": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1793236150,
+      "terminal": true,
+      "peakOwnedRssMiB": 318.3,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 66865,
+      "endedAtUnix": 1793236155
+    },
+    "executable": {
+      "bytes": 92627544,
+      "sha256": "417961ae1c09e84162e27d95fc4f73a47b6f05174157e40db4840bb009ae16c9"
+    },
+    "engineStage": {
+      "bytes": 65253,
+      "sha256": "1c09999468ef959c8fb750d027ad0b8f3089fd4100a8e2872f84b21ba1334f67"
+    },
+    "testControls": {
+      "bytes": 1713,
+      "sha256": "85dcb3b5ffd4b9ebed5d2d0ecbdd365fdfee1ecbe2b37068a53ca27ce3a7a7c5"
+    },
+    "trialStage": {
+      "bytes": 353,
+      "sha256": "a9f6846b71847884c2b99d3e0a267834c4f35471f8596e797461fd08992d5feb"
+    },
+    "log": {
+      "bytes": 261193,
+      "sha256": "83b6b3a84b3d1994e8baf169138400a5efd1d2825c08698c706d16ce6ea12e49"
+    },
+    "rental": {
+      "originalCost": 200,
+      "buyerGoldBefore": 1076,
+      "buyerGoldAfter": 876,
+      "followerId": 608,
+      "speedMarkerCount": 2,
+      "sourceVisitAndControlledFollowerQualified": true
+    },
+    "taming": {
+      "originalCost": 1000,
+      "treasuryBefore": 4540,
+      "treasuryAfter": 3540,
+      "guardianId": 606
+    },
+    "ownedSave": {
+      "bytes": 412013,
+      "sha256": "37ef1ac721f31f5b553ff01f4f1d23587786d7ac9347f5a869d054f3e21ad7ad"
+    },
+    "questPayoutObserved": false,
+    "saveReloadQualified": false,
+    "coOpQualified": false,
+    "published": false
+  },
+  "testFixtureHistory": {
+    "trial37": "Exact graphics selection never found a worker; controls did not run. Ordinary save UI succeeded.",
+    "trial38": "Operator stopped after discovering plugin staging path mismatch; not qualified.",
+    "trial39": "Operator stopped after verifying stale compiled plugin strings; copy2 preserved a source timestamp older than the existing object. Not qualified.",
+    "build26": "Copy changed sources without preserving old timestamps; official build recompiled, and changed implementation strings were verified in the actual executable."
+  },
+  "savedWorldTrial41": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 178.68,
+      "peakRssMiB": 199.8,
+      "worldQueriesQualified": false,
+      "privateIntentsQualified": false,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live41/profile",
+      "sourceEngineSha256": "da5d0a7bab95b4ff63e0dd62b7df1a214ab45343884f89c6a6f0c828debb075f"
+    },
+    "log": {
+      "bytes": 28478,
+      "sha256": "faedf1b27ecb99fe52a118d11a3a7620cc4b5f6142d19c46277727c72257a7e8"
+    },
+    "engineStage": {
+      "bytes": 65558,
+      "sha256": "e9dc732daa7b5e94dd749b982b7c807e6d14fc3da8bb010a892cf2aa83cd2c03"
+    },
+    "testControls": {
+      "bytes": 1713,
+      "sha256": "59c0019ad2edfbf07eaaf434ab2042f4400c5068502718f7ce35e430970494ae"
+    },
+    "testObserverReadOnly": true,
+    "spawningControlsDisabled": true,
+    "all13LivingLevel1000HeroesRestored": true,
+    "captiveGuardianAndRentedLeaderScriptsRestored": true,
+    "continuedFiveSecondAiPassed": true,
+    "boardRows": 0,
+    "boardRevision": 4,
+    "naturalQuestPayoutObserved": false,
+    "saveReloadQualified": true,
+    "published": false
+  },
+  "menagerieCaptureTameRentalQualified": true,
+  "naturalQuestTrial42": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 184.75,
+      "peakRssMiB": 184.9,
+      "worldQueriesQualified": false,
+      "privateIntentsQualified": false,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live42/profile",
+      "sourceEngineSha256": "603e1a24cd7e320942a34f5ac96cd43f0d8142ef51f66f90320bd210ae3aed03"
+    },
+    "logSha256": "070067d047e34a9652aefe6c816f058713a6ebd5fda47a134be35ca1f8f54e0a",
+    "originalPaidRefresh": {
+      "cost": 500,
+      "treasuryBefore": 3660,
+      "treasuryAfter": 3160,
+      "generatedOffers": 6
+    },
+    "normalPayoutObserved": true,
+    "objectiveApplicationCompletionOrPayoutInjected": false,
+    "adventurerQuestLifecycleQualified": true
+  },
+  "adventurerQuestLifecycleQualified": true,
+  "coOpRequirementWithdrawn": {
+    "date": "2026-10-28",
+    "userInstruction": "remove all coop from the game. we do not need it right now",
+    "replacementAcceptance": "Remove network entry points and qualify the single-player flow."
+  },
+  "singlePlayerNativeTrial46": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 196.19,
+      "peakRssMiB": 194.8,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live46/profile",
+      "sourceEngineSha256": "2d4a630aa7eb614d0d3b72370431368905b8842a0a990de1d98099abd4b321c6"
+    },
+    "build": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-native-v6",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1793238250,
+      "terminal": true,
+      "peakOwnedRssMiB": 357.6,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 86240,
+      "endedAtUnix": 1793238257
+    },
+    "engineStage": {
+      "bytes": 67803,
+      "sha256": "672644cface1d14176b7fc8afffdf8099760fe2a5e31a27f9e8d9aaf713b255a"
+    },
+    "testControls": {
+      "bytes": 1713,
+      "sha256": "50c4c09e98f87a06a469800fb39fba222cc1968d1233af153b4bc9afb476f75e"
+    },
+    "stage": {
+      "bytes": 545,
+      "sha256": "c01f946f57490de562bc443d603a5406d50addb05d0e0a24d12219075858f0e9"
+    },
+    "log": {
+      "bytes": 257389,
+      "sha256": "44b14cda0128079e7a0d1a767ed680ca52189f00de181d5f6f350b0bf1f73ff8"
+    },
+    "nativeMultiplayerControlHidden": true,
+    "originalNetworkEntryReturnsWithoutServiceAttachment": true,
+    "menuWrapperVisibilityMethod": "00488220",
+    "networkEntryReturnPoppedArgumentBytes": 0,
+    "all13MoreHeroesBirthLevel1000AndAiPassed": true,
+    "captureTameRentalPassed": true,
+    "rentalCost": 200,
+    "rentalBuyerGoldBefore": 1083,
+    "rentalBuyerGoldAfter": 883,
+    "rentalSpeedMarkers": 2,
+    "newGameBoardEmpty": true,
+    "naturalQuestQualifiedSeparatelyInTrial": 42,
+    "pairedTrialNotRequired": true
+  },
+  "singlePlayerNativeFailureHistory": {
+    "43": "Wrong return pop count in the new network-entry test; operator-stopped; unqualified.",
+    "44": "Wrong receiver for the menu visibility API; pinned vtable audit identified wrapper method00488220 versus raw CYDialog004e1870; operator-stopped; unqualified.",
+    "45": "Native menu and full capture/tame/rental passed; test timer inherited a30-second deadline after a valid rental using its45-second allowance. Exit6; unqualified.",
+    "46": "Fresh phase clock and no optional quest watch on an empty board; separate populated saved-world quest acceptance remains native42. Exit0."
+  },
+  "singlePlayerOnlyQualified": false,
+  "compactCaptiveListNative47": {
+    "trial": {
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "stopReason": null,
+      "elapsedSeconds": 191.84,
+      "peakRssMiB": 151.5,
+      "worldQueriesQualified": true,
+      "privateIntentsQualified": true,
+      "audioMuted": true,
+      "ownedProfile": "/Users/mike/.local/share/majesty-work/expansions20261028/expansion-runtime-live47/profile",
+      "sourceEngineSha256": "fc4383bd2fa8db29dd67c6c1ddaa6a89afc5090c0fb1390a7c5dc0369eda5209"
+    },
+    "log": {
+      "bytes": 243661,
+      "sha256": "181cfeb6a298eed3d470324c7a573b1a8dcce3e7722d55249254c24476d7a933"
+    },
+    "stage": {
+      "bytes": 507,
+      "sha256": "70c3b4431d0470348f678d4858a85e46c0742670190e5850b6b52192ab300525"
+    },
+    "stockCompactHeight": 16,
+    "stockTextBaseline": 0,
+    "originalUnitVectorCountMatched": true,
+    "paidTamingAndRentalStillPassed": true,
+    "nativeGlobalContextOverrideUsed": false,
+    "browserReadableRowsRetestPending": true
   }
 }

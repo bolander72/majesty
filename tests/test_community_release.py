@@ -29,7 +29,7 @@ class CommunityReleaseTests(unittest.TestCase):
                 engineSha256='b' * 64, sourceContracts=contracts)
             gates = ['followerMarkerLifecycleQualified', 'adventurerQuestLifecycleQualified',
                 'menagerieCaptureTameRentalQualified', 'moreHeroesGameplayQualified',
-                'browserSavedWorldRegressionQualified', 'coOpQualified',
+                'browserSavedWorldRegressionQualified', 'singlePlayerOnlyQualified',
                 'originalProfileAndPhantomPreserved']
             proof.update({key: True for key in gates})
             path = root / 'deploy/community-expansions-verification.json'

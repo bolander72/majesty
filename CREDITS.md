@@ -36,6 +36,25 @@ with acknowledgement. This permission does not relicense the original game or
 apply a blanket license to third-party media. Acquired Workshop versions and
 individual file hashes are recorded in each guild's source contract.
 
+## Adventurers Guild, The Royal Menagerie and More Heroes
+
+[Adventurers Guild](https://github.com/Phantomstar721/majesty-gold-hd-adventurers-guild)
+is by **Phantomstar721**. Its original quest activities, building resources and
+selection audio are retained with native compatibility adaptations.
+
+Adventurers Guild audio credits from the acquired package: **Kitty Jones**,
+“Hello, friend!” from [Voice Pack 1](https://kittyjones.itch.io/kittyjones-pack1),
+used under the creator's stated project permission with attribution; and
+**SamsterBirdies**, [“Sword draw unsheathe”](https://freesound.org/people/SamsterBirdies/sounds/581594/),
+under CC0 1.0. The package's original credit notice and file hashes are preserved.
+
+[The Royal Menagerie](https://steamcommunity.com/sharedfiles/filedetails/?id=3796459696)
+and [More Heroes](https://steamcommunity.com/sharedfiles/filedetails/?id=2106634312)
+retain their acquired community packages' original buildings, characters,
+artwork and authored gameplay. More Heroes uses its Standard Northern/Freestyle
+package with thirteen classes. Original package identities, media provenance
+and individual file hashes are retained in `content/community-expansions/`.
+
 ## Browser engine foundations
 
 The browser port builds on [veritr1x/majesty-recomp](https://github.com/veritr1x/majesty-recomp)

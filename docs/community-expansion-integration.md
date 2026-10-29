@@ -314,3 +314,122 @@ not evidence that all naturally recruited heroes are invulnerable. All four
 prior5/8/12/19day save hashes remain exact. The browser closes normally, with
 peak aggregate owned RSS1521.3MiB and GPU footprint320MiB; host app remains alive.
 Capture/tame/rental and normal quest completion still need separate trials.
+
+Native30 places three2000gold private capture flags through the original
+0043ef50 six-word queue after the native filter accepts ordinary hostile
+Ratmen and rejects an owned hero/building. The original lethal capture roll
+and Hooligan delivery produce a source-validated stored captive. No captured
+state or outcome is forced. The extended run exits0 at170.05seconds/187MiB.
+Native31 repeats capture, rejects all3 hostile duplicate targets after the
+queue, obtains a1000gold tame quote and selects the real native occupant.
+The ensuing paid action throws `bad conversion to bool&`. Native32's full
+interpreted trace identifies generated wrapper MM_Action_1184ab6762f8f73bd9570525:
+it evaluates the void Restore_Zoo_Tame_Beast callback in a boolean condition.
+This is a paid-action adapter error, not a list rendering error. The legacy
+port now derives the callback return type; void callbacks run once with their
+result discarded before returning the integer sentinel required by Old's
+external action ABI. Boolean action wrappers retain their exact logic.
+`stage-community-action-returns.py` changes only that generated wrapper,
+leaving all original callback bodies, DAT, routes, descriptors, art and prices
+unchanged. SDK compilev10 passes; base/expansion bytecode stays exact, common
+becomes37265541bytes/7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2.
+The paid-taming retest is pending; no rental/save/co-op qualification follows
+from the capture-only success.
+
+Native33 stops on an unrelated fixture mismatch: it selected a mobile actor
+with rate409, then compared it with the Peasant descriptor's122. World-query
+control selection now waits specifically for the pinned AVj1 Peasant; ordinary
+game behavior is unchanged. Official build22 succeeds, and native34 passes
+all controls, capture, hostile duplicate rejection, populated native MX05
+selection and paid taming. The actual1000gold quote debits13550 to12550 and
+releases the captured monster as a living owned guardian excluded from
+recapture. Native34 exits0 at168.67seconds/238.7MiB. Three action-return tests
+and the full45 focused expansion/release tests pass. Rental, quest completion,
+stateful save/reload and paired co-op remain acceptance work.
+
+
+Native40 completes the capture/tame/rental sequence with compiler10 resources.
+The original rental visit debits exactly200gold from the hero (1076 to876),
+releases follower608 with its original source script and leader, and shows two
+shared movement markers. Paid taming independently debits1000 kingdom gold
+(4540 to3540). The ordinary Save Game UI writes a412013-byte one-day save,
+SHA-256 `37ef1ac721f31f5b553ff01f4f1d23587786d7ac9347f5a869d054f3e21ad7ad`.
+The process exits0 in168.57seconds, peak208.1MiB, without an exception or guard
+stop. No natural quest payout was observed before the scripted end. Reload,
+quest completion and paired co-op remain unqualified.
+
+The failed fixture trials37–39 remain recorded. The movement test now compares
+a live actor with its own original getter and checks the stock Peasant
+descriptor independently; an exact graphics identity could exclude all workers.
+A stale object was also detected by checking changed implementation strings in
+the actual executable. Changed fixture sources are copied without preserving
+old timestamps before the official build. Native40 uses the corrected object.
+
+
+Native41 loads the exact native40 one-day save in a fresh process with every
+spawning/leveling control disabled. A separate read-only observer verifies the
+original535/536 buildings, all13 living level-1000 heroes, captive, paid tamed
+guardian606 and rented follower608/leader552. These checks pass again after
+five simulation seconds. Exit0,178.68seconds, peak199.8MiB, no exception or guard
+stop. The board restores revision4 and zero offers: its earlier fixture refresh
+ran before the13 heroes were born. This explains why that trial cannot qualify
+a natural quest reward. A separate saved-world trial pays the original500-gold
+refresh through native controls after heroes are present; no quest objective,
+application, completion or payout state is injected.
+
+
+Native42 pays the original500-gold saved-world refresh (3660 to3160) and
+generates six original offers. Unmodified NPC application, objective and return
+guards reach `Adventurer_Guild_Complete_Return`; its original `give_gold` call
+returns normally. No application, objective, completion or payout was injected.
+Exit0 in184.75seconds, peak184.9MiB, no exception or guard stop.
+
+The user subsequently removed co-op from scope and explicitly requested that
+all co-op features be removed from the game. Paired co-op is no longer an
+acceptance requirement. The replacement gate is removal of network launchers,
+invitations and the native multiplayer entry, followed by single-player browser
+and existing-save verification. Earlier co-op sources and player saves remain
+archived; they must not be exposed by the new release.
+
+
+Single-player delivery removes the shared campaign/multiplayer launchers and
+invitation startup from the served tree, sanitizes legacy room/network settings,
+removes network runtime configuration and redirects retired launcher routes to
+the root. Original solo world/profile startup and backup schemas are retained.
+The main menu uses the original modal-wrapper visibility method00488220 to
+hide AP29/control5003; original menu selection and multiplayer service entry
+are also blocked. Service-selection0045fd40 uses its original zero-argument
+return contract and returns AP29 without attaching a provider.
+
+Native46 qualifies the corrected menu and the complete expansion sequence with
+single-player mode enabled. It exits0 in196.19seconds, peak194.8MiB, with no
+exception or guard stop. Capture,1000-gold taming and200-gold rental pass; the
+buyer's purse changes1083 to883 and the follower has two shared speed markers.
+All13 original More Heroes pass birth, native level1000 and continued AI checks.
+Native42 remains the independent populated-board natural-quest acceptance.
+The native46 sources are the exact input to browser engine6. Failed menu/fixture
+trials43–45 remain recorded; their assertions are not publication evidence.
+
+The source checks currently pass60 focused Python checks and14 launcher/search
+checks. Both actual private player pages also pass JavaScript syntax inspection
+after removal of the shared-session code. Browser engine6, current-profile
+upgrade, final single-player UI and production publication remain pending.
+
+
+Browser15 runs engine6 with the complete compiler10 resources. A legacy
+room/role/mode URL becomes the original solo profile; no shared-session module
+is requested. Multiplayer is absent from the original main menu, including its
+old click/hotkey location. The exact prior19-day save continues to20days and
+its quest board renders normally. The exported native40 save then restores
+without test GPL, and a real1000-gold Tame action completes without the old
+void-to-boolean exception. New20-day and3-day saves are written; all five input
+saves remain byte-identical. The owned engine/browser close normally.
+
+That trial exposes blank captive rows despite a live native selection and price.
+The final repair uses the stock16px compact text list, retaining original
+formatted names, Unit pointers, item identities, sorting, selection and costs.
+It removes only the hero portrait painter for the private Zoo list. An examined
+controller-context override was not used. Native47 checks the compact row
+geometry and exact original Unit-vector/list count, then passes paid taming and
+rental again. Exit0 in191.84seconds, peak151.5MiB. Browser engine7 is bound to
+these exact native47 sources; readable row inspection remains pending.

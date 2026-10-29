@@ -367,9 +367,17 @@ struct Ops {
         if (s.plan.kind == ExpansionPanelKind::QuestRecords) {
             records(s);
             quote(s);
-        } else if (s.plan.kind == ExpansionPanelKind::Occupants)
+        } else if (s.plan.kind == ExpansionPanelKind::Occupants) {
+            const auto list = call(0x004df260U, read(s.window + 4), {5000});
+            require(valid(list, 0x68), "owned native captive list");
+            // Keep the original Unit vector, formatted names, item identities
+            // and selection. Stored monsters use the stock compact text view;
+            // the hero portrait callback can leave these rows blank.
+            message(s, 5000, 7);
+            write(list + 0x50, 16);
+            write(list + 0x58, 0);
             quote(s);
-        else
+        } else
             toggles(s);
     }
     void submit(const ExpansionPanelSession &s) {
