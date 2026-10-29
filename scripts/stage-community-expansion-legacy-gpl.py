@@ -13,6 +13,7 @@ sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'third_party/majesty-mod-manag
 from lib.community_guild_composition import digest
 from majesty_cam.gpl import DefinitionKind, parse_gpl, parse_dat
 from majesty_cam.gpl_function_merge import merge_function, same_function_instructions
+from lib.community_action_returns import adapt_scoped
 
 SCOPES = ('Any', 'Majesty', 'MajestyExpansion')
 
@@ -166,6 +167,7 @@ def stage(args):
                 final[scope, (DefinitionKind.FUNCTION, alias.casefold())] = renamed(alias_body, alias)
                 aliases[scope][item.name] = alias
     standard = complete_standard_sources(final, candidate, args.standard_package, new)
+    void_actions = adapt_scoped(final)
     # Resolve newly imported stock symbols through the same original VM route
     # mechanism, without guessing any new native addresses.
     spec = importlib.util.spec_from_file_location('expansion_sdk_sources', ROOT / 'scripts/compose-alchemist-gameplay.py')
@@ -228,6 +230,7 @@ def stage(args):
             ancestorStage=digest(ancestor_raw), policy=digest(Path(__file__).read_bytes()),
             modifications=replacements, scopeMoves=moved, addedStockAliases=added,
             standardSourceCompletion=standard,
+            voidActionBridges=void_actions,
             existingLegacyAdaptationsReapplied=True, sourceCompositionQualified=True),
         compiled=False, targetNativeABIQualified=False, browserPlayable=False, published=False)
     (args.out / 'source-stage.json').write_text(json.dumps(current, indent=2) + '\n')

@@ -1,7 +1,7 @@
 {
   "format": "majesty-community-expansion-source-integration-verification-v1",
   "date": "2026-10-28",
-  "status": "original-follower-marker-overlays-restored; native-and-saved-world-regression-pending",
+  "status": "void-action-bridge-original-sdk-and-native-paid-tame-passed; rental-and-full-release-pending",
   "packages": {
     "adventurers-guild": {
       "format": "majesty-community-expansion-package-inspection-v1",
@@ -73,13 +73,13 @@
     "format": "majesty-community-original-sdk-compile-v1",
     "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
     "sourceStage": {
-      "bytes": 286433,
-      "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
+      "bytes": 287604,
+      "sha256": "e9b32dc13378a3a412b8dba7e4f916ff7934fab701425124974327bb05a2a6df"
     },
     "outputs": {
       "common": {
-        "bytes": 37265667,
-        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "bytes": 37265541,
+        "sha256": "7eab75a6c4d9dcbb28f6eac4c9ba09a0a56694579fa27ce6bec39151fe854bc2",
         "exitCode": 0,
         "headerValid": true,
         "sourceDefinitions": 1106,
@@ -102,41 +102,23 @@
         "compiledDefinitions": 207
       }
     },
-    "elapsedSeconds": 36.46,
-    "peakRssMiB": 125.4,
+    "elapsedSeconds": 41.46,
+    "peakRssMiB": 124.6,
     "compiled": true,
     "compilerSourceDefinitionsQualified": true,
     "compiledBytesExportedQualified": true,
     "playerProfilesAccessed": false,
     "nativeRuntimeQualified": false,
     "browserPlayable": false,
-    "published": false,
-    "resourceOnlyRebind": {
-      "priorCompilerProof": {
-        "bytes": 1306,
-        "sha256": "6a88a6a1ae8f73613b7f6dde7b9daff304e97d439dcb76c3bd27b2daa1d3ae4f"
-      },
-      "priorSourceStage": {
-        "bytes": 285520,
-        "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
-      },
-      "originalSdkSourceFilesByteIdentical": true,
-      "editionRoutesByteIdentical": true,
-      "compilerRerun": false,
-      "metricsFromOriginalCompilation": true,
-      "policy": {
-        "bytes": 4288,
-        "sha256": "e4c076923e7d3d7bc1f2fdb4ac2f0d142fb03c73d5078af059f32e7d40b5061b"
-      }
-    }
+    "published": false
   },
   "creatorStage": {
     "bytes": 9922,
     "sha256": "80909d183c1ad9fe6be52f0efc6b7bbb0c40151516867377bd763776a1041be4"
   },
   "legacyStage": {
-    "bytes": 286433,
-    "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
+    "bytes": 287604,
+    "sha256": "e9b32dc13378a3a412b8dba7e4f916ff7934fab701425124974327bb05a2a6df"
   },
   "legacyRoutes": {
     "Majesty": 157,
@@ -752,8 +734,8 @@
     }
   },
   "latestFocusedExpansionTests": {
-    "command": "python3 -m unittest tests.test_community_follower_markers tests.test_community_expansion_packages tests.test_community_expansion_named_activity tests.test_community_expansion_routes tests.test_community_expansion_media",
-    "passed": 36
+    "command": "python3 -m unittest tests.test_community_action_returns tests.test_community_follower_markers tests.test_community_expansion_packages tests.test_community_expansion_named_activity tests.test_community_expansion_routes tests.test_community_expansion_media tests.test_community_release",
+    "passed": 45
   },
   "preFollowerMarkerCompiler": {
     "format": "majesty-community-original-sdk-compile-v1",
@@ -838,5 +820,109 @@
       "sha256": "61772be19319ee7bf65dd68f70cd0935820922ed37474adb597185dae6ea3c70"
     },
     "nativePending": []
+  },
+  "preVoidActionCompiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 286433,
+      "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 37265667,
+        "sha256": "4ead1dfa043a168f63767bcab97ec7f0c66f5f1b1fd0134d86e86a661b1a8766",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 1106,
+        "compiledDefinitions": 1106
+      },
+      "base": {
+        "bytes": 896411,
+        "sha256": "7471a89a833839f740217680dadb6f7472da702ea3d3e1f7dea0f3417d8f5d76",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 166,
+        "compiledDefinitions": 166
+      },
+      "expansion": {
+        "bytes": 1748226,
+        "sha256": "3f71f7b3f75fc187a1d289c8d9f9aaf27e79e9f20f88bdb159f55318cef6f679",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 207,
+        "compiledDefinitions": 207
+      }
+    },
+    "elapsedSeconds": 36.46,
+    "peakRssMiB": 125.4,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "resourceOnlyRebind": {
+      "priorCompilerProof": {
+        "bytes": 1306,
+        "sha256": "6a88a6a1ae8f73613b7f6dde7b9daff304e97d439dcb76c3bd27b2daa1d3ae4f"
+      },
+      "priorSourceStage": {
+        "bytes": 285520,
+        "sha256": "3da998537183615dc9f1debe15f7b099c561576111b5b8e19dabff9dcf0b11dc"
+      },
+      "originalSdkSourceFilesByteIdentical": true,
+      "editionRoutesByteIdentical": true,
+      "compilerRerun": false,
+      "metricsFromOriginalCompilation": true,
+      "policy": {
+        "bytes": 4288,
+        "sha256": "e4c076923e7d3d7bc1f2fdb4ac2f0d142fb03c73d5078af059f32e7d40b5061b"
+      }
+    }
+  },
+  "preVoidActionLegacyStage": {
+    "bytes": 286433,
+    "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
+  },
+  "voidActionBridgeRepair": {
+    "priorSourceStage": {
+      "bytes": 286433,
+      "sha256": "d863d10c4db6d9786e584fb87d782198c53f6f286be66cf47c8e6bac2896830b"
+    },
+    "changes": [
+      {
+        "scope": "Any",
+        "bridge": "MM_Action_1184ab6762f8f73bd9570525",
+        "callback": "Restore_Zoo_Tame_Beast",
+        "callbackReturnType": "void"
+      }
+    ],
+    "rewritten": [
+      {
+        "file": "Any/Merged.gpl",
+        "name": "MM_Action_1184ab6762f8f73bd9570525",
+        "before": {
+          "bytes": 154,
+          "sha256": "86a2535f9a863c83398958cc0a53cecba5ce0eb6154ac74ae873fd772117f5ab"
+        },
+        "after": {
+          "bytes": 140,
+          "sha256": "56c61a385da1186e56c0764812315911f61848b9cc12e890c63ade689a7b0bab"
+        }
+      }
+    ],
+    "originalCallbackBodiesUnchanged": true,
+    "booleanActionBridgesUnchanged": true,
+    "routesAndDatUnchanged": true,
+    "policy": {
+      "bytes": 4101,
+      "sha256": "8b15b07627c277f02ef2c05fefaca1d5be8fd9244dd20e9dcb4ba4cd3226d38f"
+    },
+    "returnPolicy": {
+      "bytes": 2358,
+      "sha256": "fcee670bc4e1f2feece12f49dc751d6dfde8ee2ffbccd64d544bee667b04456a"
+    }
   }
 }
