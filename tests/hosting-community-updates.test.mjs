@@ -83,6 +83,28 @@ test('updates only two known scripts, downloads once, retains profile and manife
   assert.equal(f.writes.length, 4);
 });
 
+test('updates both shadowing cursor tables for returning players and preserves saves', async () => {
+  const f = fixture(), saved = f.data.get('majesty/profile/player/SaveGame/keep.GMP');
+  const names = ['Data/alchemist_interfacedata.cam', 'DataMX/alchemist_interfacedata.cam'];
+  const manifest = JSON.parse(await f.data.get(prefix + '.manifest.json').text());
+  for (const name of names) {
+    f.put(prefix + name, 'old');
+    manifest.files[name] = {size: 3, mtime: 10};
+  }
+  f.put(prefix + '.manifest.json', JSON.stringify(manifest));
+  f.options.files = Object.fromEntries(names.map(name => [name, next]));
+  f.options.sizes = Object.fromEntries(names.map(name => [name, 3]));
+  f.options.hashFile = async blob => await blob.text() === 'old'
+    ? '74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf' : next;
+  f.options.loadRecipe = async () => ({patches: names.map(path =>
+    ({path, sha256: next, bytes: 3,
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + '1'.repeat(40) + '/assets/cursor.cam'}))});
+  assert.equal(await refreshCommunityScripts(f.options), true);
+  for (const name of names) assert.equal(await f.data.get(prefix + name).text(), 'new');
+  assert.equal(f.data.get('majesty/profile/player/SaveGame/keep.GMP'), saved);
+  assert.equal(await refreshCommunityScripts(f.options), false);
+});
+
 test('unchanged verified files skip hashing, downloads, recipe requests and writes', async () => {
   const f = fixture();
   await refreshCommunityScripts(f.options);

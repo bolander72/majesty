@@ -48,6 +48,27 @@ def image_sets(entry, sections):
     return data[:20], result
 
 
+def repair_capture_cursor_archive(original, authored):
+    """Keep the capture preview in the earlier Alchemist CUR1 override too."""
+    def cursors(archive):
+        sections = {section.extension: section for section in archive.sections}
+        entries = [entry for entry in sections[b'IMAG'].entries if entry.name[:4] == b'CUR1']
+        if len(entries) != 1:
+            raise ValueError('Require one native tactical cursor table')
+        return image_sets(entries[0], sections)[1]
+
+    previous, complete = cursors(original), cursors(authored)
+    if 1038 in previous or set(complete) != set(previous) | {1038}:
+        raise ValueError('Require only the missing capture cursor animation set 1038')
+    result, proof = append_art(original, authored, {b'CUR1'}, extend_cursor=True)
+    restored = cursors(result)
+    if (any(restored[key] != value for key, value in previous.items()) or
+            restored[1038] != complete[1038]):
+        raise ValueError('Native cursor artwork changed during capture cursor repair')
+    return result, dict(proof, captureCursorSet=1038, priorCursorCount=len(previous),
+                        resultingCursorCount=len(restored))
+
+
 def append_art(original, authored, image_ids, extend_cursor=False):
     """Relocate only selected new IMAG/TILE/SPLT records into an existing CAM."""
     old = {section.extension: section for section in original.sections}

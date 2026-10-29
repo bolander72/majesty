@@ -14,6 +14,38 @@ SPEC.loader.exec_module(BUILD)
 
 
 class CommunityReleaseTests(unittest.TestCase):
+    def test_capture_cursor_release_requires_preserved_art_and_browser_checks(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'deploy').mkdir()
+            policies = ['scripts/lib/community_expansion_media.py',
+                        'scripts/prepare-community-capture-cursor.py']
+            for name in policies:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('qualified cursor policy')
+            files = {name: dict(bytes=100, sha256='c' * 64) for name in
+                     ['Data/alchemist_interfacedata.cam', 'DataMX/alchemist_interfacedata.cam']}
+            content = dict(captureCursorVerification='deploy/capture-cursor-verification.json',
+                           patches=[dict(path=name, **record) for name, record in files.items()])
+            checks = ['capturePreviewBeforePlacementQualified', 'captureCursorFollowsPointerQualified',
+                      'rewardAmountPreviewQualified', 'stockAttackExploreCursorsPreserved',
+                      'cancelRestoresNativeHandQualified', 'playerSaveHashesPreserved',
+                      'onlyCaptureCursorSetAdded', 'originalCursorSetsByteIdentical',
+                      'noEngineOrGameplayChanges']
+            proof = dict(format='majesty-capture-cursor-qualification-v1',
+                         engineSha256='b' * 64, cursorOrdinal=38, files=files,
+                         sourcePolicies={name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+                                         for name in policies}, **{key: True for key in checks})
+            audit = root / content['captureCursorVerification']
+            with patch.object(BUILD, 'ROOT', root):
+                audit.write_text(json.dumps(proof))
+                BUILD.qualify_capture_cursor_release(content, 'b' * 64)
+                for key in checks:
+                    audit.write_text(json.dumps({**proof, key: False}))
+                    with self.assertRaises(ValueError):
+                        BUILD.qualify_capture_cursor_release(content, 'b' * 64)
+
     def test_expansions_require_matching_sources_and_every_gameplay_gate(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

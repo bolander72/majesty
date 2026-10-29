@@ -122,9 +122,9 @@
     },
     {
       "path": "Data/alchemist_interfacedata.cam",
-      "bytes": 3959550,
-      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0c5ce1a04f5375a7eacdc858dd8b151349e8b146/assets/content/capture-cursor-v1/Data/alchemist_interfacedata.cam",
+      "bytes": 3962284,
+      "sha256": "c79b59bc871e57418903def1985246c02d3aa2efe9de62ac9c5139cd1d43128b"
     },
     {
       "path": "Data/alchemist_maindata.cam",
@@ -278,9 +278,9 @@
     },
     {
       "path": "DataMX/alchemist_interfacedata.cam",
-      "bytes": 3959550,
-      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
-      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0c5ce1a04f5375a7eacdc858dd8b151349e8b146/assets/content/capture-cursor-v1/DataMX/alchemist_interfacedata.cam",
+      "bytes": 3962284,
+      "sha256": "c79b59bc871e57418903def1985246c02d3aa2efe9de62ac9c5139cd1d43128b"
     },
     {
       "path": "DataMX/alchemist_maindata.cam",
@@ -415,5 +415,6 @@
   "retiredCommunityExpansions": [
     "more-heroes"
   ],
-  "moreHeroesRetirementVerification": "deploy/more-heroes-retirement-verification.json"
+  "moreHeroesRetirementVerification": "deploy/more-heroes-retirement-verification.json",
+  "captureCursorVerification": "deploy/capture-cursor-verification.json"
 }

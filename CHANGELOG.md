@@ -1,5 +1,10 @@
 # Changelog
 
+## Zoo capture cursor preview — October 29, 2026
+
+- Restore the native green capture flag and reward amount beside the pointer before placement. Extend the active cursor table with the existing Zoo artwork so another interface archive cannot hide it.
+- Preserve all existing cursor animations, capture mechanics, prices, saved worlds and the current engine.
+
 ## More Heroes retirement — October 29, 2026
 
 - Keep Adventurers Guild and The Royal Menagerie active. Disable More Heroes construction and recruitment and restore the earlier random hero pool.

@@ -1,0 +1,54 @@
+{
+  "format": "majesty-capture-cursor-qualification-v1",
+  "date": "2026-10-29",
+  "engineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
+  "cursorOrdinal": 38,
+  "imageSet": 1038,
+  "files": {
+    "Data/alchemist_interfacedata.cam": {
+      "bytes": 3962284,
+      "sha256": "c79b59bc871e57418903def1985246c02d3aa2efe9de62ac9c5139cd1d43128b"
+    },
+    "DataMX/alchemist_interfacedata.cam": {
+      "bytes": 3962284,
+      "sha256": "c79b59bc871e57418903def1985246c02d3aa2efe9de62ac9c5139cd1d43128b"
+    }
+  },
+  "priorFiles": {
+    "Data/alchemist_interfacedata.cam": {
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf"
+    },
+    "DataMX/alchemist_interfacedata.cam": {
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf"
+    }
+  },
+  "cursorExtension": {
+    "imagesAdded": 0,
+    "tilesAdded": 1,
+    "palettesAdded": 0,
+    "priorCursorCount": 35,
+    "resultingCursorCount": 36
+  },
+  "sourcePolicies": {
+    "scripts/lib/community_expansion_media.py": "5755cf42b74c4abe9afe1e604c6eded39ccf957db3a53d92c46eb45578c5cbc8",
+    "scripts/prepare-community-capture-cursor.py": "1d0d6fe72ee3e82641ca1f52aee56e6f68b297408bd0a2fbd5ebcc53c379650b"
+  },
+  "capturePreviewBeforePlacementQualified": true,
+  "captureCursorFollowsPointerQualified": true,
+  "rewardAmountPreviewQualified": true,
+  "stockAttackExploreCursorsPreserved": true,
+  "cancelRestoresNativeHandQualified": true,
+  "playerSaveHashesPreserved": true,
+  "onlyCaptureCursorSetAdded": true,
+  "originalCursorSetsByteIdentical": true,
+  "noEngineOrGameplayChanges": true,
+  "browserEvidence": {
+    "baseline": "owned muted Chrome trial zoo-browser8",
+    "candidate": "owned muted Chrome trial zoo-browser9",
+    "protectedSaves": 9,
+    "setup": "Private opt-in GPL creates a completed Zoo in the existing owned Holy Chalice world. Engine and gameplay source callbacks match between trials.",
+    "trace": "No runtime exception in these cursor trials. The separately reported zoo exception remains unresolved."
+  }
+}

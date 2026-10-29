@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'third_party/majesty-mod-manager/src')]
 from majesty_cam.cam import CamArchive, CamSection, CamEntry
 from lib.community_expansion_media import (
-    append_art, append_waves, image_sets, repair_zoo_foundation_preview)
+    append_art, append_waves, image_sets, repair_zoo_foundation_preview,
+    repair_capture_cursor_archive)
 
 
 def entry(name, data):
@@ -100,6 +101,22 @@ class ExpansionMediaTests(unittest.TestCase):
             append_art(old, new, {b'CUR1'}, extend_cursor=True)
         with self.assertRaisesRegex(ValueError, 'replace a deployed image'):
             append_art(old, new, {b'CUR1'})
+
+    def test_capture_cursor_is_added_to_the_shadowing_table_without_changing_other_cursors(self):
+        old, new = self.inputs()
+        result, proof = repair_capture_cursor_archive(old, new)
+        sections = {section.extension: section for section in result.sections}
+        self.assertEqual(set(image_sets(sections[b'IMAG'].entries[0], sections)[1]), {1038, 1039})
+        self.assertEqual(proof['captureCursorSet'], 1038)
+        self.assertTrue(proof['deployedCursorSetsIdentical'])
+        self.assertEqual(proof['tilesAdded'], 1)
+        with self.assertRaisesRegex(ValueError, 'only the missing capture cursor'):
+            repair_capture_cursor_archive(result, new)
+
+    def test_capture_cursor_repair_rejects_a_donor_missing_the_preview(self):
+        old, _ = self.inputs()
+        with self.assertRaisesRegex(ValueError, 'only the missing capture cursor'):
+            repair_capture_cursor_archive(old, old)
 
     def test_wave_import_preserves_existing_audio_and_rejects_replacement(self):
         old = CamArchive((CamSection(b'WAVE', (entry(b'OLD1', b'original waveform'),)),))

@@ -93,6 +93,24 @@ voice corrections and campaign art remain in place. The new guild's original
 audio is appended without transcoding. `native-resource-verification.json`
 binds these inputs and outputs; it does not claim controller/gameplay acceptance.
 
+## Capture placement cursor repair — October 29, 2026
+
+The missing preview was reproduced separately from placed-flag rendering: the
+stock attack cursor drew its banner, while the capture cursor drew only its
+amount. Community-interface.cam already contained CUR1 animation set1038, but
+the existing Alchemist interface override contained sets1000–1037 and1039 without
+1038. Extending that override in both Data and DataMX restored the green capture
+banner in the native software cursor without changing the engine or scripts.
+
+`prepare-community-capture-cursor.py` imports only that existing animation set.
+Its resolved tile and palette match the acquired/composed cursor; every earlier
+cursor set, tile, palette and other image remains intact. A muted, isolated
+Holy Chalice comparison verified the preview before placement, movement with
+the pointer, changed reward amounts, invalid-target feedback, cancellation back
+to the ordinary hand, and unchanged stock attack/explore cursors. All nine owned
+test-save hashes remained identical. This cursor verification does not establish
+the cause or resolution of the separately reported zoo exception.
+
 ## Verification and continuation
 
 The four map/movement intrinsics now have an original 1.5.1.2 native adapter.

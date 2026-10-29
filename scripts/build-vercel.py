@@ -385,6 +385,34 @@ def qualify_more_heroes_retirement(content, engine):
         raise ValueError('Require source-bound, save-compatible More Heroes retirement')
 
 
+def qualify_capture_cursor_release(content, engine):
+    """Bind the cursor-only update to its preserved art and browser comparison."""
+    name = content.get('captureCursorVerification')
+    if name is None:
+        return
+    if name != 'deploy/capture-cursor-verification.json':
+        raise ValueError('Unexpected capture cursor qualification')
+    proof = json.loads((ROOT / name).read_text())
+    paths = {'Data/alchemist_interfacedata.cam', 'DataMX/alchemist_interfacedata.cam'}
+    actual = {p['path']: {k: p[k] for k in ('bytes', 'sha256')}
+              for p in content['patches'] if p['path'] in paths}
+    policies = ['scripts/lib/community_expansion_media.py',
+                'scripts/prepare-community-capture-cursor.py']
+    checks = ['capturePreviewBeforePlacementQualified', 'captureCursorFollowsPointerQualified',
+              'rewardAmountPreviewQualified', 'stockAttackExploreCursorsPreserved',
+              'cancelRestoresNativeHandQualified', 'playerSaveHashesPreserved',
+              'onlyCaptureCursorSetAdded', 'originalCursorSetsByteIdentical',
+              'noEngineOrGameplayChanges']
+    if (proof.get('format') != 'majesty-capture-cursor-qualification-v1' or
+            proof.get('engineSha256') != engine or proof.get('cursorOrdinal') != 38 or
+            any(proof.get(key) is not True for key in checks) or
+            proof.get('files') != actual or set(actual) != paths or
+            actual['Data/alchemist_interfacedata.cam'] != actual['DataMX/alchemist_interfacedata.cam'] or
+            proof.get('sourcePolicies') != {n: hashlib.sha256((ROOT / n).read_bytes()).hexdigest()
+                                          for n in policies}):
+        raise ValueError('Require the cursor-only repair with native browser and preservation checks')
+
+
 def qualify_community_expansions(content, engine):
     identities = content.get('communityExpansions')
     if identities is None:
@@ -433,6 +461,7 @@ def install_community_guilds_release(static):
     bindings, sizes = binding('FILES'), binding('SIZES')
     patches = content.get('patches', [])
     expansions = qualify_community_expansions(content, engine)
+    qualify_capture_cursor_release(content, engine)
     if (len(bindings) != (56 if expansions else 54) or len(patches) != len(bindings)
             or {p.get('path') for p in patches} != set(bindings)):
         raise ValueError('Require every source-bound composed resource exactly once')

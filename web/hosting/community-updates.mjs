@@ -8,6 +8,12 @@ import {hashBlob} from '../world/content-hash.mjs';
 // Keep the first released hash as the update baseline, and admit later known
 // versions so players can move directly from either prior release.
 const PREVIOUS = Object.freeze({
+  "Data/alchemist_interfacedata.cam": [
+    "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf"
+  ],
+  "DataMX/alchemist_interfacedata.cam": [
+    "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf"
+  ],
   "Data/Community_Common.bcd": [
     "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
     "d31ae1725d7f10b3dc00f63575828bb8d921b92659d0cea89daea105b07ac34e",
