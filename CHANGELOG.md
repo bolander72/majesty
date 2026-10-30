@@ -1,5 +1,11 @@
 # Changelog
 
+## Dark Paladin native tier presentation — October 30, 2026
+
+- Give upgrade tiers distinct native level labels in building lists while retaining the full Domain panel title.
+- Keep the previous completed building visible during upgrades. Reserve the foundation frames for new construction.
+- Add a substantial bell tower and side gallery at level 2, then fortified gate towers and an arched entry at level 3. Preserve the original hall and earlier additions.
+
 ## Dark Paladin production release — October 30, 2026
 
 - Replace the guild thumbnail with a painted candlelit interior and the round building with an original Gothic stone hall, slate roof and distinct upgrade tiers. Preserve native framing and the 25-pixel Palace emblem.

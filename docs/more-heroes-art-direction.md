@@ -56,6 +56,28 @@ portrait, selection card, recruitment button and ability icons at native size.
 Palace building-list emblems must use the existing opaque 25-by-25 framed
 contract. Preserve the native bevels, typography, selection and disabled states.
 
+## Native tier naming and upgrade behavior
+
+Mike clarified these requirements on October 30 after reviewing the live guild:
+
+- Identify every building tier clearly in native lists, using `Level 2`, `Level 3`, and so on for upgrades, as stock buildings do.
+  Keep the base name consistent with the stock level-one convention. Keep names readable
+  inside the stock row width and retain the full guild identity on its panel.
+- An upgrade starts from the completed previous tier. Preserve the standing
+  building while workers add to it; reserve bare foundations and initial
+  building frames for new construction. Check both 1-to-2 and 2-to-3 work.
+- Each completed tier needs substantial, clearly visible new architecture at
+  normal game scale. Add coherent wings, towers or fortifications to the
+  existing structure. Small decorative changes alone do not establish a tier.
+- Review initial construction, active upgrades, completed tiers and restored
+  saves against equivalent stock buildings. Verify the selected checkpoint
+  actually contains the tier being reviewed. Preserve placement, framing,
+  selection feedback and the features built in earlier tiers.
+
+The Domain presentation pass follows the frozen original-art producer and
+owns the final tier labels and upgrade-frame bindings. Future asset rebuilds
+must include this pass before qualification or publication.
+
 ## Initial identity proposals
 
 These are design options, not approved replacement art or new gameplay promises.

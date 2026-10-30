@@ -77,3 +77,9 @@ continuations.
   More Heroes reintroduction; all other retired classes remain disabled. The
   active production delta is `deploy/dark-paladin-release.json`; the older
   hosted-release descriptor remains its historical baseline.
+
+- Tiered guilds must show unambiguous native `Level 2`, `Level 3` and later
+  names in building lists; base naming follows the stock level-one convention. Upgrade work must retain
+  the completed previous structure, with foundations used only for new construction. Each completed
+  tier must add substantial, readily visible architecture at normal game size;
+  preserve prior features and verify active upgrades beside stock buildings.

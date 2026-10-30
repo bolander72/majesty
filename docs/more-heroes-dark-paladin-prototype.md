@@ -187,3 +187,47 @@ Phantom, capture-cursor and expansion qualification records are preserved.
 The source build now includes this release automatically. Production deployment:
 `dpl_7pKfZFf2A1FXMtLsFZhfPr4QRrS1`. Live verification is recorded in
 `deploy/dark-paladin-production-verification.json`.
+
+## Native tier presentation corrections
+
+Mike requested explicit level names and stock-equivalent upgrade behavior.
+The base entry retains `Dark Paladin's Domain`, following stock level-one
+naming. Higher tiers use `Dark Paladin Level 2` and `Dark Paladin Level 3`
+in the narrow building list; the guild panel retains the full Domain name.
+Both native description headers and display-name tables carry the tier labels;
+internal actor names, engine bindings and game attributes remain unchanged. An upgrade begins
+with the completed previous tier visible, rather than showing the initial
+construction foundation. The late construction stage reveals the enlarged
+target structure. New construction still uses the original foundation stages.
+
+The revised second tier adds a substantial attached bell tower and side
+gallery. The third preserves that architecture and adds two large crenellated
+gate towers and an arched fortified entry. The original hall and courtyard
+remain in place. These requirements are recorded in the art-direction brief
+and persistent workspace instructions for future guilds.
+
+
+The follow-up native review completed levels 2 and 3 from the existing
+level-one checkpoint, confirmed the previous building remains visible during
+both upgrades, and reloaded the existing 12-day level-three checkpoint with
+the expanded architecture. All 15 existing GMP checkpoint hashes were
+preserved; normal quest victory updated the owned test profile's progress and
+high scores. The bounded trial reported no guest exceptions. The normal
+Palace menu shows the base entry, while upgrade-only tiers retain native
+filtering; higher labels were checked in world text and both native name and
+description tables.
+
+This correction is pinned by `deploy/dark-paladin-tier-release.json` and
+qualified by `deploy/dark-paladin-tier-verification.json`. Its final overlay
+changes three resource-binding files and eight native resource archives,
+retaining the engine, gameplay scripts and actor attributes. A clean source
+build reproduced all 149 production artifact files exactly. Native asset
+commit: `7a177a31363ea700439f876223620a0e91814d7d`. Binding commit:
+`1881fd8354675cbbcfa9306124918ef8d5dbde7e`. Native review images are in the
+workspace's `output/more-heroes/dark-paladin/v4/review/`.
+
+The corrected tier presentation is live on https://majesty.boland.co/ in
+production deployment `dpl_HpChsK8RGTTCRZ2Z9eyQ5Do24vLk`. Staged and public
+HTTP checks matched the reviewed artifact, including resource bindings,
+unchanged engine bytes and browser isolation headers. The public receipt is
+`deploy/dark-paladin-tier-production-verification.json`.

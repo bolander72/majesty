@@ -1,0 +1,51 @@
+{
+  "url": "https://majesty.boland.co",
+  "target": "production",
+  "ready": true,
+  "mainDomainVerified": true,
+  "engineUnchanged": true,
+  "nativeTierPresentationVerified": true,
+  "allFilesMatchStagedProduction": true,
+  "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d",
+  "activeGuilds": [
+    "adventurers-guild",
+    "royal-menagerie",
+    "dark-paladin"
+  ],
+  "otherMoreHeroesAdmissionsDisabled": true,
+  "files": {
+    "index.html": {
+      "bytes": 22918,
+      "sha256": "3bb71b7cca0dc43d8f6fb84c28eddeb791739894b31309a2176c1e0a15130339"
+    },
+    "games.json": {
+      "bytes": 3695,
+      "sha256": "1d81757d4a149a261d46c2cc529136475a8860de3258c8a953e88e18d3cd9b69"
+    },
+    "hosting/automatic-assets.json": {
+      "bytes": 48112,
+      "sha256": "782a508938af9cf6927750351a03f72db0e7074f72e5f05c6f696f213242ba1e"
+    },
+    "content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "4991e3a0bbfdfb7c64e7d247d9f9b4ffa3308945de8a693b554e924aa5c276db"
+    },
+    "hosting/community-updates.mjs": {
+      "bytes": 13365,
+      "sha256": "dee8a51d9086b3f3c50ee4118caf2f45dbe275702d61188596c5f119cf099a4a"
+    },
+    "majesty/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "majesty/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    }
+  },
+  "deploymentId": "dpl_HpChsK8RGTTCRZ2Z9eyQ5Do24vLk",
+  "nativeAssetsCommit": "7a177a31363ea700439f876223620a0e91814d7d",
+  "bindingAssetsCommit": "1881fd8354675cbbcfa9306124918ef8d5dbde7e",
+  "reproducedArtifactFiles": 149,
+  "publishedNativeResourcesVerified": 8
+}

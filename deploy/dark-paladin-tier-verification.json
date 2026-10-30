@@ -1,0 +1,144 @@
+{
+  "format": "majesty-dark-paladin-tier-qualification-v1",
+  "date": "2026-10-30",
+  "nativeNamesQualified": true,
+  "nativeUpgradeConstructionQualified": true,
+  "distinctCompletedTiersQualified": true,
+  "savedTierReloadQualified": true,
+  "ownedBrowserClosed": true,
+  "engineUnchanged": true,
+  "statsAndScriptsUnchanged": true,
+  "sourcePolicies": {
+    "scripts/prepare-dark-paladin-tier-presentation.py": "602f524cb06f3a9b75b40a9904af50bca6ce582ecf9bdcab4065fb3fd52397e0",
+    "scripts/lib/dark_paladin_tier_presentation.py": "85124b2c3127629eeb3cf3585d628fa316717fd9fc4858e7c57d5c5d47531fcd",
+    "scripts/artwork/dark_paladin_domain_tiers.py": "c2f4761decae2e09b363cd36af1d9dc4405d43de76cb85242e4c92322fbb5c1d"
+  },
+  "resources": {
+    "Data/Community-main.cam": {
+      "bytes": 32683728,
+      "sha256": "822d2ac2a0952f39df9f341aab46508f8d5f6b0b11b211dc316161383e1d71fd"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32683728,
+      "sha256": "822d2ac2a0952f39df9f341aab46508f8d5f6b0b11b211dc316161383e1d71fd"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417517,
+      "sha256": "28224402b9b3d46a8b384e8dfdbc4967dfabb747da6f04f8feb17a1bfa202d69"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63844,
+      "sha256": "b22ac4143f00d5026a56b79a060fc0748757f9d676939f92525c3efd79c06b9b"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204266,
+      "sha256": "8eedf9dc5709a6650f07136e32ae1e08c44c5d768333b7bd8f1a6b0d0428798e"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65196,
+      "sha256": "8401e9405b0a9efe2df067fa07f97d2f21ee36485224cab02283ea52b807fbab"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204101,
+      "sha256": "5e515ef108cfe04bc748e063796170d8f1d1b3a8008cf59f84d0eb301601fe6f"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121465,
+      "sha256": "92c30062b764de1b034913f1a130bb32b0463298ddcae779e64a7b85a736f999"
+    }
+  },
+  "priorResources": {
+    "Data/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417519,
+      "sha256": "9c7655d123c7bf00ce58d7ab096a14012fd85b52f4fde72e599b2650b11d555e"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63846,
+      "sha256": "e57d073ba9a5233d9b4f8da558ad2ac09c110f8bf9b2a9ce4009f968e1fd2794"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204268,
+      "sha256": "2568073d5a382cc335b13ad1b25141203fd3a26eef75ad8de0a1f022ad984e20"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65198,
+      "sha256": "85fbcd265a1b18192294f035e20d925d8e848ff6cf14a260bf3ede5ac5fa3b9e"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204103,
+      "sha256": "63dc93d596f7caf1dad81f9cee5674642e97d937bb069fba26dcb880601070d7"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121467,
+      "sha256": "3134fabc37c378928670f99d4d1f505a5fc08ffa71a8798cc19e4dc2cee6bb2a"
+    }
+  },
+  "actualChangedStringIds": [
+    "AB22",
+    "AB23"
+  ],
+  "baseGuildTitlePreserved": true,
+  "higherTierLabels": [
+    "Dark Paladin Level 2",
+    "Dark Paladin Level 3"
+  ],
+  "nativeMenuBaseEntryInspected": true,
+  "upgradeOnlyMenuRowsHiddenUnderNormalFilter": true,
+  "higherNamesCheckedInNativeWorldAndDescriptionTables": true,
+  "savedCheckpointCountPreserved": 15,
+  "ownedQuestVictoryProgressUpdatedNormally": true,
+  "qualifyingGameTrial": "dp-browser24",
+  "qualifyingMenuTrial": "dp-browser25",
+  "interruptedTrials": {
+    "dp-browser22": "background build detected; stopped",
+    "dp-browser23": "background build/configuration detected; stopped"
+  },
+  "nativeCompletedLevels": [
+    2,
+    3
+  ],
+  "nativeCompletedMaxHP": [
+    900,
+    1200
+  ],
+  "restoredCheckpoint": "(Quest for the Holy Chalice) 12 Days.GMP",
+  "errors": [],
+  "evidence": {
+    "level3.png": {
+      "bytes": 1442806,
+      "sha256": "fbc3090629cad9101f8887a78f873595760c95255b8d2739dee81b962bbb55c4"
+    },
+    "restored-level3.png": {
+      "bytes": 1440226,
+      "sha256": "8147fcc0f373880db6f1b9477f819d1d53b592d4074d78da24f6402f90dae9ad"
+    },
+    "level2.png": {
+      "bytes": 1443361,
+      "sha256": "f0f1933bb58bc18f4099c0155b7593ab95ccca92eec53f4710261a34991a5ebd"
+    },
+    "level1.png": {
+      "bytes": 1439178,
+      "sha256": "e01cd1c47f9e0c54c77626619b5e6d6470e2e9ed9b409ccee2db7ce90aa4dee1"
+    },
+    "native-building-list.png": {
+      "bytes": 1306113,
+      "sha256": "9b9040add6ad50480da4e84f3a5577a39c7878899fd4bc5378250337b4ef0d1c"
+    },
+    "upgrade3-standing.png": {
+      "bytes": 1445409,
+      "sha256": "9d2f66fdc86da95c59006b4e0a5a522ca9c83b90c294fd90f2b32a990b7a9918"
+    },
+    "upgrade2-standing.png": {
+      "bytes": 1437169,
+      "sha256": "9aac924f03c5db3b36a8f0aa353aac8377a4379c4b8694b0edfcfa98109a5770"
+    }
+  }
+}

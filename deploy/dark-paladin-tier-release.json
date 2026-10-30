@@ -1,0 +1,1227 @@
+{
+  "format": "majesty-dark-paladin-tier-release-v1",
+  "qualification": {
+    "bytes": 4961,
+    "sha256": "6c4f21c18d1946bafba51b6affa4263130d1ac0489e3c8a457af01c654cd6058"
+  },
+  "installer": {
+    "bytes": 2648,
+    "sha256": "1d2eac71d4b2dcb702801c9e380017fc966e8a0092c94c4b97f4acaff1217113"
+  },
+  "payloads": {
+    "static/hosting/automatic-assets.json": {
+      "bytes": 48112,
+      "sha256": "782a508938af9cf6927750351a03f72db0e7074f72e5f05c6f696f213242ba1e",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/1881fd8354675cbbcfa9306124918ef8d5dbde7e/assets/releases/dark-paladin-tiers-v2/static/hosting/automatic-assets.json"
+    },
+    "static/hosting/community-updates.mjs": {
+      "bytes": 13365,
+      "sha256": "dee8a51d9086b3f3c50ee4118caf2f45dbe275702d61188596c5f119cf099a4a",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/1881fd8354675cbbcfa9306124918ef8d5dbde7e/assets/releases/dark-paladin-tiers-v2/static/hosting/community-updates.mjs"
+    },
+    "static/content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "4991e3a0bbfdfb7c64e7d247d9f9b4ffa3308945de8a693b554e924aa5c276db",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/1881fd8354675cbbcfa9306124918ef8d5dbde7e/assets/releases/dark-paladin-tiers-v2/static/content/community-files.mjs"
+    }
+  },
+  "baselineFiles": {
+    "config.json": {
+      "bytes": 2845,
+      "sha256": "e7dfda83a3a2b62d18d2a1a9e2bd83db4e42f2572854b7b8abc4df74378de9e5"
+    },
+    "static/zip-stream.mjs": {
+      "bytes": 5904,
+      "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
+    },
+    "static/index.html": {
+      "bytes": 22918,
+      "sha256": "3bb71b7cca0dc43d8f6fb84c28eddeb791739894b31309a2176c1e0a15130339"
+    },
+    "static/games.json": {
+      "bytes": 3695,
+      "sha256": "1d81757d4a149a261d46c2cc529136475a8860de3258c8a953e88e18d3cd9b69"
+    },
+    "static/core.js": {
+      "bytes": 18659,
+      "sha256": "210197ffd818341552f7a434e3e6fe5b7464b0bc61619748368488acea023afd"
+    },
+    "static/worker.js": {
+      "bytes": 9691,
+      "sha256": "6a8827baaaa4db4dd0725a74f8d71d14d17d7bb8543e88bb35e2f9b05de866c6"
+    },
+    "static/setup.html": {
+      "bytes": 6409,
+      "sha256": "983ad70717931e5d067364da66026618cd0398c6a982e38fbb993a4edec9e1d1"
+    },
+    "static/app.js": {
+      "bytes": 11446,
+      "sha256": "31f7eaf30828413570dbb6ca52390fb7932c308b9073ceb17d2e9e5a3e04b0f1"
+    },
+    "static/world/hero-generation-boundary.mjs": {
+      "bytes": 1661,
+      "sha256": "e399e9ecdc1cebdaa9a20209c93e2b0a86df9d240fbf5b6ac64e35aac0569cc4"
+    },
+    "static/world/newrecruit-marker-clock.mjs": {
+      "bytes": 5947,
+      "sha256": "6a7e529306b51ce9f603c4b94453b9e029314500f9f61137f571d0e87f2f4e05"
+    },
+    "static/world/hero-dormant-home-restore.mjs": {
+      "bytes": 5192,
+      "sha256": "2202ba860494d11b23869ee0b3febceb014c1a5d3b1aea30a1bdc15197c41197"
+    },
+    "static/world/hero-home-arrival-package.mjs": {
+      "bytes": 5201,
+      "sha256": "8911e63aaaed44bab8d8bb2d70491ae88d7bf2c9cb108c37595aed50ebe9e1e6"
+    },
+    "static/world/order-dispatch-clock.mjs": {
+      "bytes": 1834,
+      "sha256": "f8c9a080fe4f1956c2d55d98cc48a6e534211f900f01a2dbe39023deb4140e3d"
+    },
+    "static/world/content-hash.mjs": {
+      "bytes": 2420,
+      "sha256": "3a8af8ab63dd6be602563d48b97c6134ea3a0b29700bcc20a958efc53c024f80"
+    },
+    "static/world/realm-profile.mjs": {
+      "bytes": 1834,
+      "sha256": "8513264e4b154d52fb95b8e459df481edb247cb47f9a344bf473b0208b4b9755"
+    },
+    "static/world/order-allocation-bridge.mjs": {
+      "bytes": 8214,
+      "sha256": "c99d6209b2dd19c0f81a3c2f09b10410c6311c9365312db41e937e209ce0e71e"
+    },
+    "static/world/hero-generation-request.mjs": {
+      "bytes": 4789,
+      "sha256": "e4750eaaec1697c35a14f184fd4a4e56582d184f30de4d239c6cf70ba0551f4e"
+    },
+    "static/world/order-restore-bounds.mjs": {
+      "bytes": 3261,
+      "sha256": "11304c8357cb7acbd274ff31a38d6de3ab4142b4b5f293a669bf64790949afaa"
+    },
+    "static/world/registered-hero-arrival.mjs": {
+      "bytes": 4004,
+      "sha256": "2d2e2daabddf4d8759f08714c3e4bf41f1c261fbc13c428499382f276fd6b394"
+    },
+    "static/world/camera-checkpoint.mjs": {
+      "bytes": 3575,
+      "sha256": "b80b3b4102dbaafb5fa9c1f0a4bb9b4314d3f9f2229e872b5b0126b78916240f"
+    },
+    "static/world/halo-order-navigation.mjs": {
+      "bytes": 5179,
+      "sha256": "565c98b5e0e71f91dd45c145a7b18cc037651da96396d4912284d1ad10220f57"
+    },
+    "static/world/scene-view.mjs": {
+      "bytes": 1711,
+      "sha256": "b952ea1b32ecd91df83cbb08fdad628e22260a6a6a6d7891f5e551b755d1d9dc"
+    },
+    "static/world/family-order-entries.mjs": {
+      "bytes": 115,
+      "sha256": "25a99bc4d129e8428cd966433ae435a75e36c64363bac86a6ae0edd79afcd79e"
+    },
+    "static/world/actor-family-clocks.mjs": {
+      "bytes": 6584,
+      "sha256": "c309c90d70d60e8168727b410576d79451f54019547ffcfb805463bda8a0cfb1"
+    },
+    "static/world/index.html": {
+      "bytes": 5804,
+      "sha256": "f0b2f86be5a7fbf8324249835d43f62adf290d8ed260de70f74efb1a76e903e5"
+    },
+    "static/world/content-hash-worker.mjs": {
+      "bytes": 401,
+      "sha256": "e54383b984d326dfcdc3b1158e48434367c9c7b2ce1777041216ccbe3c3adcaf"
+    },
+    "static/world/halo-home-route.mjs": {
+      "bytes": 4413,
+      "sha256": "37984c007b4a55c99e8c24d3deda82833bad6d9e8bb4b8f05cd8286025357295"
+    },
+    "static/world/resources.mjs": {
+      "bytes": 2438,
+      "sha256": "4be5849de156782331285e09f0fa95c6be510e218e189b1f36e30b90f374fdc7"
+    },
+    "static/world/native-atlas.mjs": {
+      "bytes": 7246,
+      "sha256": "46322adecef4e729e967f546aec9290071609f4bf56a1701f51ed5b292d69151"
+    },
+    "static/world/hero-route-launcher.mjs": {
+      "bytes": 12202,
+      "sha256": "1d98671a240b3b69a2e2ca8ac43260e4fb4d76202ff16f608b3a6f0bb302aaed"
+    },
+    "static/world/remote-home-cache.mjs": {
+      "bytes": 3424,
+      "sha256": "c9950b2a81a5f96d70c16c62a575e6829beea1b9e3f765e8411f2f6593a8f4f3"
+    },
+    "static/world/terrain-halo.mjs": {
+      "bytes": 2517,
+      "sha256": "af7084189723f63a1cfc7737e59ab306995c499382e12476126e74d6e755c491"
+    },
+    "static/world/entity-pair.mjs": {
+      "bytes": 6934,
+      "sha256": "6a7b7d192e2c6b16dfe46d8eabea71199629352f3c144df1dcc19a027eddad98"
+    },
+    "static/world/view.mjs": {
+      "bytes": 12491,
+      "sha256": "89905e3af089d3d50c2711051979bc2388b6452baada984b091d74156eecb3b2"
+    },
+    "static/world/hero-home.mjs": {
+      "bytes": 20306,
+      "sha256": "3e680e6ede8147a8f43aa8a53d40cafb562bc5b55bcc2d4d63a22af071f53a8d"
+    },
+    "static/world/atlas-units.mjs": {
+      "bytes": 2270,
+      "sha256": "534a565e4f723e9f64e2092a7752f8729b03e1fa800231600d912056082d7baf"
+    },
+    "static/world/native-height.mjs": {
+      "bytes": 1046,
+      "sha256": "bb39301b9bf36b24587437f126f5f728839749b305efc1c882dc164f94884b37"
+    },
+    "static/world/saved-clock.mjs": {
+      "bytes": 989,
+      "sha256": "b4ed87bd1b857bea52221ba24b0f67971e906194a3d7113a9039f82232b38b9a"
+    },
+    "static/world/native-destination.mjs": {
+      "bytes": 1178,
+      "sha256": "c5c10b5176d19d7e8cbc21c00ba518285d07325acfdb301e53fe07ba0a9c47ee"
+    },
+    "static/world/render.mjs": {
+      "bytes": 2199,
+      "sha256": "2483959ff93c5e3651aad542d4a1ba0a2b2372177e3bbedaded8c5b9440a4140"
+    },
+    "static/world/queue-entry-target.mjs": {
+      "bytes": 2113,
+      "sha256": "379960a57bddd80904f4e296998ee7b424f5340ae5da564a571ceb07e498c6b8"
+    },
+    "static/world/memory.mjs": {
+      "bytes": 1068,
+      "sha256": "13bd7d45c639f7e4724fea95b0c56ce55e21d80a644069b36e947c8fe736da31"
+    },
+    "static/world/paired-session.mjs": {
+      "bytes": 3620,
+      "sha256": "12316ec1135478ad155937df551ee39ed3aa019d3268141ad7ec34379869d6a4"
+    },
+    "static/world/native-cache-retirement.mjs": {
+      "bytes": 4997,
+      "sha256": "6abe8d853a8798244263e53b4ee4650ddcfceff4c26ef63c74b38ead3c0be25d"
+    },
+    "static/world/transfer-store.mjs": {
+      "bytes": 10372,
+      "sha256": "3411ca7de83a3afdc8b6bdf67f512186e2e54750282d512f6a1ae7a95195bae9"
+    },
+    "static/world/order-navigation.mjs": {
+      "bytes": 2864,
+      "sha256": "4dd9217f4e21bc7b2041d8994ac5c0f2d3f3306c6ebb51807e892aa8527ab5e3"
+    },
+    "static/world/hero-owner-checkpoint-publication.mjs": {
+      "bytes": 3857,
+      "sha256": "55bc3d6d2c36f20127786e6d497285ce8ec8f0f0917006392d6fe8dadf13a296"
+    },
+    "static/world/halo-home-leg.mjs": {
+      "bytes": 6220,
+      "sha256": "31948385cc95608006d70f9afce726e2d3e4818fe4be5ff8e683c99eb94c2811"
+    },
+    "static/world/reward-membership.mjs": {
+      "bytes": 2727,
+      "sha256": "92f824251e12bc8d4120fa804c725405aa0a0468122089c33850f8fa2c290e9f"
+    },
+    "static/world/coordinate-travel.mjs": {
+      "bytes": 1770,
+      "sha256": "236563c12298c176f928748e2a72e5ac6d9d6dac25d2e56a276da63f7f1e4a03"
+    },
+    "static/world/hero-home-task.mjs": {
+      "bytes": 7611,
+      "sha256": "8e09d1080b936a91307d600af4b3efb8a32e45960919a47557e32b18983328a8"
+    },
+    "static/world/terrain-ground.mjs": {
+      "bytes": 2706,
+      "sha256": "20e7907e1c363d41ac976d68d801d96a0bf369fa34d13051fe5f4d6c33a4542a"
+    },
+    "static/world/hero-effect-clocks.mjs": {
+      "bytes": 3017,
+      "sha256": "536808661b053c7618f6234411c7c1a68eb8681bb32941cc7a33c6d8486d1221"
+    },
+    "static/world/hero-route-restore.mjs": {
+      "bytes": 5740,
+      "sha256": "cb8fb4150185a684895afadded16646af9117a729ddcad8c396e156238d50759"
+    },
+    "static/world/hero-route-profile.mjs": {
+      "bytes": 8225,
+      "sha256": "a2fc1a77dda7ae6cc6fb4262fd7354257b004b8f98490ef7ad057d92cd0e5abb"
+    },
+    "static/world/order-entries.mjs": {
+      "bytes": 5749,
+      "sha256": "682ff7f78fed0b7821d46f93a72f78d5fef031fd725dc8a33fd320a1b535e2be"
+    },
+    "static/world/hero-arrival-staging.mjs": {
+      "bytes": 6798,
+      "sha256": "61d3b92ca02737489682e4aefa430f5febc77115611a91ddc504c2edb246f5ee"
+    },
+    "static/world/orders.mjs": {
+      "bytes": 1475,
+      "sha256": "be2a52ff5aed2d83ea6e36c23d32a95d84e79b5bcf3ac6f5b25318da7ba0da6f"
+    },
+    "static/world/halo-checkpoint-layout.mjs": {
+      "bytes": 2343,
+      "sha256": "d687c9ee1dd412df3450fec48fcdf3e58020da8df6c8a421debcd1a77283d687"
+    },
+    "static/world/journey-record.mjs": {
+      "bytes": 1421,
+      "sha256": "ed11587a57e1eb83f5e38e14c10840cfb7762a0142a774b5a1fd30366df4919a"
+    },
+    "static/world/terrain-reconcile.mjs": {
+      "bytes": 5980,
+      "sha256": "996fd51401b9846ffdbfe929bffa11fd6f8212bac798302b9bc7d9ec5dfdf820"
+    },
+    "static/world/hero-order-arrival.mjs": {
+      "bytes": 4990,
+      "sha256": "8e0fb9a030d1396e5ef5ea2f3d07b80945744417dc6b3a37d81824a5c43dd071"
+    },
+    "static/world/hero-save-session.mjs": {
+      "bytes": 16418,
+      "sha256": "f0239dc183496cb3997226fd19675a99195fce33f81b01198025ed500ac2761c"
+    },
+    "static/world/halo-companion-orders.mjs": {
+      "bytes": 8727,
+      "sha256": "d5c3e79b66c0816d4ff1157bde7843e9b2bf1d366e0bdbef4c309a13f1f35c1d"
+    },
+    "static/world/order-read-bounds.mjs": {
+      "bytes": 1566,
+      "sha256": "384435309c3aa4f132723cafcd04c4250d32c6f6340ac35073c62f33d9c126ac"
+    },
+    "static/world/actor-coordinates.mjs": {
+      "bytes": 2645,
+      "sha256": "ee2da9af94bc6b77663b6aa83fc0de752db31a77f4a64b563400a6cb5409cfa1"
+    },
+    "static/world/halo-hero-bundle.mjs": {
+      "bytes": 17045,
+      "sha256": "42fca7f2865ce99847f1784524be07228d8a5b73a17eb1a1b47cf3e7f248f297"
+    },
+    "static/world/actor-region-crossing.mjs": {
+      "bytes": 3011,
+      "sha256": "1f33f997ddedfc446a7622208d491ed76ffe8c3873d131cef2cf508f39cec8a0"
+    },
+    "static/world/realm-store.mjs": {
+      "bytes": 7005,
+      "sha256": "db1f60e347d258fd45487f633b946a0a7600f9c45ab7280c2b720f9125434e6b"
+    },
+    "static/world/region-backup-controls.mjs": {
+      "bytes": 6153,
+      "sha256": "bcab5d0a2db2ea69b4bfc5208f069517fa69a9de68717dc71acaae0b6b8f0761"
+    },
+    "static/world/entity-revisions.mjs": {
+      "bytes": 15269,
+      "sha256": "74938e58f5c22d64539cd966496fbebf6fa51d3352ab6655e364de867dc6d50c"
+    },
+    "static/world/world-name.mjs": {
+      "bytes": 391,
+      "sha256": "984bb006b92966ce70b5375a5f2ab89db67ba078cd87ff0805cd25a484d66226"
+    },
+    "static/world/hero-travel-publication.mjs": {
+      "bytes": 8545,
+      "sha256": "c0542f6592e5948703265f0941a0c9831ba43991f4e87d88417878a7fe2fd87a"
+    },
+    "static/world/terrain.mjs": {
+      "bytes": 6798,
+      "sha256": "33f4fa322545e4a241c84c9a03836e9eac9b10ea700d5a542f6c332eff10ba39"
+    },
+    "static/world/hero-travel-boundary.mjs": {
+      "bytes": 4418,
+      "sha256": "a76f56b826f5958d59b81ba5653215a1d96fb541e07bf7b141fbe3a69788fd51"
+    },
+    "static/world/remote-home-task.mjs": {
+      "bytes": 7270,
+      "sha256": "b5fdf59f454559b83cb947a6ebb0d2512f874123ff9397b671079352a1746de8"
+    },
+    "static/world/hero-route-launch.mjs": {
+      "bytes": 2880,
+      "sha256": "d775759f92d97c8b9a594a4a8aba70cd4ff5f4a5e3a4d1dcc47a52874aa01bb1"
+    },
+    "static/world/region.mjs": {
+      "bytes": 3694,
+      "sha256": "73dafd7943a3ecac61387f1d970aed5a6bfe924a52dca3fd53f0510b6331b3d9"
+    },
+    "static/world/wait-effect-clock.mjs": {
+      "bytes": 5099,
+      "sha256": "be8b4a43fc3b47b2408cb2709d1c4765ad456e08048492985971c05ec5f214e3"
+    },
+    "static/world/outdoor-marker-clock.mjs": {
+      "bytes": 4798,
+      "sha256": "ab19a6148a8f4d09f83b11907bdabedef9f6827603c2ca426c6c48c7bfb61ef4"
+    },
+    "static/world/journey-controls.mjs": {
+      "bytes": 2154,
+      "sha256": "2cebabc1fdb8105fba864a80e4a1c42d1f4558a9d5d6e2b923afc1cddb63aaa6"
+    },
+    "static/world/entity-home-ownership.mjs": {
+      "bytes": 9979,
+      "sha256": "b4a333ec43f45e35a9e2bc7d19e7db5d53ab1960b664a6817819affda68d876f"
+    },
+    "static/world/order-unit-bindings.mjs": {
+      "bytes": 2199,
+      "sha256": "c15339a36ceb40fa1f4a5503fd70e090e6bce91a6e6558589b33f723399bda3c"
+    },
+    "static/world/journey.mjs": {
+      "bytes": 2530,
+      "sha256": "663a13a45f08acfd288ae9481c597f32ebb023673a964ce7d1ab97443aeecf7e"
+    },
+    "static/world/entity-ownership.mjs": {
+      "bytes": 7102,
+      "sha256": "87cd0f9be49d93deb336961b62def7da562e6f83d4ce34f98d7211c92b5fc7c5"
+    },
+    "static/world/terrain-seam.mjs": {
+      "bytes": 4076,
+      "sha256": "ee3da016df58295fdfef3dd67d65e9380b8c6f1527fbad0ce6e964daabddcdaa"
+    },
+    "static/world/realm-catalog-controls.mjs": {
+      "bytes": 3585,
+      "sha256": "bb9901fbd8e54543c143163720ad15b8933fc202dd14e3ebf92575cca127d7a2"
+    },
+    "static/world/realm-catalog.mjs": {
+      "bytes": 5457,
+      "sha256": "61c3531e190e64c58edcb46fae41b14f155730898ebac5fc1ae6261ce0d9f824"
+    },
+    "static/world/travel.mjs": {
+      "bytes": 427,
+      "sha256": "1a0ca7aad69bcfc091b665dd75a433893d175c326a07f1e770380179ece0d7e0"
+    },
+    "static/world/hero-travel-request.mjs": {
+      "bytes": 5982,
+      "sha256": "234e554a769a43b7b98748121e96aec81a9658cb23e2aa9f433e5d6aa0c5d9ac"
+    },
+    "static/world/remote-home-projection.mjs": {
+      "bytes": 3475,
+      "sha256": "7da0a7c7826110fed2f1435c7b27bcf8b55060db9d0a3f603350a70a9a995f52"
+    },
+    "static/world/entity-export.mjs": {
+      "bytes": 1735,
+      "sha256": "f032e37915396f504b35309b483b29d262023dab4ff336193398400917d93040"
+    },
+    "static/world/realm-terrain.mjs": {
+      "bytes": 4429,
+      "sha256": "2f08029d7be158e14654e8d24b777d6f03cd0dfef5f67494e0c18442bffce761"
+    },
+    "static/world/checkpoint.mjs": {
+      "bytes": 35387,
+      "sha256": "1712b8976f2c98c2a9a33e0ab0e032a4d517fbe0428beef7dff832528fb600f4"
+    },
+    "static/world/hero-route-native-save.mjs": {
+      "bytes": 8160,
+      "sha256": "c9a70eec2eec7ffab02e202d82dd7825830212bf5fe09a122dc4a3b315ba5c45"
+    },
+    "static/world/remote-home.mjs": {
+      "bytes": 5817,
+      "sha256": "4f9c9c522f9c30e405c714fe956242540f195883272ff90ebd61b8df0ededc42"
+    },
+    "static/world/native.mjs": {
+      "bytes": 34658,
+      "sha256": "5cbbb5d122652bda3d5141e64bafeeb0e17f2a4a05f6c7ce20f490c26afba345"
+    },
+    "static/world/hero-route-controls.mjs": {
+      "bytes": 5990,
+      "sha256": "de928e2ff62c104597d34f25ba24987c3ce82e01351f52730e01c8e91be0aefc"
+    },
+    "static/world/hero-native-arrival-publication.mjs": {
+      "bytes": 12086,
+      "sha256": "ffe8d350add387aa1815904fd58a088b2d52d1d379fcf607d552aaf60c683429"
+    },
+    "static/world/region-backup.mjs": {
+      "bytes": 6888,
+      "sha256": "c457cdda34585846c490f21ad08da122a3c6598e8be7c60f0f55c7b03c470c5e"
+    },
+    "static/world/hero-runtime-binding.mjs": {
+      "bytes": 2994,
+      "sha256": "e1e611e4c9b8db56172cfb9c3a3087d69cc2a6ac18a33b96defdf663b757376e"
+    },
+    "static/world/order-callbacks.mjs": {
+      "bytes": 3280,
+      "sha256": "65708dff8ddc41fafacf6c16a4eace86428e0ac21454262d38804f6cc4d5b593"
+    },
+    "static/world/connected-height.mjs": {
+      "bytes": 817,
+      "sha256": "5f9fe03cc7ee531363674eb865570966fedd65ee80cbca2592b4a1978785b221"
+    },
+    "static/world/arrival.mjs": {
+      "bytes": 43850,
+      "sha256": "b9b49fe965c006496b392aacda2171c2975bf568bf3417cdd59270df8570e71a"
+    },
+    "static/world/stream.mjs": {
+      "bytes": 11653,
+      "sha256": "f408731870ebc2a50df75b752cdc840897960aba50c6d5c073c0e2a381355d6f"
+    },
+    "static/world/halo-order-compaction.mjs": {
+      "bytes": 2136,
+      "sha256": "5af4d7733849d65690fa323bd5929c503ca521f038dbd67333566b5c954a4663"
+    },
+    "static/world/hero-route-store.mjs": {
+      "bytes": 20103,
+      "sha256": "a2348d5ca06cccb8b1474e1c36e97fbd90ff0a42193b23b4687aa39927e3c809"
+    },
+    "static/world/sha256.mjs": {
+      "bytes": 2796,
+      "sha256": "04e06aa9c5ce5f6c223879d12c33f9a2f098b9a931940010c9d1ebbc73e55649"
+    },
+    "static/world/halo-region-layout.mjs": {
+      "bytes": 3547,
+      "sha256": "2c46cf0b4d718f0a706e0f9e4466884be15851eda2c739149cf7c1ec3b5e3bd1"
+    },
+    "static/world/order-reservations.mjs": {
+      "bytes": 5673,
+      "sha256": "83ecba13ae7bc5fe2728ee63f629eb231eb2ffe4b52ecf26b4249dc287fd6755"
+    },
+    "static/world/halo-hero-orders.mjs": {
+      "bytes": 5025,
+      "sha256": "c5857f04233e98bc3614aa45dbcdd7a519d7b7da6e250bd5a55639557ac83987"
+    },
+    "static/world/realm-session.mjs": {
+      "bytes": 61506,
+      "sha256": "4bd8a5b6fbdf4c8e4915c38a4a052d7558692dc1bc9afb2a4ed32c45539a4465"
+    },
+    "static/world/checkpoint-lease.mjs": {
+      "bytes": 2864,
+      "sha256": "71f8395167a8672d6a894c112497f9d0f307956af7d7103a5332f0b3a9dc79a9"
+    },
+    "static/world/native-session-controls.mjs": {
+      "bytes": 7328,
+      "sha256": "462e4bee54dbb9bb79e4fba03b7ae9b73e6ef78fa3aec54bce568588f4bf24ea"
+    },
+    "static/world/terrain-scene.mjs": {
+      "bytes": 12041,
+      "sha256": "10368b738d1cd70da69ebe0ae886682e367cd5500ca30f9d6ca714141b79fcb6"
+    },
+    "static/content/vampiric-revenge-files.mjs": {
+      "bytes": 6420,
+      "sha256": "bd30376833c23efb7006752621429fcc7da381a6a764be38f525554dc11cd187"
+    },
+    "static/content/edition-session.mjs": {
+      "bytes": 4479,
+      "sha256": "91644d83fc5e204e5d9f2eeb24280fcfb6610bb10c5af7c836bd3ab84380bb38"
+    },
+    "static/content/lost-trail-files.mjs": {
+      "bytes": 1826,
+      "sha256": "2008a42851c456d85d83b7b767536b43ff4b07f410cd696083cac1a7fd3121b9"
+    },
+    "static/content/alchemist-files.mjs": {
+      "bytes": 4581,
+      "sha256": "14fd8cea877e9e1444ac6593f633756ea2310f7bfb696a61cf77a0a5f0361ebf"
+    },
+    "static/content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "0835202f269c4922d5652874eec598209e12aa9414e7fe6f73f170b42904fb34"
+    },
+    "static/content/lost-trail-v2-files.mjs": {
+      "bytes": 1404,
+      "sha256": "38b4178ab6a7bf0dcbf0f7237859c4753183d596ce2df38285722b3bdd4df157"
+    },
+    "static/content/community-runtime-registry.mjs": {
+      "bytes": 5632,
+      "sha256": "7ac584de1cfe59ef3811516ff3d40acc4663faa1307436a47e8d400959df40a2"
+    },
+    "static/majesty/index.html": {
+      "bytes": 19081,
+      "sha256": "46a325773ef69492af39aeac4898355bcb6d9823da68db4fb22157942143a090"
+    },
+    "static/majesty/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    },
+    "static/majesty/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "static/majesty/MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    },
+    "static/hosting/asset-url.mjs": {
+      "bytes": 635,
+      "sha256": "31f8e1bbf844d58d2164cb8bbe9ef974d369a92e94c2a6a54ae8c40e7bb415a8"
+    },
+    "static/hosting/single-player.js": {
+      "bytes": 515,
+      "sha256": "8ea5d16f7adf9f1d51a52b05b47023be48617d43433f8968d61384e5f6e8be08"
+    },
+    "static/hosting/runtime-safety.mjs": {
+      "bytes": 7137,
+      "sha256": "8aeb894daa1efb53bb36a4938107710a97f9cc8a8e90ab0e41bee4ca8857dcbe"
+    },
+    "static/hosting/boot.mjs": {
+      "bytes": 1531,
+      "sha256": "9d9ad0bf41c04546d9646a2efd7dd5c9c93710049079b4986f7fcbf6de55795a"
+    },
+    "static/hosting/audio-start.mjs": {
+      "bytes": 1305,
+      "sha256": "dd1b8c03154c7929e4b6724d8540a5d5bd166fc7441a4afa7ed127ae44285b48"
+    },
+    "static/hosting/automatic-assets.json": {
+      "bytes": 48064,
+      "sha256": "a7010dab70e79004834f562a89c62758f803a8c1b2b099cf8a532f12a1dc771d"
+    },
+    "static/hosting/map-art-update.mjs": {
+      "bytes": 4594,
+      "sha256": "6c77422506896c5752d844efad02df3b57b7965778e7a8dbd1e8f5b5614a5465"
+    },
+    "static/hosting/root-player.mjs": {
+      "bytes": 1840,
+      "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+    },
+    "static/hosting/autoload.mjs": {
+      "bytes": 816,
+      "sha256": "5ac82676bd52bb60d4054ea81fe37549714dc8fdeb6ea42e1e6dff5c86498f54"
+    },
+    "static/hosting/community-updates.mjs": {
+      "bytes": 12789,
+      "sha256": "12c7c5ecd2a997ef68a9726fc2b9d72d18d571b791b4ca60f948d09379f2e2a2"
+    },
+    "static/hosting/derived-assets.mjs": {
+      "bytes": 5557,
+      "sha256": "3a382e42e11895370c51301b5e2eb7dc646b637a98791494e25fb5c3c3e7839b"
+    },
+    "static/hosting/launcher-client.mjs": {
+      "bytes": 2157,
+      "sha256": "acddbaed153152cec277168d263bff736f136b3ab1540c73a184d94e677d23bb"
+    },
+    "static/hosting/original-loading.jpg": {
+      "bytes": 253477,
+      "sha256": "b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6"
+    },
+    "static/hosting/menu-text.mjs": {
+      "bytes": 1786,
+      "sha256": "4df606b8e972562b44fd5fc4548002062c098d0b94e759b7a19c8a50c3c60147"
+    },
+    "static/hosting/content-cache.mjs": {
+      "bytes": 2988,
+      "sha256": "e5c363e17a6b573d5482e20a5e9f49509a3e35121d908fa27d123d96ebf7b36f"
+    },
+    "static/hosting/boot.html": {
+      "bytes": 909,
+      "sha256": "4cffb673e9a0f0ce02eb8dbbd0d3b25440ac36a1871fc36c213b364773980683"
+    },
+    "static/hosting/favicon.svg": {
+      "bytes": 605,
+      "sha256": "7c58d95ce39dcff70e9a81124e7ba7b3fdaaf3b8db7fb9b05252a0f1d8ab4089"
+    },
+    "static/hosting/automatic-assets.mjs": {
+      "bytes": 5764,
+      "sha256": "401ac46f5d068e33d1540ffe5d9520b84b7defb1304ce095b9022925439a2784"
+    },
+    "static/backups/worker.mjs": {
+      "bytes": 1085,
+      "sha256": "10da8690737d2f1107a19eb371a00e8689d9247e53a75880820eae1b9a91be71"
+    },
+    "static/backups/index.html": {
+      "bytes": 3777,
+      "sha256": "c147347cd5aec190945c90a64f82b44d2893fae39ecb2521eda1be478b3c65eb"
+    },
+    "static/backups/storage.mjs": {
+      "bytes": 12202,
+      "sha256": "64fdab1976f0bea1bc6bd982198de4ef23657274fe9e943b887b7ed16ecaf7d7"
+    },
+    "static/backups/launcher.mjs": {
+      "bytes": 3404,
+      "sha256": "f20d06ea1200386d7b25acf3da7f19fd93d95cf6f61bde14173b4e74dea6082e"
+    },
+    "static/backups/bundle.mjs": {
+      "bytes": 9540,
+      "sha256": "0c3379dabef8fdde0962f27f47f12c51e38b403e2f9e4643ace0ecf03d8de725"
+    }
+  },
+  "productionFiles": {
+    "config.json": {
+      "bytes": 2845,
+      "sha256": "e7dfda83a3a2b62d18d2a1a9e2bd83db4e42f2572854b7b8abc4df74378de9e5"
+    },
+    "static/zip-stream.mjs": {
+      "bytes": 5904,
+      "sha256": "3e5325f0da5b1f32cc524b5a601e1341165de937dded6ae362a29314818fcc8d"
+    },
+    "static/index.html": {
+      "bytes": 22918,
+      "sha256": "3bb71b7cca0dc43d8f6fb84c28eddeb791739894b31309a2176c1e0a15130339"
+    },
+    "static/games.json": {
+      "bytes": 3695,
+      "sha256": "1d81757d4a149a261d46c2cc529136475a8860de3258c8a953e88e18d3cd9b69"
+    },
+    "static/core.js": {
+      "bytes": 18659,
+      "sha256": "210197ffd818341552f7a434e3e6fe5b7464b0bc61619748368488acea023afd"
+    },
+    "static/worker.js": {
+      "bytes": 9691,
+      "sha256": "6a8827baaaa4db4dd0725a74f8d71d14d17d7bb8543e88bb35e2f9b05de866c6"
+    },
+    "static/setup.html": {
+      "bytes": 6409,
+      "sha256": "983ad70717931e5d067364da66026618cd0398c6a982e38fbb993a4edec9e1d1"
+    },
+    "static/app.js": {
+      "bytes": 11446,
+      "sha256": "31f7eaf30828413570dbb6ca52390fb7932c308b9073ceb17d2e9e5a3e04b0f1"
+    },
+    "static/world/hero-generation-boundary.mjs": {
+      "bytes": 1661,
+      "sha256": "e399e9ecdc1cebdaa9a20209c93e2b0a86df9d240fbf5b6ac64e35aac0569cc4"
+    },
+    "static/world/newrecruit-marker-clock.mjs": {
+      "bytes": 5947,
+      "sha256": "6a7e529306b51ce9f603c4b94453b9e029314500f9f61137f571d0e87f2f4e05"
+    },
+    "static/world/hero-dormant-home-restore.mjs": {
+      "bytes": 5192,
+      "sha256": "2202ba860494d11b23869ee0b3febceb014c1a5d3b1aea30a1bdc15197c41197"
+    },
+    "static/world/hero-home-arrival-package.mjs": {
+      "bytes": 5201,
+      "sha256": "8911e63aaaed44bab8d8bb2d70491ae88d7bf2c9cb108c37595aed50ebe9e1e6"
+    },
+    "static/world/order-dispatch-clock.mjs": {
+      "bytes": 1834,
+      "sha256": "f8c9a080fe4f1956c2d55d98cc48a6e534211f900f01a2dbe39023deb4140e3d"
+    },
+    "static/world/content-hash.mjs": {
+      "bytes": 2420,
+      "sha256": "3a8af8ab63dd6be602563d48b97c6134ea3a0b29700bcc20a958efc53c024f80"
+    },
+    "static/world/realm-profile.mjs": {
+      "bytes": 1834,
+      "sha256": "8513264e4b154d52fb95b8e459df481edb247cb47f9a344bf473b0208b4b9755"
+    },
+    "static/world/order-allocation-bridge.mjs": {
+      "bytes": 8214,
+      "sha256": "c99d6209b2dd19c0f81a3c2f09b10410c6311c9365312db41e937e209ce0e71e"
+    },
+    "static/world/hero-generation-request.mjs": {
+      "bytes": 4789,
+      "sha256": "e4750eaaec1697c35a14f184fd4a4e56582d184f30de4d239c6cf70ba0551f4e"
+    },
+    "static/world/order-restore-bounds.mjs": {
+      "bytes": 3261,
+      "sha256": "11304c8357cb7acbd274ff31a38d6de3ab4142b4b5f293a669bf64790949afaa"
+    },
+    "static/world/registered-hero-arrival.mjs": {
+      "bytes": 4004,
+      "sha256": "2d2e2daabddf4d8759f08714c3e4bf41f1c261fbc13c428499382f276fd6b394"
+    },
+    "static/world/camera-checkpoint.mjs": {
+      "bytes": 3575,
+      "sha256": "b80b3b4102dbaafb5fa9c1f0a4bb9b4314d3f9f2229e872b5b0126b78916240f"
+    },
+    "static/world/halo-order-navigation.mjs": {
+      "bytes": 5179,
+      "sha256": "565c98b5e0e71f91dd45c145a7b18cc037651da96396d4912284d1ad10220f57"
+    },
+    "static/world/scene-view.mjs": {
+      "bytes": 1711,
+      "sha256": "b952ea1b32ecd91df83cbb08fdad628e22260a6a6a6d7891f5e551b755d1d9dc"
+    },
+    "static/world/family-order-entries.mjs": {
+      "bytes": 115,
+      "sha256": "25a99bc4d129e8428cd966433ae435a75e36c64363bac86a6ae0edd79afcd79e"
+    },
+    "static/world/actor-family-clocks.mjs": {
+      "bytes": 6584,
+      "sha256": "c309c90d70d60e8168727b410576d79451f54019547ffcfb805463bda8a0cfb1"
+    },
+    "static/world/index.html": {
+      "bytes": 5804,
+      "sha256": "f0b2f86be5a7fbf8324249835d43f62adf290d8ed260de70f74efb1a76e903e5"
+    },
+    "static/world/content-hash-worker.mjs": {
+      "bytes": 401,
+      "sha256": "e54383b984d326dfcdc3b1158e48434367c9c7b2ce1777041216ccbe3c3adcaf"
+    },
+    "static/world/halo-home-route.mjs": {
+      "bytes": 4413,
+      "sha256": "37984c007b4a55c99e8c24d3deda82833bad6d9e8bb4b8f05cd8286025357295"
+    },
+    "static/world/resources.mjs": {
+      "bytes": 2438,
+      "sha256": "4be5849de156782331285e09f0fa95c6be510e218e189b1f36e30b90f374fdc7"
+    },
+    "static/world/native-atlas.mjs": {
+      "bytes": 7246,
+      "sha256": "46322adecef4e729e967f546aec9290071609f4bf56a1701f51ed5b292d69151"
+    },
+    "static/world/hero-route-launcher.mjs": {
+      "bytes": 12202,
+      "sha256": "1d98671a240b3b69a2e2ca8ac43260e4fb4d76202ff16f608b3a6f0bb302aaed"
+    },
+    "static/world/remote-home-cache.mjs": {
+      "bytes": 3424,
+      "sha256": "c9950b2a81a5f96d70c16c62a575e6829beea1b9e3f765e8411f2f6593a8f4f3"
+    },
+    "static/world/terrain-halo.mjs": {
+      "bytes": 2517,
+      "sha256": "af7084189723f63a1cfc7737e59ab306995c499382e12476126e74d6e755c491"
+    },
+    "static/world/entity-pair.mjs": {
+      "bytes": 6934,
+      "sha256": "6a7b7d192e2c6b16dfe46d8eabea71199629352f3c144df1dcc19a027eddad98"
+    },
+    "static/world/view.mjs": {
+      "bytes": 12491,
+      "sha256": "89905e3af089d3d50c2711051979bc2388b6452baada984b091d74156eecb3b2"
+    },
+    "static/world/hero-home.mjs": {
+      "bytes": 20306,
+      "sha256": "3e680e6ede8147a8f43aa8a53d40cafb562bc5b55bcc2d4d63a22af071f53a8d"
+    },
+    "static/world/atlas-units.mjs": {
+      "bytes": 2270,
+      "sha256": "534a565e4f723e9f64e2092a7752f8729b03e1fa800231600d912056082d7baf"
+    },
+    "static/world/native-height.mjs": {
+      "bytes": 1046,
+      "sha256": "bb39301b9bf36b24587437f126f5f728839749b305efc1c882dc164f94884b37"
+    },
+    "static/world/saved-clock.mjs": {
+      "bytes": 989,
+      "sha256": "b4ed87bd1b857bea52221ba24b0f67971e906194a3d7113a9039f82232b38b9a"
+    },
+    "static/world/native-destination.mjs": {
+      "bytes": 1178,
+      "sha256": "c5c10b5176d19d7e8cbc21c00ba518285d07325acfdb301e53fe07ba0a9c47ee"
+    },
+    "static/world/render.mjs": {
+      "bytes": 2199,
+      "sha256": "2483959ff93c5e3651aad542d4a1ba0a2b2372177e3bbedaded8c5b9440a4140"
+    },
+    "static/world/queue-entry-target.mjs": {
+      "bytes": 2113,
+      "sha256": "379960a57bddd80904f4e296998ee7b424f5340ae5da564a571ceb07e498c6b8"
+    },
+    "static/world/memory.mjs": {
+      "bytes": 1068,
+      "sha256": "13bd7d45c639f7e4724fea95b0c56ce55e21d80a644069b36e947c8fe736da31"
+    },
+    "static/world/paired-session.mjs": {
+      "bytes": 3620,
+      "sha256": "12316ec1135478ad155937df551ee39ed3aa019d3268141ad7ec34379869d6a4"
+    },
+    "static/world/native-cache-retirement.mjs": {
+      "bytes": 4997,
+      "sha256": "6abe8d853a8798244263e53b4ee4650ddcfceff4c26ef63c74b38ead3c0be25d"
+    },
+    "static/world/transfer-store.mjs": {
+      "bytes": 10372,
+      "sha256": "3411ca7de83a3afdc8b6bdf67f512186e2e54750282d512f6a1ae7a95195bae9"
+    },
+    "static/world/order-navigation.mjs": {
+      "bytes": 2864,
+      "sha256": "4dd9217f4e21bc7b2041d8994ac5c0f2d3f3306c6ebb51807e892aa8527ab5e3"
+    },
+    "static/world/hero-owner-checkpoint-publication.mjs": {
+      "bytes": 3857,
+      "sha256": "55bc3d6d2c36f20127786e6d497285ce8ec8f0f0917006392d6fe8dadf13a296"
+    },
+    "static/world/halo-home-leg.mjs": {
+      "bytes": 6220,
+      "sha256": "31948385cc95608006d70f9afce726e2d3e4818fe4be5ff8e683c99eb94c2811"
+    },
+    "static/world/reward-membership.mjs": {
+      "bytes": 2727,
+      "sha256": "92f824251e12bc8d4120fa804c725405aa0a0468122089c33850f8fa2c290e9f"
+    },
+    "static/world/coordinate-travel.mjs": {
+      "bytes": 1770,
+      "sha256": "236563c12298c176f928748e2a72e5ac6d9d6dac25d2e56a276da63f7f1e4a03"
+    },
+    "static/world/hero-home-task.mjs": {
+      "bytes": 7611,
+      "sha256": "8e09d1080b936a91307d600af4b3efb8a32e45960919a47557e32b18983328a8"
+    },
+    "static/world/terrain-ground.mjs": {
+      "bytes": 2706,
+      "sha256": "20e7907e1c363d41ac976d68d801d96a0bf369fa34d13051fe5f4d6c33a4542a"
+    },
+    "static/world/hero-effect-clocks.mjs": {
+      "bytes": 3017,
+      "sha256": "536808661b053c7618f6234411c7c1a68eb8681bb32941cc7a33c6d8486d1221"
+    },
+    "static/world/hero-route-restore.mjs": {
+      "bytes": 5740,
+      "sha256": "cb8fb4150185a684895afadded16646af9117a729ddcad8c396e156238d50759"
+    },
+    "static/world/hero-route-profile.mjs": {
+      "bytes": 8225,
+      "sha256": "a2fc1a77dda7ae6cc6fb4262fd7354257b004b8f98490ef7ad057d92cd0e5abb"
+    },
+    "static/world/order-entries.mjs": {
+      "bytes": 5749,
+      "sha256": "682ff7f78fed0b7821d46f93a72f78d5fef031fd725dc8a33fd320a1b535e2be"
+    },
+    "static/world/hero-arrival-staging.mjs": {
+      "bytes": 6798,
+      "sha256": "61d3b92ca02737489682e4aefa430f5febc77115611a91ddc504c2edb246f5ee"
+    },
+    "static/world/orders.mjs": {
+      "bytes": 1475,
+      "sha256": "be2a52ff5aed2d83ea6e36c23d32a95d84e79b5bcf3ac6f5b25318da7ba0da6f"
+    },
+    "static/world/halo-checkpoint-layout.mjs": {
+      "bytes": 2343,
+      "sha256": "d687c9ee1dd412df3450fec48fcdf3e58020da8df6c8a421debcd1a77283d687"
+    },
+    "static/world/journey-record.mjs": {
+      "bytes": 1421,
+      "sha256": "ed11587a57e1eb83f5e38e14c10840cfb7762a0142a774b5a1fd30366df4919a"
+    },
+    "static/world/terrain-reconcile.mjs": {
+      "bytes": 5980,
+      "sha256": "996fd51401b9846ffdbfe929bffa11fd6f8212bac798302b9bc7d9ec5dfdf820"
+    },
+    "static/world/hero-order-arrival.mjs": {
+      "bytes": 4990,
+      "sha256": "8e0fb9a030d1396e5ef5ea2f3d07b80945744417dc6b3a37d81824a5c43dd071"
+    },
+    "static/world/hero-save-session.mjs": {
+      "bytes": 16418,
+      "sha256": "f0239dc183496cb3997226fd19675a99195fce33f81b01198025ed500ac2761c"
+    },
+    "static/world/halo-companion-orders.mjs": {
+      "bytes": 8727,
+      "sha256": "d5c3e79b66c0816d4ff1157bde7843e9b2bf1d366e0bdbef4c309a13f1f35c1d"
+    },
+    "static/world/order-read-bounds.mjs": {
+      "bytes": 1566,
+      "sha256": "384435309c3aa4f132723cafcd04c4250d32c6f6340ac35073c62f33d9c126ac"
+    },
+    "static/world/actor-coordinates.mjs": {
+      "bytes": 2645,
+      "sha256": "ee2da9af94bc6b77663b6aa83fc0de752db31a77f4a64b563400a6cb5409cfa1"
+    },
+    "static/world/halo-hero-bundle.mjs": {
+      "bytes": 17045,
+      "sha256": "42fca7f2865ce99847f1784524be07228d8a5b73a17eb1a1b47cf3e7f248f297"
+    },
+    "static/world/actor-region-crossing.mjs": {
+      "bytes": 3011,
+      "sha256": "1f33f997ddedfc446a7622208d491ed76ffe8c3873d131cef2cf508f39cec8a0"
+    },
+    "static/world/realm-store.mjs": {
+      "bytes": 7005,
+      "sha256": "db1f60e347d258fd45487f633b946a0a7600f9c45ab7280c2b720f9125434e6b"
+    },
+    "static/world/region-backup-controls.mjs": {
+      "bytes": 6153,
+      "sha256": "bcab5d0a2db2ea69b4bfc5208f069517fa69a9de68717dc71acaae0b6b8f0761"
+    },
+    "static/world/entity-revisions.mjs": {
+      "bytes": 15269,
+      "sha256": "74938e58f5c22d64539cd966496fbebf6fa51d3352ab6655e364de867dc6d50c"
+    },
+    "static/world/world-name.mjs": {
+      "bytes": 391,
+      "sha256": "984bb006b92966ce70b5375a5f2ab89db67ba078cd87ff0805cd25a484d66226"
+    },
+    "static/world/hero-travel-publication.mjs": {
+      "bytes": 8545,
+      "sha256": "c0542f6592e5948703265f0941a0c9831ba43991f4e87d88417878a7fe2fd87a"
+    },
+    "static/world/terrain.mjs": {
+      "bytes": 6798,
+      "sha256": "33f4fa322545e4a241c84c9a03836e9eac9b10ea700d5a542f6c332eff10ba39"
+    },
+    "static/world/hero-travel-boundary.mjs": {
+      "bytes": 4418,
+      "sha256": "a76f56b826f5958d59b81ba5653215a1d96fb541e07bf7b141fbe3a69788fd51"
+    },
+    "static/world/remote-home-task.mjs": {
+      "bytes": 7270,
+      "sha256": "b5fdf59f454559b83cb947a6ebb0d2512f874123ff9397b671079352a1746de8"
+    },
+    "static/world/hero-route-launch.mjs": {
+      "bytes": 2880,
+      "sha256": "d775759f92d97c8b9a594a4a8aba70cd4ff5f4a5e3a4d1dcc47a52874aa01bb1"
+    },
+    "static/world/region.mjs": {
+      "bytes": 3694,
+      "sha256": "73dafd7943a3ecac61387f1d970aed5a6bfe924a52dca3fd53f0510b6331b3d9"
+    },
+    "static/world/wait-effect-clock.mjs": {
+      "bytes": 5099,
+      "sha256": "be8b4a43fc3b47b2408cb2709d1c4765ad456e08048492985971c05ec5f214e3"
+    },
+    "static/world/outdoor-marker-clock.mjs": {
+      "bytes": 4798,
+      "sha256": "ab19a6148a8f4d09f83b11907bdabedef9f6827603c2ca426c6c48c7bfb61ef4"
+    },
+    "static/world/journey-controls.mjs": {
+      "bytes": 2154,
+      "sha256": "2cebabc1fdb8105fba864a80e4a1c42d1f4558a9d5d6e2b923afc1cddb63aaa6"
+    },
+    "static/world/entity-home-ownership.mjs": {
+      "bytes": 9979,
+      "sha256": "b4a333ec43f45e35a9e2bc7d19e7db5d53ab1960b664a6817819affda68d876f"
+    },
+    "static/world/order-unit-bindings.mjs": {
+      "bytes": 2199,
+      "sha256": "c15339a36ceb40fa1f4a5503fd70e090e6bce91a6e6558589b33f723399bda3c"
+    },
+    "static/world/journey.mjs": {
+      "bytes": 2530,
+      "sha256": "663a13a45f08acfd288ae9481c597f32ebb023673a964ce7d1ab97443aeecf7e"
+    },
+    "static/world/entity-ownership.mjs": {
+      "bytes": 7102,
+      "sha256": "87cd0f9be49d93deb336961b62def7da562e6f83d4ce34f98d7211c92b5fc7c5"
+    },
+    "static/world/terrain-seam.mjs": {
+      "bytes": 4076,
+      "sha256": "ee3da016df58295fdfef3dd67d65e9380b8c6f1527fbad0ce6e964daabddcdaa"
+    },
+    "static/world/realm-catalog-controls.mjs": {
+      "bytes": 3585,
+      "sha256": "bb9901fbd8e54543c143163720ad15b8933fc202dd14e3ebf92575cca127d7a2"
+    },
+    "static/world/realm-catalog.mjs": {
+      "bytes": 5457,
+      "sha256": "61c3531e190e64c58edcb46fae41b14f155730898ebac5fc1ae6261ce0d9f824"
+    },
+    "static/world/travel.mjs": {
+      "bytes": 427,
+      "sha256": "1a0ca7aad69bcfc091b665dd75a433893d175c326a07f1e770380179ece0d7e0"
+    },
+    "static/world/hero-travel-request.mjs": {
+      "bytes": 5982,
+      "sha256": "234e554a769a43b7b98748121e96aec81a9658cb23e2aa9f433e5d6aa0c5d9ac"
+    },
+    "static/world/remote-home-projection.mjs": {
+      "bytes": 3475,
+      "sha256": "7da0a7c7826110fed2f1435c7b27bcf8b55060db9d0a3f603350a70a9a995f52"
+    },
+    "static/world/entity-export.mjs": {
+      "bytes": 1735,
+      "sha256": "f032e37915396f504b35309b483b29d262023dab4ff336193398400917d93040"
+    },
+    "static/world/realm-terrain.mjs": {
+      "bytes": 4429,
+      "sha256": "2f08029d7be158e14654e8d24b777d6f03cd0dfef5f67494e0c18442bffce761"
+    },
+    "static/world/checkpoint.mjs": {
+      "bytes": 35387,
+      "sha256": "1712b8976f2c98c2a9a33e0ab0e032a4d517fbe0428beef7dff832528fb600f4"
+    },
+    "static/world/hero-route-native-save.mjs": {
+      "bytes": 8160,
+      "sha256": "c9a70eec2eec7ffab02e202d82dd7825830212bf5fe09a122dc4a3b315ba5c45"
+    },
+    "static/world/remote-home.mjs": {
+      "bytes": 5817,
+      "sha256": "4f9c9c522f9c30e405c714fe956242540f195883272ff90ebd61b8df0ededc42"
+    },
+    "static/world/native.mjs": {
+      "bytes": 34658,
+      "sha256": "5cbbb5d122652bda3d5141e64bafeeb0e17f2a4a05f6c7ce20f490c26afba345"
+    },
+    "static/world/hero-route-controls.mjs": {
+      "bytes": 5990,
+      "sha256": "de928e2ff62c104597d34f25ba24987c3ce82e01351f52730e01c8e91be0aefc"
+    },
+    "static/world/hero-native-arrival-publication.mjs": {
+      "bytes": 12086,
+      "sha256": "ffe8d350add387aa1815904fd58a088b2d52d1d379fcf607d552aaf60c683429"
+    },
+    "static/world/region-backup.mjs": {
+      "bytes": 6888,
+      "sha256": "c457cdda34585846c490f21ad08da122a3c6598e8be7c60f0f55c7b03c470c5e"
+    },
+    "static/world/hero-runtime-binding.mjs": {
+      "bytes": 2994,
+      "sha256": "e1e611e4c9b8db56172cfb9c3a3087d69cc2a6ac18a33b96defdf663b757376e"
+    },
+    "static/world/order-callbacks.mjs": {
+      "bytes": 3280,
+      "sha256": "65708dff8ddc41fafacf6c16a4eace86428e0ac21454262d38804f6cc4d5b593"
+    },
+    "static/world/connected-height.mjs": {
+      "bytes": 817,
+      "sha256": "5f9fe03cc7ee531363674eb865570966fedd65ee80cbca2592b4a1978785b221"
+    },
+    "static/world/arrival.mjs": {
+      "bytes": 43850,
+      "sha256": "b9b49fe965c006496b392aacda2171c2975bf568bf3417cdd59270df8570e71a"
+    },
+    "static/world/stream.mjs": {
+      "bytes": 11653,
+      "sha256": "f408731870ebc2a50df75b752cdc840897960aba50c6d5c073c0e2a381355d6f"
+    },
+    "static/world/halo-order-compaction.mjs": {
+      "bytes": 2136,
+      "sha256": "5af4d7733849d65690fa323bd5929c503ca521f038dbd67333566b5c954a4663"
+    },
+    "static/world/hero-route-store.mjs": {
+      "bytes": 20103,
+      "sha256": "a2348d5ca06cccb8b1474e1c36e97fbd90ff0a42193b23b4687aa39927e3c809"
+    },
+    "static/world/sha256.mjs": {
+      "bytes": 2796,
+      "sha256": "04e06aa9c5ce5f6c223879d12c33f9a2f098b9a931940010c9d1ebbc73e55649"
+    },
+    "static/world/halo-region-layout.mjs": {
+      "bytes": 3547,
+      "sha256": "2c46cf0b4d718f0a706e0f9e4466884be15851eda2c739149cf7c1ec3b5e3bd1"
+    },
+    "static/world/order-reservations.mjs": {
+      "bytes": 5673,
+      "sha256": "83ecba13ae7bc5fe2728ee63f629eb231eb2ffe4b52ecf26b4249dc287fd6755"
+    },
+    "static/world/halo-hero-orders.mjs": {
+      "bytes": 5025,
+      "sha256": "c5857f04233e98bc3614aa45dbcdd7a519d7b7da6e250bd5a55639557ac83987"
+    },
+    "static/world/realm-session.mjs": {
+      "bytes": 61506,
+      "sha256": "4bd8a5b6fbdf4c8e4915c38a4a052d7558692dc1bc9afb2a4ed32c45539a4465"
+    },
+    "static/world/checkpoint-lease.mjs": {
+      "bytes": 2864,
+      "sha256": "71f8395167a8672d6a894c112497f9d0f307956af7d7103a5332f0b3a9dc79a9"
+    },
+    "static/world/native-session-controls.mjs": {
+      "bytes": 7328,
+      "sha256": "462e4bee54dbb9bb79e4fba03b7ae9b73e6ef78fa3aec54bce568588f4bf24ea"
+    },
+    "static/world/terrain-scene.mjs": {
+      "bytes": 12041,
+      "sha256": "10368b738d1cd70da69ebe0ae886682e367cd5500ca30f9d6ca714141b79fcb6"
+    },
+    "static/content/vampiric-revenge-files.mjs": {
+      "bytes": 6420,
+      "sha256": "bd30376833c23efb7006752621429fcc7da381a6a764be38f525554dc11cd187"
+    },
+    "static/content/edition-session.mjs": {
+      "bytes": 4479,
+      "sha256": "91644d83fc5e204e5d9f2eeb24280fcfb6610bb10c5af7c836bd3ab84380bb38"
+    },
+    "static/content/lost-trail-files.mjs": {
+      "bytes": 1826,
+      "sha256": "2008a42851c456d85d83b7b767536b43ff4b07f410cd696083cac1a7fd3121b9"
+    },
+    "static/content/alchemist-files.mjs": {
+      "bytes": 4581,
+      "sha256": "14fd8cea877e9e1444ac6593f633756ea2310f7bfb696a61cf77a0a5f0361ebf"
+    },
+    "static/content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "4991e3a0bbfdfb7c64e7d247d9f9b4ffa3308945de8a693b554e924aa5c276db"
+    },
+    "static/content/lost-trail-v2-files.mjs": {
+      "bytes": 1404,
+      "sha256": "38b4178ab6a7bf0dcbf0f7237859c4753183d596ce2df38285722b3bdd4df157"
+    },
+    "static/content/community-runtime-registry.mjs": {
+      "bytes": 5632,
+      "sha256": "7ac584de1cfe59ef3811516ff3d40acc4663faa1307436a47e8d400959df40a2"
+    },
+    "static/majesty/index.html": {
+      "bytes": 19081,
+      "sha256": "46a325773ef69492af39aeac4898355bcb6d9823da68db4fb22157942143a090"
+    },
+    "static/majesty/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    },
+    "static/majesty/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "static/majesty/MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    },
+    "static/hosting/asset-url.mjs": {
+      "bytes": 635,
+      "sha256": "31f8e1bbf844d58d2164cb8bbe9ef974d369a92e94c2a6a54ae8c40e7bb415a8"
+    },
+    "static/hosting/single-player.js": {
+      "bytes": 515,
+      "sha256": "8ea5d16f7adf9f1d51a52b05b47023be48617d43433f8968d61384e5f6e8be08"
+    },
+    "static/hosting/runtime-safety.mjs": {
+      "bytes": 7137,
+      "sha256": "8aeb894daa1efb53bb36a4938107710a97f9cc8a8e90ab0e41bee4ca8857dcbe"
+    },
+    "static/hosting/boot.mjs": {
+      "bytes": 1531,
+      "sha256": "9d9ad0bf41c04546d9646a2efd7dd5c9c93710049079b4986f7fcbf6de55795a"
+    },
+    "static/hosting/audio-start.mjs": {
+      "bytes": 1305,
+      "sha256": "dd1b8c03154c7929e4b6724d8540a5d5bd166fc7441a4afa7ed127ae44285b48"
+    },
+    "static/hosting/automatic-assets.json": {
+      "bytes": 48112,
+      "sha256": "782a508938af9cf6927750351a03f72db0e7074f72e5f05c6f696f213242ba1e"
+    },
+    "static/hosting/map-art-update.mjs": {
+      "bytes": 4594,
+      "sha256": "6c77422506896c5752d844efad02df3b57b7965778e7a8dbd1e8f5b5614a5465"
+    },
+    "static/hosting/root-player.mjs": {
+      "bytes": 1840,
+      "sha256": "16b1438b022731f835847f0946d4447a06f4e7f06af294255f2c5a89b021d053"
+    },
+    "static/hosting/autoload.mjs": {
+      "bytes": 816,
+      "sha256": "5ac82676bd52bb60d4054ea81fe37549714dc8fdeb6ea42e1e6dff5c86498f54"
+    },
+    "static/hosting/community-updates.mjs": {
+      "bytes": 13365,
+      "sha256": "dee8a51d9086b3f3c50ee4118caf2f45dbe275702d61188596c5f119cf099a4a"
+    },
+    "static/hosting/derived-assets.mjs": {
+      "bytes": 5557,
+      "sha256": "3a382e42e11895370c51301b5e2eb7dc646b637a98791494e25fb5c3c3e7839b"
+    },
+    "static/hosting/launcher-client.mjs": {
+      "bytes": 2157,
+      "sha256": "acddbaed153152cec277168d263bff736f136b3ab1540c73a184d94e677d23bb"
+    },
+    "static/hosting/original-loading.jpg": {
+      "bytes": 253477,
+      "sha256": "b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6"
+    },
+    "static/hosting/menu-text.mjs": {
+      "bytes": 1786,
+      "sha256": "4df606b8e972562b44fd5fc4548002062c098d0b94e759b7a19c8a50c3c60147"
+    },
+    "static/hosting/content-cache.mjs": {
+      "bytes": 2988,
+      "sha256": "e5c363e17a6b573d5482e20a5e9f49509a3e35121d908fa27d123d96ebf7b36f"
+    },
+    "static/hosting/boot.html": {
+      "bytes": 909,
+      "sha256": "4cffb673e9a0f0ce02eb8dbbd0d3b25440ac36a1871fc36c213b364773980683"
+    },
+    "static/hosting/favicon.svg": {
+      "bytes": 605,
+      "sha256": "7c58d95ce39dcff70e9a81124e7ba7b3fdaaf3b8db7fb9b05252a0f1d8ab4089"
+    },
+    "static/hosting/automatic-assets.mjs": {
+      "bytes": 5764,
+      "sha256": "401ac46f5d068e33d1540ffe5d9520b84b7defb1304ce095b9022925439a2784"
+    },
+    "static/backups/worker.mjs": {
+      "bytes": 1085,
+      "sha256": "10da8690737d2f1107a19eb371a00e8689d9247e53a75880820eae1b9a91be71"
+    },
+    "static/backups/index.html": {
+      "bytes": 3777,
+      "sha256": "c147347cd5aec190945c90a64f82b44d2893fae39ecb2521eda1be478b3c65eb"
+    },
+    "static/backups/storage.mjs": {
+      "bytes": 12202,
+      "sha256": "64fdab1976f0bea1bc6bd982198de4ef23657274fe9e943b887b7ed16ecaf7d7"
+    },
+    "static/backups/launcher.mjs": {
+      "bytes": 3404,
+      "sha256": "f20d06ea1200386d7b25acf3da7f19fd93d95cf6f61bde14173b4e74dea6082e"
+    },
+    "static/backups/bundle.mjs": {
+      "bytes": 9540,
+      "sha256": "0c3379dabef8fdde0962f27f47f12c51e38b403e2f9e4643ace0ecf03d8de725"
+    }
+  },
+  "nativeAssetsCommit": "7a177a31363ea700439f876223620a0e91814d7d",
+  "bindingAssetsCommit": "1881fd8354675cbbcfa9306124918ef8d5dbde7e",
+  "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d"
+}
