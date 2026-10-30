@@ -12,6 +12,11 @@ for gradually introducing the other More Heroes guilds. Each addition should
 feel like a polished, believable part of Majesty's world. Quality and internal
 consistency take priority over the number of guilds released.
 
+Take pride in the complete player experience. Attractive, carefully finished
+imagery is a release requirement across the building, hero, guild-panel scene
+and menus. Functional integration alone is not sufficient. Review each
+addition in-game beside stock content and revise weak artwork before release.
+
 - Give each guild and hero a distinct identity through strong original artwork,
   readable silhouettes, equipment, portraits and animations. Carry that identity
   consistently through the world sprites, recruitment UI, selection cards,
@@ -60,15 +65,21 @@ contract. Preserve the native bevels, typography, selection and disabled states.
 
 Mike clarified these requirements on October 30 after reviewing the live guild:
 
-- Identify every building tier clearly in native lists, using `Level 2`, `Level 3`, and so on for upgrades, as stock buildings do.
-  Keep the base name consistent with the stock level-one convention. Keep names readable
+- Follow stock Blacksmith and Wizards Guild conventions in building menus:
+  show the base building name for the first tier, then distinct `Level 2`,
+  `Level 3` and later labels wherever those tiers are listed. Multiple tiers
+  must never appear as indistinguishable repeated names. Keep names readable
   inside the stock row width and retain the full guild identity on its panel.
 - An upgrade starts from the completed previous tier. Preserve the standing
   building while workers add to it; reserve bare foundations and initial
   building frames for new construction. Check both 1-to-2 and 2-to-3 work.
 - Each completed tier needs substantial, clearly visible new architecture at
   normal game scale. Add coherent wings, towers or fortifications to the
-  existing structure. Small decorative changes alone do not establish a tier.
+  existing structure. Level 2 must visibly extend level 1; level 3 must retain
+  the level-1 and level-2 architecture and visibly extend that combined building.
+  Continue this cumulative progression for any later tiers. Give every tier
+  its own completed artwork. Small decorative changes alone do not establish
+  a tier.
 - Review initial construction, active upgrades, completed tiers and restored
   saves against equivalent stock buildings. Verify the selected checkpoint
   actually contains the tier being reviewed. Preserve placement, framing,
