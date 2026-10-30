@@ -84,7 +84,9 @@ continuations.
   correction in `deploy/dark-paladin-textured-release.json`, then the full Guild
   names, solid heroes, scaffolding and scale correction in
   `deploy/dark-paladin-guild-release.json`, then original guild animations and
-  refined hero artwork in `deploy/dark-paladin-life-release.json`. The older
+  refined hero artwork in `deploy/dark-paladin-life-release.json`, followed by
+  matching slate roofs and the chapel steeple in
+  `deploy/dark-paladin-roof-release.json`. The older
   hosted-release descriptor remains its historical baseline.
 
 - Tiered guilds must show unambiguous native `Level 2`, `Level 3` and later
@@ -107,4 +109,4 @@ continuations.
   Do not borrow stock ambient, work, damage or collapse effects: author motion
   and effects for its architecture and character. Native animation formats and
   UI framing remain appropriate. Keep upper tiers readable: additions belong
-  around or behind the main hall rather than hiding it behind an oversized gate.
+  around, behind or above the main hall rather than hiding it behind an oversized gate.

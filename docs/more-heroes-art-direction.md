@@ -252,3 +252,21 @@ All 149 deployment files reproduced exactly; only the three resource bindings
 changed. Public native resources and the main-domain responses matched the
 qualified candidate. See `deploy/dark-paladin-life-release.json` and
 `deploy/dark-paladin-life-production-verification.json`.
+
+Mike's subsequent Dark Paladin roof refinement requires all secondary roofs to use the
+main hall's staggered, overlapping weathered slate shingles, including side
+wings, porches and tower caps. Level three replaces its separate rear
+watchtower with a chapel steeple rising directly from the main hall: a pointed
+bell chamber, visible bronze bell, steep shingled spire and small iron finial.
+Carry roof details through upgrade, damage and collapse states.
+
+The matching shingles and chapel steeple are live in deployment
+`dpl_Ag8NM4UE875r5D9PE8ucY1K5jUMU`. All 430 hero image references, flags
+and normalized tile/palette payloads are identical to the preceding release.
+Ten gameplay/text resources are byte-identical; only the two art archives
+changed. The level-three saved game loaded, native recruitment animation
+played without runtime errors, and all 15 protected GMP files stayed unchanged.
+The complete 149-file deployment reproduced exactly, and public bindings and
+all twelve native downloads matched the tested artifact. Qualification and
+production receipts are `deploy/dark-paladin-roof-release.json` and
+`deploy/dark-paladin-roof-production-verification.json`.

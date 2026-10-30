@@ -1,0 +1,102 @@
+{
+  "nativeWorkingAnimationAudit": {
+    "changingGuildPixels": [
+      607,
+      417
+    ],
+    "stationaryBackgroundPixels": [
+      0,
+      0
+    ],
+    "nativeWorkingAnimationQualified": true
+  },
+  "format": "majesty-dark-paladin-roof-verification-v1",
+  "matchingRoofSlatesQualified": true,
+  "centralSteepleQualified": true,
+  "nativeWorkingAnimationQualified": true,
+  "saveReloadQualified": true,
+  "ownedBrowserClosed": true,
+  "engineUnchanged": true,
+  "gameplayUnchanged": true,
+  "heroUnchanged": true,
+  "sourcePolicies": {
+    "scripts/artwork/dark_paladin_shingled.py": "b3ccf09d83ad43cd47311ab92f986a16ad0cee63cadf546bb18531568127415a",
+    "scripts/prepare-dark-paladin-roof-presentation.py": "b530b3fba0ff2c901279545dc5776408d09d4546a25c85a64f6a6b320941ff0b"
+  },
+  "nativeResult": {
+    "completed": true,
+    "productionChanged": false,
+    "saveWritten": false,
+    "runtime": {
+      "closed": false,
+      "queuedBytes": 0,
+      "queuedOperations": 0,
+      "queuedSubmissions": 0,
+      "peakBytes": 12963936,
+      "peakOperations": 17,
+      "peakSubmissions": 1
+    },
+    "errors": []
+  },
+  "nativeResourceFiles": {
+    "Data/Community-main.cam": {
+      "bytes": 40844027,
+      "sha256": "e47b49dff62a40d929779fad735ddaa901808d5359c57f1662e552df786ecffb"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 40844027,
+      "sha256": "e47b49dff62a40d929779fad735ddaa901808d5359c57f1662e552df786ecffb"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417334,
+      "sha256": "07cc183fe79fecc4e38d9ca20eb013bd2caa5fd37d7d0c1523aafd8ad91d7186"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63661,
+      "sha256": "7afdd2f588534bf815a0ad7a0c235dc0bd0d99b2dcf5ed5bd743bfdaa173d55f"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204083,
+      "sha256": "3ccedcd21d74bc6eec280de12e6a837e210b5330c72c6e784011e47532281d32"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65013,
+      "sha256": "bfe9c654f96874504be0863d5296b98dea47a2c5bca4b7131de6164c1f3621d5"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204116,
+      "sha256": "3835f92878d7723f234f40ac0b8f1d957e681546e980f00c5b1cf30ce761732a"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121480,
+      "sha256": "d982cdce224914b8f2dff39cfcd03b9d008e33f2309e54adecb2a59b2ba47f34"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    }
+  },
+  "heroAudit": {
+    "allHeroReferencesIdentical": true,
+    "references": 430,
+    "directionalHeroFramesUnchanged": 424,
+    "uiArtworkUnchanged": true
+  },
+  "savedGmpFilesUnchanged": 15,
+  "limits": {
+    "nativeLiveCase": "Existing level-three save loaded; working guild animation captured during recruitment.",
+    "damageAndCollapse": "Re-rendered and native codec verified; no live building-damage event staged."
+  }
+}

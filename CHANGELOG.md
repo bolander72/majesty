@@ -1,3 +1,10 @@
+## Dark Paladin matching slate roofs and steeple — October 30, 2026
+
+- Add individual matching slate shingles to secondary roofs at every tier.
+- Replace level three's separate rear watchtower with a chapel steeple rising
+  from the main hall, preserving the open courtyard and added training wing.
+- Carry the changes through upgrade scaffolds, damage and collapse artwork.
+
 ## Dark Paladin original animation refinement — October 30, 2026
 
 - Replace borrowed guild fire ornaments with original attached torch flames,
