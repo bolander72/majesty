@@ -1,0 +1,126 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "src": "/(?:multiplayer|campaign)(?:/.*)?",
+      "status": 302,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
+      "src": "/hosting/original-loading\\.jpg",
+      "has": [
+        {
+          "type": "query",
+          "key": "v",
+          "value": "b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6"
+        }
+      ],
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/majesty/MajestyRecomp\\.wasm",
+      "has": [
+        {
+          "type": "query",
+          "key": "v",
+          "value": "e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8"
+        }
+      ],
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Type": "application/wasm",
+        "Content-Encoding": "br"
+      },
+      "dest": "/majesty/MajestyRecomp.wasm.br"
+    },
+    {
+      "src": "/majesty/MajestyRecomp\\.data",
+      "has": [
+        {
+          "type": "query",
+          "key": "v",
+          "value": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+        }
+      ],
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/majesty/MajestyRecomp\\.js",
+      "has": [
+        {
+          "type": "query",
+          "key": "v",
+          "value": "8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b"
+        }
+      ],
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Resource-Policy": "same-origin",
+        "Cache-Control": "no-cache"
+      },
+      "continue": true
+    },
+    {
+      "src": "/majesty/MajestyRecomp\\.wasm",
+      "dest": "/majesty/MajestyRecomp.wasm.br",
+      "headers": {
+        "Content-Type": "application/wasm",
+        "Content-Encoding": "br"
+      }
+    },
+    {
+      "src": "/backups/?",
+      "dest": "/backups/index.html"
+    },
+    {
+      "src": "/campaign/?",
+      "dest": "/campaign/index.html"
+    },
+    {
+      "src": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "setup",
+          "value": "1"
+        }
+      ],
+      "dest": "/setup.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/majesty/?",
+      "dest": "/majesty/index.html"
+    },
+    {
+      "src": "/multiplayer/?",
+      "dest": "/multiplayer/index.html"
+    },
+    {
+      "src": "/world/?",
+      "dest": "/world/index.html"
+    },
+    {
+      "handle": "filesystem"
+    }
+  ]
+}

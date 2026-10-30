@@ -1,0 +1,404 @@
+<!doctype html>
+<!-- The player page for one game's web build. tools/web_launcher.py places it,
+     with MajestyRecomp.js/.wasm/.data, in <launcher>/<game id>/; the game's files were
+     imported by the launcher into the browser's private storage at
+     <game id>/game, and the profile lives at <game id>/profile. The page must
+     be served cross-origin isolated (COOP same-origin, COEP require-corp). -->
+<html lang="en">
+<head>
+<base href="/majesty/">
+<link rel="icon" href="/hosting/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/majesty/MajestyRecomp.wasm?v=e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8" as="fetch" crossorigin>
+<link rel="preload" href="/majesty/MajestyRecomp.data?v=4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939" as="fetch" crossorigin>
+<link rel="preload" href="/majesty/MajestyRecomp.js?v=8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b" as="script">
+<link rel="modulepreload" href="/hosting/root-player.mjs">
+<link rel="modulepreload" href="/hosting/launcher-client.mjs">
+<link rel="modulepreload" href="/hosting/automatic-assets.mjs">
+<link rel="modulepreload" href="/hosting/derived-assets.mjs">
+<link rel="modulepreload" href="/hosting/asset-url.mjs">
+<link rel="modulepreload" href="/hosting/community-updates.mjs">
+<link rel="modulepreload" href="/hosting/content-cache.mjs">
+<link rel="modulepreload" href="/hosting/audio-start.mjs">
+<link rel="modulepreload" href="/hosting/runtime-safety.mjs">
+<link rel="modulepreload" href="/hosting/menu-text.mjs">
+<link rel="modulepreload" href="/world/sha256.mjs">
+<link rel="modulepreload" href="/world/content-hash.mjs">
+<link rel="modulepreload" href="/content/edition-session.mjs">
+<link rel="modulepreload" href="/content/lost-trail-files.mjs">
+<link rel="modulepreload" href="/backups/storage.mjs">
+<link rel="preload" href="/games.json" as="fetch" crossorigin>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Majesty Gold HD</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #ddd; font: 14px system-ui, sans-serif; overflow: hidden; }
+  #canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; outline: none; }
+  #canvas { visibility: hidden; }
+  body[data-game-ready] #canvas { visibility: visible; }
+  body[data-game-ready] #canvas { cursor: none !important; }
+  [hidden] { display: none !important; }
+  #status { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 0 16px; white-space: pre-line; pointer-events: none; }
+  #status a { pointer-events: auto; color: #8cf; }
+  #startup-art { position: fixed; inset: 0; z-index: 1;
+    display: grid; place-items: center; background: #000; pointer-events: none; }
+  #startup-art img { display: block; width: min(800px, 100vw);
+    height: min(600px, 100dvh); object-fit: contain; }
+  body[data-game-ready] #startup-art,
+  body:has(#status:not([hidden])) #startup-art { display: none; }
+</style>
+<link rel="preload" href="/hosting/original-loading.jpg?v=b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6" as="image" fetchpriority="high">
+</head>
+<body>
+<div id="startup-art" role="status" aria-label="Loading Majesty"><img src="/hosting/original-loading.jpg?v=b410dc632aa0ed7361cb70f11648d3c95f972397078cb2f223d41b59834dced6" width="800" height="600" alt="Majesty original loading artwork" fetchpriority="high"></div>
+<canvas id="canvas" tabindex="-1"></canvas>
+<div id="status" hidden></div>
+<script src="../hosting/single-player.js"></script>
+<script>
+"use strict";
+const playerSearch = majestySinglePlayerSearch(location.search);
+if (playerSearch !== location.search) {
+  const soloURL = new URL(location.href);
+  soloURL.search = playerSearch;
+  history.replaceState(history.state, "", soloURL);
+}
+const statusEl = document.getElementById("status");
+const canvas = document.getElementById("canvas");
+function status(text, back) {
+  statusEl.textContent = text;
+  if (back) {
+    const a = document.createElement("a");
+    a.href = "../?setup=1";
+    a.textContent = "\nBack to the launcher";
+    statusEl.append(document.createElement("br"), a);
+  }
+  statusEl.hidden = !text;
+}
+// Opt-in visible diagnostics make resize verification possible without
+// exposing guest memory or runtime internals to browser automation.
+const viewportDebug = new URLSearchParams(playerSearch).get("RECOMP_VIEWPORT_DEBUG") === "1"
+  ? document.body.appendChild(document.createElement("output")) : null;
+if (viewportDebug) {
+  viewportDebug.id = "viewport-debug";
+  viewportDebug.style.cssText = "position:fixed;bottom:0;right:0;background:#000b;color:#fff;padding:4px;pointer-events:none;font:12px monospace";
+}
+function reportViewport(t) {
+  if (!viewportDebug) return;
+  if (t.startsWith("[viewport]")) latestViewport = boundedLogLine(t);
+  runtimeDiagnosticsDirty = true;
+  queueDiagnostics();
+}
+const MAX_LOG_LINES = 512, MAX_LOG_CHARS = 2048;
+const MAX_CONSOLE_LINES = 256, MAX_CONSOLE_CHARS = 262144, MAX_CONSOLE_LINES_PER_SECOND = 16;
+const log = [];
+let latestViewport = "", runtimeDiagnosticsDirty = false;
+let diagnosticsFrame = null;
+let consoleWindowStart = -Infinity, consoleWindowLines = 0, consoleLines = 0, consoleChars = 0;
+function boundedLogLine(t) {
+  const text = String(t);
+  if (text.length <= MAX_LOG_CHARS) return text;
+  // A sliced string may retain the full native trace. Copy only these code units.
+  const units = new Uint16Array(MAX_LOG_CHARS);
+  for (let i = 0; i < units.length; ++i) units[i] = text.charCodeAt(i);
+  return String.fromCharCode(...units);
+}
+function rememberLog(t) {
+  if (t === "[player] menu ready") requestAnimationFrame(() =>
+    requestAnimationFrame(() => { document.body.dataset.gameReady = "true";
+      document.getElementById("startup-art")?.remove();
+      canvas.focus({preventScroll: true});
+      performance.mark("majesty-menu-ready"); }));
+  log.push(boundedLogLine(t));
+  if (log.length > MAX_LOG_LINES) log.shift();
+}
+// Console sinks can retain native trace messages outside our bounded tail.
+// Use both lifetime and burst limits, with no queue, timer or delayed drain.
+function forwardConsole(t, level) {
+  if (consoleLines >= MAX_CONSOLE_LINES || consoleChars >= MAX_CONSOLE_CHARS) return;
+  const now = performance.now();
+  if (now - consoleWindowStart >= 1000) { consoleWindowStart = now; consoleWindowLines = 0; }
+  if (consoleWindowLines >= MAX_CONSOLE_LINES_PER_SECOND) return;
+  const line = boundedLogLine(t).slice(0, MAX_CONSOLE_CHARS - consoleChars);
+  ++consoleLines; ++consoleWindowLines; consoleChars += line.length;
+  console[level](line);
+}
+// Diagnostic DOM work is coalesced once per animation frame. Runtime control
+// messages still dispatch synchronously and retain their original contents.
+function queueDiagnostics() {
+  if (diagnosticsFrame !== null) return;
+  diagnosticsFrame = requestAnimationFrame(() => { diagnosticsFrame = null; flushDiagnostics(); });
+}
+function flushDiagnostics() {
+  if (runtimeDiagnosticsDirty) {
+    runtimeDiagnosticsDirty = false;
+    viewportDebug.textContent = latestViewport;
+    let details = document.getElementById("debug-log");
+    if (!details) {
+      details = document.body.appendChild(document.createElement("details"));
+      details.id = "debug-log";
+      details.style.cssText = "position:fixed;top:0;left:0;max-width:95vw;max-height:45vh;overflow:auto;background:#111e;color:#ddd;padding:8px;font:12px monospace";
+      details.appendChild(document.createElement("summary")).textContent = "Runtime diagnostics";
+      details.appendChild(document.createElement("pre"));
+    }
+    details.querySelector("pre").textContent = log.slice(-40).join("\n");
+  }
+}
+let stopGameRuntime = () => {};
+function showFailure(what) {
+  stopGameRuntime();
+  document.dispatchEvent(new CustomEvent("recomp-runtime-state", { detail: { state: "failed", message: String(what) } }));
+  status(`The game stopped: ${what}`, true);
+  let details = document.getElementById("failure-details");
+  if (!details) {
+    details = document.body.appendChild(document.createElement("details"));
+    details.id = "failure-details";
+    details.style.cssText = "position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#111e;color:#ddd;padding:8px";
+    details.appendChild(document.createElement("summary")).textContent = "Game diagnostics";
+    details.appendChild(document.createElement("pre"));
+  }
+  details.querySelector("pre").textContent = log.slice(-80).join("\n");
+}
+window.recompLog = log; // for tests
+
+async function gameId() {
+  const parts = location.pathname.split("/").filter(Boolean);
+  if (parts.length && parts[parts.length - 1].includes(".")) parts.pop();
+  return decodeURIComponent(parts[parts.length - 1] || "majesty");
+}
+
+// Hash actual imported bytes and paths, including files added by content mods.
+// Generated viewport layouts and the writable profile live in a separate tree. All peers must
+// run the same WASM build, original executable and content before room joining.
+async function contentManifest(dir, game, signal, cacheKey) {
+  signal?.throwIfAborted();
+  await dir.getFileHandle(".manifest.json"); // completed original import required
+  const hex = b => Array.from(new Uint8Array(b), v => v.toString(16).padStart(2, "0")).join("");
+  const entries = [];
+  // Native rule adapters can select opt-in scenarios. Peers must agree on
+  // every rule parameter, including unknown future rules, before joining.
+  const rules = [...new URLSearchParams(playerSearch)].filter(([k]) => k.startsWith("RECOMP_RULE_"));
+  if (game.id === "majesty" && !rules.some(([key]) => key === "RECOMP_RULE_INVENTORY_COMPAT"))
+    rules.push(["RECOMP_RULE_INVENTORY_COMPAT", "1"]);
+  if (rules.length > 16 || new Set(rules.map(([k]) => k)).size !== rules.length ||
+      rules.some(([k, v]) => !/^RECOMP_RULE_[A-Z0-9_]{1,60}$/.test(k) || !/^[a-zA-Z0-9_-]{1,80}$/.test(v)))
+    throw new Error("Invalid or duplicate game rule parameter");
+  if (rules.length) entries.push("rules-v1\0" + JSON.stringify(rules.sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)));
+  const files = [];
+  async function collect(folder, prefix = "") {
+    for await (const [name, handle] of folder.entries()) {
+      signal?.throwIfAborted();
+      const path = prefix + name;
+      if (handle.kind === "directory") await collect(handle, path + "/");
+      else if (path !== ".manifest.json") files.push([path, handle]);
+    }
+  }
+  await collect(dir);
+  files.sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
+  const {cachedFileHashes} = await import("../hosting/content-cache.mjs");
+  const fresh = frontierProfilePath !== null ||
+    prepareHeroRestore !== null || rules.some(([key]) => key !== "RECOMP_RULE_INVENTORY_COMPAT");
+  const hashes = await cachedFileHashes(files, cacheKey, {signal, fresh});
+  for (const value of hashes) entries.push(value);
+  signal?.throwIfAborted();
+  const digest = async values => hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(values.join("\n"))));
+  const content = await digest(entries);
+  // Regional checkpoints bind to actual imported bytes, independent of
+  // session rules, restore toggles and compatible host-only WASM rebuilds.
+  const assets = await digest(entries.filter(value => !value.startsWith("rules-v1\0")));
+  if (!/^[a-f0-9]{64}$/.test(game.engineSha256 || "")) throw new Error("The launcher is missing this engine's identity. Re-stage the web build.");
+  return { session: game.engineSha256 + ":" + game.sha256 + ":" + content,
+           checkpoint: game.sha256 + ":" + assets };
+}
+async function start() {
+  const startupController = new AbortController();
+  const signal = startupController.signal;
+  const cancelStartup = () => startupController.abort();
+  addEventListener("pagehide", cancelStartup, {once: true});
+  try {
+  await import("../backups/storage.mjs").then(({assertNoPlayerRestore}) => assertNoPlayerRestore());
+  signal.throwIfAborted();
+  if (!crossOriginIsolated) throw new Error("This page must be served cross-origin isolated (COOP/COEP headers).");
+  if (!navigator.gpu) throw new Error("This browser has no WebGPU.");
+  const id = await gameId();
+  const {editionFor} = await import("../content/edition-session.mjs");
+  const edition = editionFor(playerSearch);
+  const dataId = edition ? edition.storageId : (preparedRootGames?.find(g => g.id === id)?.contentStorageId || id);
+  if (frontierProfilePath && id !== "majesty") throw new Error("Named worlds require Majesty");
+  const games = preparedRootGames || await fetch("../games.json", {signal}).then((r) => r.json());
+  signal.throwIfAborted();
+  const game = games.find((g) => g.id === id);
+  if (!game) throw new Error(`No game "${id}" in the launcher's games.json.`);
+  document.title = game.title;
+
+  // The game must have been imported by the launcher first.
+  let dir = await navigator.storage.getDirectory();
+  try {
+    for (const p of [dataId, "game"]) dir = await dir.getDirectoryHandle(p);
+    await dir.getFileHandle(game.executable);
+  } catch {
+    throw new Error(`${game.title} has not been imported yet.`);
+  }
+
+  status("");
+  signal.throwIfAborted();
+  const contentIdentity = await contentManifest(dir, game, signal, dataId);
+  signal.throwIfAborted();
+  const displayProfile = (new URLSearchParams(playerSearch).get("profile") || "");
+  if (displayProfile && !/^[a-zA-Z0-9_-]{1,40}$/.test(displayProfile)) throw Error("Invalid player profile name");
+  const displayProfilePath = `${id}/profile` + (frontierProfilePath ? `/${frontierProfilePath}` :
+    (displayProfile ? `/${displayProfile}` : ""));
+  const {removeMenuTextShadows} = await import("../hosting/menu-text.mjs");
+  await removeMenuTextShadows({profilePath: displayProfilePath, signal});
+  const heroRestoreReceipt = prepareHeroRestore ? await prepareHeroRestore(contentIdentity.checkpoint, {signal}) : null;
+  const heroRuntimeBinding = heroRestoreReceipt?.runtimeBinding ?? null;
+  const heroHaloBinding = heroRestoreReceipt?.haloBinding ?? null;
+  signal.throwIfAborted();
+  const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+  signal.throwIfAborted();
+  if (!adapter) throw new Error("WebGPU gave no adapter.");
+  const wanted = ["texture-compression-bc", "depth32float-stencil8", "float32-filterable",
+                  "unorm16-texture-formats", "rg11b10ufloat-renderable"];
+  const requiredFeatures = wanted.filter((f) => adapter.features.has(f));
+  const requiredLimits = {};
+  for (const k of ["maxTextureDimension2D", "maxBufferSize", "maxStorageBufferBindingSize",
+                   "maxUniformBufferBindingSize", "maxBindGroups", "maxSampledTexturesPerShaderStage",
+                   "maxSamplersPerShaderStage", "maxStorageBuffersPerShaderStage",
+                   "maxUniformBuffersPerShaderStage", "maxDynamicUniformBuffersPerPipelineLayout",
+                   "maxVertexBuffers", "maxVertexAttributes", "maxColorAttachments",
+                   "maxInterStageShaderVariables"])
+    if (k in adapter.limits) requiredLimits[k] = adapter.limits[k];
+  const device = await adapter.requestDevice({ requiredFeatures, requiredLimits });
+  if (signal.aborted) { device.destroy(); signal.throwIfAborted(); }
+  const {guardGraphicsDevice, createRuntimeStop} = await import("../hosting/runtime-safety.mjs");
+  const graphicsGuard = guardGraphicsDevice(device, {fail: showFailure});
+  device.lost.then((info) => {
+    if (info.reason !== "destroyed") showFailure(`The graphics device was lost: ${info.message}`);
+  });
+  device.addEventListener("uncapturederror", (e) => forwardConsole(`WebGPU: ${e.error.message}`, "error"));
+
+  const exe = `/opfs/${dataId}/game/${game.executable}`;
+  const Module = {
+    canvas,
+    locateFile: filename => {
+      const versions = {"MajestyRecomp.js": "8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b", "MajestyRecomp.data": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939", "MajestyRecomp.wasm": "e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8"};
+      return "/majesty/" + filename + (versions[filename] ? "?v=" + versions[filename] : "");
+    },
+    preinitializedWebGPUDevice: graphicsGuard.device,
+    noInitialRun: true,
+    print: (t) => { rememberLog(t); forwardConsole(t, "log"); },
+    printErr: (t) => {
+      rememberLog(t);
+      reportViewport(t);
+      document.dispatchEvent(new CustomEvent("recomp-runtime-message", { detail: t }));
+      forwardConsole(t, "warn");
+      // A guest ExitProcess stops the simulation without aborting Emscripten.
+      // Keep tools such as checkpoint saving from acting on a stopped guest.
+      const exit = /^\[recomp\] guest process exited with code (\d+)$/.exec(t);
+      if (exit) {
+        if (Number(exit[1]) === 0) location.replace("https://boland.co");
+        else showFailure(`guest exited with code ${exit[1]}`);
+      }
+    },
+    setStatus: () => {},
+    onAbort: (what) => showFailure(what),
+    preRun: [() => {
+      const m = Module;
+      const profile = (new URLSearchParams(playerSearch).get("profile") || "");
+      if (profile && !/^[a-zA-Z0-9_-]{1,40}$/.test(profile)) throw new Error("Invalid player profile name");
+      m.ENV.RECOMP_PROFILE_DIR = `/opfs/${id}/profile` + (frontierProfilePath ? `/${frontierProfilePath}` : (profile ? `/${profile}` : ""));
+      m.ENV.RECOMP_RULE_INVENTORY_COMPAT = "1";
+      m.ENV.RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT = "1";
+      m.ENV.RECOMP_ALCHEMIST_PANEL_BRIDGE = "1";
+      m.ENV.RECOMP_ALCHEMIST_RESEARCH_BRIDGE = "1";
+      m.ENV.RECOMP_ALCHEMIST_ACTION_BRIDGE = "1";
+      m.ENV.RECOMP_ALCHEMIST_TARGET_BRIDGE = "1";
+      m.ENV.RECOMP_ALCHEMIST_SHARED_FUNCTIONS = "1";
+      m.ENV.RECOMP_COMMUNITY_INTEGER_HELPERS = "1";
+      m.ENV.RECOMP_COMMUNITY_BASE_TIMING_HELPERS = "1";
+      m.ENV.RECOMP_COMMUNITY_PROCESS_GUILDS = "1";
+      m.ENV.RECOMP_COMMUNITY_MOVEMENT_SCALE = "1";
+      m.ENV.RECOMP_COMMUNITY_SPELL_ORIGIN = "1";
+      m.ENV.RECOMP_COMMUNITY_RESEARCH_QUERY_HELPERS = "1";
+      m.ENV.RECOMP_COMMUNITY_SPELL_TIMING_HELPERS = "1";
+      m.ENV.RECOMP_COMMUNITY_HERO_UI = "1";
+      m.ENV.RECOMP_COMMUNITY_PHANTOM_UI = "1";
+      m.ENV.RECOMP_COMMUNITY_PRIVATE_INTENTS = "1";
+      m.ENV.RECOMP_COMMUNITY_WORLD_QUERY_HELPERS = "1";
+      m.ENV.RECOMP_COMMUNITY_EXPANSION_PANELS = "1";
+      m.ENV.RECOMP_DDRAW_CPU_SNAPSHOT_ONLY = "1";
+      m.ENV.RECOMP_GUEST_ARGS = game.guestArgs || "";
+      m.ENV.RECOMP_CONTENT_IDENTITY = contentIdentity.checkpoint;
+      m.ENV.RECOMP_SINGLE_PLAYER_ONLY = "1";
+      const extra = new URLSearchParams(playerSearch);
+      for (const [k, v] of extra) if (k.startsWith("RECOMP_") && k !== "RECOMP_CONTENT_IDENTITY" && k !== "RECOMP_FRONTIER_HERO_BINDING" && k !== "RECOMP_FRONTIER_HERO_HALO_BINDING" && k !== "RECOMP_FRONTIER_HERO_OWNER_MANIFEST") m.ENV[k] = v;
+      if (heroRuntimeBinding) m.ENV.RECOMP_FRONTIER_HERO_BINDING = heroRuntimeBinding;
+      else delete m.ENV.RECOMP_FRONTIER_HERO_BINDING;
+      if (heroHaloBinding) m.ENV.RECOMP_FRONTIER_HERO_HALO_BINDING = heroHaloBinding;
+      else delete m.ENV.RECOMP_FRONTIER_HERO_HALO_BINDING;
+      if (heroRestoreReceipt?.ownerManifest) m.ENV.RECOMP_FRONTIER_HERO_OWNER_MANIFEST = heroRestoreReceipt.ownerManifest;
+      else delete m.ENV.RECOMP_FRONTIER_HERO_OWNER_MANIFEST;
+      if (heroHaloBinding) {
+        m.ENV.RECOMP_RULE_FRONTIER_HERO_GENERATION = "v1";
+        m.ENV.RECOMP_RULE_FRONTIER_SEEDED_GENERATION = "1";
+        m.ENV.RECOMP_RULE_FRONTIER_CONNECTED_TERRAIN = "v1";
+      } else delete m.ENV.RECOMP_RULE_FRONTIER_HERO_GENERATION;
+      if (id === "majesty" && !extra.has("RECOMP_RULE_INVENTORY_COMPAT"))
+        m.ENV.RECOMP_RULE_INVENTORY_COMPAT = "1";
+    }],
+    onRuntimeInitialized() {
+      status("");
+      canvas.focus();
+      Module.callMain([`--exe=${exe}`]);
+    },
+  };
+  const {installGameAudio} = await import("../hosting/audio-start.mjs");
+  const stopAudio = installGameAudio(Module);
+  const stopRuntime = createRuntimeStop({module: Module, device, stopAudio,
+    stopThreads: () => { if (typeof PThread !== "undefined") PThread.terminateAllThreads(); }});
+  const onRuntimeError = event => {
+    const source = String(event.filename || event.reason?.stack || "");
+    if (source.includes("/majesty/MajestyRecomp.") || source.includes("/hosting/runtime-safety.mjs"))
+      showFailure(event.message || event.reason?.message || "Game runtime error");
+  };
+  addEventListener("error", onRuntimeError);
+  addEventListener("unhandledrejection", onRuntimeError);
+  stopGameRuntime = () => {
+    removeEventListener("error", onRuntimeError);
+    removeEventListener("unhandledrejection", onRuntimeError);
+    graphicsGuard.stop(); stopRuntime();
+  };
+  addEventListener("pagehide", stopGameRuntime, {once: true});
+  window.recompRuntimeSafety = {snapshot: graphicsGuard.snapshot};
+  window.Module = Module;
+  const script = document.createElement("script");
+  script.src = "/majesty/MajestyRecomp.js?v=8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b";
+  script.onerror = () => status("The game's web build is missing.", true);
+  if (retainWorldLease) retainWorldLease();
+  document.body.append(script);
+  } finally { removeEventListener("pagehide", cancelStartup); }
+}
+
+canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+canvas.addEventListener("click", () => canvas.focus());
+// Frontier startup owns its storage lease before native initialization.
+let frontierProfilePath = null, retainWorldLease = null, prepareHeroRestore = null;
+const rootController = new AbortController();
+addEventListener("pagehide", () => rootController.abort(), {once: true});
+const rootPreparation = location.pathname === "/"
+  ? import("../hosting/root-player.mjs").then(({prepareRootPlayer}) =>
+      prepareRootPlayer({signal: rootController.signal}))
+  : Promise.resolve();
+let preparedRootGames;
+rootPreparation.then(games => { preparedRootGames = games; return (new URLSearchParams(playerSearch).has("world") || new URLSearchParams(playerSearch).has("RECOMP_RULE_FRONTIER_SESSION") || new URLSearchParams(playerSearch).has("RECOMP_RULE_FRONTIER_HERO_RESTORE")
+  ? import("../world/realm-session.mjs").then(({startNativeWorldPlayer}) => startNativeWorldPlayer((profile, retain, prepare) => {
+      frontierProfilePath = profile; retainWorldLease = retain; prepareHeroRestore = prepare; return start();
+    }))
+  : new URLSearchParams(playerSearch).has("RECOMP_RULE_FRONTIER_TRANSFER")
+    ? import("../world/paired-session.mjs").then(({startPairedPlayer}) => startPairedPlayer(start))
+    : import("../content/edition-session.mjs").then(({startEditionPlayer}) => startEditionPlayer(start))); }).catch((e) => status(e.message, true));
+</script>
+<script type="module" src="../world/native.mjs"></script>
+<script type="module" src="../world/resources.mjs"></script>
+</body>
+</html>
