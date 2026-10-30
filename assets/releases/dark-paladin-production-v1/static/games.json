@@ -1,0 +1,155 @@
+[
+  {
+    "id": "majesty",
+    "title": "Majesty Gold HD",
+    "executable": "MajestyHD - Old.exe",
+    "sha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+    "requiredDirs": [
+      "Data",
+      "DataMX",
+      "Quests",
+      "QuestsMX",
+      "Music"
+    ],
+    "exclude": [
+      "__redist",
+      "__support",
+      "app",
+      "commonappdata",
+      "tmp",
+      "SDK",
+      "*.dll",
+      "*.pdf",
+      "*.htm",
+      "*.url",
+      "*.hashdb",
+      "*.info",
+      "*.script",
+      "MajestyHD.exe"
+    ],
+    "store": "https://www.gog.com/game/majesty_gold_hd",
+    "installNames": [
+      "Majesty Gold HD",
+      "Majesty HD",
+      "Majesty"
+    ],
+    "minFreeMb": 800,
+    "guestArgs": "-nointro -dochecksums -softwarecursor -nothreadedcursor",
+    "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d",
+    "defaultContentStorageId": "majesty-community-guilds-v1"
+  },
+  {
+    "id": "majesty-alchemist-v1-campaign3",
+    "title": "Majesty: Alchemist Lab",
+    "executable": "MajestyHD - Old.exe",
+    "sha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+    "requiredDirs": [
+      "Data",
+      "DataMX",
+      "Quests",
+      "QuestsMX",
+      "Music"
+    ],
+    "exclude": [
+      "__redist",
+      "__support",
+      "app",
+      "commonappdata",
+      "tmp",
+      "SDK",
+      "*.dll",
+      "*.pdf",
+      "*.htm",
+      "*.url",
+      "*.hashdb",
+      "*.info",
+      "*.script",
+      "MajestyHD.exe"
+    ],
+    "store": "https://www.gog.com/game/majesty_gold_hd",
+    "installNames": [
+      "Majesty Gold HD",
+      "Majesty HD",
+      "Majesty"
+    ],
+    "minFreeMb": 800,
+    "guestArgs": "-nointro -dochecksums -softwarecursor -nothreadedcursor",
+    "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d"
+  },
+  {
+    "id": "majesty-alchemist-demo-v1",
+    "title": "Majesty: Alchemist Lab and Vampiric Revenge",
+    "executable": "MajestyHD - Old.exe",
+    "sha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+    "requiredDirs": [
+      "Data",
+      "DataMX",
+      "Quests",
+      "QuestsMX",
+      "Music"
+    ],
+    "exclude": [
+      "__redist",
+      "__support",
+      "app",
+      "commonappdata",
+      "tmp",
+      "SDK",
+      "*.dll",
+      "*.pdf",
+      "*.htm",
+      "*.url",
+      "*.hashdb",
+      "*.info",
+      "*.script",
+      "MajestyHD.exe"
+    ],
+    "store": "https://www.gog.com/game/majesty_gold_hd",
+    "installNames": [
+      "Majesty Gold HD",
+      "Majesty HD",
+      "Majesty"
+    ],
+    "minFreeMb": 800,
+    "guestArgs": "-nointro -dochecksums -softwarecursor -nothreadedcursor",
+    "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d"
+  },
+  {
+    "id": "majesty-community-guilds-v1",
+    "title": "Majesty: Community Guilds",
+    "executable": "MajestyHD - Old.exe",
+    "sha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+    "requiredDirs": [
+      "Data",
+      "DataMX",
+      "Quests",
+      "QuestsMX",
+      "Music"
+    ],
+    "exclude": [
+      "__redist",
+      "__support",
+      "app",
+      "commonappdata",
+      "tmp",
+      "SDK",
+      "*.dll",
+      "*.pdf",
+      "*.htm",
+      "*.url",
+      "*.hashdb",
+      "*.info",
+      "*.script",
+      "MajestyHD.exe"
+    ],
+    "store": "https://www.gog.com/game/majesty_gold_hd",
+    "installNames": [
+      "Majesty Gold HD",
+      "Majesty HD",
+      "Majesty"
+    ],
+    "minFreeMb": 800,
+    "guestArgs": "-nointro -dochecksums -softwarecursor -nothreadedcursor",
+    "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d"
+  }
+]
