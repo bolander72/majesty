@@ -216,3 +216,39 @@ building remains standing. Completed tiers must expand the visible footprint
 with coherent connected architecture. Compare actual dimensions with stock
 guilds and verify placement and selection, rather than accepting equal tiny
 footprints at every tier.
+
+### Original animation and readable architecture
+
+Mike explicitly required custom world animations on October 30, 2026. Every
+new guild and hero must ship its own coherent animation artwork, including
+ambient activity, cloth, attached torch flames, damage and collapse. Borrowed
+stock effect sprites are not acceptable, even when native controller metadata
+is reused. Review animation in motion at native scale; a still render cannot
+qualify attachment, scale, occlusion or timing.
+
+Dark Paladin level 3 replaces the oversized front gate with an open courtyard,
+low walls, a rear watchtower and an upper training wing. The hall stays visible.
+The refined hero uses slimmer fitted armor, smaller shoulders and shield, solid
+rounded boots and less exaggerated stride. Preserve all directions and states.
+
+The Dark Paladin animation implementation includes twenty-frame primary guild
+state artwork and original working/damage effect channels. Native controllers
+choose when a state advances; do not add a separate idle timer or assume that
+an idle standing building continuously plays every frame. Review active native
+playback and attachment after changing animation records; retaining a stock
+record layout alone does not prove that a controller plays its effect layers.
+
+The original-animation refinement is live at `https://majesty.boland.co/` in
+deployment `dpl_GcFjuq1uP5xfg5dibbqSdNSa4S24`. It includes all 424 refined
+hero frames, three original 60-frame guild effect families, six scaffold stages
+and open level-three architecture. Guild animation palettes remain stable
+across the loop. Native recruitment playback was captured in three phases;
+only moving effects changed against a stationary background. The older
+level-three save loaded, a newly recruited hero moved normally, no runtime
+errors were reported, and all 15 protected GMP files retained their hashes.
+Damage artwork passed native codec checks; this pass did not stage a live
+damage event. The engine, voices, unit stats and bytecode remain unchanged.
+All 149 deployment files reproduced exactly; only the three resource bindings
+changed. Public native resources and the main-domain responses matched the
+qualified candidate. See `deploy/dark-paladin-life-release.json` and
+`deploy/dark-paladin-life-production-verification.json`.

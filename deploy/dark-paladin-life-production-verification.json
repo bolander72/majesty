@@ -1,0 +1,112 @@
+{
+  "url": "https://majesty.boland.co",
+  "target": "production",
+  "ready": true,
+  "mainDomainVerified": true,
+  "newEngineCacheUrlsVerified": true,
+  "allFilesMatchStagedProduction": true,
+  "engineSha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d",
+  "activeGuilds": [
+    "adventurers-guild",
+    "royal-menagerie",
+    "dark-paladin"
+  ],
+  "otherMoreHeroesAdmissionsDisabled": true,
+  "files": {
+    "index.html": {
+      "bytes": 22918,
+      "sha256": "3bb71b7cca0dc43d8f6fb84c28eddeb791739894b31309a2176c1e0a15130339"
+    },
+    "games.json": {
+      "bytes": 3695,
+      "sha256": "1d81757d4a149a261d46c2cc529136475a8860de3258c8a953e88e18d3cd9b69"
+    },
+    "hosting/automatic-assets.json": {
+      "bytes": 48124,
+      "sha256": "87f40f1a2816169e230b2ff20304be27078cbd45654f67e50272d542a3d9fd79"
+    },
+    "content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "aa421f5fd0b38e59364a880254acb8758f87b8064e8a4cd23f5bfbdf471d3da9"
+    },
+    "hosting/community-updates.mjs": {
+      "bytes": 15525,
+      "sha256": "2c924fdc94a6e1bc0d56bd0b9451bfa6ac3e34d40ac29513b12726fa55191b41"
+    },
+    "majesty/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "majesty/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    }
+  },
+  "deploymentId": "dpl_GcFjuq1uP5xfg5dibbqSdNSa4S24",
+  "deploymentUrl": "https://majesty-1116cehf6-bolander72-01.vercel.app",
+  "nativeAssetCommit": "cd6378ef6a3e97744628ecf60295771bf3fa122f",
+  "bindingAssetCommit": "7abab2119a3fd3483213be2bbc9e53a033f05345",
+  "nativeResources": {
+    "allTwelveNativeResourcesMatch": true,
+    "files": {
+      "Data/Community-main.cam": {
+        "bytes": 40976483,
+        "sha256": "6134932c967ffb670233ff38412f80a7a06203e74f430271b5d39ee7fffee40d"
+      },
+      "Data/Community-textdata.cam": {
+        "bytes": 63661,
+        "sha256": "7afdd2f588534bf815a0ad7a0c235dc0bd0d99b2dcf5ed5bd743bfdaa173d55f"
+      },
+      "Data/Community_Base.bcd": {
+        "bytes": 946028,
+        "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+      },
+      "Data/Community_Expansion.bcd": {
+        "bytes": 1738800,
+        "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+      },
+      "Data/textdata.cam": {
+        "bytes": 417334,
+        "sha256": "07cc183fe79fecc4e38d9ca20eb013bd2caa5fd37d7d0c1523aafd8ad91d7186"
+      },
+      "Data/unittype.cam": {
+        "bytes": 204116,
+        "sha256": "3835f92878d7723f234f40ac0b8f1d957e681546e980f00c5b1cf30ce761732a"
+      },
+      "DataMX/Community-main.cam": {
+        "bytes": 40976483,
+        "sha256": "6134932c967ffb670233ff38412f80a7a06203e74f430271b5d39ee7fffee40d"
+      },
+      "DataMX/Community-textdata.cam": {
+        "bytes": 65013,
+        "sha256": "bfe9c654f96874504be0863d5296b98dea47a2c5bca4b7131de6164c1f3621d5"
+      },
+      "DataMX/Community_Base.bcd": {
+        "bytes": 946028,
+        "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+      },
+      "DataMX/Community_Expansion.bcd": {
+        "bytes": 1738800,
+        "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+      },
+      "DataMX/mx_Unittype.cam": {
+        "bytes": 121480,
+        "sha256": "d982cdce224914b8f2dff39cfcd03b9d008e33f2309e54adecb2a59b2ba47f34"
+      },
+      "DataMX/mx_textdata.cam": {
+        "bytes": 204083,
+        "sha256": "3ccedcd21d74bc6eec280de12e6a837e210b5330c72c6e784011e47532281d32"
+      }
+    }
+  },
+  "reproduction": {
+    "files": 149,
+    "allFilesMatch": true,
+    "changedFiles": [
+      "static/content/community-files.mjs",
+      "static/hosting/automatic-assets.json",
+      "static/hosting/community-updates.mjs"
+    ],
+    "engineUnchanged": true
+  }
+}

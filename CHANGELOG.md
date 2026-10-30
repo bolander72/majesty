@@ -1,3 +1,13 @@
+## Dark Paladin original animation refinement — October 30, 2026
+
+- Replace borrowed guild fire ornaments with original attached torch flames,
+  moving cloth, damage fire and smoke; preserve original collapse artwork.
+- Replace the level-three front gate with an open courtyard, rear watchtower
+  and training wing; revise corresponding upgrade scaffolds.
+- Refine all 424 hero frames with smaller fitted armor, slimmer limbs,
+  rounded solid boots and quieter movement.
+- Require custom world animation artwork for future guilds and heroes.
+
 # Changelog
 
 ## Dark Paladin Guild visibility and progression — October 30, 2026
