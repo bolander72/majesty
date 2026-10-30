@@ -1,0 +1,217 @@
+{
+  "format": "majesty-guild-usability-qualification-v1",
+  "date": "2026-10-30",
+  "nativeCaptureQualified": true,
+  "palaceCaptureQualified": true,
+  "guildAlwaysOpenQualified": true,
+  "retiredConstructionQualified": true,
+  "buildingScaleQualified": true,
+  "nativeHelpQualified": true,
+  "playerSavesPreserved": true,
+  "ownedBrowsersClosed": true,
+  "officialSdkCompiled": true,
+  "officialEngineBuilt": true,
+  "darkPaladinArtUnchanged": true,
+  "sourcePolicies": {
+    "scripts/prepare-guild-usability-resources.py": "e168c035a4fbc6a70d6f25090c2f752a87d02f0276f1867080259948c8012c87",
+    "scripts/prepare-guild-usability-art.py": "24be26ee06ed2cda690230d92a0740983af0cbe9e4590e0c8a1959babfc7b65c",
+    "scripts/prepare-guild-usability-gpl.py": "8cd96b2d73a223043a83ff23f0aadee881202af3511dd1727e91d1f099a3b038",
+    "scripts/prepare-guild-usability-engine.py": "dd1b9e641688583271ff2af81d2315ace3f5573ce0a1b1ec2ffbba6a41f6ea9e",
+    "native/community/guild_usability_policy.h": "1b219a30567194130902d4e7fde2ad5c875eb21a82f971b2c293067b21bd22b9",
+    "native/community/guild_usability_probe.cpp": "6322f313bad21a069c552a3effb6d1e94ebcc7fbf11a8bd6939a2dacf531de8c",
+    "native/community/guild_usability_panels.cpp": "d4fd0fecc13cad405aff683d9ea56582a207aa9cadda33cde53b0797e0f60615"
+  },
+  "nativeResourceFiles": {
+    "Data/Community-gpltext.cam": {
+      "bytes": 84333,
+      "sha256": "d8b97e4e014d705fb1b44fa59fd0a5ecabfe7fbf3780c93a51e85d1652887287"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 43445265,
+      "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63603,
+      "sha256": "5e0e7a6c3a7ac4d9fb0427111cdc2538a63673fc8414bc56d37becd212140b7e"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 37409957,
+      "sha256": "d0902fa5653d87cd6c5e0d57eb02941ffa3c5c9c3a166d5aca74be8d04b5c741"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 160433,
+      "sha256": "27d8306bbcf72fac457b61bf9605b322046b7b4ca3fbc3795dddd8c92e8cb22e"
+    },
+    "Data/mx_gpltext.cam": {
+      "bytes": 145263,
+      "sha256": "6027d6255039c7b89aad4140c9cd054e5c319874be60a7ecebd43c6bd680b525"
+    },
+    "Data/mx_textdata.cam": {
+      "bytes": 139523,
+      "sha256": "4e02d2c9ee898b1f1180f1b6a691b5eafd9ebb0f7ea5a9a94b928b47040817d9"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417629,
+      "sha256": "dac5cdb39f328ce20b459cf8822cf42c1e1cd6ba97cafe32db8abc90b5d02508"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204116,
+      "sha256": "3835f92878d7723f234f40ac0b8f1d957e681546e980f00c5b1cf30ce761732a"
+    },
+    "DataMX/Community-gpltext.cam": {
+      "bytes": 94073,
+      "sha256": "35eb5b9b59e6d9db23622448ec65419f1f09f379cb866df1043032af005300de"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 43445265,
+      "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 64955,
+      "sha256": "504cdb2bff6a95334cc0210b4a3755f222d85763481282646efdb484f6e4aa09"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 37409957,
+      "sha256": "d0902fa5653d87cd6c5e0d57eb02941ffa3c5c9c3a166d5aca74be8d04b5c741"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121480,
+      "sha256": "d982cdce224914b8f2dff39cfcd03b9d008e33f2309e54adecb2a59b2ba47f34"
+    },
+    "DataMX/mx_gpltext.cam": {
+      "bytes": 169751,
+      "sha256": "dc7685d5b18c85c9b16ee4875d43d458f60fdd215b52ce37a38b79d8fa4cc75d"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204426,
+      "sha256": "d0da74365a10b16898ef66dc6da37ab25e5166d6b265d4b3862795278e19ca8c"
+    }
+  },
+  "engine": {
+    "MajestyRecomp.js": {
+      "bytes": 473595,
+      "sha256": "8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b"
+    },
+    "MajestyRecomp.wasm": {
+      "bytes": 91099517,
+      "sha256": "e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8"
+    },
+    "MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    }
+  },
+  "evidence": {
+    "static-qualification-v4.json": {
+      "bytes": 2774,
+      "sha256": "ee71ef3f064429879a1ec1fc7b37a1eb90e85f3d5ac0996f521a426f156f485d"
+    },
+    "guild-ui53-capture-progress.json": {
+      "bytes": 1293,
+      "sha256": "a6cfa599187c46713f495fa7647ce23a616768153ab76c3c8259329867627bce"
+    },
+    "guild-ui53-runtime-log.json": {
+      "bytes": 27952,
+      "sha256": "6e8891dc49f53b8e1150ad3a1986f665d833a014ff25cab18468416c9a4956a3"
+    },
+    "guild-ui53-public-save-reload-proof.json": {
+      "bytes": 463,
+      "sha256": "087c57bc3c3f3d5a65a6076821912b4df6b04e6b72c79f72bcfb067f913f28aa"
+    },
+    "save-preservation-final.json": {
+      "bytes": 125,
+      "sha256": "fd96c2025adbec922d6db9f5e31438151d99b00e3ed80708c3261eb952d526b4"
+    },
+    "guild-ui53-resources.json": {
+      "bytes": 558,
+      "sha256": "0f5cb0cf9af7d0b96943e145e1d2e460d8d4e70b5172bdd67db9edd18b9bdae9"
+    },
+    "compiled-v7/compiler-proof.json": {
+      "bytes": 1306,
+      "sha256": "440672da14e0e7560bf5fdfa6398d789f25ddc6f0b0bfb8d7c7ca1ef757ac29d"
+    },
+    "fixture-compiled-v14/compiler-proof.json": {
+      "bytes": 1305,
+      "sha256": "ddd29025829b9520ccfada4eb1d6faa81f57f23f3eda0640052b7efae2d718eb"
+    },
+    "browser-build-v12b.json": {
+      "bytes": 643,
+      "sha256": "0eeae05c4058875c483ca3ded68aa127adb81e8b0f98200e3fba9058dcd87cd2"
+    },
+    "engine-final-v8.json": {
+      "bytes": 403,
+      "sha256": "461f643247e06924eb3ff300c091ac3e86e19e4d27b322a28e75e6aabd058761"
+    },
+    "scaled-art-v9/scale-proof.json": {
+      "bytes": 1029,
+      "sha256": "6135c703db7a4849fbbfe87ac5f5e5645bdf176b08239d3d2d5fb4e391d27c7b"
+    },
+    "engine-compression-final.json": {
+      "bytes": 240,
+      "sha256": "563591ea001cd4b0b12b28761710a529ca135ddfb0bb9387dfc5f758687c105e"
+    }
+  },
+  "captureTest": {
+    "method": "Original native lethal HP setter; native death callback, normal control and escort, real Zoo storage, native paid Tame queue and debit, living owned guardian.",
+    "productionDefinitionsMatchFixture": true,
+    "privateFixtureOnlyFunctions": 4,
+    "level1000Enabled": true,
+    "infiniteGoldEnabledThroughCapture": true,
+    "infiniteGoldDisabledBeforePaidTameDebitCheck": true,
+    "productionReloadWithoutTestFlags": true,
+    "automatedPhysicalCombatClaimed": false
+  },
+  "retiredFamilies": [
+    "31304241",
+    "31314241",
+    "31334241",
+    "31344241",
+    "31354241",
+    "31364241",
+    "31374241",
+    "31384241",
+    "31394241",
+    "31494241",
+    "314b4241",
+    "315a4241",
+    "31694241",
+    "31794241"
+  ],
+  "nativeVisualReview": {
+    "runtimeBuildingTiers": [
+      1
+    ],
+    "allThreeZooTiersGeometryAndHelpAliasesStaticallyQualified": true,
+    "palaceCaptureWithZooAndBack": true,
+    "palaceCaptureHiddenWithoutZoo": true,
+    "adventurersAlwaysOpenControlsRemoved": true,
+    "nativeZooHelpScrolledForCaptureTameRent": true,
+    "nativeAdventurerHelpReviewed": true
+  },
+  "limits": {
+    "oldHostAppCrashCauseRemainsUnresolved": true,
+    "protectedOriginalGmpFiles": 15
+  },
+  "nativeAssetCommit": "ce4a48ba3cc7388420b1c2cd5e7a4f22769d9e90",
+  "project": {
+    "id": "prj_B7rHdDZTN89cQisZqwlM9aGtmRyY",
+    "owner": "bolander72-01",
+    "environment": "production"
+  }
+}

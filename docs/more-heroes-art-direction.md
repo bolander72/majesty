@@ -270,3 +270,22 @@ The complete 149-file deployment reproduced exactly, and public bindings and
 all twelve native downloads matched the tested artifact. Qualification and
 production receipts are `deploy/dark-paladin-roof-release.json` and
 `deploy/dark-paladin-roof-production-verification.json`.
+
+## Town scale and understandable mechanics
+
+Review community buildings together with the Palace, Marketplace, Blacksmith
+and stock guilds at normal game zoom. Their visible architecture and real
+placement/collision footprint must belong in the town. Resizing must preserve
+native shadows, animation timing, entrances, attachments and sidebar emblems.
+
+At every tier, question-mark help must explain every visible custom command,
+its cost, its outcome and any state label. Use the expected native kingdom
+menus for shared actions such as rewards. Avoid unexplained switches and hidden
+capture odds. The Adventurers Guild is always open; the Zoo's capture bounty
+reliably subdues eligible monsters when storage and an escort are available.
+See `community-guild-usability.md` for the current command contract.
+
+Retirement is a product rule, including when build-anything is enabled. A
+NotBuildable flag alone does not establish that a guild is unavailable. Verify
+the actual construction list with the cheat enabled while preserving existing
+saved actors and all approved content.

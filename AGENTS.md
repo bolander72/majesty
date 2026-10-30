@@ -110,3 +110,9 @@ continuations.
   and effects for its architecture and character. Native animation formats and
   UI framing remain appropriate. Keep upper tiers readable: additions belong
   around, behind or above the main hall rather than hiding it behind an oversized gate.
+
+- Retired More Heroes construction must remain unavailable even when the native
+  build-anything cheat is enabled. Preserve saved actors and approved Dark Paladin
+  construction. Community building scale includes placement/collision geometry,
+  and question-mark help must explain every visible action at every tier.
+  Adventurers Guild remains always open; see `docs/community-guild-usability.md`.
