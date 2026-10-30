@@ -1,0 +1,221 @@
+{
+  "format": "majesty-dark-paladin-preview-qualification-v1",
+  "baselineEngineSha256": "a3f869eeb7d24fd27013a27c012f7ece717dcf5b03be2ac891c0e8bbde3694cd",
+  "nativeConstructRecruitCombatQualified": true,
+  "freshLevel1000SaveReloadQualified": true,
+  "nativeUiQualified": true,
+  "otherRetiredAdmissionsDisabled": true,
+  "stockResourcesPreserved": true,
+  "existingSaveHashesPreserved": true,
+  "engineProducerReproducesCompiledInputs": true,
+  "ownedBrowsersClosed": true,
+  "resources": {
+    "Data/unittype.cam": {
+      "bytes": 204103,
+      "sha256": "63dc93d596f7caf1dad81f9cee5674642e97d937bb069fba26dcb880601070d7"
+    },
+    "Data/action.cam": {
+      "bytes": 33617,
+      "sha256": "6563c92100f168dca48d0ba2ace1991201f64fcda07badf5ca1a4e10277f0f56"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121467,
+      "sha256": "3134fabc37c378928670f99d4d1f505a5fc08ffa71a8798cc19e4dc2cee6bb2a"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417519,
+      "sha256": "9c7655d123c7bf00ce58d7ab096a14012fd85b52f4fde72e599b2650b11d555e"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63846,
+      "sha256": "e57d073ba9a5233d9b4f8da558ad2ac09c110f8bf9b2a9ce4009f968e1fd2794"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204268,
+      "sha256": "2568073d5a382cc335b13ad1b25141203fd3a26eef75ad8de0a1f022ad984e20"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65198,
+      "sha256": "85fbcd265a1b18192294f035e20d925d8e848ff6cf14a260bf3ede5ac5fa3b9e"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 158126,
+      "sha256": "d4b776d6800d8326ec07cdd8a2a5408f459740b1eca788c95d86fb7a58e4af89"
+    },
+    "Data/Community-gpltext.cam": {
+      "bytes": 82026,
+      "sha256": "c555b94db518c1e7c88985a92602e3d5300abe12259187a31497bcd75eeeb681"
+    },
+    "Data/miscdata.cam": {
+      "bytes": 10323,
+      "sha256": "ad45b52e51a7a6ca36f5722aef69d22b0adb8297a0817e1ccf015d357bef425c"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17265,
+      "sha256": "9deb25d8721917928f909c9aaf8f5d078ee633be46af47b94492dc79ad8743bf"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 37266127,
+      "sha256": "6dea005ad44d652ef9ebf054f23d23dc5b725ce8cba7b4b2210fdd7a05bbddf3"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 37266127,
+      "sha256": "6dea005ad44d652ef9ebf054f23d23dc5b725ce8cba7b4b2210fdd7a05bbddf3"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    }
+  },
+  "engine": {
+    "MajestyRecomp.wasm": {
+      "bytes": 91086556,
+      "sha256": "d326a96083dfd91205ca2ace275aaa6a01de7559a401c700a2c143f01bce840d"
+    },
+    "MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    }
+  },
+  "compressedEngine": {
+    "bytes": 6808545,
+    "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+  },
+  "sourcePolicies": {
+    "native/community/native_probe_plugin.cpp": "b3d88860883951d1495f0308794604ccec2e31c5b729e09e42a988efb7e15e34",
+    "scripts/prepare-dark-paladin-gpl.py": "036cccaa0042a21574338acb4ff34d1777e021e4e215dd5e5165f5de1001b497",
+    "scripts/prepare-dark-paladin-art.py": "339ae75fae27baf3aee156be1b8a8c8cc3df0a62dbc6b8f74127b499b9b720be",
+    "scripts/prepare-dark-paladin-prototype.py": "869c26b79d00b9ff2b7e67f8ce5db851a11251424ed989fe26000173368755be",
+    "scripts/lib/dark_paladin_interface.py": "1db630ed6532c0c43543f263536d15b429b1123c0e39fde1aae55962f7862701",
+    "scripts/prepare-dark-paladin-engine.py": "995fae543a46f844a30540f71e64df4b3410b094f3c085eac23f0d8a1acae1b0",
+    "scripts/prepare-dark-paladin-preview.py": "b81978308f5fe585ae3916f02e6e78f988ac80af70b782c4e130ce95d7c25c9c",
+    "scripts/artwork/dark_paladin_scene.py": "52b157844d556011a446a6e8c30161bb275d074aa6f8769384356b57a42ba4bd",
+    "scripts/artwork/dark_paladin_domain.py": "a4f426788495c07063851a77ee418860b1cbbc0736df691db4d0286409275686",
+    "scripts/lib/dark_paladin_upgrades.py": "bfc3f72a5a98307b3d55fe5296c4cd6f5d3652632e40e5f26e79a3a6acec9451",
+    "scripts/prepare-dark-paladin-upgrades-gpl.py": "5e1521856963f0706bf21024ee07a45f73d80ad5134af18e8ebfe6d371e50843"
+  },
+  "freshHero": {
+    "name": "Jupithra Antillia",
+    "level": 1000,
+    "currentHP": 7929,
+    "maxHP": 7936
+  },
+  "baselineSaveFilesPreserved": 22,
+  "oldPlayerSaveFilesPreserved": 9,
+  "normalLevelingObserved": {
+    "fromLevel": 1,
+    "toLevel": 20
+  },
+  "staticDirectionalFrames": 424,
+  "allEightDirectionsLiveQualified": false,
+  "legacySavedTintMigrationIncluded": false,
+  "productionChanged": false,
+  "artToolMode": "Built-in image_gen painted interior; original medieval Blender architecture; unchanged original hero animation; native resource encoding",
+  "evidence": {
+    "restored-world.png": {
+      "bytes": 1284432,
+      "sha256": "60127390d87bf6fe2f6300e93d6d9047777d15489abd9a4a5ce5379bb657d5fa"
+    },
+    "restored-help.png": {
+      "bytes": 1397063,
+      "sha256": "6f7bc7b0c75cd8579fd808f9dbaeefea2f989ddddda3248338b6c44580d519b8"
+    },
+    "guild-level1.png": {
+      "bytes": 1437763,
+      "sha256": "675d08ec2c8ba2abe876f5090974c4740d3fb6e7d487e380f9c1f2720f3d608d"
+    },
+    "restored-members.png": {
+      "bytes": 1402661,
+      "sha256": "adb6990d81fea54b803b9a8fc8e618dc8eb57e1c749d294c7069af2363b6c353"
+    },
+    "upgrade2-later.png": {
+      "bytes": 1440974,
+      "sha256": "2484f37b31112246460158cfed0e3d6acbf1ca00fc3cbb8a07c42cbee2945226"
+    },
+    "restored-spells.png": {
+      "bytes": 1420435,
+      "sha256": "1369a692c6d39035372459cdc83ba7f024f2298536ab5d3364d0fd2adcf2359e"
+    },
+    "upgrade3-later.png": {
+      "bytes": 1442214,
+      "sha256": "23aedfee72c2726bd470e00845ad099d401de6a62e4f7224b96efc1ef8fbd79a"
+    },
+    "restored-hero.png": {
+      "bytes": 1442386,
+      "sha256": "75966bfa2fbbaa239285b718a1dda3a1ea1273dd063ab406c1c92edf7e909fa2"
+    },
+    "restored-guild.png": {
+      "bytes": 1441029,
+      "sha256": "e811c773b78d0321249a533e1fe0f1193f7d48f677ac2d4653338a3b8f5fd05c"
+    }
+  },
+  "nativeUpgradeChainQualified": true,
+  "upgradeQualification": {
+    "completedLevels": [
+      2,
+      3
+    ],
+    "existingSaveCompatibility": true,
+    "hp": [
+      600,
+      900,
+      1200
+    ],
+    "capacities": [
+      3,
+      4,
+      5
+    ],
+    "costs": [
+      1500,
+      2000,
+      3000
+    ],
+    "freshEngineReload": true
+  },
+  "consistentVoiceBinding": "WR01: stock male Warrior bank",
+  "existingHeroNamesPreserved": true,
+  "freshCheckpointFiles": 23,
+  "sourceStage": {
+    "bytes": 291319,
+    "sha256": "e9ef8c523b76327bc570fd6eb1dd37ccde35e15d76050560d38075964b14b5eb"
+  },
+  "compilerReceipt": {
+    "bytes": 1306,
+    "sha256": "60ff0bf5e5696399dfab0dcef8b448a95a1a07518209301c07db70acc593df54"
+  },
+  "sharedSourceDelta": {
+    "onlyFunctions": [
+      "building_upgraded",
+      "MJC_building_upgraded"
+    ],
+    "before": "a9ef90b189817e654342634233bd6a7428cee10e88c2e3ab29a648597c71b32d",
+    "after": "1f7a2fbc7d526c62caf9857f0a20d29c3b3c61c2834c46f0a7f4d7edd5a37f3c",
+    "stockBranchesPreserved": true
+  },
+  "nativeConstructRecruitCombatQualificationOrigin": "Previous qualified hero and placement controls; upgrade, portrait and fresh checkpoint verified in trials 19/21."
+}

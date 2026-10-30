@@ -1,5 +1,12 @@
 # Dark Paladin’s Domain: original-art prototype
 
+Current status: released on October 30, 2026 at https://majesty.boland.co/.
+The redesigned Dark Paladin is the only reintroduced More Heroes guild.
+Adventurers Guild and Royal Menagerie remain active; the other classes remain
+retired. Dark Paladin's Domain becomes available at Palace level 2. The
+preview-stage statements below describe the development and qualification
+history before this production authorization.
+
 On October 29, 2026 Mike approved developing the Dark Paladin concept as the
 first More Heroes guild with original artwork. This work is an isolated
 prototype. Public More Heroes admissions remain retired; Adventurers Guild
@@ -159,3 +166,24 @@ level-three artwork after reload. Main production remains unchanged.
 Qualification and in-game review images are in
 `output/more-heroes/dark-paladin/v3/` in the Majesty workspace. Published asset
 commit: `f0c988467ea6a35aa19f9fee3f8573cba8e01e5c`.
+
+## Production release
+
+The production artifact preserves the tested preview's engine and all 56
+resource bindings. Its only additional changes update the launcher's engine
+cache identities and corresponding immutable routes, ensuring returning
+players fetch the qualified engine. A staged production deployment passed
+HTTP integrity and isolation-header checks before promotion; the main domain
+then passed the same checks. Source builds reproduce that exact artifact.
+
+`deploy/hosted-release.json` remains the historical baseline for the existing
+qualification gates. The final active engine and resource delta are pinned by
+`deploy/dark-paladin-release.json`, applied after those gates by
+`scripts/lib/dark_paladin_release.py`. The installer verifies the complete
+baseline and resulting file inventories, original preview qualification and
+source hashes, and immutable downloaded payloads. The earlier retirement,
+Phantom, capture-cursor and expansion qualification records are preserved.
+
+The source build now includes this release automatically. Production deployment:
+`dpl_7pKfZFf2A1FXMtLsFZhfPr4QRrS1`. Live verification is recorded in
+`deploy/dark-paladin-production-verification.json`.

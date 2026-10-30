@@ -1,10 +1,10 @@
 # Changelog
 
-## Dark Paladin medieval preview — October 30, 2026
+## Dark Paladin production release — October 30, 2026
 
 - Replace the guild thumbnail with a painted candlelit interior and the round building with an original Gothic stone hall, slate roof and distinct upgrade tiers. Preserve native framing and the 25-pixel Palace emblem.
 - Add native level 2 and 3 upgrades, capacities of 4 and 5, and a scoped worker callback for existing prototype saves.
-- Use the stock male Warrior voice bank consistently for Dark Paladins. Other classes and main production remain unchanged.
+- Use the stock male Warrior voice bank consistently for Dark Paladins. Other classes retain their existing voices. The redesigned guild is live on the main site; other More Heroes admissions remain disabled.
 
 ## Zoo capture cursor preview — October 29, 2026
 

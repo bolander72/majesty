@@ -789,6 +789,7 @@ def build(destination=None):
         'has': [{'type': 'query', 'key': 'v', 'value': artwork['sha256']}],
         'headers': {'Cache-Control': 'public, max-age=31536000, immutable'}, 'continue': True})
     config_file.write_text(json.dumps(config, indent=2) + '\n')
+    runpy.run_path(str(ROOT / 'scripts/lib/dark_paladin_release.py'))['install'](ROOT, destination)
     print(f"Built {release['release']} for / with the pinned native engine")
 
 

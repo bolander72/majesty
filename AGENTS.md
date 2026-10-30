@@ -57,3 +57,23 @@ continuations.
   recruitment or random arrivals without an explicit request. Reintroduction
   requires distinct artwork and native-scale UI review; see
   `docs/more-heroes-art-direction.md`.
+
+# More Heroes quality standard
+
+- Mike established the October 30, 2026 revised Dark Paladin preview as the
+  quality benchmark for future More Heroes additions. Introduce guilds
+  gradually, one complete and reviewed guild/hero package at a time.
+- Require polished, distinct original artwork; believable medieval fantasy
+  buildings and heroes; attractive painted guild-panel scenes; and consistent
+  world sprites, portraits, native UI, voices, combat sounds, lore and mechanics.
+  Finish intended progression and matching upgrade/building states, then verify
+  recruitment, combat, upgrades where applicable, and save/reload before release.
+- Follow `docs/more-heroes-art-direction.md` for the full standard. Preserve the
+  existing retirement and explicit reintroduction rules.
+
+- On October 30, 2026 Mike explicitly approved the redesigned Dark Paladin for
+  production. Dark Paladin's Domain is live with original medieval artwork,
+  consistent male Warrior audio and tested levels 1–3. This is the sole current
+  More Heroes reintroduction; all other retired classes remain disabled. The
+  active production delta is `deploy/dark-paladin-release.json`; the older
+  hosted-release descriptor remains its historical baseline.

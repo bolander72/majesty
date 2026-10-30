@@ -5,6 +5,38 @@ finding the repeated stock imagery unsuitable. Adventurers Guild and The Royal
 Menagerie remain active. More Heroes is not to be reactivated until requested.
 Its source and saved actor definitions remain available for compatibility.
 
+## Quality standard approved October 30, 2026
+
+Mike established the revised Dark Paladin preview as the quality benchmark
+for gradually introducing the other More Heroes guilds. Each addition should
+feel like a polished, believable part of Majesty's world. Quality and internal
+consistency take priority over the number of guilds released.
+
+- Give each guild and hero a distinct identity through strong original artwork,
+  readable silhouettes, equipment, portraits and animations. Carry that identity
+  consistently through the world sprites, recruitment UI, selection cards,
+  framed emblems and ability presentation.
+- Build believable medieval fantasy architecture that suits the guild's purpose,
+  culture and heroes. Use convincing materials, proportions and construction.
+  Avoid futuristic forms, crude geometric stand-ins and deliberately blocky
+  artwork. Review clarity and finish at actual game scale.
+- Give the guild panel a composed, attractive painted scene with a readable focal
+  subject, following the revised Dark Paladin interior's standard. Preserve
+  Majesty's native framing, palette, typography and interaction states.
+- Keep appearance, lore, names, equipment, voice and combat sounds, abilities
+  and building function coherent. Choose audio that fits the character; do not
+  carry over conflicting speech or combat voices from a borrowed class.
+- Finish the intended progression and controls. Where the design includes
+  upgrades, make them work and give each tier appropriate artwork and benefits.
+  Include matching construction, damage and destruction states.
+- Introduce guilds gradually, completing and reviewing one coherent guild and
+  hero package at a time. Verify recruitment, combat, progression, native UI
+  and save/reload compatibility before release. Apply the existing explicit
+  authorization requirement for enabling retired content.
+
+Use this benchmark to develop each guild's own character and architecture;
+the roster should offer a variety of equally polished, cohesive designs.
+
 ## Visual acceptance
 
 A new class needs a distinct silhouette, costume, equipment and animation,
@@ -59,3 +91,8 @@ contracts, testing status and remaining UI work. Public admissions remain retire
 The first Dark Paladin now has a qualified playable preview; see the prototype brief for construction, recruitment and fresh save/reload results. Main production remains unchanged.
 
 On October 30 Mike requested a prettier guild portrait, medieval architecture, consistent voices and levels 2/3. The revised preview adds a painted interior, three original Gothic building tiers, the male Warrior voice bank and tested native upgrades, including an older-save worker repair.
+
+Mike explicitly approved making the revised Dark Paladin live on October 30,
+2026. It is now the first reintroduced guild on majesty.boland.co. This approval
+applies to Dark Paladin's Domain; the remaining More Heroes guilds stay retired
+until individually developed and approved to this standard.
