@@ -1,0 +1,167 @@
+{
+  "format": "majesty-dark-paladin-textured-qualification-v1",
+  "date": "2026-10-30",
+  "nativeArtQualified": true,
+  "heroAnimationsQualified": true,
+  "allTiersQualified": true,
+  "guildPanelQualified": true,
+  "saveReloadQualified": true,
+  "ownedBrowserClosed": true,
+  "engineUnchanged": true,
+  "statsAndScriptsUnchanged": true,
+  "sourcePolicies": {
+    "scripts/prepare-dark-paladin-tier-presentation.py": "602f524cb06f3a9b75b40a9904af50bca6ce582ecf9bdcab4065fb3fd52397e0",
+    "scripts/lib/dark_paladin_tier_presentation.py": "85124b2c3127629eeb3cf3585d628fa316717fd9fc4858e7c57d5c5d47531fcd",
+    "scripts/artwork/dark_paladin_domain_tiers.py": "c2f4761decae2e09b363cd36af1d9dc4405d43de76cb85242e4c92322fbb5c1d",
+    "scripts/artwork/dark_paladin_textured.py": "a7b86273768a17f3800a317eb2d88dccc6de9d3ef1371ecb5ca95d1257c5951a",
+    "scripts/lib/dark_paladin_panel_safety.py": "1d57a085c311f8b52ec61c82decdc6e50f6bd10f4f6b5e6d5e727281c9ff36db",
+    "scripts/prepare-dark-paladin-art.py": "339ae75fae27baf3aee156be1b8a8c8cc3df0a62dbc6b8f74127b499b9b720be",
+    "scripts/lib/dark_paladin_art_bindings.py": "c8b8d79a69e541e54f1c0b496239e3f3e8b1d484f448e5fba60b126932e9c78a"
+  },
+  "resources": {
+    "Data/Community-main.cam": {
+      "bytes": 32650525,
+      "sha256": "4dd8b31b004297469f02ce59172f34cce5aa778696746666aac73e8fcd52adce"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32650525,
+      "sha256": "4dd8b31b004297469f02ce59172f34cce5aa778696746666aac73e8fcd52adce"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417321,
+      "sha256": "13c2197d05794b3cef507ab4be4efc51c75c54392a2cf7e3222ecf565eb602ae"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63648,
+      "sha256": "3e778bed11f2e8eae2cbe6faac49de5ad8d3007b592f1797733fbe72931a7919"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204070,
+      "sha256": "787a6d987a0eb2970e40cb66884d2e254d46367bf29b5cf4549d4d4a09fbcaf9"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65000,
+      "sha256": "6d0cce91e57ca77ea80559ac494cadfa62e12b76717653b81251a0cc7bbfb01f"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204101,
+      "sha256": "5e515ef108cfe04bc748e063796170d8f1d1b3a8008cf59f84d0eb301601fe6f"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121465,
+      "sha256": "92c30062b764de1b034913f1a130bb32b0463298ddcae779e64a7b85a736f999"
+    }
+  },
+  "priorResources": {
+    "Data/Community-main.cam": {
+      "bytes": 32683728,
+      "sha256": "822d2ac2a0952f39df9f341aab46508f8d5f6b0b11b211dc316161383e1d71fd"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32683728,
+      "sha256": "822d2ac2a0952f39df9f341aab46508f8d5f6b0b11b211dc316161383e1d71fd"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417517,
+      "sha256": "28224402b9b3d46a8b384e8dfdbc4967dfabb747da6f04f8feb17a1bfa202d69"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63844,
+      "sha256": "b22ac4143f00d5026a56b79a060fc0748757f9d676939f92525c3efd79c06b9b"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204266,
+      "sha256": "8eedf9dc5709a6650f07136e32ae1e08c44c5d768333b7bd8f1a6b0d0428798e"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65196,
+      "sha256": "8401e9405b0a9efe2df067fa07f97d2f21ee36485224cab02283ea52b807fbab"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204101,
+      "sha256": "5e515ef108cfe04bc748e063796170d8f1d1b3a8008cf59f84d0eb301601fe6f"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121465,
+      "sha256": "92c30062b764de1b034913f1a130bb32b0463298ddcae779e64a7b85a736f999"
+    }
+  },
+  "changedArchives": [
+    "Data/Community-main.cam",
+    "DataMX/Community-main.cam",
+    "Data/textdata.cam",
+    "Data/Community-textdata.cam",
+    "DataMX/mx_textdata.cam",
+    "DataMX/Community-textdata.cam"
+  ],
+  "nativeHeroFrames": 424,
+  "nativeGuildTiers": 3,
+  "damageStatesPerTier": 3,
+  "collapseFramesPerTier": 42,
+  "nativeAlphaRoundTrip": true,
+  "nativeIconBorderExact": true,
+  "nativeControlsPreservedExceptUnsupportedSpellCommand": true,
+  "stockPanelsPreserved": true,
+  "nativeUpgradeMaxHP": [
+    900,
+    1200
+  ],
+  "restoredCheckpoint": "(Quest for the Holy Chalice) 12 Days.GMP",
+  "restoredHeroLevel": 1000,
+  "restoredHeroMaxHP": 7936,
+  "savedCheckpointCountPreserved": 15,
+  "normalOwnedQuestVictoryProgressUpdates": true,
+  "mainGameTrial": "dp-browser27",
+  "reloadTrial": "dp-browser28",
+  "errorsInFinalReloadTrial": [],
+  "earlierTrialOutcomes": {
+    "dp-browser26": "Unsupported AP05 spell widget called through AP06 controller; null-call access violation at return 004168fc. Complete widget removed; centered AP06-compatible Heroes control tested in 27 and 28.",
+    "dp-browser27": "Both upgrades, hero combat/portrait, safe guild-panel controls and fresh town construction reviewed; deadline guard closed session before final checkpoint reload. Cleanup only afterward."
+  },
+  "evidence": {
+    "restored-level3.png": {
+      "bytes": 1447305,
+      "sha256": "62140cd2aa3b02c4656f1b6326eab4f78023b43243eca3c37fd33569ef380085"
+    },
+    "safe-former-spells-area.png": {
+      "bytes": 1444344,
+      "sha256": "3a5a1a0a9cf50df2bf69904ef781061f748e1ead8fb501ca79f9775b1b708c51"
+    },
+    "level2.png": {
+      "bytes": 1445285,
+      "sha256": "b5692c2c461b31e187a6559826b194823934049bf5f8a6d565fc69c9d2008f11"
+    },
+    "level1.png": {
+      "bytes": 1450092,
+      "sha256": "b838079b2da4b029cb6b16f06726f701a2ce0fd6a583543b8a187eda1be1a6a9"
+    },
+    "hero-portrait.png": {
+      "bytes": 1442118,
+      "sha256": "602408b2572702e3121b9a823747fc4acbf67f88ca97e723bde6b7d74de77fc9"
+    },
+    "hero-fighting-roster.png": {
+      "bytes": 1397895,
+      "sha256": "cc34664c99418637d2bc46770d300d8ab7fcf32a7a337ce938c73f57b30e8628"
+    },
+    "native-building-list.png": {
+      "bytes": 1344901,
+      "sha256": "a53b6b06c518d5142b036e9ac846766b1b6c827709dbadcffd8fc3cc2b2e4986"
+    },
+    "town-comparison.png": {
+      "bytes": 1332970,
+      "sha256": "1c03ee2876c0c216ac4032bbf0f7c86e98f08cbc6ce14c309d1cb04407d3bc7f"
+    },
+    "restored-hero.png": {
+      "bytes": 1442956,
+      "sha256": "116bf684961b541ddceb7de4083bffe3230e0aa65dd88730bc9ec7ca866c6cd1"
+    },
+    "upgrade3-standing.png": {
+      "bytes": 1447727,
+      "sha256": "f2525cb087255825dbecddd876c80b7e784d9a1414fc45d898a3c42a6796fb3a"
+    },
+    "upgrade2-standing.png": {
+      "bytes": 1446845,
+      "sha256": "5f2152cca457a160ea365282e0134c726bf2519ab016618b6546b6c446c238d3"
+    }
+  }
+}

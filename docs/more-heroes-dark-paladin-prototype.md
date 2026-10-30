@@ -247,3 +247,56 @@ Carry the shared textured medieval treatment through every building tier and
 state, hero direction and action, and corresponding native UI image. Retain
 working upgrades, labels, male audio and save compatibility. The full shared
 standard is in `docs/more-heroes-art-direction.md`.
+
+
+## Native textured guild and hero completion
+
+The approved reference direction now has an original deterministic native
+renderer in `scripts/artwork/dark_paladin_textured.py`. It supplies fine
+weathered masonry, overlapping slate courses, recessed galleries and timber
+gates across cumulative levels 1–3, matching initial construction, three
+damage states per tier and 42 collapse frames per tier. The hero's entire
+424-frame directional animation set has forged rounded armor, visible mail,
+folded teal cloth, a heater shield and matching guild heraldry. A new painted
+portrait supplies the 100-pixel and small native hero UI images. The native
+25-pixel Palace emblem and guild-panel painted interior retain their existing
+framing. The editable renderer and final native assets are saved in the
+workspace's `output/more-heroes/dark-paladin/v7-native-textured/` package.
+
+Testing exposed an existing panel mismatch: CGDP borrowed AP05 resources but
+uses the AP06 single-choice guild controller. Its copied Spells widget (1009)
+had no handler, producing a null-call access violation at return 004168fc.
+`scripts/lib/dark_paladin_panel_safety.py` removes only that complete private
+widget and centers the native Heroes control as in AP06. Stock AP05/AP06
+records remain unchanged. The same correction is applied to all four native
+text archives. No engine, actor attributes, voice bindings or gameplay scripts
+change. Tier labels and additive upgrade-frame bindings remain intact.
+
+Native art is packed by the existing `prepare-dark-paladin-art.py`, followed
+by the frozen tier-presentation pass and the scoped panel-safety helper. The
+final source build applies `deploy/dark-paladin-textured-release.json` after
+the existing qualified releases. Its installer verifies native qualification,
+source hashes, immutable payloads, and full before/after artifact inventories.
+Historical release inputs and qualification receipts remain unchanged.
+
+
+Final native verification completed both upgrades at 900/1,200 maximum HP,
+reviewed fresh construction beside the stock palace/house, exercised the
+working Heroes control and the former spell-button area, and inspected the
+saved hero in combat with its matching portrait. A separate bounded session
+loaded the exact older 12-day checkpoint at guild level three and hero level
+1000 (maximum HP 7,936), with no runtime errors. All 15 existing GMP checkpoint
+hashes were preserved. The owned quest victory updated normal profile progress;
+no save command was issued. Every owned browser and local test server was
+closed. The earlier unsupported-button failure and the subsequent deadline
+stop are recorded in `deploy/dark-paladin-textured-verification.json`.
+
+All 149 production files reproduced exactly from the source build. The staged
+production artifact passed HTTP integrity and isolation-header checks before
+promotion, and the public main site passed the same checks afterward. The
+release is live at https://majesty.boland.co/ in deployment
+`dpl_5WpW4oU7GH5kgc3GLKUGBxC7Xf2f`. Native asset commit:
+`9de36ed8662eefea32e653eca7537f1e42a55ecd`; binding commit:
+`0277a5093804f070d4f7d39417b7b72bd6886fcd`. Public verification is recorded in
+`deploy/dark-paladin-textured-production-verification.json`. Other retired
+More Heroes admissions remain disabled.

@@ -1,5 +1,12 @@
 # Changelog
 
+## Dark Paladin native material and hero overhaul — October 30, 2026
+
+- Replace flat guild surfaces with fine weathered masonry, layered slate shingles, recessed gallery bays, timber gates and grounded edge detail across all three cumulative tiers. Include matching construction, damage and collapse artwork.
+- Rebuild the complete 424-frame directional hero set with rounded forged armor, visible mail, folded teal cloth, a heater shield and the shared guild mark. Replace the hero portrait and small UI image to match the approved character reference.
+- Preserve native level labels, additive upgrades, stock UI framing, male audio, gameplay attributes and existing saved actors.
+- Remove the unsupported Spells button from the Dark Paladin panel and center the native Heroes control. Its AP06 single-choice controller has no spell-command handler; clicking the copied AP05 spell widget previously raised an access violation.
+
 ## Dark Paladin native tier presentation — October 30, 2026
 
 - Give upgrade tiers distinct native level labels in building lists while retaining the full Domain panel title.

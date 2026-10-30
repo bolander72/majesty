@@ -79,7 +79,9 @@ continuations.
   production. Dark Paladin's Domain is live with original medieval artwork,
   consistent male Warrior audio and tested levels 1–3. This is the sole current
   More Heroes reintroduction; all other retired classes remain disabled. The
-  active production delta is `deploy/dark-paladin-release.json`; the older
+  production chain starts with `deploy/dark-paladin-release.json`, followed
+  by `deploy/dark-paladin-tier-release.json` and the final textured-art/panel
+  correction in `deploy/dark-paladin-textured-release.json`. The older
   hosted-release descriptor remains its historical baseline.
 
 - Tiered guilds must show unambiguous native `Level 2`, `Level 3` and later
@@ -87,3 +89,7 @@ continuations.
   the completed previous structure, with foundations used only for new construction. Each completed
   tier must add substantial, readily visible architecture at normal game size;
   preserve prior features and verify active upgrades beside stock buildings.
+
+- Guild panels must expose only commands implemented by their native controller.
+  Validate every visible button; copied stock panel artwork or widgets do not
+  establish a working command route.

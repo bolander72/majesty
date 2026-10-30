@@ -36,7 +36,9 @@ addition in-game beside stock content and revise weak artwork before release.
   carry over conflicting speech or combat voices from a borrowed class.
 - Finish the intended progression and controls. Where the design includes
   upgrades, make them work and give each tier appropriate artwork and benefits.
-  Include matching construction, damage and destruction states.
+  Include matching construction, damage and destruction states. Expose only
+  commands supported by the chosen native controller, and test every visible
+  button. Reusing a stock panel layout does not establish valid command routes.
 - Introduce guilds gradually, completing and reviewing one coherent guild and
   hero package at a time. Verify recruitment, combat, progression, native UI
   and save/reload compatibility before release. Apply the existing explicit
@@ -61,8 +63,8 @@ practical sword and shield, human proportions and readable medieval armor.
 Carry the guild identity through the world character, directional animations,
 portrait, recruitment image and icons. The design board contains a full-body
 view, matching portrait and front/rear sprite studies; it is not a finished
-animation sheet or an installed native resource. The hero reference has not
-yet received separate user review.
+animation sheet or an installed native resource. Mike subsequently instructed completion of the guild and matching hero
+package. Native-scale review remains required before release.
 
 Future guilds and heroes must fit this same material treatment, lighting,
 detail density and native sprite finish while keeping their own identities.
@@ -186,3 +188,11 @@ Mike explicitly approved making the revised Dark Paladin live on October 30,
 2026. It is now the first reintroduced guild on majesty.boland.co. This approval
 applies to Dark Paladin's Domain; the remaining More Heroes guilds stay retired
 until individually developed and approved to this standard.
+
+
+The matching native Dark Paladin completion is documented in the prototype
+brief and saved in `output/more-heroes/dark-paladin/v7-native-textured/` in
+the workspace. It includes all directional hero frames, cumulative guild
+tiers and matching building states, plus a scoped fix for an unsupported
+copied panel command. In-game review and save/checkpoint verification remain
+requirements for future packages; concept approval alone does not replace them.
