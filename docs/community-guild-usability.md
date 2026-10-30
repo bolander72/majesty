@@ -102,4 +102,21 @@ exactly. The release changes eight deployment files and twenty native resource
 bindings; Dark Paladin art and all original unit definitions are unchanged.
 Player saves require no migration. Deployment receipts are recorded in
 `deploy/guild-usability-release.json`, `deploy/guild-usability-verification.json`
-and the production verification receipt once promotion completes.
+and `deploy/guild-usability-production-verification.json`.
+
+Production rollout completed on October 30, 2026 at
+https://majesty.boland.co. The exact staged production deployment
+`dpl_51voVfCSUpoVWwn9Y5p2eBhU7ipB` was promoted after HTTP checks; main then
+served the matching launcher, bindings, engine/data identities and isolation
+headers. All twenty native resources passed independent HTTP digest checks.
+The native resource commit is `ce4a48ba3cc7388420b1c2cd5e7a4f22769d9e90`;
+the eight deployment payloads are pinned to
+`bed31efd5ffb7cc6ada90aa4ccffb359b12e58ba`.
+
+Rollout / manual operations: **completed** for production. No save migration,
+secret change or separate player-data rewrite is required. The existing
+integrity-checked content updater installs the new resources on launch while
+preserving custom files and saves. A recovery release should retain recognition
+of these resource hashes; blindly promoting an older content manifest can be
+refused by the updater's custom-file protection. Prefer a compatible forward
+fix, or prepare and qualify explicit reverse resource bindings before rollback.
