@@ -42,6 +42,33 @@ addition in-game beside stock content and revise weak artwork before release.
 Use this benchmark to develop each guild's own character and architecture;
 the roster should offer a variety of equally polished, cohesive designs.
 
+## Native world-art correction — October 30, 2026
+
+Mike's 11:23 AM town screenshot revealed that the released Dark Paladin world
+building does not meet the native Majesty aesthetic. Its pale flat walls,
+oversized blocks, broad uniform roof surfaces and clean geometric edges read
+as a toy model beside the marketplace, palace and zoo. The earlier release
+is not an accepted visual benchmark for future world-building art. Working
+upgrades and distinct silhouettes do not establish stylistic acceptance.
+
+Use those neighboring native buildings as the material, detail, lighting and
+pixel-scale reference. Require fine irregular masonry and visible mortar,
+individually readable weathered roof tiles, recessed openings, convincing
+wood and iron details, deep contact shadows and grounded placement. Match
+Majesty's richly textured sprite finish and muted material palette. Retain
+readable silhouettes without smooth low-detail CAD or plastic-looking forms.
+Review all completed tiers side by side with stock buildings in the same town
+at normal game scale before calling the visual work finished.
+
+A replacement level-three visual study is saved in the workspace at
+`output/more-heroes/dark-paladin/v5-style-study/majesty-style-study.png`.
+It is a generated in-context art-direction study, not an installed sprite,
+proof of unchanged screenshot pixels, or a completed native resource package.
+The next production artwork must carry this textured treatment through the
+cumulative level-one, level-two and level-three designs and their matching
+construction, damage and destruction states. Existing tier labels, upgrade
+behavior and save compatibility remain required.
+
 ## Visual acceptance
 
 A new class needs a distinct silhouette, costume, equipment and animation,
