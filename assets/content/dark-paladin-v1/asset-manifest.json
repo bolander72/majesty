@@ -1,0 +1,85 @@
+{
+  "format": "majesty-dark-paladin-assets-v1",
+  "files": {
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 120539,
+      "sha256": "3f82d290be2c7857ec986fdf4922a39dcd88436c2c2df2bca8695b8848c11a26"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 31474786,
+      "sha256": "28e84f9c72fff5d101b5e247908430b744a9486b3cf8b9df07fe065cda761415"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 943982,
+      "sha256": "0c723014bea862f076f4394df4624ea56db43d1c20131a7e2e6860e818bac242"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17231,
+      "sha256": "7b1196dbb39a0b13fb7c5ad8d8169d1c39f5767dc7732ee4502acf16ddd2fb95"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 202763,
+      "sha256": "291b21aab0499f72d27dc72330a4c3e0ab2f0ef6a75ab37be65ed8fe1ea8adfa"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1736754,
+      "sha256": "2a0c65d78b16500ca944437a96005de443054e561990ebd1a4860b75a4f31ff8"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 63693,
+      "sha256": "20257925f1667a1daf4de1295a329080b92b154371899b0b0de523c4d198941d"
+    },
+    "Data/Community-gpltext.cam": {
+      "bytes": 82026,
+      "sha256": "c555b94db518c1e7c88985a92602e3d5300abe12259187a31497bcd75eeeb681"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 31474786,
+      "sha256": "28e84f9c72fff5d101b5e247908430b744a9486b3cf8b9df07fe065cda761415"
+    },
+    "Data/unittype.cam": {
+      "bytes": 203175,
+      "sha256": "caf951bb1483267ab27597497d3533c155dba160f6f0b1357e342fac3ee4c298"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 943982,
+      "sha256": "0c723014bea862f076f4394df4624ea56db43d1c20131a7e2e6860e818bac242"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 158126,
+      "sha256": "d4b776d6800d8326ec07cdd8a2a5408f459740b1eca788c95d86fb7a58e4af89"
+    },
+    "Data/textdata.cam": {
+      "bytes": 416014,
+      "sha256": "18c22a281004431cb07dc75186b38e53def713d96f7083828d623bf81c7ee774"
+    },
+    "Data/action.cam": {
+      "bytes": 33617,
+      "sha256": "6563c92100f168dca48d0ba2ace1991201f64fcda07badf5ca1a4e10277f0f56"
+    },
+    "Data/miscdata.cam": {
+      "bytes": 10289,
+      "sha256": "1bede42e0efb41bdd573fc0fc3927b82b82c4cc6ae051b2d4db153b9be6dab05"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1736754,
+      "sha256": "2a0c65d78b16500ca944437a96005de443054e561990ebd1a4860b75a4f31ff8"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 62341,
+      "sha256": "8e9cf8bc04be865f42d74ed57a2d44c7b34d12644a495541fce5b3915827d92f"
+    },
+    "engine/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    },
+    "engine/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    }
+  },
+  "qualification": {
+    "bytes": 5864,
+    "sha256": "c9deb09883023b9daffcd5053f6444a9651a745a9088e69059c9590ae7939eeb"
+  }
+}
