@@ -7,8 +7,11 @@ Its source and saved actor definitions remain available for compatibility.
 
 ## Quality standard approved October 30, 2026
 
-Mike established the revised Dark Paladin preview as the quality benchmark
-for gradually introducing the other More Heroes guilds. Each addition should
+Mike approved the textured Dark Paladin chapterhouse recreation after the
+11:23 AM comparison as the visual direction for its replacement and all future
+guilds and heroes. This supersedes the earlier smooth live building as the
+world-art benchmark. Apply this aesthetic to every new guild or hero, including
+content outside More Heroes. Each addition should
 feel like a polished, believable part of Majesty's world. Quality and internal
 consistency take priority over the number of guilds released.
 
@@ -41,6 +44,33 @@ addition in-game beside stock content and revise weak artwork before release.
 
 Use this benchmark to develop each guild's own character and architecture;
 the roster should offer a variety of equally polished, cohesive designs.
+
+## Approved shared guild and hero aesthetic
+
+Use Majesty's detailed, weathered medieval fantasy aesthetic consistently.
+The approved chapterhouse reference is saved in the workspace at
+`output/more-heroes/dark-paladin/v5-style-study/majesty-style-study.png`.
+Its acceptance establishes the visual direction, not native integration or
+pixel-perfect fidelity of the generated surrounding town.
+
+Mike also requested a matching Dark Paladin hero redesign. The initial new
+hero reference is at
+`output/more-heroes/dark-paladin/v6-hero-redesign/hero-design-board.png`:
+worn darkened steel over chainmail, restrained aged brass, faded teal cloth,
+practical sword and shield, human proportions and readable medieval armor.
+Carry the guild identity through the world character, directional animations,
+portrait, recruitment image and icons. The design board contains a full-body
+view, matching portrait and front/rear sprite studies; it is not a finished
+animation sheet or an installed native resource. The hero reference has not
+yet received separate user review.
+
+Future guilds and heroes must fit this same material treatment, lighting,
+detail density and native sprite finish while keeping their own identities.
+They need not share the Dark Paladin's teal palette, equipment or architecture.
+Review building and hero together beside stock content at actual game scale.
+An attractive enlarged portrait cannot substitute for legible, cohesive
+in-game sprites; complete the native animation and building states before
+claiming production readiness.
 
 ## Native world-art correction — October 30, 2026
 

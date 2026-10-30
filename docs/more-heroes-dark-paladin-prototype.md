@@ -231,3 +231,19 @@ production deployment `dpl_HpChsK8RGTTCRZ2Z9eyQ5Do24vLk`. Staged and public
 HTTP checks matched the reviewed artifact, including resource bindings,
 unchanged engine bytes and browser isolation headers. The public receipt is
 `deploy/dark-paladin-tier-production-verification.json`.
+
+## Textured replacement and matching hero direction
+
+After reviewing the live world sprite beside the marketplace and zoo, Mike
+approved the generated textured chapterhouse study as a substantially better
+visual direction and requested a matching hero redesign. This supersedes the
+earlier live building as the world-art benchmark. The reference package is
+`output/more-heroes/dark-paladin/v5-style-study/` in the workspace; the new
+matching hero board and exact image-generation prompt are in
+`output/more-heroes/dark-paladin/v6-hero-redesign/`. Both were created with the
+built-in image_gen tool. The hero board is a design reference awaiting native
+animation production and user review; neither package is installed game art.
+Carry the shared textured medieval treatment through every building tier and
+state, hero direction and action, and corresponding native UI image. Retain
+working upgrades, labels, male audio and save compatibility. The full shared
+standard is in `docs/more-heroes-art-direction.md`.

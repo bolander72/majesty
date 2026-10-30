@@ -60,9 +60,13 @@ continuations.
 
 # More Heroes quality standard
 
-- Mike established the October 30, 2026 revised Dark Paladin preview as the
-  quality benchmark for future More Heroes additions. Introduce guilds
-  gradually, one complete and reviewed guild/hero package at a time.
+- Mike approved the textured Dark Paladin chapterhouse recreation following
+  the October 30, 2026 11:23 AM town comparison as the visual direction. The
+  earlier smooth live building is not an accepted world-art benchmark. Every
+  new guild and hero must fit Majesty's detailed, weathered medieval aesthetic,
+  with coherent building, hero, portrait and animation artwork reviewed beside
+  stock content at native scale. Preserve distinct identities within that style.
+  Introduce guilds gradually, one complete and reviewed package at a time.
 - Require polished, distinct original artwork; believable medieval fantasy
   buildings and heroes; attractive painted guild-panel scenes; and consistent
   world sprites, portraits, native UI, voices, combat sounds, lore and mechanics.
