@@ -1,0 +1,94 @@
+{
+  "format": "majesty-dark-paladin-medieval-assets-v2",
+  "resources": {
+    "Data/unittype.cam": {
+      "bytes": 204103,
+      "sha256": "63dc93d596f7caf1dad81f9cee5674642e97d937bb069fba26dcb880601070d7"
+    },
+    "Data/action.cam": {
+      "bytes": 33617,
+      "sha256": "6563c92100f168dca48d0ba2ace1991201f64fcda07badf5ca1a4e10277f0f56"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121467,
+      "sha256": "3134fabc37c378928670f99d4d1f505a5fc08ffa71a8798cc19e4dc2cee6bb2a"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32638551,
+      "sha256": "d7a1c9ed5c70e4b9241b254b427a2f9194796e7537cc8e1b2b2a3db08f46742e"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417519,
+      "sha256": "9c7655d123c7bf00ce58d7ab096a14012fd85b52f4fde72e599b2650b11d555e"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63846,
+      "sha256": "e57d073ba9a5233d9b4f8da558ad2ac09c110f8bf9b2a9ce4009f968e1fd2794"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204268,
+      "sha256": "2568073d5a382cc335b13ad1b25141203fd3a26eef75ad8de0a1f022ad984e20"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65198,
+      "sha256": "85fbcd265a1b18192294f035e20d925d8e848ff6cf14a260bf3ede5ac5fa3b9e"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 158126,
+      "sha256": "d4b776d6800d8326ec07cdd8a2a5408f459740b1eca788c95d86fb7a58e4af89"
+    },
+    "Data/Community-gpltext.cam": {
+      "bytes": 82026,
+      "sha256": "c555b94db518c1e7c88985a92602e3d5300abe12259187a31497bcd75eeeb681"
+    },
+    "Data/miscdata.cam": {
+      "bytes": 10323,
+      "sha256": "ad45b52e51a7a6ca36f5722aef69d22b0adb8297a0817e1ccf015d357bef425c"
+    },
+    "DataMX/mx_miscdata.cam": {
+      "bytes": 17265,
+      "sha256": "9deb25d8721917928f909c9aaf8f5d078ee633be46af47b94492dc79ad8743bf"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 37266127,
+      "sha256": "6dea005ad44d652ef9ebf054f23d23dc5b725ce8cba7b4b2210fdd7a05bbddf3"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 37266127,
+      "sha256": "6dea005ad44d652ef9ebf054f23d23dc5b725ce8cba7b4b2210fdd7a05bbddf3"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    },
+    "engine/MajestyRecomp.js": {
+      "bytes": 473586,
+      "sha256": "0f834fa79c83e4110fed8d55354af654a4e531d84e7d9fc7978532a82627af0c"
+    },
+    "engine/MajestyRecomp.wasm.br": {
+      "bytes": 6808545,
+      "sha256": "fa8c93f09d898f53739ca433b968dbc649f4cc54d49f1e3acc1a054efdea88de"
+    }
+  },
+  "productionChanged": false,
+  "guildLevels": 3,
+  "originalArt": true,
+  "voiceBank": "WR01",
+  "nativeEngineUnchangedFromV1": true
+}
