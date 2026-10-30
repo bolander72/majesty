@@ -49,3 +49,13 @@ For the first prototype, compare silhouette sketches and a portrait together,
 then produce a complete animation sheet and native icon set. Integrate that
 prototype in an isolated build, inspect the native UI, and verify selection,
 combat and save/reload before considering public recruitment.
+
+Mike approved developing the Dark Paladin / Dark Paladin’s Domain design.
+Original directional animation, building states, portraits and a framed emblem
+are now packed into an isolated candidate. See
+[the prototype brief](more-heroes-dark-paladin-prototype.md) for its native
+contracts, testing status and remaining UI work. Public admissions remain retired.
+
+The first Dark Paladin now has a qualified playable preview; see the prototype brief for construction, recruitment and fresh save/reload results. Main production remains unchanged.
+
+On October 30 Mike requested a prettier guild portrait, medieval architecture, consistent voices and levels 2/3. The revised preview adds a painted interior, three original Gothic building tiers, the male Warrior voice bank and tested native upgrades, including an older-save worker repair.

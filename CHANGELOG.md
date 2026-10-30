@@ -1,5 +1,11 @@
 # Changelog
 
+## Dark Paladin medieval preview — October 30, 2026
+
+- Replace the guild thumbnail with a painted candlelit interior and the round building with an original Gothic stone hall, slate roof and distinct upgrade tiers. Preserve native framing and the 25-pixel Palace emblem.
+- Add native level 2 and 3 upgrades, capacities of 4 and 5, and a scoped worker callback for existing prototype saves.
+- Use the stock male Warrior voice bank consistently for Dark Paladins. Other classes and main production remain unchanged.
+
 ## Zoo capture cursor preview — October 29, 2026
 
 - Restore the native green capture flag and reward amount beside the pointer before placement. Extend the active cursor table with the existing Zoo artwork so another interface archive cannot hide it.

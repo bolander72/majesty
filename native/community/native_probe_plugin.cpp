@@ -2327,6 +2327,19 @@ void hook(const PopModApi *, pop_cpu_v1 *cpu, PopHookInvocation *inv, void *) {
                     "private Phantom window retains its actual Haunt");
             return;
         }
+        if (requested == 0x50444743U) { // CGDP: independent Dark Paladin AP06 resources
+            // AP06 already uses the original single-choice Guild controller.
+            // Select that class while retaining CGDP's actual native window,
+            // text, icons and unit. Stock Dwarf panels never enter this branch.
+            write(args, 0x36305041U);
+            next(inv, cpu);
+            write(args, requested);
+            require(cpu->eax != 0, "original Dark Paladin guild controller");
+            const auto unit = call(0x00481ec0U, cpu->eax);
+            require(unit && (read(unit + 0x6c) & 0xffffffU) == 0x00324241U,
+                    "private Dark Paladin window retains its actual Domain");
+            return;
+        }
         if (communityRecipes.FindPrivateRecruitmentByParent(requested) ||
             communityRecipes.FindPrivateRecruitmentByChild(requested)) {
             const auto entry = majesty_guild_process_bridge(0);
