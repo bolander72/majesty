@@ -1,0 +1,261 @@
+{
+  "format": "majesty-dark-paladin-guild-qualification-v1",
+  "date": "2026-10-30",
+  "opaqueHeroQualified": true,
+  "guildNamesQualified": true,
+  "scaffoldUpgradesQualified": true,
+  "guildScaleQualified": true,
+  "nativeRecruitCombatQualified": true,
+  "scopedOpacityRepairQualified": true,
+  "saveReloadQualified": true,
+  "ownedBrowserClosed": true,
+  "engineUnchanged": true,
+  "unitStatsUnchanged": true,
+  "sourcePolicies": {
+    "scripts/artwork/dark_paladin_guild.py": "96953dfd5a6dc9db3b1bee077b0f73603e57502c386ed1e1c522562ad2e10355",
+    "scripts/prepare-dark-paladin-guild-art.py": "753ae1931f45d539c2db7e7dbb3e9cdccc45bbb23e2fed79d1e28419c7da56d3",
+    "scripts/prepare-dark-paladin-guild-presentation.py": "72b46ca619f3ecbc686c2623faf2e8d7b56ec89b539ffbf9e3ad4c49b7a2c6d2",
+    "scripts/lib/dark_paladin_guild_presentation.py": "bdb097ee1e3de3219c5b72fc987baece66e06f60f0103811b4c744b7b4cc3cd3",
+    "scripts/prepare-dark-paladin-opacity-gpl.py": "1f87fccc9b0528da457722ec45e3c20560db774f3209356db6d58a4f2dcd5df6",
+    "scripts/compile-community-guild-gpl.py": "86f3c6e6bb0dcc17d4f619735a71a84ac132b9e5bde25d8578f2a7ede6e7c950"
+  },
+  "resources": {
+    "Data/Community-main.cam": {
+      "bytes": 34736042,
+      "sha256": "924863c608b5c9b8965c262cca642de79c247300ae64b0868e7e6e5c16ff551d"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 34736042,
+      "sha256": "924863c608b5c9b8965c262cca642de79c247300ae64b0868e7e6e5c16ff551d"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417334,
+      "sha256": "07cc183fe79fecc4e38d9ca20eb013bd2caa5fd37d7d0c1523aafd8ad91d7186"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63661,
+      "sha256": "7afdd2f588534bf815a0ad7a0c235dc0bd0d99b2dcf5ed5bd743bfdaa173d55f"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204083,
+      "sha256": "3ccedcd21d74bc6eec280de12e6a837e210b5330c72c6e784011e47532281d32"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65013,
+      "sha256": "bfe9c654f96874504be0863d5296b98dea47a2c5bca4b7131de6164c1f3621d5"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204116,
+      "sha256": "3835f92878d7723f234f40ac0b8f1d957e681546e980f00c5b1cf30ce761732a"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121480,
+      "sha256": "d982cdce224914b8f2dff39cfcd03b9d008e33f2309e54adecb2a59b2ba47f34"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    }
+  },
+  "priorResources": {
+    "Data/Community-main.cam": {
+      "bytes": 32650525,
+      "sha256": "4dd8b31b004297469f02ce59172f34cce5aa778696746666aac73e8fcd52adce"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 32650525,
+      "sha256": "4dd8b31b004297469f02ce59172f34cce5aa778696746666aac73e8fcd52adce"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417321,
+      "sha256": "13c2197d05794b3cef507ab4be4efc51c75c54392a2cf7e3222ecf565eb602ae"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63648,
+      "sha256": "3e778bed11f2e8eae2cbe6faac49de5ad8d3007b592f1797733fbe72931a7919"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204070,
+      "sha256": "787a6d987a0eb2970e40cb66884d2e254d46367bf29b5cf4549d4d4a09fbcaf9"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 65000,
+      "sha256": "6d0cce91e57ca77ea80559ac494cadfa62e12b76717653b81251a0cc7bbfb01f"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204101,
+      "sha256": "5e515ef108cfe04bc748e063796170d8f1d1b3a8008cf59f84d0eb301601fe6f"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121465,
+      "sha256": "92c30062b764de1b034913f1a130bb32b0463298ddcae779e64a7b85a736f999"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 944706,
+      "sha256": "91f9d457fbf3b2d677973be2bc5618229f70a3e2bad09f21a1646c4e266fec1a"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1737478,
+      "sha256": "c0fd542491288a20311bfb24517ae793ba13ec7daeeacf41908d0b374fec8ffb"
+    }
+  },
+  "sourceStage": {
+    "bytes": 291713,
+    "sha256": "8826383b178c0b461f5639f5d7336ec2137c1d56d32c12244bab79f23eb042c7"
+  },
+  "compilerProof": {
+    "bytes": 1306,
+    "sha256": "3b9d35c65906cf9666a3ca331c68af5a5e6aef4072af59a141057b15349193e7"
+  },
+  "sharedBytecodeUnchanged": true,
+  "opacityRepairFunction": "Dark_Paladin_tree_mh in Base and Expansion only",
+  "realAppearanceSpellsPreserved": [
+    "Petrify",
+    "Camouflage",
+    "Invisibility",
+    "IllusionaryHero"
+  ],
+  "heroFrames": 424,
+  "opaqueHeroPixelsAvoidRgb565Zero": true,
+  "guildNames": [
+    "Dark Paladin's Guild",
+    "Dark Paladin's Guild Level 2",
+    "Dark Paladin's Guild Level 3"
+  ],
+  "guildSizeAndScaffoldAudit": {
+    "sizeProgression": [
+      {
+        "level": 1,
+        "prior": [
+          182,
+          153
+        ],
+        "new": [
+          248,
+          208
+        ],
+        "widthRatio": 1.36
+      },
+      {
+        "level": 2,
+        "prior": [
+          182,
+          153
+        ],
+        "new": [
+          278,
+          217
+        ],
+        "widthRatio": 1.53
+      },
+      {
+        "level": 3,
+        "prior": [
+          182,
+          153
+        ],
+        "new": [
+          308,
+          224
+        ],
+        "widthRatio": 1.69
+      }
+    ],
+    "sixDistinctScaffoldUpgradeFrames": true,
+    "nativeControlsPreserved": true,
+    "stockTempleDaurosCompletedSize": [
+      [
+        268,
+        183
+      ],
+      [
+        261,
+        197
+      ],
+      [
+        278,
+        222
+      ]
+    ]
+  },
+  "freshRecruitedHero": "Ullavan the Saint; recruited at level 1 and observed at level 2, 31 maximum HP",
+  "nativeActiveUpgrades": [
+    2,
+    3
+  ],
+  "restoredGuildLevel": 3,
+  "restoredGuildMaxHP": 1200,
+  "restoredHeroLevel": 1000,
+  "restoredHeroMaxHP": 7936,
+  "savedCheckpointCountPreserved": 15,
+  "saveCommandIssued": false,
+  "normalQuestVictoryProgressUpdates": true,
+  "finalRuntimeErrors": [],
+  "boundedTrials": {
+    "dp-browser29": "Stopped by guard when unrelated background compilation resumed; cleanup only afterward.",
+    "dp-browser30": "Fresh recruitment, outdoor leg/foot visibility, full labels, larger guilds and both scaffolded upgrades reviewed; deadline guard stopped the trial.",
+    "dp-browser31": "Exact existing 12-day save and hero reloaded, enlarged-footprint selection reviewed; no runtime errors and all 15 checkpoints preserved."
+  },
+  "evidence": {
+    "restored-level3.png": {
+      "bytes": 1428209,
+      "sha256": "56a02e70741750ef797d2d9d68dbbf40092e20a61be0dc213a4d603cbc45a3fc"
+    },
+    "level2.png": {
+      "bytes": 1428364,
+      "sha256": "8916c35994e50add37d20b922f6e169df807f4c5aed28182608182af575c22da"
+    },
+    "level1.png": {
+      "bytes": 1437933,
+      "sha256": "378e771be4588ec6bcc6f1cad0c22fbc1a0cecec8ede745881695b7cc6d52f1c"
+    },
+    "upgrade3-late-scaffolding.png": {
+      "bytes": 1449137,
+      "sha256": "8fb432d1eb5adc2287201ab7e0673fc07ff3b006489eae06db2a3dcfed2357c1"
+    },
+    "fresh-recruit-roster.png": {
+      "bytes": 1392560,
+      "sha256": "06ef6b2333b7be665202c8bfbebbb86c5fa23dc794729c88319463c5339e59cb"
+    },
+    "fresh-recruit.png": {
+      "bytes": 1407385,
+      "sha256": "ca887f03ba0ef5829881448524b15300b035b836cbd4e87c38ebc843e49be79c"
+    },
+    "expanded-footprint-selection.png": {
+      "bytes": 1427169,
+      "sha256": "0ae9aa9c10664f9d67a1ee089be7c5b1b08fd0d61d703351cb68225102fe7d7d"
+    },
+    "upgrade2-scaffolding.png": {
+      "bytes": 1437419,
+      "sha256": "b852b33fc5ddcddb5afa6633034d448dcbc2d0117dde6eaf6d8326de0084db92"
+    },
+    "restored-hero.png": {
+      "bytes": 1425703,
+      "sha256": "96869996286a2b145af1fa7ed02cb2a0beeaf0ec7fa063fe984f01f85264a532"
+    },
+    "upgrade3-scaffolding.png": {
+      "bytes": 1431453,
+      "sha256": "c988267cc1e91bce7516aaaa8e8ffaa2e9b532b1b091f9759da4b8d99b7ae1d9"
+    }
+  }
+}

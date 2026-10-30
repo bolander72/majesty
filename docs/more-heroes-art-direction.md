@@ -196,3 +196,23 @@ the workspace. It includes all directional hero frames, cumulative guild
 tiers and matching building states, plus a scoped fix for an unsupported
 copied panel command. In-game review and save/checkpoint verification remain
 requirements for future packages; concept approval alone does not replace them.
+
+
+## Guild visibility, names, scaffolding and scale — October 30, 2026
+
+Mike clarified that normal Dark Paladins must read as solid characters with
+visible legs and feet, including newly recruited heroes. Validate opaque
+interior pixels through the native renderer, readable shin/boot contrast and
+cloth hems that leave the legs visible. Preserve native spell-controlled
+appearance separately from class-default cosmetic effects.
+
+Use the full names `Dark Paladin's Guild`, `Dark Paladin's Guild Level 2` and
+`Dark Paladin's Guild Level 3` in native building lists and tier labels. Keep
+legacy internal actor identifiers stable for existing saves and callbacks.
+
+Both upgrade paths require visible native-style timber scaffolding: posts,
+platforms, diagonal braces and ladders around the additions, while the earlier
+building remains standing. Completed tiers must expand the visible footprint
+with coherent connected architecture. Compare actual dimensions with stock
+guilds and verify placement and selection, rather than accepting equal tiny
+footprints at every tier.

@@ -1,9 +1,9 @@
-# Dark Paladin’s Domain: original-art prototype
+# Dark Paladin's Guild: original-art integration
 
 Current status: released on October 30, 2026 at https://majesty.boland.co/.
 The redesigned Dark Paladin is the only reintroduced More Heroes guild.
 Adventurers Guild and Royal Menagerie remain active; the other classes remain
-retired. Dark Paladin's Domain becomes available at Palace level 2. The
+retired. Dark Paladin's Guild becomes available at Palace level 2. The
 preview-stage statements below describe the development and qualification
 history before this production authorization.
 
@@ -300,3 +300,59 @@ release is live at https://majesty.boland.co/ in deployment
 `0277a5093804f070d4f7d39417b7b72bd6886fcd`. Public verification is recorded in
 `deploy/dark-paladin-textured-production-verification.json`. Other retired
 More Heroes admissions remain disabled.
+
+
+## Guild naming, solid heroes, visible works and native scale
+
+Mike's follow-up requests replace the displayed Domain name with the literal
+Dark Paladin's Guild name, including full Level 2 and Level 3 suffixes. Legacy
+internal identifiers and the AB21/AB22/AB23 actor family remain stable.
+`scripts/lib/dark_paladin_guild_presentation.py` updates native names, descriptor
+headings and panel/help text without changing actor attributes or callbacks.
+
+The new original renderer is `scripts/artwork/dark_paladin_guild.py`. It leaves
+shin/boot silhouettes visible with shorter cloth hems and solid thicker leg
+armor. The native packer keeps opaque hero RGB values above the RGB565 zero
+key, preserves the silhouette mask and checks every packed hero frame. These
+changes also apply to newly recruited heroes, as Mike explicitly confirmed
+that they showed the reported issue. A scoped normal-decision-entry repair
+clears class-default cosmetic effects only when no petrification, camouflage,
+invisibility or illusion effect is active. It changes only
+Dark_Paladin_tree_mh in each campaign source; the shared library is identical.
+It uses ordinary GPL builtins and the original SDK compiler, without the
+experimental native saved-actor callback used in the earlier prototype.
+
+Completed native guild images now measure 248x208, 278x217 and 308x224 pixels,
+compared with 182x153 at all three prior tiers. Stock Temple to Dauros images
+measure 268x183, 261x197 and 278x222. Connected side/rear wings and enlarged
+courtyards extend the pictured footprint while preserving earlier structures.
+All tiers fit within the existing native placement reservation; actor/collision
+attributes remain unchanged. Both upgrade paths have three independently
+packed frames with standing earlier architecture, timber posts, platforms,
+diagonal braces and ladders. The frozen additive-only mapping is deliberately
+not applied to these new scaffold frames.
+
+The native producer is `scripts/prepare-dark-paladin-guild-presentation.py`;
+its 12 resources cover eight art/name archives and the two campaign bytecode
+libraries in both edition folders. Gameplay attributes, recruitment,
+capacities, prices, voice bindings and the single-player engine remain intact.
+The complete editable/rendered package is in the workspace at
+`output/more-heroes/dark-paladin/v8-guild-progression/`.
+
+The Guild correction is live at https://majesty.boland.co/ in deployment
+`dpl_4fExp961u9YE3sWoyjsZsGnFhTHG`. Native checks recruited a new hero,
+reviewed its visible legs/boots outdoors at level 2, showed scaffolded work on
+both upgrade paths and loaded the older 12-day level-three checkpoint with
+1,200 maximum building HP and the saved level-1000 hero. Selection of the new
+outer fortification returned the Guild panel correctly. The final reload
+reported no runtime errors; all 15 existing GMP checkpoint hashes were
+preserved. Resource/deadline guard stops and cleanup are recorded in
+`deploy/dark-paladin-guild-verification.json`. Every owned browser and local
+server was closed.
+
+The original SDK compiler qualified all source definitions; the shared BCD
+library remained identical. 18 focused Dark Paladin tests and 12 Vercel source
+build tests passed. The clean source build reproduced all 149 production
+files. All 12 published resource hashes, staged HTTP files and public main
+files passed integrity verification. Public verification is recorded in
+`deploy/dark-paladin-guild-production-verification.json`.

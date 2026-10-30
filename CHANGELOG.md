@@ -1,5 +1,11 @@
 # Changelog
 
+## Dark Paladin Guild visibility and progression — October 30, 2026
+
+- Use the full Dark Paladin's Guild name and explicit Level 2/Level 3 tier labels throughout native building names and the guild panel.
+- Give all hero directions thicker solid greaves and boots, shorter cloth hems, and opaque native pixels that avoid the RGB565 zero key. Repair stale class-default draw effects through the normal decision function while preserving native appearance spells.
+- Show timber scaffolding around the standing guild during both upgrades. Enlarge the visible guild footprint with connected wings, courtyard additions and outer fortifications: completed sprites grow from 248 to 278 to 308 pixels wide.
+
 ## Dark Paladin native material and hero overhaul — October 30, 2026
 
 - Replace flat guild surfaces with fine weathered masonry, layered slate shingles, recessed gallery bays, timber gates and grounded edge detail across all three cumulative tiers. Include matching construction, damage and collapse artwork.

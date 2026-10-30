@@ -76,12 +76,14 @@ continuations.
   existing retirement and explicit reintroduction rules.
 
 - On October 30, 2026 Mike explicitly approved the redesigned Dark Paladin for
-  production. Dark Paladin's Domain is live with original medieval artwork,
+  production. Dark Paladin's Guild is live with original medieval artwork,
   consistent male Warrior audio and tested levels 1–3. This is the sole current
   More Heroes reintroduction; all other retired classes remain disabled. The
   production chain starts with `deploy/dark-paladin-release.json`, followed
   by `deploy/dark-paladin-tier-release.json` and the final textured-art/panel
-  correction in `deploy/dark-paladin-textured-release.json`. The older
+  correction in `deploy/dark-paladin-textured-release.json`, then the full Guild
+  names, solid heroes, scaffolding and scale correction in
+  `deploy/dark-paladin-guild-release.json`. The older
   hosted-release descriptor remains its historical baseline.
 
 - Tiered guilds must show unambiguous native `Level 2`, `Level 3` and later
@@ -93,3 +95,9 @@ continuations.
 - Guild panels must expose only commands implemented by their native controller.
   Validate every visible button; copied stock panel artwork or widgets do not
   establish a working command route.
+
+- Dark Paladin display names use the full Guild name with Level 2/Level 3
+  suffixes. Normal hero sprites require solid readable legs/feet and opaque
+  interior pixels. Upgrades must show native-style timber scaffolding around
+  the standing prior tier. Match stock guild scale and expand visible courtyard
+  footprints with coherent additions; preserve legacy internal actor IDs.
