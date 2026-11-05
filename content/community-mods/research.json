@@ -1,8 +1,8 @@
 {
   "format": "majesty-community-content-research-v1",
-  "reviewedAt": "2026-10-13",
+  "reviewedAt": "2026-10-16",
   "lostTrailRetired": true,
-  "productionCommunityModsInstalled": false,
+  "productionCommunityModsInstalled": true,
   "firstCandidate": "alchemist-lab",
   "candidates": [
     {
@@ -24,7 +24,7 @@
       "id": "phantoms-haunt",
       "repository": "https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-phantoms-haunt",
       "commit": "fed7058cd342a5f9568f964cebdc8797ef6a82e2",
-      "sourceLicense": "No root LICENSE found; reuse permission unresolved",
+      "sourceLicense": "No root license; creator permission confirmed by Mike, no blanket media relicensing inferred",
       "features": [
         "Undead hero guild",
         "Ice and grave spells",
@@ -33,13 +33,15 @@
       ],
       "publicCompiledCAMs": false,
       "publicArtworkAudio": false,
-      "requiresManagerRuntime": true
+      "requiresManagerRuntime": true,
+      "fullWorkshopPackageAcquired": true,
+      "mediaPermission": "Confirmed by Mike 2026-10-16 for site and public GitHub redistribution, with creator credit"
     },
     {
       "id": "bards-hall",
       "repository": "https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-bards-hall",
       "commit": "ee36792a9a8910141c1414b0408ba143f54f4893",
-      "sourceLicense": "No root LICENSE found; reuse permission unresolved",
+      "sourceLicense": "No root license; creator permission confirmed by Mike, no blanket media relicensing inferred",
       "features": [
         "Troubadour support hero",
         "Spellsinger ranged caster",
@@ -48,7 +50,9 @@
       ],
       "publicCompiledCAMs": false,
       "publicArtworkAudio": false,
-      "requiresManagerRuntime": true
+      "requiresManagerRuntime": true,
+      "fullWorkshopPackageAcquired": true,
+      "mediaPermission": "Confirmed by Mike 2026-10-16 for site and public GitHub redistribution, with creator credit"
     }
   ],
   "support": {
@@ -59,11 +63,17 @@
     "gogAuditAvailable": true
   },
   "nextIntegrationWork": [
-    "Audit Alchemist/Manager source against the pinned DirectDraw guest executable and required functions",
-    "Implement required capability registries/controllers in the supported runtime rather than substitute a stock guild",
-    "Obtain the community's complete actual artwork/audio package; substitutions and renamed stock classes are not allowed",
-    "Qualify normal paid construction/recruitment, special mechanics, native saves/reloads and browser resource limits before publishing"
+    "Compile prepared authentic three-guild source with original SDK",
+    "Port required controller and gameplay features to the pinned DirectDraw WASM guest",
+    "Qualify paid recruitment, authentic mechanics, missions, saves/reloads and UI in muted guarded browser trials before publishing"
   ],
   "contactedAuthors": false,
-  "unlicensedContentCopiedIntoRelease": false
+  "unlicensedContentCopiedIntoRelease": false,
+  "productionCommunityMods": [
+    "alchemist-lab"
+  ],
+  "activeCandidates": [
+    "bards-hall",
+    "phantoms-haunt"
+  ]
 }

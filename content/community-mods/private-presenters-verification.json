@@ -1,0 +1,474 @@
+{
+  "format": "majesty-private-native-presenters-verification-v1",
+  "templateSourceSha256": "774e71311b2b2a1ded857cb795534745acb29299ba8a7f8ad9f5fcc6606f9cba",
+  "originalFunctions": {
+    "presenter": {
+      "start": "00465510",
+      "end": "00465aa0",
+      "sha256": "91bd51f6f398c98a5fb97bc02afca607dea5cf8d753f65b6c608a920a08d0fa8"
+    },
+    "tooltip": {
+      "start": "00465ac0",
+      "end": "00465bf0",
+      "sha256": "546f57c8b4865cd524a6d891e3b51f8242a12a535f7f23a73729031c7f2c6d11"
+    },
+    "counts": {
+      "start": "0047e680",
+      "end": "0047e830",
+      "sha256": "e0fc479dd828204dd36af06a2c669d38aac4f583f470d101c20adbc0a59cdb1c"
+    },
+    "availability": {
+      "start": "0047e8f0",
+      "end": "0047e9c0",
+      "sha256": "be61892ca4bbed46cc675e1f3d3d0f3204dbab2e997d82bacf2ceb225b93b60f"
+    },
+    "setup": {
+      "start": "0047f1b0",
+      "end": "0047f270",
+      "sha256": "fe1a907bf946b032751d81c0221ee52e5967a4ad8bf236c6a499b9f3b86daa4e"
+    },
+    "event": {
+      "start": "0047f530",
+      "end": "0047f640",
+      "sha256": "0cb70c9c1c8e87f6976224582619ec36950520aa49c53e782119885e9008f1d3"
+    }
+  },
+  "modules": {
+    "recruit0": {
+      "patches": [
+        {
+          "at": 4609356,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609370,
+          "text": "PUSH 0x1752",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609451,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609465,
+          "text": "PUSH 0x1752",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609691,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609705,
+          "text": "PUSH 0x1752",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610008,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610038,
+          "text": "PUSH 0x0",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610158,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610192,
+          "text": "PUSH 0x0",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610304,
+          "text": "PUSH 0x1f48",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610339,
+          "text": "PUSH 0x0",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610555,
+          "text": "PUSH 0x0",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610665,
+          "text": "PUSH 0x1752",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610681,
+          "text": "PUSH 0x1752",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610789,
+          "text": "CMP EDI,0x1f48",
+          "role": "native-tooltip-command"
+        },
+        {
+          "at": 4610910,
+          "text": "PUSH 0x0",
+          "role": "native-produced-index"
+        }
+      ],
+      "sourceGameConfigSha256": "47cd2b6a60104bdeb38f2d0c8cb7b8ff88fee77fc6ba486faa0343a1e330e157",
+      "translatedFunctions": 2,
+      "translationExitCode": 0,
+      "translationPeakRssMiB": 368.5,
+      "generatedSourceSha256": {
+        "chunk_000.c": "4c507cd07722c96550e5b076ee67e3b8aad27f915a1e828fb2abd6023d8ae5a5",
+        "table.c": "905939f13e1aa54c3eab235c4a4b75c7b10a320ab13d3cda7ca35ebf8a2ca52b"
+      }
+    },
+    "recruit1": {
+      "patches": [
+        {
+          "at": 4609356,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609370,
+          "text": "PUSH 0x1f51",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609451,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609465,
+          "text": "PUSH 0x1f51",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609691,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609705,
+          "text": "PUSH 0x1f51",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610008,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610038,
+          "text": "PUSH 0x1",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610158,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610192,
+          "text": "PUSH 0x1",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610304,
+          "text": "PUSH 0x1389",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610339,
+          "text": "PUSH 0x1",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610555,
+          "text": "PUSH 0x1",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610665,
+          "text": "PUSH 0x1f51",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610681,
+          "text": "PUSH 0x1f51",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610789,
+          "text": "CMP EDI,0x1389",
+          "role": "native-tooltip-command"
+        },
+        {
+          "at": 4610910,
+          "text": "PUSH 0x1",
+          "role": "native-produced-index"
+        }
+      ],
+      "sourceGameConfigSha256": "bc8f3e9ecba6013f0bf17079f62269a750b9b21ef02771e15e1dba6910c40d06",
+      "translatedFunctions": 2,
+      "translationExitCode": 0,
+      "translationPeakRssMiB": 369.9,
+      "generatedSourceSha256": {
+        "chunk_000.c": "1f84d48a3c545ebcd8be744f8d31ecd4e294bc04844c8a3410b48e76901702e4",
+        "table.c": "43a66171358cc62798373111a94bc78859ea8d6003d72c7a58086ef2298b2f94"
+      }
+    },
+    "recruit2": {
+      "patches": [
+        {
+          "at": 4609356,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609370,
+          "text": "PUSH 0x7301",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609451,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609465,
+          "text": "PUSH 0x7301",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4609691,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4609705,
+          "text": "PUSH 0x7301",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610008,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610038,
+          "text": "PUSH 0x2",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610158,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610192,
+          "text": "PUSH 0x2",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610304,
+          "text": "PUSH 0x1388",
+          "role": "native-recruit-command"
+        },
+        {
+          "at": 4610339,
+          "text": "PUSH 0x2",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610555,
+          "text": "PUSH 0x2",
+          "role": "native-produced-index"
+        },
+        {
+          "at": 4610665,
+          "text": "PUSH 0x7301",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610681,
+          "text": "PUSH 0x7301",
+          "role": "native-price-control"
+        },
+        {
+          "at": 4610789,
+          "text": "CMP EDI,0x1388",
+          "role": "native-tooltip-command"
+        },
+        {
+          "at": 4610910,
+          "text": "PUSH 0x2",
+          "role": "native-produced-index"
+        }
+      ],
+      "sourceGameConfigSha256": "cf55bc835dff1c70b013dded772e61f65fe7214e2d8a0035a7214fe5f966b45f",
+      "translatedFunctions": 2,
+      "translationExitCode": 0,
+      "translationPeakRssMiB": 369.7,
+      "generatedSourceSha256": {
+        "chunk_000.c": "ae2c6af44139aae475b656dfd506ea9d3cca6afb6a06fbf1c0ab14a854829757",
+        "table.c": "31e1809bd3b0fea639ebe514a09349e13a9c5564c005568efc1ddb57e7831835"
+      }
+    },
+    "common": {
+      "patches": [
+        {
+          "at": 4712688,
+          "text": "MOV EAX,dword ptr [ESP + 0x4]",
+          "role": "private-three-counts"
+        },
+        {
+          "at": 4712689,
+          "text": "MOV dword ptr [EAX],0x1",
+          "role": "private-three-counts"
+        },
+        {
+          "at": 4712690,
+          "text": "MOV EAX,dword ptr [ESP + 0x8]",
+          "role": "private-three-counts"
+        },
+        {
+          "at": 4712691,
+          "text": "MOV dword ptr [EAX],0x1",
+          "role": "private-three-counts"
+        },
+        {
+          "at": 4712692,
+          "text": "RET 0x8",
+          "role": "private-three-counts"
+        },
+        {
+          "at": 4714928,
+          "text": "JMP 0x00465aa0",
+          "role": "private-no-call-to-arms-setup"
+        },
+        {
+          "at": 4715866,
+          "text": "JMP 0x0047f60a",
+          "role": "private-no-call-to-arms-event"
+        }
+      ],
+      "sourceGameConfigSha256": "e192bb43df8e4b7a1d657c61605038c9eaca3bf0f2545fd1c2002b226260f379",
+      "translatedFunctions": 4,
+      "translationExitCode": 0,
+      "translationPeakRssMiB": 369.5,
+      "generatedSourceSha256": {
+        "chunk_000.c": "2fb46057a85d3d36ca6094e59fa94fbbeef6486d9dfb17c225780505e9bd4b36",
+        "table.c": "2116ae77562620946bdaa1ab69240572f907555fc1cfddf9b2110263147b6372"
+      }
+    }
+  },
+  "controllerRegistrySha256": "5087186afe2c2aa724dd72168fe45934a1b55cc6c183118483fa5b8432a04d0d",
+  "privateConstructorsCollectedWithoutGlobalRegistration": true,
+  "originalRawFunctionSymbolsRenamed": true,
+  "originalInstructionBodiesNeverEditedInGeneratedC": true,
+  "nativeBridgeEntries": 10,
+  "nativeBridgeBytes": 160,
+  "liveBridgesRequireProcessLifetimeBuiltin": true,
+  "originalAddressVariantsMustNeverRegisterGlobally": true,
+  "nativeSymbolAudit": {
+    "recruit0": {
+      "objectCount": 2,
+      "privateExports": [
+        "_majesty_template_recruit0_fn_00465510",
+        "_majesty_template_recruit0_fn_00465644",
+        "_majesty_template_recruit0_fn_00465ac0"
+      ],
+      "globalRegistrationReferenceAbsent": true,
+      "unprefixedOriginalExportsAbsent": true
+    },
+    "recruit1": {
+      "objectCount": 2,
+      "privateExports": [
+        "_majesty_template_recruit1_fn_00465510",
+        "_majesty_template_recruit1_fn_00465644",
+        "_majesty_template_recruit1_fn_00465ac0"
+      ],
+      "globalRegistrationReferenceAbsent": true,
+      "unprefixedOriginalExportsAbsent": true
+    },
+    "recruit2": {
+      "objectCount": 2,
+      "privateExports": [
+        "_majesty_template_recruit2_fn_00465510",
+        "_majesty_template_recruit2_fn_00465644",
+        "_majesty_template_recruit2_fn_00465ac0"
+      ],
+      "globalRegistrationReferenceAbsent": true,
+      "unprefixedOriginalExportsAbsent": true
+    },
+    "common": {
+      "objectCount": 2,
+      "privateExports": [
+        "_majesty_template_common_fn_0047e680",
+        "_majesty_template_common_fn_0047e80c",
+        "_majesty_template_common_fn_0047e8f0",
+        "_majesty_template_common_fn_0047f1b0",
+        "_majesty_template_common_fn_0047f530"
+      ],
+      "globalRegistrationReferenceAbsent": true,
+      "unprefixedOriginalExportsAbsent": true
+    }
+  },
+  "nativeFixtureTests": {
+    "bank": {
+      "terminal": true,
+      "exitCode": 0,
+      "stopReason": null,
+      "peakOwnedRssMiB": 50.5,
+      "rssCeilingMiB": 2048
+    },
+    "translatedExecution": {
+      "terminal": true,
+      "exitCode": 0,
+      "stopReason": null,
+      "peakOwnedRssMiB": 88.8,
+      "rssCeilingMiB": 2048
+    }
+  },
+  "focusedPythonTestsPassed": 39,
+  "focusedPythonTestsSkipped": 0,
+  "descriptorRecruitmentOrderCorrected": true,
+  "sourceIndexOrder": [
+    "Blade_Dancer",
+    "Spellsinger",
+    "Troubadour"
+  ],
+  "visualRowOrder": [
+    "Troubadour",
+    "Spellsinger",
+    "Blade_Dancer"
+  ],
+  "executedRealTranslatedBranches": [
+    "ThreeCounts RET8 writes both availability outputs",
+    "Original indexed counter presenter requests indices1/2/0 with native control IDs",
+    "All three original presenters: incomplete construction and pending recruitment",
+    "Sequential three-presenter refresh through isolated guest bridge entries",
+    "Private setup tail delegates original generic setup without Call-to-Arms",
+    "Original event argument forwarding and controller refresh/count virtual dispatch"
+  ],
+  "externalNativeServicesWereRefusingFixtures": true,
+  "callbackBookkeepingWasFixture": true,
+  "livePricesTooltipsOrdersAbilitiesNotQualified": true,
+  "nativeGameWorldLaunched": false,
+  "browserLaunched": false,
+  "nativeGameplayQualified": false,
+  "playerProfilesAccessed": false,
+  "published": false,
+  "scope": "Private native instruction/module/bridge fixtures only. Refusing external-service fixtures exercise real translated bodies; no live kingdom, native callback/SEH integration, paid recruitment, abilities, saves or browser gameplay qualified."
+}

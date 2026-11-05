@@ -1,0 +1,232 @@
+{
+  "format": "majesty-community-guild-services-source-verification-v1",
+  "date": "2026-10-16",
+  "originalGuestSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "sourceFiles": {
+    "guild_gameplay_runtime.cpp": {
+      "bytes": 12572,
+      "sha256": "aa5879d95359ad1138e458e16d91af7a8c8745b24f7ef128abd34f9d1616a5ac"
+    },
+    "guild_gameplay_runtime.h": {
+      "bytes": 954,
+      "sha256": "9e259e4749dcdabe5c2e1e9dd1fbcac313a01c2208973f31141db59552216122"
+    },
+    "guild_gameplay_services.h": {
+      "bytes": 6528,
+      "sha256": "250dc5a38824cefba6858d784bb09feaa86d537efc56996a183364f30143fd0a"
+    },
+    "guild_gameplay_services_tests.cpp": {
+      "bytes": 6282,
+      "sha256": "f2e64d0caad1fec0c6690ebee137d5a1f85c671f2c4abf9c0e24aa23bb388883"
+    },
+    "recruitment_panel_owner.h": {
+      "bytes": 10547,
+      "sha256": "74f718cd1e54b314acf4a355db992818a049ae7f26f3be411d7eb887e40df1a8"
+    },
+    "recruitment_panel_runtime.cpp": {
+      "bytes": 11581,
+      "sha256": "320a993640edccdf79e2353ce6c3f2456413d383c2978055f778bcac49436175"
+    },
+    "recruitment_panel_runtime.h": {
+      "bytes": 1826,
+      "sha256": "27e448d5c85e7259496eee422eb7a9e2beed3a725c8beefb5b4972c08f51e7b4"
+    },
+    "native_probe_plugin.cpp": {
+      "bytes": 139163,
+      "sha256": "a6ef7728c598cd152bc05f19543a8e81849b63e36edd3ceca44c3d1cb2461515"
+    }
+  },
+  "creatorSource": {
+    "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+    "commit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+    "references": [
+      "runtime/KingdomResearchRuntime.inl",
+      "runtime/MajestyModManagerRuntime.cpp"
+    ]
+  },
+  "oldBindings": {
+    "researchExecution": "004ac2f0",
+    "executionDispatchSlot": "00682f58",
+    "executionReturnBytes": 8,
+    "completion": "004abf70",
+    "completionArguments": 5,
+    "completionCallingConvention": "cdecl",
+    "rawNonNotifyingSetter": "005b46a0",
+    "packedAttributeMap": "unit+4",
+    "factoryReturnBytes": 12
+  },
+  "nativeSourceBoundaries": {
+    "0x4ac2f0": {
+      "bytes": 320,
+      "sha256": "3a5dcfc3500d0efc04fda2bd1f6f51972b2094eebe96bb927574814dcf616932"
+    },
+    "0x682f58": {
+      "bytes": 4,
+      "sha256": "de96f05e6334b549ce6839203ac975583918973f0d2e9cc6d73c4fe28a1f1333"
+    },
+    "0x4abf70": {
+      "bytes": 592,
+      "sha256": "941a902f7e2c839addc3d62985d71baf7b8772118cbfcf417661929ab2de8326"
+    },
+    "0x5b46a0": {
+      "bytes": 21,
+      "sha256": "69cdaacc9b03a758b24e7bec7b6a25263c63f16c18f196b048a15f9a4c2f1e48"
+    }
+  },
+  "services": [
+    "researchBusy",
+    "researchCommand",
+    "toggle",
+    "extras"
+  ],
+  "gameplayStateStorage": "Original native saved4005 orders and authored GPL ledger; two transient UI caches only",
+  "stackScratch": "ESP-256..ESP; nested guest_call uses a separate lower ESP-512 stack",
+  "processBridge": {
+    "entries": [
+      "factory",
+      "research-execution",
+      "research-completion",
+      "pre-world-disposal-reset"
+    ],
+    "processLifetimeOnly": true,
+    "unloadablePluginRefusesActivation": true,
+    "sourceCoreHookIntegrationCompiled": true,
+    "sourceNormalMMFR1MMCR20GatesUnchanged": true,
+    "unhookableBlockMetadataEdited": false,
+    "researchUsesGuardedOriginalVtableSlot": true,
+    "slotCommittedAfterAllHooksInstall": true
+  },
+  "officialTests": [
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_guild_gameplay_services_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792178478,
+      "terminal": true,
+      "peakOwnedRssMiB": 250.8,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 58024,
+      "endedAtUnix": 1792178481
+    },
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_recruitment_runtime_execution_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792178207,
+      "terminal": true,
+      "peakOwnedRssMiB": 184.0,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 57295,
+      "endedAtUnix": 1792178209
+    },
+    {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1989-process-core-engine/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1989-process-core-engine",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792179768,
+      "terminal": true,
+      "peakOwnedRssMiB": 293.4,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 98307,
+      "endedAtUnix": 1792179837
+    }
+  ],
+  "processCoreNativeObjectCompiled": true,
+  "serviceFixturePassed": true,
+  "ownerOriginalTemplateABIRegressionPassed": true,
+  "nativeEngineLinked": true,
+  "gameLaunched": true,
+  "livePaidGameplayQualified": false,
+  "ordinarySaveReloadQualified": false,
+  "browserPlayable": false,
+  "productionChanged": false,
+  "published": false,
+  "rollout": "Private process core links and initializes in original world; source-bound collection tables staged separately. Native guild gameplay and full Alchemist/browser coexistence remain required.",
+  "nativeBuild": {
+    "receipt": "community1991-process-engine-linked.json",
+    "stage": "community1989-process-core-engine/process-engine-stage.json",
+    "executableSha256": "2a45ed296600f17f4870c29e37bb1ae08248d7781c049daf9e2dfbd78d547b70",
+    "originalObjectsReused": true,
+    "translatedSourcesEdited": false
+  },
+  "nativeBootstrap": {
+    "receipt": "community1992-native-process-bootstrap/trial/run.json",
+    "nativeExecutableSha256": "2a45ed296600f17f4870c29e37bb1ae08248d7781c049daf9e2dfbd78d547b70",
+    "nativeBuild": "/Users/mike/.local/share/majesty-work/community1991-process-engine-linked.json",
+    "startedAtUnix": 1792179845,
+    "deadlineSeconds": 115,
+    "rssCeilingMiB": 1024,
+    "peakRssMiB": 186.3,
+    "stopReason": null,
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "audioMuted": true,
+    "freshOwnedProfile": true,
+    "inputSave": null,
+    "ownedNativePid": 11366,
+    "endedAtUnix": 1792179910,
+    "coreInitializationAccepted": true,
+    "normalWorldEntered": true,
+    "originalControlledHelperChecksPassed": true,
+    "actualPrivateGuildFactoryExercised": false,
+    "ordinaryGuildResearchExercised": false,
+    "legacyAlchemistPanelResearchBridgeEnabled": false,
+    "reason": "The older native archive classifies the later Alchemist fog entry0042ee50 as an unhookable block. This bootstrap explicitly disables the legacy panel/research bridges; it does not qualify full Alchemist coexistence or release gameplay.",
+    "probeBytecode": "Older1860 co-loaded library, not final1920 replacement"
+  },
+  "focusedPythonTests": {
+    "patterns": [
+      "test_community_guild*.py",
+      "test_community_native_resources.py",
+      "test_community_native_tables.py",
+      "test_community_recruitment*.py",
+      "test_community_research*.py",
+      "test_phantom_workshop_source.py",
+      "test_alchemist_inventory_description.py"
+    ],
+    "testsRun": 66,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "successful": true
+  }
+}

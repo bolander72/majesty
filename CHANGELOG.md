@@ -1,5 +1,96 @@
 # Changelog
 
+## Phantom survivability and Eternal Soul — October 28, 2026
+
+- Fix Eternal Soul's high-level HP multiplication overflowing the original GPL expression accumulator and killing its caster. Scale current HP with bounded integer long division, preserve exact rounded health proportions, and keep a living one-HP hero alive when the effect begins or expires.
+- Give Phantoms 18 additional starting HP, eight additional vitality, faster natural regeneration, and a 35-percent retreat threshold. Retain their original spells, artwork, equipment and undead healing restrictions.
+- Upgrade existing living Phantoms once with the same vitality/recovery changes and an HP allowance for already-earned levels. Preserve damage taken and the original Eternal Soul lifecycle; persist the upgrade marker through ordinary saves.
+- Let anchored Phantoms choose safe home retreat at low health instead of the stock last-stand gamble. Preserve Call to Grave's existing level, cooldown and destination checks.
+- Change only composed shared gameplay bytecode in the original and Northern collections. Keep the engine, stock hero stats, resource identities and player-profile format unchanged.
+
+## Community guild integration — private work, October 16, 2026
+
+- Verify paid Bards Hall and Phantoms Haunt upgrades through level3, then save and freshly reload a kingdom containing their four authentic heroes alongside a living Alchemist and completed Lab.
+- Preserve native Palace icon frames. Implement the creator's temporary movement modifiers and original spell-caster tracking; verify a controlled March speed increase and expiry through the original engine.
+- Link a private browser core against the production runtime objects. Browser gameplay remains unqualified: the initial import stopped at the host disk limit. These guilds are not activated in the public build.
+
+## Original Vampiric Revenge demo — October 15, 2026
+
+- Expose Cyberlore's original demo quest through an unused native campaign slot, with its original map, briefing, objectives, events and building restrictions.
+- Retain stock missions, the Alchemist pack, existing player profiles and prior game-data collections. Reuse the native bonus medallion with its hover animation and transparent map edges.
+- Verify browser selection, world creation, an ordinary save, fresh-runtime reload and continued play into Day2. A complete victory playthrough has not been repeated.
+
+## Faster kingdom scrolling and memory copies — October 15, 2026
+
+- Find exact changed-row edges without scanning the unused interior; batch safe REP MOVS copies while preserving x86 overlap, flags, dirty bounds and watchpoints.
+- In a matched 1080p kingdom sample, reduce the 95th-percentile display gap from 34.25 to 18.73 ms and pauses over 50 ms from ten to two. Preserve native cards, resolution, simulation and ordinary save/reload; no general crash fix or overall resource reduction is claimed.
+- Apply lessons from Qwasm, D3Wasm and wipEout. Exclude the growable-memory-view experiment after its owned browser reached the existing resource guard.
+
+## Smoother CPU-rendered kingdoms — October 15, 2026
+
+- Publish the complete native CPU image without also building redundant per-pixel replay records. Preserve resolution, native UI, simulation, profiles and saves; retain exact GPU/texture recording and device transitions.
+- In the matched large-kingdom scrolling sample, reduce the longest display gap from 67 to 36 ms and remove six brief hitches over 50 ms. This is a bounded sample, not a guarantee for every mission.
+- Verify original saving/reloading, building cards, larger-view scrolling, native Options and resuming play. Enable the new path only with its qualified engine.
+
+## Exact SIMD change masks — October 15, 2026
+
+- Batch exact 16-bit changed-pixel mask generation with WASM SIMD, preserving native recording, simulation and save behavior. Skip redundant dynamic setting lookups for writes without a GPU surface.
+- Pass native/WASM pixel checks, DirectDraw and host regressions, plus ordinary browser saving and fresh-profile reload of a 111-building kingdom.
+- Short matched camera-motion samples improve from 50.31 to 57.13 fresh FPS at 800×633 and 35.00 to 43.33 at 1280×633. Wider views remain below 60 FPS; no general crash fix is claimed.
+
+## Reuse synchronized primary pixels — October 15, 2026
+
+- Reuse the current DirectDraw pixel baseline during synchronous presentation after a recorded primary write, avoiding a second full-surface scan. Independent presents still discover later retained-pointer writes.
+- Preserve frame storage, simulation and saves. Pass 182,820 DirectDraw checks and a 111-building browser world/save/reload trial.
+- The matched short sample remains about 21 fresh frames/s, with no meaningful CPU reduction established; this is not a claim that large-kingdom lag or recurring crashes are fixed.
+
+## Wide SIMD pixel comparisons — October 15, 2026
+
+- Compare long pixel rows in four-vector batches while preserving early mismatches, exact bounds and the existing frame storage. Retain the original simulation, graphics and save format.
+- Pass 3,676,361 native and WASM kernel checks; the explicit WASM helper benchmark takes about 40% less time. This is not a whole-game FPS claim.
+- Add a private source-only 111-building/41-hero stress fixture and hash-bound save inspector. Keep the unsuccessful CPU-band recorder experiment out of production.
+
+## Instant level-1000 cheat — October 15, 2026
+
+- Replace repeated 32-level script batches with one native stat calculation and one final level update per hero. Observe new recruits and stop scanning completed heroes every frame.
+- Preserve normal health rolls, primary growth, skill caps, range and class counters; retain the original Gnome transition. Keep the single-player, ownership and living-hero restrictions.
+
+## Browser mission rendering — October 15, 2026
+
+- Expand and upload the final DirectDraw primary image once per sealed frame, avoiding repeated intermediate conversions and GPU uploads. Preserve native graphics, simulation timing, content and player saves.
+- Verify native presentation tests, an existing original mission comparison, ordinary save/reload and Alchemist panels. The short mission sample used about 24% less CPU and delivered 9% more fresh frames; larger Siege kingdoms and recurring random crashes remain unqualified.
+- Hold out a second pixel-diff experiment because its browser sample performed worse.
+
+## Alchemist fog of war — October 15, 2026
+
+- Let the real community Alchemist pass the legacy sight-circle resource-ID check, so it reveals unexplored terrain using its current sight range and player ownership.
+- Preserve the original hero, character card, mechanics, saved identity and exploration. Apply the fix to existing saves without replacing characters or revealing the entire map.
+- Verify native old/fixed controls, browser exploration and selection, and an ordinary save/reload.
+
+## Alchemist original-mission recruitment — October 14, 2026
+
+- Include the official expansion helper dependencies used by the community Alchemist in its script library, fixing the original-mission exit at first recruitment or Bazaar shopping.
+- Preserve the creator's gameplay, existing hero identities and saves; refresh content separately from player profiles.
+- Verify Brashnard recruitment, an ordinary browser save and a fresh browser reload. Require original-campaign recruitment qualification when publishing content.
+
+## Original Majesty cursor — October 14, 2026
+
+- Keep the browser arrow hidden when SDL updates its inline canvas cursor style, preventing a second cursor over the game.
+
+- Enable the original software cursor in the browser, preserving its artwork, animation, hotspot and contextual states. Hide the browser arrow over the ready game canvas.
+
+## Alchemist map selection — October 14, 2026
+
+- Allow the community Alchemist to pass the original map selection and hover predicates. Its ALC1 identity previously matched a legacy exclusion for effect actors.
+- Preserve the real identity before character-card dispatch, after each map callback and in saved games. Keep stock selection and native card panels.
+- Verify direct selection of both Alchemists natively, then direct browser selection, Stats and an ordinary Day13 save/reload with no temporary identity in the save.
+
+## Private Alchemist research adapter — October 14, 2026
+
+- Check the original building identity when submitting research, allowing player zero's single-player Laboratory to reach native validation. Preserve original construction, health and gold checks.
+- Add focused controls for player zero, missing identities and missing command owners. Browser research and the remaining alchemy mechanics still require qualification before release.
+- Preserve the original recruitment order when queued research reaches native dispatch before the next simulation update, preventing a completed research command from being restored as recruitment.
+
 ## Community Alchemist development — October 13, 2026
 
 - Credit Phantomstar721 for Alchemist Lab and Majesty Mod Manager; record Mike's confirmation of creator permission for original mod media distribution.

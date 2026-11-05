@@ -1,0 +1,166 @@
+{
+  "format": "majesty-gameplay-performance-verification-v1",
+  "engineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
+  "priorEngineSha256": "22ecf6f2208eed016e83f16f463a6198da36ce3734bab4a183e35232df38b2b0",
+  "change": "Snapshot intermediate primary presents; expand and upload once at frame seal",
+  "patch": "patches/recomp-kit-present-coalescing.patch",
+  "patchSha256": "47dc7e29ae050dcdcda155cfa2fa8e4ea187a0dcd94a48c5b78c9319aab662e5",
+  "runtimeSource": {
+    "host/present.cpp": {
+      "before": "7a0935cddef1b4c25e6f018ecb6c6f93006407c42e5e8f3a8c41d7bae8d46dda",
+      "after": "cf5eaee7b182f3b34f717cc6bc85e22c2a71a0a16ac1ee653afb7d9dbb528413"
+    },
+    "host/present.h": {
+      "before": "d0e2578693d9bc88c9b0b80e8607ff8d0f65b94f0912a49779376184f9c88a6d",
+      "after": "6e5a4adbf2ca4ab7eaedec3598fc31c1e3cd84ca2ef58c7c6766e73d5851d3a7"
+    },
+    "host/present_frame.h": {
+      "before": "67d9a28ff443a556be346df6e9d610494332a64fc762863aaa6ca4eabf2c438d",
+      "after": "0d103f848ee759189400648c18a655df00cfdaa83e38abc712851c0cf6cbd751"
+    },
+    "host/present_thread.cpp": {
+      "before": "0bc66fc829cc54e83d20a4d64adb90079cde852f2b073b0ef90a0a1d756c8fdb",
+      "after": "c93203e281befad5b16427cb2e6f4afc238cb3043f39a1624494504e8542b4c7"
+    },
+    "host/present_test.h": {
+      "before": "bbd7e9d3d71169db28890a7a2ad3a2f8dd99ceeebc66e604e2a9b31a345be1d9",
+      "after": "46f0649d0ff87c9805efbfe891abdd70b431cd2b9df8c6dee9780eb54cac2f4b"
+    },
+    "host/tests/host_tests.cpp": {
+      "before": "c240353d864457ae061ecb2cb8b80ea286f6986b2e1358f90a08a7d846437b5f",
+      "after": "da3fa26f001b641a2533d6504d84abda47ae7ec8cb772199384e5552dab98f2a"
+    }
+  },
+  "generatedTranslationsEdited": false,
+  "contentChanged": false,
+  "simulationTimingChanged": false,
+  "resolutionChanged": false,
+  "officialBuild": {
+    "tool": "tools/build.py",
+    "target": "app",
+    "preset": "alchemist1325-web",
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 1663.7
+  },
+  "nativeTests": {
+    "tool": "tools/test.py",
+    "suite": "presenter_service_tests",
+    "passed": true,
+    "tests": 1,
+    "burstPresents": 102,
+    "expectedSealFlushes": 1,
+    "officialLiteralCheckChangedFilesPassed": true,
+    "fullLiteralScanCompleted": false,
+    "fullLiteralScanLimitation": "Unrelated cloud-offloaded source reads stalled; scoped official scanner passed for all changed source files."
+  },
+  "browserComparison": {
+    "inputSaveSha256": "02e0954fd8a0720a2f2e69f58c396f546031ae7df1ca8a8e60e9819486792039",
+    "inputMission": "Quest for the Holy Chalice",
+    "inputPredatesLevel1000Cheat": true,
+    "inputWorldObjects": 2355,
+    "inputPlayerBuildings": 10,
+    "inputPlayerVehicleFamilyActors": 6,
+    "viewport": [
+      1280,
+      633
+    ],
+    "sameInputProfileSettingsCamera": true,
+    "muted": true,
+    "isolated": true,
+    "cpuProfilerEnabledDuringMeasurement": false,
+    "frameTimingsEnabled": true,
+    "baseline": {
+      "frames": 1211,
+      "freshFrames": 356,
+      "seconds": 20.21633505821228,
+      "freshFps": 17.603787303513432,
+      "medianMs": 50.16493797302246,
+      "p95Ms": 100.68011283874512,
+      "classes": [
+        "1"
+      ],
+      "aggregateOwnedCpuCores": 1.428551351059557,
+      "peakOwnedRssMiB": 1534.0,
+      "guardStopped": false,
+      "closedNormally": true
+    },
+    "uploadOnly": {
+      "frames": 1211,
+      "freshFrames": 387,
+      "seconds": 20.181899785995483,
+      "freshFps": 19.172174426758676,
+      "medianMs": 50.025105476379395,
+      "p95Ms": 73.94003868103027,
+      "classes": [
+        "1"
+      ],
+      "aggregateOwnedCpuCores": 1.0895879682830334,
+      "peakOwnedRssMiB": 1859.0,
+      "guardStopped": false,
+      "closedNormally": true
+    }
+  },
+  "ordinarySave": {
+    "trial": 1629,
+    "nativeSaveConfirmationObserved": true,
+    "bytes": 1338354,
+    "sha256": "238572d25139ec92f8df9d9d044de82ee9daab66df9e044c7584cc6875a2b225",
+    "publicOpfsExport": true
+  },
+  "freshReload": {
+    "trial": 1635,
+    "onlyGeneratedSaveImported": true,
+    "worldRestoredAndContinuedIntoDay1": true,
+    "guestErrors": [],
+    "guardStopped": false,
+    "closedNormally": true,
+    "peakOwnedRssMiB": 1687.5
+  },
+  "alchemistRegression": {
+    "trial": 1636,
+    "priorFogSaveSha256": "df5b2b3897a3550f72ce5a5e681dd596b54014492fb7155543aee00e6313c1b1",
+    "historicalLevel1000FixtureUsedOnlyForAlchemistRegression": true,
+    "worldContinuedDay12To14": true,
+    "labLevel3Panel": true,
+    "labMembersSelectCharacterCard": true,
+    "selectedHero": "Ameline Amberglass",
+    "statsPanel": true,
+    "guestErrors": [],
+    "guardStopped": false,
+    "closedNormally": true,
+    "peakOwnedRssMiB": 2286.4
+  },
+  "heldOutExperiment": {
+    "patch": "patches/experimental/recomp-kit-pixel-diff.patch",
+    "engineSha256": "f37feea84f9cd12e041472f1838ef7a8da19b11735ee74c6480e4f73014a4f2e",
+    "published": false,
+    "freshFps": 14.54326,
+    "aggregateOwnedCpuCores": 1.1237,
+    "reason": "Correctness passed, browser sample did not qualify a performance improvement"
+  },
+  "randomCrashFixed": false,
+  "largeSiegeKingdomQualified": false,
+  "limitations": [
+    "Short existing-mission samples, not a large-kingdom or 60 FPS guarantee.",
+    "Ordinary recurring guest exits were not reproduced; no general crash fix is claimed.",
+    "No comparative memory reduction is claimed; cold startup peaks differed.",
+    "Old save loads showed a zero-day calendar with both engines; gold/buildings and continued play/save/reload were verified.",
+    "Prior Alchemist mechanics qualifications are retained; this host-only change rechecked its panels and continued world simulation."
+  ],
+  "manualRolloutOperations": "none",
+  "releaseArchiveSha256": "d582962d733fc0615c0f074f866341a1f2455c91cf77e4fe5382c11c531f1dc8",
+  "releaseArchiveCommit": "9027f50c671fc415db132c0b261ded6237da2d46",
+  "releaseBuilderTests": {
+    "suite": "tests/test_vercel_git_build.py",
+    "tests": 9,
+    "passed": true
+  },
+  "localReleaseMaterialization": {
+    "passed": true,
+    "rawWasmHashVerified": true,
+    "catalogHashesVerified": true,
+    "rootDefaultAlchemistCollectionPreserved": true
+  },
+  "patchAppliesAndMatchesQualifiedSource": true
+}

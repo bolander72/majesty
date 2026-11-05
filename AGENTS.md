@@ -49,3 +49,67 @@ continuations.
 # Retired content
 
 - Lost Trail, Wayfinder and Trail Lodge were removed at the user's request on October 13, 2026. Preserve their archived sources and existing player saves, but do not reactivate them or resume their narration/content work unless explicitly requested. Live game launches use the original Majesty collection. Prioritize substantive, compatible community content over renamed stock classes.
+
+- More Heroes was retired at Mike's request on October 29, 2026 because its
+  reused stock art did not meet the desired character/UI distinction. Keep
+  Adventurers Guild and The Royal Menagerie active. Preserve More Heroes
+  sources and saved actor definitions, but do not restore new construction,
+  recruitment or random arrivals without an explicit request. Reintroduction
+  requires distinct artwork and native-scale UI review; see
+  `docs/more-heroes-art-direction.md`.
+
+# More Heroes quality standard
+
+- Mike approved the textured Dark Paladin chapterhouse recreation following
+  the October 30, 2026 11:23 AM town comparison as the visual direction. The
+  earlier smooth live building is not an accepted world-art benchmark. Every
+  new guild and hero must fit Majesty's detailed, weathered medieval aesthetic,
+  with coherent building, hero, portrait and animation artwork reviewed beside
+  stock content at native scale. Preserve distinct identities within that style.
+  Introduce guilds gradually, one complete and reviewed package at a time.
+- Require polished, distinct original artwork; believable medieval fantasy
+  buildings and heroes; attractive painted guild-panel scenes; and consistent
+  world sprites, portraits, native UI, voices, combat sounds, lore and mechanics.
+  Finish intended progression and matching upgrade/building states, then verify
+  recruitment, combat, upgrades where applicable, and save/reload before release.
+- Follow `docs/more-heroes-art-direction.md` for the full standard. Preserve the
+  existing retirement and explicit reintroduction rules.
+
+- On October 30, 2026 Mike explicitly approved the redesigned Dark Paladin for
+  production. Dark Paladin's Guild is live with original medieval artwork,
+  consistent male Warrior audio and tested levels 1–3. This is the sole current
+  More Heroes reintroduction; all other retired classes remain disabled. The
+  production chain starts with `deploy/dark-paladin-release.json`, followed
+  by `deploy/dark-paladin-tier-release.json` and the final textured-art/panel
+  correction in `deploy/dark-paladin-textured-release.json`, then the full Guild
+  names, solid heroes, scaffolding and scale correction in
+  `deploy/dark-paladin-guild-release.json`. The older
+  hosted-release descriptor remains its historical baseline.
+
+- Tiered guilds must show unambiguous native `Level 2`, `Level 3` and later
+  names in building lists; base naming follows the stock level-one convention. Upgrade work must retain
+  the completed previous structure, with foundations used only for new construction. Each completed
+  tier must add substantial, readily visible architecture at normal game size;
+  preserve prior features and verify active upgrades beside stock buildings.
+
+- Guild panels must expose only commands implemented by their native controller.
+  Validate every visible button; copied stock panel artwork or widgets do not
+  establish a working command route.
+
+- Dark Paladin display names use the full Guild name with Level 2/Level 3
+  suffixes. Normal hero sprites require solid readable legs/feet and opaque
+  interior pixels. Upgrades must show native-style timber scaffolding around
+  the standing prior tier. Match stock guild scale and expand visible courtyard
+  footprints with coherent additions; preserve legacy internal actor IDs.
+
+- Every introduced guild and hero requires original world animation artwork.
+  Do not borrow stock ambient, work, damage or collapse effects: author motion
+  and effects for its architecture and character. Native animation formats and
+  UI framing remain appropriate. Keep upper tiers readable: additions belong
+  around, behind or above the main hall rather than hiding it behind an oversized gate.
+
+- Retired More Heroes construction must remain unavailable even when the native
+  build-anything cheat is enabled. Preserve saved actors and approved Dark Paladin
+  construction. Community building scale includes placement/collision geometry,
+  and question-mark help must explain every visible action at every tier.
+  Adventurers Guild remains always open; see `docs/community-guild-usability.md`.

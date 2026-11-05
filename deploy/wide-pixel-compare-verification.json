@@ -1,0 +1,135 @@
+{
+  "format": "majesty-wide-pixel-compare-verification-v1",
+  "engineSha256": "f571183dad41932feba8b586f4042d495771d1e6bb2dc78b0f01cf0807078efb",
+  "priorEngineSha256": "21e3b4592cd8e89e9b887bf77303934a3f69b6eb96607562e23c9f6125744049",
+  "patch": "patches/recomp-kit-wide-pixel-compare.patch",
+  "patchSha256": "a703306a01b77ff39a2a23380db4c74f4be7ba20398fb302f1bcad3543947cca",
+  "runtimeSource": {
+    "dx/pixel_compare.h": {
+      "before": "4064f3c06c3e79d8f1ad1ed13e6950d26a74e53cb9b706e2bce754d0fce858bd",
+      "after": "00f6ca47ab97c8ccaa9aa17dbba60d0397e721292afb930b2a12d042559bcb19"
+    },
+    "host/tests/pixel_kernel_tests.cpp": {
+      "before": "5857be227b83a44e6e00cd2899e8fb74d4b51283a74a34da3bcba3706cfbe96a",
+      "after": "558b85b4e9d0580e213a9e4284e18a6460756659e72b6c553c308061d21bf614"
+    },
+    "host/CMakeLists.txt": {
+      "before": "5eee4625424cf3c9c72f52db032d9d71ee216f0fb2afd72848f44075c814a1c5",
+      "after": "125bbc5d5f69737969a58201420c910c98d8bfe7a323547a4e1a40d5f40326fa"
+    },
+    "host/tests/pixel_compare_bench.cpp": {
+      "before": null,
+      "after": "dcd08db9fcac470dcb922c6a8efb991489116d61de3acba383aa5404d8641d77"
+    }
+  },
+  "generatedTranslationsEdited": false,
+  "frameStorageChanged": false,
+  "simulationTimingChanged": false,
+  "contentChanged": false,
+  "officialBuild": {
+    "terminal": true,
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 1707.0
+  },
+  "officialKernelTests": {
+    "tool": "tools/test.py",
+    "suite": "pixel_kernel_tests",
+    "nativePassed": true,
+    "wasmSimdPassed": true,
+    "checksEach": 3676361
+  },
+  "officialWasmBenchmark": {
+    "tool": "tools/test.py",
+    "suite": "pixel_compare_bench",
+    "cases": 48,
+    "roundsPerCase": 200000,
+    "allChecksumsPassed": true,
+    "oldTotalMs": 400.19,
+    "newTotalMs": 239.43,
+    "equalOldMs": 158.34,
+    "equalNewMs": 93.04,
+    "firstMismatchOldMs": 5.07,
+    "firstMismatchNewMs": 4.99,
+    "fullGameSpeedupClaimed": false,
+    "formattedSourceRerunPassed": true,
+    "formattedSourceRerunOldTotalMs": 407.093,
+    "formattedSourceRerunNewTotalMs": 242.494
+  },
+  "syntheticStressInput": {
+    "nativeGeneratedSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882",
+    "buildings": 111,
+    "completedFullHealthBuildings": 111,
+    "livingHeroes": 41,
+    "heroLevelRange": [
+      1,
+      6
+    ],
+    "cityGuards": 30,
+    "realSavedAi": true,
+    "published": false
+  },
+  "browserSave": {
+    "trial": 1683,
+    "compilerMode": "--liftoff-only",
+    "actualEngineUrlVerified": true,
+    "worldContinued": true,
+    "nativeGuardhouseCardHp": "200/200",
+    "sha256": "841a3c97d6d3eabccba1a08fd21f5609e35a4c7abc0aa91f9b41e85279baa737",
+    "bytes": 1663528,
+    "completedFullHealthBuildings": 111,
+    "survivingHeroesWithAi": 38,
+    "errors": [],
+    "guardStopped": false,
+    "closedNormally": true,
+    "peakOwnedRssMiB": 2234.6
+  },
+  "freshReload": {
+    "trial": 1687,
+    "compilerMode": "--liftoff-only",
+    "onlyExactGeneratedSaveImported": true,
+    "inputSha256": "841a3c97d6d3eabccba1a08fd21f5609e35a4c7abc0aa91f9b41e85279baa737",
+    "actualEngineUrlVerified": true,
+    "largeWorldRestoredAndContinued": true,
+    "nativeGuardhouseCardHp": "200/200",
+    "guardStopped": false,
+    "closedNormally": true,
+    "peakOwnedRssMiB": 2112.8
+  },
+  "excludedExperiment": {
+    "patch": "patches/experimental/recomp-kit-cpu-band-records.patch",
+    "published": false,
+    "engineSha256": "3e42168578042d7c19b56df6e09a2eb0923581db3ae6b856facf1d82847c872f",
+    "gameplayFpsDisabled": 24.17864,
+    "gameplayFpsEnabled": 23.8501,
+    "guardStoppedPeakRssMiB": 2640.1,
+    "unchangedProductionStartupAlsoHitGuardPeakRssMiB": 2546.2,
+    "memoryCauseEstablished": false
+  },
+  "generalCrashFixed": false,
+  "normalOptimizingBrowserSpeedupQualified": false,
+  "zeroLagGuarantee": false,
+  "manualRolloutOperations": "none",
+  "patchAppliesAndMatchesQualifiedSource": true,
+  "scopedOfficialGameLiteralCheckPassed": true,
+  "testHarnessCorrection": "The first final native run used a stale object from the rejected band test after a timestamp-preserving source restore; restored source mtimes were invalidated and the official suite rerun.",
+  "officialDirectDrawRegression": {
+    "suite": "dx_tests",
+    "passed": true,
+    "trial": 1691,
+    "checks": 182813,
+    "failures": 0
+  },
+  "releaseArchiveCommit": "de3d65e380a16cb9d97b412e64925737c68c3f29",
+  "releaseArchiveSha256": "c20db779b0887c336ca94a8b8538e540f4bc3a53a2c7817d2797823fbf1735fb",
+  "releaseBuilderTests": {
+    "tests": 9,
+    "passed": true
+  },
+  "localReleaseMaterialization": {
+    "passed": true,
+    "decompressedEngineHashVerified": true,
+    "jsDataAndCatalogHashesVerified": true,
+    "normalRootAndExistingCollectionPreserved": true
+  }
+}

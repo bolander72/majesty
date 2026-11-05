@@ -32,6 +32,7 @@ for native_source in "$MAJESTY_WORKSPACE/native/browser/"*; do
   if [ ! -e "$native_target" ]; then cp "$native_source" "$native_target"; fi
 done
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-menu-version-label.patch"
+cp "$MAJESTY_WORKSPACE/native/cheats/instant_level.h" "$MAJESTY_PROJECT/majesty-instant-level.h"
 cp "$MAJESTY_WORKSPACE/patches/majesty-cheats.h" "$MAJESTY_PROJECT/majesty-cheats.h"
 apply_browser_patch "$MAJESTY_PROJECT" "$MAJESTY_WORKSPACE/patches/majesty-cheats.patch"
 if [ ! -x "$MAJESTY_PROJECT/.venv/bin/python" ]; then

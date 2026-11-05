@@ -5,10 +5,24 @@ import {derivedDescriptor, buildDerivedFiles} from '../web/hosting/derived-asset
 import {WAYFINDER_FILES} from '../web/content/edition-session.mjs';
 import {hashBlob} from '../web/world/content-hash.mjs';
 import {LOST_TRAIL_FILES} from '../web/content/lost-trail-files.mjs';
+import {VAMPIRIC_FILES, VAMPIRIC_SIZES, VAMPIRIC_STORAGE_ID} from '../web/content/vampiric-revenge-files.mjs';
 
 const patches = Object.entries(WAYFINDER_FILES).map(([path, sha256]) => ({path, sha256, bytes: 10,
   url: 'https://example.public.blob.vercel-storage.com/' + path}));
 const descriptor = {format: 'majesty-automatic-assets-v1', games: {'majesty-wayfinder': {baseId: 'majesty', patches}}};
+
+test('original demo requires the complete pinned community and mission collection', () => {
+  const recipe = {baseId: 'majesty', patches: Object.entries(VAMPIRIC_FILES).map(([path, sha256]) =>
+    ({path, sha256, bytes: VAMPIRIC_SIZES[path],
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + path}))};
+  const plan = {format: descriptor.format, games: {[VAMPIRIC_STORAGE_ID]: recipe}};
+  assert.equal(derivedDescriptor(plan, VAMPIRIC_STORAGE_ID).contentSet, 'vampiric-revenge-v1');
+  for (const change of [r => r.patches.pop(), r => r.patches[0].bytes++,
+    r => {r.patches[0].sha256 = '0'.repeat(64);}, r => {r.baseId = 'majesty-alchemist-v1-campaign3';}]) {
+    const bad = structuredClone(plan); change(bad.games[VAMPIRIC_STORAGE_ID]);
+    assert.throws(() => derivedDescriptor(bad, VAMPIRIC_STORAGE_ID));
+  }
+});
 
 test('only the exact four qualified resources can be overlaid', () => {
   assert.equal(derivedDescriptor(descriptor, 'majesty-wayfinder').patches.length, 4);
@@ -81,4 +95,41 @@ test('derived copy keeps original File handles and replaces only the copy', asyn
   assert.equal(await result.find(r => r.path === 'DataMX/mx_miscdata.cam').file.text(), 'new config');
   assert.equal(base[1].file, config);
   assert.equal(await config.text(), 'original');
+});
+
+
+test('Alchemist accepts its complete source-bound media pack with exact sizes', async () => {
+  const {ALCHEMIST_FILES, ALCHEMIST_SIZES} = await import('../web/content/alchemist-files.mjs');
+  const plan = {format: descriptor.format, games: {'majesty-alchemist-v1-campaign3': {baseId: 'majesty',
+    patches: Object.entries(ALCHEMIST_FILES).map(([path, sha256]) => ({path, sha256,
+      bytes: ALCHEMIST_SIZES[path],
+      url: 'https://raw.githubusercontent.com/bolander72/majesty/' + 'a'.repeat(40) + '/assets/content/' + path}))}}};
+  assert.equal(derivedDescriptor(plan, 'majesty-alchemist-v1-campaign3').contentSet, 'alchemist-v1');
+  assert.ok(plan.games['majesty-alchemist-v1-campaign3'].patches.some(p => p.bytes > 1024 * 1024));
+  for (const change of [p => p.patches.pop(), p => p.patches[0].bytes++,
+    p => {p.patches[0].sha256 = '0'.repeat(64);}, p => {p.patches[0] = p.patches[1];}]) {
+    const bad = structuredClone(plan); change(bad.games['majesty-alchemist-v1-campaign3']);
+    assert.throws(() => derivedDescriptor(bad, 'majesty-alchemist-v1-campaign3'));
+  }
+});
+
+test('Alchemist verifies every replaced original file before fetching media', async () => {
+  const {ALCHEMIST_REPLACEMENTS} = await import('../web/content/alchemist-files.mjs');
+  const config = new File(['original'], 'config'), text = new File(['customized'], 'text');
+  await assert.rejects(buildDerivedFiles([
+    {path: 'MajestyHD - Old.exe', file: new File(['exe'], 'exe')},
+    {path: 'DataMX/mx_miscdata.cam', file: config}, {path: 'Data/textdata.cam', file: text},
+  ], {contentSet: 'alchemist-v1', patches: [{path: 'Data/textdata.cam'}]}, {
+    fetchFile: () => assert.fail('Do not download onto a customized collection'),
+    hashFile: file => file === config ? Promise.resolve('14adacc16a0340f14cf951d933cf10b9bb08b770d189e8591660aebebfac3fb3') : hashBlob(file),
+  }), /modified content/);
+  assert.ok(ALCHEMIST_REPLACEMENTS['Data/textdata.cam']);
+  assert.equal(await text.text(), 'customized');
+});
+
+
+test('case-folded resource collisions cannot enter a native content collection', async () => {
+  const exe = {path: 'MajestyHD - Old.exe', file: new File(['exe'], 'exe')};
+  await assert.rejects(buildDerivedFiles([exe, {...exe, path: 'majestyhd - old.exe'}], {patches: []}),
+    /complete original game/);
 });

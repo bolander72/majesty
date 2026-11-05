@@ -1,0 +1,8 @@
+{
+  "format": "majesty-cpu-snapshot-release-v1",
+  "engineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+  "requiredRuntimeEnvironment": {
+    "RECOMP_DDRAW_CPU_SNAPSHOT_ONLY": "1"
+  },
+  "verification": "deploy/cpu-snapshot-verification.json"
+}

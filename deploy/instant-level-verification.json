@@ -1,0 +1,136 @@
+{
+  "format": "majesty-instant-hero-level-verification-v1",
+  "engineSha256": "21e3b4592cd8e89e9b887bf77303934a3f69b6eb96607562e23c9f6125744049",
+  "priorQualifiedEngineSha256": "9069877b51fd8e3456ebb228de903c188584934c72f2ee338b904b5b11317e6a",
+  "source": {
+    "patches/majesty-cheats.h": "23bdca12900c55dee3009e0e1d67582796fbe8e5923ebffd78b77a015b0f0676",
+    "native/cheats/instant_level.h": "0c0cb90aa84dad197bd246b58a5d678e42f30dcd9bb21f11bfd6b80b22b0c618",
+    "native/cheats/instant_level_tests.cpp": "68fbd346eb19fdceb2c2ef0e35f62abc310fcf15e8fce32902c6045e6eeca1c0",
+    "native/cheats/tests.cmake": "c176dd1cc4ed8327b1a4bc3023994e4a4992c21ee9df3a4e778f7b78b9cf3583",
+    "scripts/prepare-instant-level-tests.py": "1fe4a2bd99fe982089b76e7955afb2227637340f9360f973cc057320496e8bc8",
+    "scripts/verify-instant-level-bindings.py": "2e7fbc2f70d0405add2f9c010dbcd37ec515321c8dc3ff73dfea9019226eb1b3",
+    "scripts/setup.sh": "5ffa79135ff4e9cf370dde6a9fba900761bd9cc5336cfae0dcb15b77f81b9c69"
+  },
+  "generatedTranslationsEdited": false,
+  "contentResourcesChanged": false,
+  "singlePlayerOwnershipAndLivingHeroGuardsRetained": true,
+  "originalRandomStreamAndStatRulesPreserved": true,
+  "perLevelGuestCallsRemoved": true,
+  "completedHeroFrameScansRemoved": true,
+  "allEligibleHeroIdsProcessedInOneBoundary": true,
+  "nativeArithmeticTests": {
+    "officialTool": "tools/test.py",
+    "suite": "instant_hero_level_tests",
+    "passed": true,
+    "checks": 43208,
+    "inputCases": 2880,
+    "seconds": 0.41
+  },
+  "originalBindingsAudit": {
+    "executableSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+    "attributeRegistrations": 11,
+    "nativeValueSlotsVerified": true,
+    "originalRandomCases": 1344,
+    "originalRandomStateOffset": 36,
+    "passed": true
+  },
+  "officialBrowserBuild": {
+    "tool": "tools/build.py",
+    "trial": 1648,
+    "exitCode": 0,
+    "guardStopped": false,
+    "peakOwnedRssMiB": 1761.0
+  },
+  "normalBrowserTrials": {
+    "originalCampaign": {
+      "trial": 1646,
+      "sourceSaveSha256": "02e0954fd8a0720a2f2e69f58c396f546031ae7df1ca8a8e60e9819486792039",
+      "initialHeroCommitMicroseconds": 1295,
+      "newRecruitCommitMicroseconds": 1680,
+      "savedLivingGnomes": [
+        {
+          "unitId": 2639,
+          "level": 1000,
+          "maxHp": 2001
+        },
+        {
+          "unitId": 2686,
+          "level": 1000,
+          "maxHp": 2001
+        }
+      ],
+      "generatedSaveSha256": "d9dfa893003c2f97ef3be4f16cde154ef5fe5646af158e57a9f40d0d2ecaa8b0",
+      "generatedSaveBytes": 1343765,
+      "workersReceivedNoLevel": true,
+      "closedNormally": true,
+      "guardStopped": false,
+      "peakOwnedRssMiB": 2324.0
+    },
+    "alchemist": {
+      "trial": 1647,
+      "existingRecruitCommitMicroseconds": 1369,
+      "laterRecruitCommitMicroseconds": 1149,
+      "fourAlchemistsAt1000": true,
+      "ordinaryNativeSaveSha256": "373b9e1951637ca1f5bccedb7489339e21e93b33d919a0e312f75616032c54e8",
+      "ordinaryNativeSaveBytes": 383167,
+      "savedNewHeroIds": [
+        2357,
+        2580
+      ],
+      "savedNewHeroMaxHp": [
+        5023,
+        3501
+      ],
+      "savedOldHeroMaxHpUnchanged": [
+        3525,
+        4977
+      ],
+      "toggleOffOnDidNotAddLevelsOrStatsAgain": true,
+      "workersReceivedNoLevel": true,
+      "closedNormally": true,
+      "guardStopped": false,
+      "peakOwnedRssMiB": 2225.6
+    }
+  },
+  "freshReload": {
+    "trial": 1650,
+    "exactGeneratedAlchemistSaveImportedAlone": true,
+    "fourAlchemistsAt1000AndOriginalMaxHpRetained": true,
+    "worldContinuedNormally": true,
+    "automaticCheatNotReenabled": true,
+    "guestErrors": [],
+    "testOnlyV8Flag": "--liftoff-only",
+    "flagSource": "https://chromium.googlesource.com/v8/v8/+/refs/heads/main/src/flags/flag-definitions.h",
+    "peakOwnedRssMiB": 2265.2,
+    "guardStopped": false,
+    "closedNormally": true
+  },
+  "guardStoppedReload": {
+    "trial": 1649,
+    "reason": "rss-margin",
+    "peakOwnedRssMiB": 2446.875,
+    "cleanupOnlyAfterStop": true,
+    "guestCrashEstablished": false
+  },
+  "limitations": [
+    "Live checks cover original-mission Gnomes and community Alchemists; other primary-stat, attack and class-counter combinations are arithmetic-test coverage.",
+    "Reload alone used baseline-only WASM compilation to stay under the 2400 MiB test guard. The measured cheat timings and recruitment trials used the normal optimizing browser configuration.",
+    "Per-hero commit durations are focused measurements, not whole-kingdom speed guarantees.",
+    "No general gameplay-crash fix is claimed."
+  ],
+  "manualRolloutOperations": "none",
+  "releaseArchiveSha256": "719c1bdc33efecf6c6df26afc780a43f5765e879e54b919052a153aa795bc84e",
+  "releaseArchiveCommit": "5d7795524657770fb5c169ef60d59a60d94cd0d4",
+  "releaseBuilderTests": {
+    "tests": 9,
+    "passed": true
+  },
+  "inheritedPresentationVerification": "deploy/gameplay-performance-verification.json",
+  "presenterSourceUnchangedFromPriorQualifiedEngine": true,
+  "localReleaseMaterialization": {
+    "passed": true,
+    "decompressedWasmHashVerified": true,
+    "catalogHashesVerified": true,
+    "rootDefaultContentPreserved": true
+  }
+}

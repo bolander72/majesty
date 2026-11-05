@@ -1,0 +1,142 @@
+{
+  "format": "majesty-cpu-only-write-candidate-v1",
+  "status": "privately qualified; included in exact-pixel-mask release",
+  "productionEngineUnchanged": "178fdeeeee46b8fcd1ead8f71b3f6de2a5e0de251ba60336beaf60d1930d7f8e",
+  "candidateEngineSha256": "9c147d34bb394fe6156d95717167adf43b976080020e2cf231e48f77f43476da",
+  "patch": "patches/experimental/recomp-kit-cpu-only-write-fastpath.patch",
+  "patchSha256": "72b40522214624d96d30c75214593e9421d9dbbf380cb39e77524776dc1c69a7",
+  "sourceBinding": {
+    "host/d3d_render.cpp": {
+      "before": "d9a0a465b762b9012d99408274a7cfb24f91a658bf2850c88b978a76ba154a9e",
+      "after": "efcc6ce172fc89daa95150c25f25c3460a468f36d8b0a19929e0331b8f231016"
+    },
+    "host/tests/host_tests.cpp": {
+      "before": "da3fa26f001b641a2533d6504d84abda47ae7ec8cb772199384e5552dab98f2a",
+      "after": "acd4454a24f8a8438b312eb51d50a3a02ccbe08effb1a962667b76502e50c773"
+    }
+  },
+  "change": "Reject CPU writes without an existing GPU surface generation before looking up the dynamic legacy-writeback setting. No setting cache is introduced.",
+  "nativeRegression": {
+    "suite": "host_tests",
+    "checks": 4175535,
+    "failures": 0,
+    "officialWrapper": true,
+    "peakOwnedRssMiB": 481.1,
+    "covers": [
+      "stale-generation writes must not create or mutate a GPU scene",
+      "compatibility setting changes remain visible",
+      "valid partial CPU writes preserve untouched GPU pixels"
+    ]
+  },
+  "build": {
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 1761.4
+  },
+  "scopedChecks": {
+    "patchAppliesAndMatchesSource": true,
+    "scopedOfficialGameLiteralCheck": true,
+    "scopedOfficialTrackedBoundaryCheck": true,
+    "scopedFiles": [
+      "host/d3d_render.cpp",
+      "host/tests/host_tests.cpp"
+    ]
+  },
+  "productionAlignedBaseline": {
+    "freshFrames": 471,
+    "durationSeconds": 20.164690017700195,
+    "freshFps": 23.3080696795955,
+    "medianIntervalMs": 49.767255783081055,
+    "p95IntervalMs": 66.8649673461914,
+    "screenClasses": {
+      "1": 471
+    },
+    "aggregateCpuCores": 1.1129278673673348,
+    "resources": {
+      "peakRssMiB": 2307.8,
+      "lastRssMiB": 1047.4
+    },
+    "viewport": [
+      800,
+      633
+    ],
+    "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882",
+    "compilerMode": "--liftoff-only",
+    "defaultContentStorageId": "majesty-alchemist-v1-campaign3"
+  },
+  "qualificationLimits": [
+    "No meaningful average stationary FPS or CPU reduction was established.",
+    "Stationary fresh frame rate is not a rendering cap: a separate camera pan reached 56.70 fresh FPS with this engine.",
+    "Camera motion and stationary samples are different workloads, not a before/after speedup.",
+    "No general 60-FPS, lag-free kingdom or crash-fix claim.",
+    "Earlier guard-stopped trials remain failed trials; later successful tests used an isolated browser configuration disabling browser UI preloads under the same resource ceiling."
+  ],
+  "generatedTranslationsEdited": false,
+  "simulationTimingChanged": false,
+  "gameContentChanged": false,
+  "playerSavesChanged": false,
+  "rollout": {
+    "state": "none",
+    "manualDataOperations": "No data migration required. Combined release is bound by deploy/exact-pixel-mask-verification.json."
+  },
+  "earlierGuardStoppedBrowser": {
+    "trial": 1719,
+    "guardStopped": true,
+    "peakOwnedRssMiB": 2443.9,
+    "phase": "before menu readiness",
+    "actualBrowserEngineUrlVerified": false,
+    "fpsQualified": false,
+    "saveReloadQualified": false
+  },
+  "candidateBrowser": {
+    "actualEngineUrlVerified": true,
+    "gameplayTrial": 1731,
+    "freshReloadTrial": 1732,
+    "generatedSaveSha256": "824e59888cd9608ab217e622467991e89c3a0c0e0d1ffd8da72ae7acc0b2a1cb",
+    "bytes": 1614443,
+    "completedBuildings": 111,
+    "livingHeroesWithAi": 29,
+    "saveReloadQualified": true,
+    "stockGuardhouseHp": "200/200",
+    "compilerMode": "normal optimizing V8; one compilation task",
+    "muted": true,
+    "isolated": true,
+    "guardStops": false
+  },
+  "stationaryComparison": {
+    "production": {
+      "freshFrames": 611,
+      "durationSeconds": 30.165030002593994,
+      "freshFps": 20.222091605662055,
+      "medianIntervalMs": 49.97992515563965,
+      "p95IntervalMs": 66.2851333618164,
+      "aggregateCpuCores": 1.095625102453639,
+      "resources": {
+        "peakOwnedRssMiB": 2070.3
+      },
+      "compilerMode": "normal optimizing V8; one compilation task",
+      "viewport": [
+        800,
+        633
+      ],
+      "warmupSeconds": 60
+    },
+    "candidate": {
+      "freshFrames": 615,
+      "durationSeconds": 30.099329948425293,
+      "freshFps": 20.399125198204707,
+      "medianIntervalMs": 49.99494552612305,
+      "p95IntervalMs": 50.83012580871582,
+      "aggregateCpuCores": 1.114807596055854,
+      "resources": {
+        "peakOwnedRssMiB": 2119.9
+      },
+      "compilerMode": "normal optimizing V8; one compilation task",
+      "viewport": [
+        800,
+        633
+      ],
+      "warmupSeconds": 60
+    }
+  }
+}

@@ -177,6 +177,174 @@ def retire_custom_content(static):
     assets_file.write_text(json.dumps(assets, indent=2) + '\n')
 
 
+
+def install_alchemist_release(static):
+    """Mount only the engine-bound, qualified community content collection."""
+    descriptor = ROOT / 'deploy/alchemist-release.json'
+    if not descriptor.exists():
+        return None
+    content = json.loads(descriptor.read_text())
+    release = json.loads((ROOT / 'deploy/hosted-release.json').read_text())
+    required = ['nativeMechanicsQualified', 'browserWorldSaveReloadQualified',
+                'browserSovereignActionsQualified', 'browserPhoenixSaveQualified',
+                'originalCampaignEntryQualified', 'baseCampaignRecruitmentSaveReloadQualified', 'browserFogRevealQualified']
+    if (content.get('format') != 'majesty-alchemist-content-release-v1'
+            or content.get('engineSha256') != release['engineSha256']
+            or content.get('storageId') != 'majesty-alchemist-v1-campaign3'
+            or any(content.get(key) is not True for key in required)):
+        raise ValueError('Require engine-bound Alchemist gameplay qualification')
+    text = (ROOT / 'web/content/alchemist-files.mjs').read_text()
+    start = text.split('export const ALCHEMIST_FILES = Object.freeze(', 1)[1]
+    bindings = json.loads(start.split(');', 1)[0])
+    start = text.split('export const ALCHEMIST_SIZES = Object.freeze(', 1)[1]
+    sizes = json.loads(start.split(');', 1)[0])
+    patches = content.get('patches', [])
+    if len(patches) != len(bindings) or len({p['path'] for p in patches}) != len(bindings):
+        raise ValueError('Missing Alchemist resources')
+    for patch in patches:
+        if (bindings.get(patch['path']) != patch.get('sha256')
+                or sizes.get(patch['path']) != patch.get('bytes')
+                or not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Alchemist resources differ from verified bindings')
+    environment = {name: '1' for name in [
+        'RECOMP_RULE_INVENTORY_COMPAT', 'RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT',
+        'RECOMP_ALCHEMIST_PANEL_BRIDGE', 'RECOMP_ALCHEMIST_RESEARCH_BRIDGE',
+        'RECOMP_ALCHEMIST_ACTION_BRIDGE', 'RECOMP_ALCHEMIST_TARGET_BRIDGE',
+        'RECOMP_ALCHEMIST_SHARED_FUNCTIONS']}
+    if content.get('requiredRuntimeEnvironment') != environment:
+        raise ValueError('Alchemist runtime environment differs')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-alchemist-v1-campaign3'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    games = [game for game in games if game['id'] != 'majesty-alchemist-v1-campaign3']
+    games.append({**original, 'id': 'majesty-alchemist-v1-campaign3', 'title': 'Majesty: Alchemist Lab'})
+    original['defaultContentStorageId'] = 'majesty-alchemist-v1-campaign3'
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    anchor = '      m.ENV.RECOMP_GUEST_ARGS ='
+    if html.count(anchor) != 1:
+        raise ValueError('Review Alchemist runtime environment placement')
+    html = html.replace(anchor, ''.join('      m.ENV.' + name + ' = "1";\n'
+                                      for name in environment) + anchor, 1)
+    player.write_text(html)
+    return content
+
+
+def install_vampiric_revenge_release(static):
+    """Add the original demo in a new collection; retain all older game data."""
+    descriptor = ROOT / 'deploy/vampiric-revenge-release.json'
+    if not descriptor.exists():
+        return
+    content = json.loads(descriptor.read_text())
+    proof = json.loads((ROOT / 'deploy/vampiric-revenge-verification.json').read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    if (content.get('format') != 'majesty-vampiric-revenge-release-v1' or
+            content.get('engineSha256') != engine or proof.get('engineSha256') != engine or
+            content.get('storageId') != 'majesty-alchemist-demo-v1' or
+            content.get('canonicalGuid') != '{504D4156-0000-0000-0000-000000000000}' or
+            proof.get('canonicalGuid') != content.get('canonicalGuid') or
+            content.get('nativeId') != 'XQD3' or any(proof.get(key) is not True for key in [
+                'originalTemplateBodyPreserved', 'originalScriptsUnmodified',
+                'browserNativeSelectionQualified', 'browserWorldSaveReloadQualified',
+                'browserOriginalDemoRestrictionsQualified', 'browserProgressQualified',
+                'browserRootAutomaticImportQualified', 'sameOriginalSaveProfileQualified'])):
+        raise ValueError('Require the original browser-qualified demo mission')
+    for name, expected in content.get('sourceSha256', {}).items():
+        if name not in ('VampiricRevengeBridge.gpl', 'VampiricRevengeBridge.gplproj') or hashlib.sha256(
+                (ROOT / 'content/vampiric-revenge' / name).read_bytes()).hexdigest() != expected:
+            raise ValueError('Demo bridge source differs from original SDK compilation')
+    if len(content.get('sourceSha256', {})) != 2:
+        raise ValueError('Missing demo bridge source bindings')
+    if proof.get('originalCompiler', {}).get('sourceSha256') != content['sourceSha256']:
+        raise ValueError('Demo compiler proof does not match the released source')
+    module = (ROOT / 'web/content/vampiric-revenge-files.mjs').read_text()
+    def binding(name):
+        return json.loads(module.split('export const ' + name + ' = Object.freeze(', 1)[1].split(');', 1)[0])
+    files, sizes = binding('VAMPIRIC_FILES'), binding('VAMPIRIC_SIZES')
+    patches = content.get('patches', [])
+    if len(patches) != len(files) or len({p['path'] for p in patches}) != len(files):
+        raise ValueError('Missing or duplicate original demo resources')
+    for patch in patches:
+        if (files.get(patch['path']) != patch.get('sha256') or
+                sizes.get(patch['path']) != patch.get('bytes') or
+                not trusted_asset_url(patch.get('url', ''), 'https://unused.invalid/')):
+            raise ValueError('Demo resources differ from verified browser bindings')
+    overlay = proof.get('overlay', {})
+    if len(overlay) != 14 or any(
+            files.get(name) != record.get('sha256') or sizes.get(name) != record.get('bytes')
+            for name, record in overlay.items()):
+        raise ValueError('Demo resources differ from the browser-qualified overlay')
+    assets_file = static / 'hosting/automatic-assets.json'
+    assets = json.loads(assets_file.read_text())
+    assets['games']['majesty-alchemist-demo-v1'] = {'baseId': 'majesty', 'patches': patches}
+    assets_file.write_text(json.dumps(assets, indent=2) + '\n')
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    original = next(game for game in games if game['id'] == 'majesty')
+    games = [game for game in games if game['id'] != 'majesty-alchemist-demo-v1']
+    original['defaultContentStorageId'] = 'majesty-alchemist-demo-v1'
+    games.append({**original, 'id': 'majesty-alchemist-demo-v1',
+                  'title': 'Majesty: Alchemist Lab and Vampiric Revenge'})
+    games[-1].pop('defaultContentStorageId', None)
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+
+
+def install_cpu_snapshot_release(static):
+    """Enable the complete-image renderer only for its qualified engine."""
+    descriptor = ROOT / 'deploy/cpu-snapshot-release.json'
+    if not descriptor.exists():
+        return
+    release = json.loads(descriptor.read_text())
+    engine = json.loads((ROOT / 'deploy/hosted-release.json').read_text())['engineSha256']
+    proof = json.loads((ROOT / 'deploy/cpu-snapshot-verification.json').read_text())
+    if (release.get('format') != 'majesty-cpu-snapshot-release-v1'
+            or release.get('engineSha256') != engine
+            or proof.get('engineSha256') != engine
+            or release.get('requiredRuntimeEnvironment') != {'RECOMP_DDRAW_CPU_SNAPSHOT_ONLY': '1'}
+            or any(proof.get(key) is not True for key in [
+                'nativeControlsQualified', 'browserWorldSaveReloadQualified',
+                'browserInteractionQualified'])):
+        raise ValueError('Require the qualified CPU snapshot engine and browser checks')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    anchor = '      m.ENV.RECOMP_GUEST_ARGS ='
+    if html.count(anchor) != 1 or 'm.ENV.RECOMP_DDRAW_CPU_SNAPSHOT_ONLY =' in html:
+        raise ValueError('Review CPU snapshot runtime environment placement')
+    player.write_text(html.replace(anchor,
+        '      m.ENV.RECOMP_DDRAW_CPU_SNAPSHOT_ONLY = "1";\n' + anchor, 1))
+
+
+def enable_native_cursor(static):
+    """Use Majesty's own cursor renderer, including native context/animation."""
+    games_file = static / 'games.json'
+    games = json.loads(games_file.read_text())
+    for game in games:
+        args = game.get('guestArgs', '').split()
+        for flag in ('-softwarecursor', '-nothreadedcursor'):
+            if flag not in args:
+                args.append(flag)
+        game['guestArgs'] = ' '.join(args)
+    games_file.write_text(json.dumps(games, indent=2) + '\n')
+    player = static / 'majesty/index.html'
+    html = player.read_text()
+    # Keep the normal pointer during startup/recovery and outside the canvas.
+    # The original game renders its cursor into presented frames after startup.
+    # SDL writes an inline cursor style when focus/pointer state changes.
+    # This game-specific rule must outrank it while the native cursor is drawn.
+    rule = '  body[data-game-ready] #canvas { cursor: none !important; }\n'
+    anchor = '  body[data-game-ready] #canvas { visibility: visible; }\n'
+    if html.count(anchor) != 1:
+        raise ValueError('Review native cursor readiness placement')
+    if rule not in html:
+        html = html.replace(anchor, anchor + rule, 1)
+    player.write_text(html)
+
+
 def unpack_release(data, release, destination):
     if len(data) != release['bytes'] or hashlib.sha256(data).hexdigest() != release['sha256']:
         raise ValueError('Hosted release download failed integrity verification')
@@ -308,6 +476,10 @@ def build(destination=None):
     install_automatic_assets(static)
     install_content_v2_release(static)
     retire_custom_content(static)
+    install_alchemist_release(static)
+    install_vampiric_revenge_release(static)
+    install_cpu_snapshot_release(static)
+    enable_native_cursor(static)
     for page in static.rglob('index.html'):
         text = page.read_text()
         if '<head>' in text and 'rel="icon"' not in text:

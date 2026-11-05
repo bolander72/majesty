@@ -1,0 +1,170 @@
+{
+  "format": "majesty-community-activity-reentrancy-verification-v1",
+  "sourceFiles": {
+    "scripts/prepare-community-guild-gpl.py": {
+      "bytes": 12156,
+      "sha256": "41643d152e4a6cb21e234720ae2db8c06844ff7ed1915e7bf7d8f1cf9dca91b7"
+    },
+    "scripts/lib/community_activity_reentrancy.py": {
+      "bytes": 1983,
+      "sha256": "1e9b71c88cdec00b18ac4557959882154e3997814ddef493c1a8c1af702fe133"
+    },
+    "tests/test_community_activity_reentrancy.py": {
+      "bytes": 2144,
+      "sha256": "c4c5740fc783abb95e5338bf47209f22b0eec785f5fd444871352a08c5ca3b21"
+    }
+  },
+  "failure": {
+    "trials": [
+      "community2110",
+      "community2114",
+      "community2119",
+      "community2123"
+    ],
+    "windowsExitCode": 3765269347,
+    "exception": "GplException",
+    "property": "MM_ActivityTicking_v1",
+    "agentOperandId": "ffffffff",
+    "sourceCallSequence": [
+      "MM_AD_Change",
+      "MM_AD_Notify",
+      "Bards_Street_Show_Cancelled",
+      "Bards_Street_End",
+      "Bards_Street_Clean",
+      "Bards_Show_Cancel",
+      "MM_AD_Change",
+      "MM_AD_Root",
+      "MM_AD_Find",
+      "MM_AD_StopIfEmpty"
+    ],
+    "scope": "Bounded source-function ring and actual throw; frame argument layout was not qualified."
+  },
+  "control": {
+    "nativeExecutableSha256": "ed08e75e070302759d2f00d8091da73e8823f2a400fda123291e2c6f9556f738",
+    "nativeBuild": "/Users/mike/.local/share/majesty-work/community2101-process-engine-linked.json",
+    "startedAtUnix": 1792187370,
+    "deadlineSeconds": 210,
+    "rssCeilingMiB": 1024,
+    "peakRssMiB": 176.8,
+    "stopReason": null,
+    "nativeExitCode": 0,
+    "nativeSessionTerminal": true,
+    "audioMuted": true,
+    "freshOwnedProfile": true,
+    "inputSave": {
+      "sha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d",
+      "bytes": 399441
+    },
+    "ownedNativePid": 94298,
+    "endedAtUnix": 1792187471
+  },
+  "change": {
+    "function": "MM_AD_Change",
+    "before": "$MM_AD_StopIfEmpty(Root);",
+    "after": "$MM_AD_StopIfEmpty($MM_AD_Root());",
+    "sourceBytesAdded": 9,
+    "compiledCommonBytesAdded": 12,
+    "callbackOrderingTimingRewardsUnchanged": true
+  },
+  "compiler": {
+    "format": "majesty-community-original-sdk-compile-v1",
+    "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+    "sourceStage": {
+      "bytes": 106371,
+      "sha256": "036295a932d1fa02d98513b6bbeea83293bcc7643ed20a92bd034535519b5756"
+    },
+    "outputs": {
+      "common": {
+        "bytes": 15602927,
+        "sha256": "9df88eb9f536155ed03b148b547ba4a88a24cc86f7212416517a213f42120d1a",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 817,
+        "compiledDefinitions": 817
+      },
+      "base": {
+        "bytes": 187130,
+        "sha256": "6bcf4e7b106249c212dcc3c264d98cd5faafbe90f2b41d433406c0e42bb8c4f0",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 85,
+        "compiledDefinitions": 85
+      },
+      "expansion": {
+        "bytes": 27612,
+        "sha256": "9581cf08a4a936a93ea52fb41de6ff492a92e1c1788e01262340169f57494dfa",
+        "exitCode": 0,
+        "headerValid": true,
+        "sourceDefinitions": 13,
+        "compiledDefinitions": 13
+      }
+    },
+    "elapsedSeconds": 25.07,
+    "peakRssMiB": 68.5,
+    "compiled": true,
+    "compilerSourceDefinitionsQualified": true,
+    "compiledBytesExportedQualified": true,
+    "playerProfilesAccessed": false,
+    "nativeRuntimeQualified": false,
+    "browserPlayable": false,
+    "published": false
+  },
+  "candidate": "/Users/mike/.local/share/majesty-work/community2130-reentrant-native-candidate/candidate.json",
+  "engineReuse": "/Users/mike/.local/share/majesty-work/community2132-source-bound-engine-reuse.json",
+  "changedFinalGameFiles": [
+    "Data/Community_Common.bcd",
+    "DataMX/Community_Common.bcd"
+  ],
+  "resourcesAndRuntimeFilesIdentical": true,
+  "pythonTests": {
+    "tests": 77,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "passed": true
+  },
+  "replay": {
+    "trial": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/run.json",
+    "terminal": true,
+    "exactOriginalInputAndScript": true,
+    "nestedCancellationNormalReturnObserved": true,
+    "wholeReplayQualified": true,
+    "run": {
+      "nativeExecutableSha256": "ed08e75e070302759d2f00d8091da73e8823f2a400fda123291e2c6f9556f738",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2132-source-bound-engine-reuse.json",
+      "startedAtUnix": 1792188039,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 183.7,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d",
+        "bytes": 399441
+      },
+      "ownedNativePid": 97767,
+      "endedAtUnix": 1792188176
+    },
+    "noCxxThrowsObserved": true,
+    "generatedSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 5 Days.GMP",
+      "bytes": 393874,
+      "sha256": "12b973434c66f748d8ce3fdbccc3874e066e45b4df280e747dacc85b4d4f8547",
+      "profile": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/run.json",
+      "inputSha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d"
+    },
+    "savedRootActivity": {
+      "busy": false,
+      "ticking": false,
+      "running": false,
+      "records": 0
+    },
+    "scope": "Exact original Day3/script replay passes nested-cancellation witness, paid Hall3 upgrade, research interaction and ordinary native save. Full mod/browser verification remains pending."
+  },
+  "browserPlayable": false,
+  "published": false
+}

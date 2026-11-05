@@ -52,6 +52,43 @@ class ReleaseIntegrity(unittest.TestCase):
                     build.unpack_release(data, release, Path(temp))
 
 
+class CpuSnapshotReleaseIntegrity(unittest.TestCase):
+    def fixture(self, directory):
+        root = Path(directory)
+        (root / 'deploy').mkdir()
+        (root / 'static/majesty').mkdir(parents=True)
+        engine = 'a' * 64
+        release = {'format': 'majesty-cpu-snapshot-release-v1', 'engineSha256': engine,
+            'requiredRuntimeEnvironment': {'RECOMP_DDRAW_CPU_SNAPSHOT_ONLY': '1'}}
+        proof = dict(engineSha256=engine, nativeControlsQualified=True,
+            browserWorldSaveReloadQualified=True, browserInteractionQualified=True)
+        for name, value in [('cpu-snapshot-release', release), ('cpu-snapshot-verification', proof),
+                            ('hosted-release', {'engineSha256': engine})]:
+            (root / ('deploy/' + name + '.json')).write_text(json.dumps(value))
+        (root / 'static/majesty/index.html').write_text('      m.ENV.RECOMP_GUEST_ARGS = "";')
+        return root, proof
+
+    def test_mismatched_engine_or_unverified_interaction_is_rejected(self):
+        for key, value in [('engineSha256', 'b' * 64), ('browserInteractionQualified', False),
+                           ('browserWorldSaveReloadQualified', False)]:
+            with tempfile.TemporaryDirectory() as temp:
+                root, proof = self.fixture(temp)
+                proof[key] = value
+                (root / 'deploy/cpu-snapshot-verification.json').write_text(json.dumps(proof))
+                with patch.object(build, 'ROOT', root), self.assertRaises(ValueError):
+                    build.install_cpu_snapshot_release(root / 'static')
+
+    def test_enables_qualified_renderer_and_refuses_duplicate_injection(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, _ = self.fixture(temp)
+            with patch.object(build, 'ROOT', root):
+                build.install_cpu_snapshot_release(root / 'static')
+                self.assertIn('RECOMP_DDRAW_CPU_SNAPSHOT_ONLY = "1"',
+                    (root / 'static/majesty/index.html').read_text())
+                with self.assertRaises(ValueError):
+                    build.install_cpu_snapshot_release(root / 'static')
+
+
 class ContentReleaseIntegrity(unittest.TestCase):
     def fixture(self, directory):
         root = Path(directory)
@@ -154,3 +191,47 @@ class ArchivePartsIntegrity(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class AlchemistReleaseIntegrity(unittest.TestCase):
+    def fixture(self, directory):
+        root = Path(directory)
+        for folder in ['deploy', 'web/content', 'static/hosting', 'static/majesty']:
+            (root / folder).mkdir(parents=True)
+        pins = (build.ROOT / 'web/content/alchemist-files.mjs').read_text()
+        (root / 'web/content/alchemist-files.mjs').write_text(pins)
+        bindings = json.loads(pins.split('ALCHEMIST_FILES = Object.freeze(')[1].split(');')[0])
+        sizes = json.loads(pins.split('ALCHEMIST_SIZES = Object.freeze(')[1].split(');')[0])
+        env = {name: '1' for name in ['RECOMP_RULE_INVENTORY_COMPAT', 'RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT',
+            'RECOMP_ALCHEMIST_PANEL_BRIDGE', 'RECOMP_ALCHEMIST_RESEARCH_BRIDGE',
+            'RECOMP_ALCHEMIST_ACTION_BRIDGE', 'RECOMP_ALCHEMIST_TARGET_BRIDGE', 'RECOMP_ALCHEMIST_SHARED_FUNCTIONS']}
+        content = dict(format='majesty-alchemist-content-release-v1', engineSha256='a'*64,
+            storageId='majesty-alchemist-v1-campaign3', requiredRuntimeEnvironment=env,
+            nativeMechanicsQualified=True, browserWorldSaveReloadQualified=True,
+            browserSovereignActionsQualified=True, browserPhoenixSaveQualified=True,
+            originalCampaignEntryQualified=True, baseCampaignRecruitmentSaveReloadQualified=True, browserFogRevealQualified=True, patches=[dict(path=name,sha256=digest,bytes=sizes[name],
+            url='https://raw.githubusercontent.com/bolander72/majesty/'+'a'*40+'/assets/content/'+name)
+            for name,digest in bindings.items()])
+        (root/'deploy/hosted-release.json').write_text(json.dumps({'engineSha256':'a'*64}))
+        (root/'deploy/alchemist-release.json').write_text(json.dumps(content))
+        (root/'static/games.json').write_text(json.dumps([{'id':'majesty'}]))
+        (root/'static/hosting/automatic-assets.json').write_text(json.dumps({'games':{'majesty':{}}}))
+        (root/'static/majesty/index.html').write_text('      m.ENV.RECOMP_GUEST_ARGS = "";')
+        return root,content
+
+    def test_requires_qualification_and_matching_engine(self):
+        for key in ['browserPhoenixSaveQualified','originalCampaignEntryQualified','baseCampaignRecruitmentSaveReloadQualified','browserFogRevealQualified','engineSha256']:
+            with tempfile.TemporaryDirectory() as temp:
+                root,content=self.fixture(temp)
+                content[key]=False if key!='engineSha256' else 'b'*64
+                (root/'deploy/alchemist-release.json').write_text(json.dumps(content))
+                with patch.object(build,'ROOT',root), self.assertRaisesRegex(ValueError,'qualification'):
+                    build.install_alchemist_release(root/'static')
+
+    def test_mounts_separate_data_preserving_profile_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root,content=self.fixture(temp)
+            with patch.object(build,'ROOT',root):build.install_alchemist_release(root/'static')
+            games=json.loads((root/'static/games.json').read_text())
+            self.assertEqual(games[0]['id'],'majesty')
+            self.assertEqual(games[0]['defaultContentStorageId'],'majesty-alchemist-v1-campaign3')
+            self.assertIn('RECOMP_ALCHEMIST_TARGET_BRIDGE = "1"',(root/'static/majesty/index.html').read_text())

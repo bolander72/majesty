@@ -1,0 +1,134 @@
+{
+  "format": "majesty-present-baseline-reuse-verification-v1",
+  "engineSha256": "178fdeeeee46b8fcd1ead8f71b3f6de2a5e0de251ba60336beaf60d1930d7f8e",
+  "priorEngineSha256": "f571183dad41932feba8b586f4042d495771d1e6bb2dc78b0f01cf0807078efb",
+  "patch": "patches/recomp-kit-present-baseline-reuse.patch",
+  "patchSha256": "2b3b807931805a09c242f70292def4cd389eb287344cbb80ddd22fe99a0d6178",
+  "runtimeSource": {
+    "dx/ddraw.cpp": {
+      "before": "2e6245e822e6f230e762a4d6c63da37946dc1666a78aa158acf700a4e3a2e9ad",
+      "after": "4c88a6834ccbaa734c5f21e0fbff00bf2667d54b7cd5da27a7de7b15b29f5cb7"
+    },
+    "dx/tests/dx_tests.cpp": {
+      "before": "1aff2d5ffd2f54bad1d1ee966fe48acfb044a400d789171f36f75bd703e54dae",
+      "after": "31c3119dd2294a93fcf9f2590d2d65312a30733eaf4398685fc1a4ab6b0d4bc0"
+    }
+  },
+  "generatedTranslationsEdited": false,
+  "frameStorageChanged": false,
+  "simulationTimingChanged": false,
+  "contentChanged": false,
+  "officialDirectDrawRegression": {
+    "suite": "dx_tests",
+    "checks": 182820,
+    "failures": 0,
+    "passed": true,
+    "peakOwnedRssMiB": 441.2
+  },
+  "officialBuild": {
+    "terminal": true,
+    "exitCode": 0,
+    "stopReason": null,
+    "peakOwnedRssMiB": 1704.2
+  },
+  "matchedBrowserSample": {
+    "compilerMode": "--liftoff-only",
+    "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882",
+    "buildings": 111,
+    "initialLivingHeroes": 41,
+    "cityGuards": 30,
+    "prior": {
+      "freshFrames": 432,
+      "durationSeconds": 20.3625750541687,
+      "freshFps": 21.215391415417244,
+      "medianIntervalMs": 49.95012283325195,
+      "p95IntervalMs": 67.35014915466309,
+      "aggregateCpuCores": 1.1594750176300839,
+      "resources": {
+        "peakRssMiB": 2289.0,
+        "lastRssMiB": 1230.5
+      },
+      "compilerMode": "--liftoff-only",
+      "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882"
+    },
+    "candidate": {
+      "freshFrames": 430,
+      "durationSeconds": 20.198364973068237,
+      "freshFps": 21.288851873572256,
+      "medianIntervalMs": 49.89027976989746,
+      "p95IntervalMs": 67.39974021911621,
+      "aggregateCpuCores": 1.161724552006637,
+      "resources": {
+        "peakRssMiB": 1999.0,
+        "lastRssMiB": 1570.6
+      },
+      "compilerMode": "--liftoff-only",
+      "inputSaveSha256": "d271672fc9a813fbbd36fd3e226e908b2a5003013b1e577bd758bc06af0a9882"
+    },
+    "meaningfulFpsOrCpuImprovementQualified": false,
+    "normalOptimizingBrowserSpeedupQualified": false
+  },
+  "browserSave": {
+    "trial": 1700,
+    "name": "(Quest for the Holy Chalice) 0 Days.GMP",
+    "sha256": "47e2ccbc60ab88023c1fd9f4a88dc8ef8394bb985698457568bc9539ff220588",
+    "bytes": 1656516,
+    "completedFullHealthBuildings": 111,
+    "livingHeroesWithAi": 36,
+    "actualEngineUrlVerified": true,
+    "guestErrors": [],
+    "closedNormally": true,
+    "guardStopped": false,
+    "peakOwnedRssMiB": 1999.0
+  },
+  "freshReload": {
+    "trial": 1701,
+    "inputSaveSha256": "47e2ccbc60ab88023c1fd9f4a88dc8ef8394bb985698457568bc9539ff220588",
+    "actualEngineUrlVerified": true,
+    "largeWorldRestoredAndContinued": true,
+    "nativeGuardhouseCardHp": "200/200",
+    "closedNormally": true,
+    "guardStopped": false,
+    "peakOwnedRssMiB": 2095.8
+  },
+  "boundedCpuCapture": {
+    "trial": 1701,
+    "correctSymbolMap": true,
+    "duplicatePresentScanObserved": false,
+    "baselineSyncRemainsInResync": true,
+    "scanPercentageSpeedupClaimed": false,
+    "note": "Prior1666 profile used engine21e3 before the previously shipped wide SIMD comparison; different world progress and compiler modes also prevent isolating this patch with those profile percentages."
+  },
+  "patchValidation": {
+    "patchAppliesAndMatchesSource": true,
+    "scopedOfficialGameLiteralCheck": true,
+    "scopedOfficialTrackedBoundaryCheck": true,
+    "scopedFiles": [
+      "dx/ddraw.cpp",
+      "dx/tests/dx_tests.cpp"
+    ]
+  },
+  "testHarnessIssue": {
+    "trial": 1696,
+    "cancelled": true,
+    "reason": "Clang blocked in a header pread; local source/header pre-read and official1698 rerun passed."
+  },
+  "allOwnedBrowserTrialsSilentIsolatedAndClosed": true,
+  "generalCrashFixed": false,
+  "zeroLagGuarantee": false,
+  "manualRolloutOperations": "none",
+  "releaseArchiveCommit": "71e1dc5d4bcb6d12d64e18e43d46d54e9941e203",
+  "releaseArchiveSha256": "5bd2b26e3a6c7bac4b3a110449fd82aa12efd569b5e5bca6cf7e899a17964640",
+  "releaseBuilderTests": {
+    "tests": 9,
+    "passed": true
+  },
+  "localReleaseMaterialization": {
+    "passed": true,
+    "archiveManifestFilesVerified": 148,
+    "materializedEngineFilesVerified": true,
+    "decompressedEngineHashVerified": true,
+    "normalRootAndCommunityCollectionPreserved": true,
+    "derivedBuildConfigVerifiedByBuilderTests": true
+  }
+}

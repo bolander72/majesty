@@ -1,9 +1,17 @@
 #include "controller_lifecycle.h"
+#include "controller_dispatch.h"
 #include "resource_meter.h"
+#include "research_descriptors.h"
+#include "research_activity.h"
+#include "rage_dispatch.h"
+#include "upgrade_research_gate.h"
+#include "map_selection_identity.h"
+#include "fog_reveal_identity.h"
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
 #include <vector>
+#include <map>
 
 void check(bool value) {
     if (!value)
@@ -29,7 +37,7 @@ struct MeterOps {
         return stock;
     }
     void visible(std::uint32_t window, std::uint32_t control, bool shown) {
-        check(window == 201 && shown && (control == 10787 || control == 10788));
+        check(window == 201 && shown && (control == 10787 || control == 10788 || control == 10789));
         ++visibleCalls;
     }
     void integer(std::uint32_t window, std::uint32_t control, std::int32_t value) {
@@ -38,8 +46,241 @@ struct MeterOps {
         shownStock = value;
     }
 };
+struct DispatchOps {
+    std::map<std::uint32_t, std::uint32_t> memory;
+    std::vector<std::uint32_t> freed;
+    std::uint32_t next = 1000;
+    bool allocationFails = false;
+    std::uint32_t read(std::uint32_t address) {
+        return memory.at(address);
+    }
+    void write(std::uint32_t address, std::uint32_t value) {
+        memory[address] = value;
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        check(bytes == 44);
+        if (allocationFails)
+            return 0;
+        const auto address = next;
+        next += bytes;
+        return address;
+    }
+    void release(std::uint32_t address) {
+        freed.push_back(address);
+    }
+};
+
+struct ResearchOps : DispatchOps {
+    std::map<std::uint32_t, std::uint32_t> descriptors;
+    std::uint32_t lookup(std::uint32_t id) {
+        return descriptors.count(id) ? descriptors.at(id) : 0;
+    }
+    std::uint32_t allocate(std::uint32_t bytes) {
+        check(bytes == 20);
+        if (allocationFails)
+            return 0;
+        const auto result = next;
+        next += bytes;
+        return result;
+    }
+    bool insert(std::uint32_t id, std::uint32_t value) {
+        if (lookup(id))
+            return false;
+        descriptors[id] = value;
+        return true;
+    }
+};
 
 int main(int argc, char **argv) {
+    DispatchOps fogOps;
+    fogOps.memory = {{300 + 0x5c, 1},
+                     {300 + 0x60, 1670},
+                     {300 + 0x6c, 0x31434c41},
+                     {300 + 0x80, 400},
+                     {400 + 4, 0x31434c41}};
+    unsigned reveals = 0;
+    check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+        // The original V/B gate admits this descriptor while the real actor
+        // and every gameplay/saved identity remain Alchemist.
+        check((fogOps.read(400 + 4) & 0xff00) == 0x5600);
+        check(fogOps.read(300 + 0x6c) == 0x31434c41);
+        ++reveals;
+        check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] { ++reveals; }));
+        check(fogOps.read(400 + 4) == 0x31435641);
+    }));
+    check(reveals == 2 && fogOps.read(400 + 4) == 0x31434c41);
+    for (auto identity : {0x31485641U, 0x31504e57U, 0x31534c41U}) {
+        fogOps.memory[300 + 0x6c] = identity;
+        fogOps.memory[400 + 4] = identity;
+        check(MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+            check(fogOps.read(400 + 4) == identity); // stock heroes/effects untouched
+        }));
+    }
+    fogOps.memory[300 + 0x6c] = fogOps.memory[400 + 4] = 0x31434c41;
+    check(!MajestyCommunity::WithAlchemistFogReveal(fogOps, 300, [&] {
+        fogOps.memory[300 + 0x60] = 1671; // reject recycled actors, restore descriptor
+    }));
+    check(fogOps.read(400 + 4) == 0x31434c41);
+
+    DispatchOps selectionOps;
+    selectionOps.memory = {{300 + 0x5c, 1},
+                           {300 + 0x60, 915},
+                           {300 + 0x6c, 0x31434c41},
+                           {300 + 0x80, 400},
+                           {400 + 4, 0x31434c41}};
+    MajestyCommunity::MapSelectionIdentity selection;
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    selection.enter();
+    selection.character(selectionOps, 300, 0x00418bc0); // ordinary card/AI call excluded
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    selection.enter();
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31435641);
+    check(selection.leave(selectionOps));
+    check(selectionOps.read(300 + 0x6c) == 0x31435641); // outer predicate still owns it
+    check(selection.restore(selectionOps));             // full card sees real community identity
+    check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    check(selection.leave(selectionOps));
+    selection.enter();
+    selectionOps.memory[300 + 0x6c] = 0x31485641; // stock Ranger unaffected
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    check(selectionOps.read(300 + 0x6c) == 0x31485641);
+    check(selection.leave(selectionOps));
+    selectionOps.memory[300 + 0x6c] = 0x31434c41;
+    for (auto caller : {0x0043dde4U, 0x0043de62U, 0x0043dee6U}) {
+        selection.enter();
+        selection.character(selectionOps, 300, caller);
+        check(selectionOps.read(300 + 0x6c) == 0x31435641);
+        check(selection.leave(selectionOps));
+        check(selectionOps.read(300 + 0x6c) == 0x31434c41);
+    }
+    selection.enter();
+    selection.character(selectionOps, 300, 0x0043e3e3);
+    selectionOps.memory[300 + 0x60] = 916; // refuse recycled actors
+    check(!selection.restore(selectionOps));
+
+    MajestyCommunity::RageDispatch rage;
+    check(!rage.begin(0, 915, "Alchemist_DoInvigoratingElixer"));
+    check(rage.begin(300, 915, "Alchemist_DoInvigoratingElixer"));
+    check(!rage.begin(301, 916, "Alchemist_Arcane_Infusion"));
+    {
+        MajestyCommunity::RageDispatch::Scope privateCall(rage, 300, 915);
+        check(rage.callback() == "Alchemist_DoInvigoratingElixer");
+        {
+            MajestyCommunity::RageDispatch::Scope stockCall(rage, 301, 916);
+            check(rage.callback().empty());
+        }
+        check(rage.callback() == "Alchemist_DoInvigoratingElixer");
+        rage.reset();
+        check(rage.begin(300, 915, "Alchemist_Arcane_Infusion"));
+    }
+    check(rage.callback().empty() && rage.pending());
+    rage.reset();
+
+    DispatchOps identityOps;
+    identityOps.memory = {{300 + 0x84, 400}, {300 + 0x60, 915}, {300 + 0x70, 0}};
+    check(MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    // A nonzero player number cannot substitute for a missing unit identity.
+    identityOps.memory[300 + 0x70] = 1;
+    identityOps.memory[300 + 0x60] = 0;
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    identityOps.memory[300 + 0x60] = 915;
+    identityOps.memory[300 + 0x84] = 0;
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 300));
+    check(!MajestyCommunity::ResearchUnitHasIdentity(identityOps, 0));
+
+    struct ActivityOps {
+        MajestyCommunity::BuildingActivity activity{8000, 100, 12000};
+        MajestyCommunity::BuildingActivity capture(std::uint32_t unit) {
+            check(unit == 300);
+            return activity;
+        }
+        void restore(std::uint32_t unit, MajestyCommunity::BuildingActivity value) {
+            check(unit == 300);
+            activity = value;
+        }
+    } activityOps;
+    MajestyCommunity::ResearchActivity activityOwner;
+    const auto recruitment = activityOps.activity;
+    // Original dispatch can install research before the world-update wrapper
+    // observes it. Do not restore that research tuple as recruitment on finish.
+    MajestyCommunity::ResearchActivity earlyDispatch;
+    check(earlyDispatch.begin(300, 10771, recruitment));
+    activityOps.activity = {10771, 200, 10000};
+    check(earlyDispatch.capture(activityOps, activityOps.activity));
+    check(activityOps.activity.command == recruitment.command);
+    check(earlyDispatch.complete(activityOps, 300, 2, [&] { activityOps.activity = {}; }));
+    check(earlyDispatch.phase() == MajestyCommunity::ResearchActivity::Phase::Idle);
+    check(activityOps.activity.command == recruitment.command);
+    check(!activityOwner.begin(0, 10771));
+    check(activityOwner.begin(300, 10771));
+    check(!activityOwner.begin(301, 10774));
+    // An unrelated update or incomplete tuple must not steal recruitment.
+    check(!activityOwner.capture(activityOps, recruitment));
+    activityOps.activity = {10771, 200, 0};
+    check(!activityOwner.capture(activityOps, recruitment));
+    activityOps.activity = {10771, 200, 30000};
+    check(activityOwner.capture(activityOps, recruitment));
+    check(activityOps.activity.command == 8000 && activityOps.activity.duration == 12000);
+    unsigned completionCalls = 0;
+    auto completion = [&] {
+        ++completionCalls;
+        check(activityOps.activity.command == 10771 && activityOps.activity.startedAt == 200);
+        activityOps.activity = {};
+    };
+    check(!activityOwner.complete(activityOps, 301, 2, completion));
+    check(!activityOwner.complete(activityOps, 300, 1, completion));
+    check(completionCalls == 0);
+    // A native callback that leaves the order active must retain its owner.
+    check(activityOwner.complete(activityOps, 300, 2, [] {}));
+    check(activityOwner.phase() == MajestyCommunity::ResearchActivity::Phase::Active);
+    check(activityOps.activity.command == 8000);
+    check(activityOwner.complete(activityOps, 300, 2, completion));
+    check(completionCalls == 1 &&
+          activityOwner.phase() == MajestyCommunity::ResearchActivity::Phase::Idle);
+    check(activityOps.activity.command == 8000 && activityOps.activity.startedAt == 100);
+    check(!activityOwner.complete(activityOps, 300, 2, completion));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(0, 0));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(0, 0x00505041U));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(1, 0x00505041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(1, 0x2c425041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(1, 0x02425041U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(7, 0x18000000U));
+    check(MajestyCommunity::ResearchRowsNeedRefresh(7, 0x2b000000U));
+    check(!MajestyCommunity::ResearchRowsNeedRefresh(7, 0x2b000001U));
+    DispatchOps dispatchOps;
+    dispatchOps.memory[100] = 200;
+    const std::uint32_t original[] = {0x0047a360U, 0x0047a760U, 3,           0x0047a790U, 5, 6,
+                                      7,           8,           0x0047aae0U, 10,          11};
+    for (unsigned i = 0; i < 11; ++i)
+        dispatchOps.memory[200 + i * 4] = original[i];
+    MajestyCommunity::PrivateControllerDispatch dispatch;
+    dispatchOps.allocationFails = true;
+    check(!dispatch.install(dispatchOps, 100, 1) && dispatchOps.read(100) == 200);
+    dispatchOps.allocationFails = false;
+    check(dispatch.install(dispatchOps, 100, 1));
+    const auto clone = dispatch.find(100).table;
+    for (unsigned i = 0; i < 11; ++i) {
+        check(dispatchOps.read(200 + i * 4) == original[i]);
+        check(dispatchOps.read(clone + i * 4) == (i == 3   ? dispatch.controlBridge
+                                                  : i == 8 ? dispatch.eventBridge
+                                                           : original[i]));
+    }
+    check(!dispatch.install(dispatchOps, 100, 2));
+    dispatch.destroyed(dispatchOps, 100, 2);
+    check(dispatch.find(100).table == clone && dispatchOps.freed.empty());
+    dispatch.destroyed(dispatchOps, 100, 1);
+    check(!dispatch.find(100).table && dispatchOps.freed.size() == 1);
+    dispatchOps.memory[100] = 200;
+    check(dispatch.install(dispatchOps, 100, 2));
+    const auto replacementDispatch = dispatch.find(100).table;
+    dispatch.destroyed(dispatchOps, 100, 1);
+    check(dispatch.find(100).table == replacementDispatch);
+    dispatch.clear(dispatchOps);
+    check(dispatchOps.read(100) == 200 && dispatchOps.freed.size() == 2);
+    dispatchOps.memory[200 + 12] = 0;
+    check(!dispatch.install(dispatchOps, 100, 3) && dispatchOps.read(100) == 200);
     check(argc == 2);
     std::ifstream input(argv[1], std::ios::binary);
     const std::vector<unsigned char> bytes((std::istreambuf_iterator<char>(input)), {});
@@ -47,10 +288,76 @@ int main(int argc, char **argv) {
     MajestyStockControllers::Registry registry;
     std::string error;
     check(MajestyStockControllers::ParseRegistry(bytes.data(), bytes.size(), &registry, &error));
+    struct UpgradeOps {
+        bool weaponOil = false, phoenix = false, missingDescriptor = false;
+        std::uint32_t completionAttribute(std::uint32_t action, std::uint32_t stockTemplate) {
+            if (missingDescriptor)
+                return 0;
+            check((action == 10771 && stockTemplate == 5020) ||
+                  (action == 10774 && stockTemplate == 5043));
+            return action == 10771 ? 0x2a425041U : 0x29425041U;
+        }
+        bool complete(std::uint32_t unit, std::uint32_t attribute) {
+            check(unit == 300);
+            return attribute == 0x2a425041U ? weaponOil : phoenix;
+        }
+    } upgradeOps;
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.weaponOil = true;
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.phoenix = true;
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 2, 300));
+    upgradeOps.missingDescriptor = true;
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 300));
+    check(!MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 1, 0));
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "stock-panel", 1, 300));
+    check(MajestyCommunity::UpgradeResearchComplete(upgradeOps, registry, "brewing", 3, 300));
     check(registry.panels.size() == 1 && registry.meters.size() == 1 &&
           registry.researchRows.size() == 2 && registry.upgradeGates.size() == 1 &&
           registry.timedRageActions.size() == 1 && registry.rageCommandActions.size() == 1 &&
           registry.sovereignTargetActions.size() == 1);
+    ResearchOps researchOps;
+    for (const auto &row : registry.researchRows) {
+        for (const auto id : {row.descriptorTemplateControlId, row.completionTemplateControlId}) {
+            if (researchOps.lookup(id))
+                continue;
+            const auto address = researchOps.allocate(20);
+            researchOps.descriptors[id] = address;
+            for (unsigned i = 0; i < 5; ++i)
+                researchOps.memory[address + i * 4] = id * 10 + i + 1;
+        }
+    }
+    const auto beforeTemplates = researchOps.memory;
+    MajestyCommunity::ResearchDescriptors research;
+    researchOps.allocationFails = true;
+    check(!research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows)
+        check(!researchOps.lookup(row.actionControlId));
+    researchOps.allocationFails = false;
+    check(research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows) {
+        const auto descriptorClone = researchOps.lookup(row.actionControlId);
+        const auto source = researchOps.lookup(row.descriptorTemplateControlId);
+        const auto completion = researchOps.lookup(row.completionTemplateControlId);
+        check(researchOps.read(descriptorClone) == beforeTemplates.at(source));
+        check(researchOps.read(descriptorClone + 4) == row.requiredLevel);
+        check(researchOps.read(descriptorClone + 8) == row.price);
+        check(researchOps.read(descriptorClone + 12) == beforeTemplates.at(source + 12));
+        check(researchOps.read(descriptorClone + 16) == beforeTemplates.at(completion + 16));
+        for (unsigned i = 0; i < 5; ++i)
+            check(researchOps.read(source + i * 4) == beforeTemplates.at(source + i * 4));
+    }
+    const auto firstClone = researchOps.lookup(registry.researchRows[0].actionControlId);
+    check(research.prepare(researchOps, registry.researchRows));
+    check(researchOps.lookup(registry.researchRows[0].actionControlId) == firstClone);
+    researchOps.descriptors[registry.researchRows[0].actionControlId] = 9999;
+    check(!research.prepare(researchOps, registry.researchRows));
+    for (const auto &row : registry.researchRows)
+        researchOps.descriptors.erase(row.actionControlId);
+    check(research.prepare(researchOps, registry.researchRows));
+    check(researchOps.lookup(registry.researchRows[0].actionControlId) != firstClone);
     const auto &panel = registry.panels[0];
     check(panel.panelKey == "brewing" && panel.parentDialogId == 0x31304743U &&
           panel.childDialogId == 0x32304743U && panel.buildingFamilyId == 0x00424c41U &&
@@ -94,7 +401,7 @@ int main(int argc, char **argv) {
     check(lifecycle.child(101, 8009, 0x00424c41U) == 0);
     MeterOps meter;
     check(MajestyCommunity::PresentResourceMeter(meter, 101, registry.meters[0]));
-    check(meter.reads == 1 && meter.visibleCalls == 2 && meter.integerCalls == 1 &&
+    check(meter.reads == 1 && meter.visibleCalls == 3 && meter.integerCalls == 1 &&
           meter.stock == 23 && meter.shownStock == 23);
     meter.stock = -9;
     check(MajestyCommunity::PresentResourceMeter(meter, 101, registry.meters[0]));

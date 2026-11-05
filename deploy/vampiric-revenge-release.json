@@ -1,0 +1,229 @@
+{
+  "format": "majesty-vampiric-revenge-release-v1",
+  "engineSha256": "9aa9b44b96a02d5339f885d10bfbb0690bfa48853721e0bf587d32b05a86497e",
+  "storageId": "majesty-alchemist-demo-v1",
+  "canonicalGuid": "{504D4156-0000-0000-0000-000000000000}",
+  "nativeId": "XQD3",
+  "sourceSha256": {
+    "VampiricRevengeBridge.gpl": "d5e6d42e50228b2c18b012cc31d01251b5f902a5147e262f1008295ef9a41339",
+    "VampiricRevengeBridge.gplproj": "0fdfbb7a49562576aac92e017e12ab6c752876a09f90733cf5677a6780fe71ea"
+  },
+  "patches": [
+    {
+      "path": "DataMX/mx_gpltext.cam",
+      "bytes": 141746,
+      "sha256": "71ba4e34bc8cf617e7864b90ee782f25b817b56e5af53c6b376ce23772738f08",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/mx_gpltext.cam"
+    },
+    {
+      "path": "DataMX/mx_Unittype.cam",
+      "bytes": 68145,
+      "sha256": "37bb5755cf18e79f6d7029f730cd5b5b10c90f2fa557fa2bd8ea27de25fa87d8",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_Unittype.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist-native-units.cam"
+    },
+    {
+      "path": "DataMX/mx_miscdata.cam",
+      "bytes": 17857,
+      "sha256": "4b14d31f1cd65969739484671db7459f6c1304a5a499ca759dfe746ea6cb0279",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/mx_miscdata.cam"
+    },
+    {
+      "path": "DataMX/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/DataMX/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "DataMX/Alchemist_Composed.bcd",
+      "bytes": 2067851,
+      "sha256": "2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/0914992d11c5fb57dd46c30b9873b0f0bcbc851e/assets/content/alchemist-v1-campaign3/DataMX/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "DataMX/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "DataMX/mx_action.cam",
+      "bytes": 15138,
+      "sha256": "e7d994815467576eb9ffb4bbd1061bf4fe380eddbc6a93c060e3f5e7df631079",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/mx_action.cam"
+    },
+    {
+      "path": "DataMX/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_maindata.cam"
+    },
+    {
+      "path": "DataMX/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_audio.cam"
+    },
+    {
+      "path": "DataMX/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "DataMX/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/DataMX/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-units.cam",
+      "bytes": 8589,
+      "sha256": "43e4cd20fcdf7741d96b3d37e02fc8011706b332bfeb9159ead8383f116c1989",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-units.cam"
+    },
+    {
+      "path": "Data/unittype.cam",
+      "bytes": 157112,
+      "sha256": "2215a41da881fa7ace6fcfd95abf14f9cb5718ece354085ab291d9f299f36efd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/unittype.cam"
+    },
+    {
+      "path": "Data/gpltext.cam",
+      "bytes": 142359,
+      "sha256": "41c0e5604f0e2970acbdfd69360ce4216c0e22d82ed030f2dd1a22094862356f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/gpltext.cam"
+    },
+    {
+      "path": "Data/textdata.cam",
+      "bytes": 363958,
+      "sha256": "a88f2c8be3e775fb8bf4fecd37396c50d1dff036115b549d9eb3c16bda6c626f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/textdata.cam"
+    },
+    {
+      "path": "Data/Alchemist-native-interface-text.cam",
+      "bytes": 123509,
+      "sha256": "eba900e8d9f277246141ab9462857509e05880b2bc4640f2224011704264d163",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/2ea898c748b09c2f72d62117f89ce7b59140a781/assets/content/alchemist-v1-labels2/Data/Alchemist-native-interface-text.cam"
+    },
+    {
+      "path": "Data/Alchemist_Composed.bcd",
+      "bytes": 701264,
+      "sha256": "98d726c14289ff0ca64adb147d2d922c8d2fdb893ad29f1ca593280edebfac93",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist_Composed.bcd"
+    },
+    {
+      "path": "Data/Alchemist-native-actions.cam",
+      "bytes": 3915,
+      "sha256": "df329ef1fcd939d9eb8cce30ca3b62a39387a704581e1c1413c3e68ea0ccc93b",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/Alchemist-native-actions.cam"
+    },
+    {
+      "path": "Data/alchemist_maindata.cam",
+      "bytes": 7253434,
+      "sha256": "956a8bc671396ee7055ad20340e0d7adc461a443aa36c81177bbbff15aace3e1",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_maindata.cam"
+    },
+    {
+      "path": "Data/alchemist_audio.cam",
+      "bytes": 1282058,
+      "sha256": "a66c67ecff08386babc8eba64d11603b53c54afe718beda7bebc09fe0b5193e2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_audio.cam"
+    },
+    {
+      "path": "Data/alchemist_sounddesc.cam",
+      "bytes": 2523,
+      "sha256": "18df6fe72d5207cec50e7b261d19dead04d1f7cbd35126a95387bf57e4db5a15",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_sounddesc.cam"
+    },
+    {
+      "path": "Data/alchemist_interfacedata.cam",
+      "bytes": 3959550,
+      "sha256": "74837f9a1b17e18bfd34b7d12f750d0aea0f4bfe96b1d8b3b287f28a55cbdccf",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/alchemist_interfacedata.cam"
+    },
+    {
+      "path": "Data/action.cam",
+      "bytes": 25830,
+      "sha256": "983ad9518614e2b425717c7bcb50e71c100e86960489c72c2ef8d8c02144876a",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/ef2694e7a6235eed61b12d679bc1fa16a1c6748c/assets/content/alchemist-v1/Data/action.cam"
+    },
+    {
+      "path": "Data/miscdata.cam",
+      "bytes": 10570,
+      "sha256": "b19ccf49a72229b20de652b9b4f80d53611f24743426a4464a614e52cd2688b2",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/miscdata.cam"
+    },
+    {
+      "path": "DataMX/mx_textdata.cam",
+      "bytes": 139122,
+      "sha256": "54d8f1784adf210e17a135b0fee0a1a699f0c7c33dcb18eea2f6703a730298bd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/mx_textdata.cam"
+    },
+    {
+      "path": "Data/mx_textdata.cam",
+      "bytes": 139122,
+      "sha256": "54d8f1784adf210e17a135b0fee0a1a699f0c7c33dcb18eea2f6703a730298bd",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/mx_textdata.cam"
+    },
+    {
+      "path": "Data/mx_gpltext.cam",
+      "bytes": 141746,
+      "sha256": "71ba4e34bc8cf617e7864b90ee782f25b817b56e5af53c6b376ce23772738f08",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/mx_gpltext.cam"
+    },
+    {
+      "path": "Quests/VampiricRevengeLegacy.q",
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Quests/VampiricRevengeLegacy.q"
+    },
+    {
+      "path": "Quests/VampiricRevengeLegacy.qdd",
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Quests/VampiricRevengeLegacy.qdd"
+    },
+    {
+      "path": "QuestsMX/VampiricRevengeLegacy.q",
+      "bytes": 3656,
+      "sha256": "572e1878d0878ac8d84760611dcd83242353c8599555a4e30a217ce4fdaf2c7f",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.q"
+    },
+    {
+      "path": "QuestsMX/VampiricRevengeLegacy.qdd",
+      "bytes": 426,
+      "sha256": "f1b70671c6e2a293d8edf243eeb88826974782341c2a77a286749f69772fedc6",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/QuestsMX/VampiricRevengeLegacy.qdd"
+    },
+    {
+      "path": "Data/VampiricRevenge-menu.cam",
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/VampiricRevenge-menu.cam"
+    },
+    {
+      "path": "Data/VampiricRevengeBridge.bcd",
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/Data/VampiricRevengeBridge.bcd"
+    },
+    {
+      "path": "DataMX/VampiricRevenge-menu.cam",
+      "bytes": 322307,
+      "sha256": "199ba9f6e9aadfe511911944a313509d444056191772c077e57bd5244ebb0fdc",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevenge-menu.cam"
+    },
+    {
+      "path": "DataMX/VampiricRevengeBridge.bcd",
+      "bytes": 616,
+      "sha256": "6026659ec89f775c6190c3bce73914c29b4029402caadca0816951ac8aa23657",
+      "url": "https://raw.githubusercontent.com/bolander72/majesty/a6b01ac9b9d19db2efdf98f3ca3b4cc63e4644a1/assets/content/vampiric-revenge-v1/DataMX/VampiricRevengeBridge.bcd"
+    }
+  ]
+}

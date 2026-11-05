@@ -1,0 +1,96 @@
+--- a/dx/ddraw.cpp
++++ b/dx/ddraw.cpp
+@@ -130,7 +130,8 @@
+                       bool guest_pointer = false);
+ bool lock_shadow_record(ComObj *s, const int32_t *unlock_rect, uint32_t unlock_ptr);
+ void baseline_note_revision(const ComObj *s, uint32_t was_current_at);
+-void baseline_resync(const ComObj *s);
++bool baseline_resync(const ComObj *s);
++static void ddraw_present_impl(ComObj *s, bool baseline_current);
+ void baseline_absorb(const ComObj *s, const int32_t r[4], uint32_t was_current_at);
+ void lock_shadow_forget(const ComObj *s);
+ bool dirty_close(uint32_t base, uint32_t len, uint32_t *lo, uint32_t *hi);
+@@ -828,9 +829,10 @@
+     if (s->is_primary) {
+         // This write already has a record. Do not rediscover it as a retained
+         // pointer write when presenting the primary below.
+-        if (s->retained_pointer)
+-            baseline_resync(s);
+-        ddraw_present(s);
++        const bool baseline_current = s->retained_pointer && baseline_resync(s);
++        // No guest code runs between resync and this synchronous present.
++        // Its baseline is already current; do not scan the same rows twice.
++        ddraw_present_impl(s, baseline_current);
+     }
+     if (s->texture_handle)
+         d3d_upload_texture(s);
+@@ -839,6 +841,10 @@
+ }
+ 
+ void ddraw_present(ComObj *s) {
++    ddraw_present_impl(s, false);
++}
++
++static void ddraw_present_impl(ComObj *s, bool baseline_current) {
+     if (!s || s->kind != K_SURFACE || !s->pixels)
+         return;
+     // Only the visible surface reaches the screen. A back buffer becomes
+@@ -851,7 +857,7 @@
+         // so the change is a new version even though no palette was written.
+         palette_now();
+     }
+-    if (s->retained_pointer) {
++    if (s->retained_pointer && !baseline_current) {
+         int32_t full[4] = {0, 0, (int32_t)s->width, (int32_t)s->height};
+         uint32_t revision = ddraw_surface_revision(s->id);
+         ddraw_refresh_retained_writes(s, full);
+@@ -2327,12 +2333,12 @@
+ // The whole surface, taken as it is now and accounted for: what the pixels
+ // hold is not news any more. Used where the recorder has just published the
+ // content itself.
+-void baseline_resync(const ComObj *s) {
++bool baseline_resync(const ComObj *s) {
+     if (!s || !s->pixels)
+-        return;
++        return false;
+     auto it = baselines().find(s->id);
+     if (it == baselines().end())
+-        return;
++        return false;
+     bool fresh = false;
+     Baseline &b = baseline_of(s, &fresh);
+     if (!fresh) {
+@@ -2340,6 +2346,7 @@
+         baseline_sync(b, s, full);
+     }
+     b.revision = ddraw_surface_revision(s->id);
++    return true;
+ }
+ 
+ // The dirty range for a surface's pixels, opened by a guest Lock and closed
+--- a/dx/tests/dx_tests.cpp
++++ b/dx/tests/dx_tests.cpp
+@@ -1519,10 +1519,23 @@
+     CHECK_EQ(call_method(prim, S_Lock, {0, pdesc, DDLOCK_WAIT, 0}), DD_OK);
+     ppix = rd32(pdesc + DDSD_OFF_lpSurface);
+     CHECK_EQ(call_method(prim, S_Unlock, {ppix}), DD_OK);
++    // A recorded primary Unlock presents its current bytes exactly once.
++    // A later retained-pointer store must still be discovered by an independent
++    // present: the synchronous shortcut cannot persist across guest execution.
++    CHECK_EQ(call_method(prim, S_Lock, {0, pdesc, DDLOCK_WAIT, 0}), DD_OK);
++    wr16(ppix + 479 * 1280 + 639 * 2, 0x001f);
++    const size_t presents_before_unlock = g_presents.size();
++    CHECK_EQ(call_method(prim, S_Unlock, {ppix}), DD_OK);
++    CHECK_EQ(g_presents.size(), presents_before_unlock + 1);
++    CHECK_EQ(
++        ((const uint16_t *)(g_presents.back().pixels.data() + 479 * g_presents.back().pitch))[639],
++        0x001fu);
+     uint32_t primary_rev = ddraw_surface_revision(com_this(prim)->id);
++    const size_t presents_before_retained = g_presents.size();
+     wr16(ppix + 200 * 1280 + 300 * 2, 0xf800);
+     ddraw_present(com_this(prim));
+     CHECK(ddraw_surface_revision(com_this(prim)->id) != primary_rev);
++    CHECK_EQ(g_presents.size(), presents_before_retained + 1);
+     const Present &p = g_presents.back();
+     CHECK_EQ(((const uint16_t *)(p.pixels.data() + 200 * p.pitch))[300], 0xf800u);
+     primary_rev = ddraw_surface_revision(com_this(prim)->id);

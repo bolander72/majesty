@@ -1,0 +1,92 @@
+// Original GPL integer expressions pass through Q22.10 arithmetic. Avoid
+// HP * MaxHP entirely: binary long division keeps each remainder below OldMax
+// and each accumulated quotient at or below NewMax. At most 21 iterations for
+// representable positive HP, with exact nearest-integer rounding.
+function MJP_Scale_Living_HP(integer HP, integer OldMax, integer NewMax) is integer
+declare
+    integer Multiplier, Whole, Part, Scaled, Remainder;
+begin
+    if (OldMax < 1 || NewMax < 1) return 1;
+    if (HP >= OldMax) return NewMax;
+    if (HP < 1) return 1;
+    Multiplier = NewMax;
+    Part = HP;
+    Whole = 0;
+    Scaled = 0;
+    Remainder = 0;
+    while (Multiplier > 0) do begin
+        if (Multiplier % 2 == 1) begin
+            Scaled += Whole;
+            if (Remainder >= OldMax - Part) begin
+                Remainder -= OldMax - Part;
+                Scaled += 1;
+            end
+            else Remainder += Part;
+        end
+        Multiplier = Multiplier / 2;
+        if (Multiplier > 0) begin
+            Whole = Whole * 2;
+            if (Part >= OldMax - Part) begin
+                Part -= OldMax - Part;
+                Whole += 1;
+            end
+            else Part = Part * 2;
+        end
+    end
+    if (Remainder >= OldMax - (OldMax / 2)) Scaled += 1;
+    if (Scaled < 1) Scaled = 1;
+    if (Scaled > NewMax) Scaled = NewMax;
+    return Scaled;
+end
+
+// Majesty browser balance adaptation, separate from Phantomstar's original.
+// A saved marker makes recruitment, watcher and reload entry points idempotent.
+function MJP_Phantom_Resilience(agent ThisAgent)
+declare
+    integer Level, Bonus;
+begin
+    if ($IsValidGamePiece(ThisAgent) == False) return;
+    if ($IsDead(ThisAgent)) return;
+    if (ThisAgent's "Title" != "Phantom") return;
+    if ($HasAttribute("MJPPhantomResilienceV1", ThisAgent)) return;
+    Level = $GetAttribute(ThisAgent, #ATTRIB_ExperienceLevel);
+    if (Level < 1) return;
+
+    // Eternal Soul stores a temporary HP bonus and restores an HP proportion.
+    // Let that original effect finish before changing its underlying HP pool.
+    // The existing watcher retries; no new timer or thread is required.
+    if ($HasAttribute("PhantomEternalSoulActive", ThisAgent))
+        if (ThisAgent's "PhantomEternalSoulActive") return;
+
+    // +8 vitality increases future HP rolls by 3 on average at every level.
+    // Existing levels receive that expected growth once, including level 1000.
+    // Add the same amount to current and maximum HP to preserve damage taken.
+    Bonus = 18 + (Level - 1) * 3;
+    $AdjustAttribute(ThisAgent, #ATTRIB_Vitality, 8);
+    $AdjustAttribute(ThisAgent, #ATTRIB_MaxHP, Bonus);
+    $AdjustAttribute(ThisAgent, #ATTRIB_HP, Bonus);
+    $AdjustAttribute(ThisAgent, #ATTRIB_HealingRateModifier, -3);
+    ThisAgent's "PercentageHPRetreat" += 15;
+    $AddAttribute(ThisAgent, "MJPPhantomResilienceV1", "boolean", True);
+end
+
+// The stock heal_self path can choose a last stand against faster enemies.
+// Phantoms cannot drink potions or receive normal healing, so that choice can
+// strand them in combat instead of ever preparing their existing home recall.
+// Use the native safe-building retreat, retaining the original recall spell's
+// learned level, destination, cooldown and delayed movement checks.
+function MJP_Phantom_Retreat(agent ThisAgent)
+declare
+    agent Home;
+begin
+    if ($IsValidGamePiece(ThisAgent) == False) return;
+    if ($IsDead(ThisAgent)) return;
+    if (ThisAgent's "Title" != "Phantom") return;
+    if ($InsideBuilding(ThisAgent)) return;
+    if ($HasLowHP(ThisAgent) == False) return;
+    Home = $Phantom_Call_To_Grave_Own_Haunt(ThisAgent);
+    if ($IsValidGamePiece(Home) == False) return;
+    // Do not reset an ongoing safe journey or the spell's midpoint callback.
+    if (ThisAgent's "TaskName" == "go_home" && ThisAgent's "Target" == Home) return;
+    $Flee_Absolute(ThisAgent, #intent_flee_lowHP);
+end

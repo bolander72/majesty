@@ -1,0 +1,47 @@
+{
+  "format": "majesty-community-original-sdk-compile-v1",
+  "compilerSha256": "8cfbf6fff1cf90d7aaf334392352515eb0f989a35a16bc99f225e52af38820c4",
+  "sourceStage": {
+    "bytes": 88149,
+    "sha256": "a4da27eb8370f3ae12b4624b93a6f9c3bfc768e3bbc1deeb36596c7ddab4b376"
+  },
+  "outputs": {
+    "common": {
+      "bytes": 13535721,
+      "sha256": "c0547c8663e3591f33c2415417f605b3a16c9c89a89ed36755fb124a669b861b",
+      "exitCode": 0,
+      "headerValid": true,
+      "sourceDefinitions": 684,
+      "compiledDefinitions": 684
+    },
+    "base": {
+      "bytes": 108586,
+      "sha256": "0ff27dca0792e93edf589aa66e2936a38cfef74f711d4e7dec46afcc73d9a29b",
+      "exitCode": 0,
+      "headerValid": true,
+      "sourceDefinitions": 57,
+      "compiledDefinitions": 57
+    },
+    "expansion": {
+      "bytes": 16812,
+      "sha256": "2e9247f9f84b0cafdb34fa2f7d3ff93bcc43d3c729ea45ad2a7a7963c6926084",
+      "exitCode": 0,
+      "headerValid": true,
+      "sourceDefinitions": 8,
+      "compiledDefinitions": 8
+    }
+  },
+  "elapsedSeconds": 15.56,
+  "peakRssMiB": 64.7,
+  "compiled": true,
+  "compilerSourceDefinitionsQualified": true,
+  "compiledBytesExportedQualified": true,
+  "playerProfilesAccessed": false,
+  "nativeRuntimeQualified": false,
+  "browserPlayable": false,
+  "published": false,
+  "focusedTestsPassed": 29,
+  "phantomRecoveryVerification": "phantoms-haunt/source-recovery-verification.json",
+  "nativeResourceVerification": "native-resource-verification.json",
+  "scope": "Prepared/recovered source and original SDK compilation only. Native/WASM gameplay, save/reload and full binary equivalence are not qualified."
+}

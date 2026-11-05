@@ -1,0 +1,320 @@
+--- a/runtime/x86.h
++++ b/runtime/x86.h
+@@ -924,0 +925,58 @@
++/* Arena-bounded REP MOVS can copy the whole span instead of running a
++ * translated load/store and updating every open dirty range per element.
++ * An overlap in the safe direction is memmove; an overlap whose writes feed
++ * later reads keeps the original x86 smear. An armed watch keeps its exact
++ * per-store values/backtraces.
++ * Reject wrap/null/arena boundaries before touching memory so their scalar
++ * path retains the original access/fault order and partial register updates.
++ * Caller owns the guest baton; neither path yields during the instruction. */
++static inline int rep_movs_bulk(X86 *c, uint32_t unit) {
++    const uint32_t count = c->r[R_ECX];
++    if (!count)
++        return 1;
++    const uint64_t bytes64 = (uint64_t)count * unit;
++    if (bytes64 < 32 || bytes64 > GUEST_SIZE || g_watch_len)
++        return 0;
++    const uint32_t bytes = (uint32_t)bytes64;
++    uint32_t src = c->r[R_ESI], dst = c->r[R_EDI];
++    if (c->eflags_df) {
++        const uint32_t back = bytes - unit;
++        if (src < back || dst < back)
++            return 0;
++        src -= back;
++        dst -= back;
++    }
++    if (src < GUEST_NULL_LIMIT || dst < GUEST_NULL_LIMIT || src > GUEST_SIZE - bytes ||
++        dst > GUEST_SIZE - bytes)
++        return 0;
++    const int overlap = src < dst + bytes && dst < src + bytes;
++    if (overlap && (src == dst || (c->eflags_df ? dst < src : dst > src)))
++        return 0;
++    if (overlap)
++        memmove(g_mem + dst, g_mem + src, bytes);
++    else
++        memcpy(g_mem + dst, g_mem + src, bytes);
++    for (uint32_t i = 0; i < g_dirty_count; ++i) {
++        RecompDirty *d = &g_dirty[i];
++        const uint32_t end = dst + bytes, range_end = d->base + d->len;
++        const uint32_t lo = dst > d->base ? dst : d->base;
++        const uint32_t hi = end < range_end ? end : range_end;
++        if (dst >= range_end || end <= d->base)
++            continue;
++        /* Match the first/last overlapping ELEMENT stores, not the whole
++         * copy: another lock may watch only an unaligned slice of this span. */
++        const uint32_t store_lo = dst + (lo - dst) / unit * unit;
++        const uint32_t store_hi = dst + ((hi - dst + unit - 1) / unit) * unit;
++        if (store_lo >= store_hi)
++            continue;
++        if (store_lo < d->lo)
++            d->lo = store_lo;
++        if (store_hi > d->hi)
++            d->hi = store_hi;
++    }
++    const uint32_t step = c->eflags_df ? 0u - bytes : bytes;
++    c->r[R_ESI] += step;
++    c->r[R_EDI] += step;
++    c->r[R_ECX] = 0;
++    return 1;
++}
+@@ -941,0 +1000,2 @@
++        if (rep_movs_bulk(c, BITS / 8))                                                            \
++            return;                                                                                \
+--- a/runtime/CMakeLists.txt
++++ b/runtime/CMakeLists.txt
+@@ -54,0 +55,17 @@
++add_executable(string_ops_tests tests/string_ops_tests.cpp)
++target_compile_options(string_ops_tests PRIVATE ${POP_WARN_HOST})
++pop_optimize(string_ops_tests 2)
++pop_test_binary(string_ops_tests)
++add_custom_target(string_ops_bench DEPENDS string_ops_tests)
++if(EMSCRIPTEN)
++  target_link_options(string_ops_tests PRIVATE -sENVIRONMENT=node -sEXIT_RUNTIME=1)
++  find_program(STRING_TEST_NODE node REQUIRED)
++  add_test(NAME string_ops_tests COMMAND ${STRING_TEST_NODE} $<TARGET_FILE:string_ops_tests>)
++  add_test(NAME string_ops_bench COMMAND ${STRING_TEST_NODE} $<TARGET_FILE:string_ops_tests> --benchmark)
++else()
++  add_test(NAME string_ops_tests COMMAND string_ops_tests)
++  add_test(NAME string_ops_bench COMMAND string_ops_tests --benchmark)
++endif()
++set_tests_properties(string_ops_tests PROPERTIES LABELS nogame TIMEOUT 30)
++set_tests_properties(string_ops_bench PROPERTIES LABELS benchmark TIMEOUT 30)
++
+--- /dev/null
++++ b/runtime/tests/string_ops_tests.cpp
+@@ -0,0 +1,208 @@
++// REP MOVS against an independent element-by-element x86 memory oracle.
++// Covers overlapping smear order, DF, byte/word/dword tails, dirty ranges and
++// armed watchpoints. No game image, guest code or browser is needed.
++// This standalone test needs only two MiB; the game's directory-wide build
++// defines its real arena size, which must not force a game-sized test heap.
++#undef GUEST_SIZE
++#define GUEST_SIZE 0x00200000u
++#include "../x86.h"
++#include <array>
++#include <chrono>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <vector>
++
++uint8_t *g_mem;
++RecompDirty g_dirty[RECOMP_DIRTY_SLOTS];
++uint32_t g_dirty_count, g_watch_base, g_watch_len;
++using Watch = std::array<uint64_t, 3>;
++std::vector<Watch> watched;
++extern "C" void recomp_watch_hit(uint32_t a, uint32_t n, uint64_t v) {
++    watched.push_back({a, n, v});
++}
++extern "C" void recomp_null_access(uint32_t, int) {
++    std::abort();
++}
++
++static unsigned checks, failures;
++#define CHECK(ok)                                                                                  \
++    do {                                                                                           \
++        ++checks;                                                                                  \
++        if (!(ok)) {                                                                               \
++            if (++failures <= 12)                                                                  \
++                std::fprintf(stderr, "FAIL line %d: %s\n", __LINE__, #ok);                         \
++        }                                                                                          \
++    } while (0)
++
++constexpr uint32_t base = 0x10000, size = 16384;
++static void oracle(X86 &c, unsigned unit, std::vector<uint8_t> &memory,
++                   std::array<RecompDirty, RECOMP_DIRTY_SLOTS> &dirty, std::vector<Watch> &events) {
++    while (c.r[R_ECX]) {
++        const uint32_t src = c.r[R_ESI], dst = c.r[R_EDI];
++        uint32_t v = 0;
++        std::memcpy(&v, memory.data() + src - base, unit);
++        std::memcpy(memory.data() + dst - base, &v, unit);
++        if (g_watch_len && dst < g_watch_base + g_watch_len && g_watch_base < dst + unit)
++            events.push_back({dst, unit, v});
++        for (auto &d : dirty)
++            if (dst < d.base + d.len && dst + unit > d.base) {
++                if (dst < d.lo)
++                    d.lo = dst;
++                if (dst + unit > d.hi)
++                    d.hi = dst + unit;
++            }
++        const uint32_t step = c.eflags_df ? 0u - unit : unit;
++        c.r[R_ESI] += step;
++        c.r[R_EDI] += step;
++        --c.r[R_ECX];
++    }
++}
++
++static void differential() {
++    std::vector<uint8_t> initial(size), expected(size);
++    for (unsigned i = 0; i < size; ++i)
++        initial[i] = uint8_t((i * 31 + i / 7) ^ (i >> 8));
++    for (unsigned unit : {1u, 2u, 4u})
++        for (uint32_t count : {0u,  1u,  2u,  3u,  4u,  7u,   8u,   15u,  16u,  17u,  31u,
++                               32u, 33u, 63u, 64u, 65u, 127u, 128u, 255u, 256u, 257u, 1024u})
++            for (uint32_t df : {0u, 1u})
++                for (uint32_t offset = 0; offset < 16; ++offset)
++                    for (int delta : {-33, -16, -7, -1, 0, 1, 7, 16, 33, 8192}) {
++                        const uint32_t src = base + 1024 + offset, dst = src + delta;
++                        X86 c{};
++                        for (unsigned i = 0; i < 8; ++i)
++                            c.r[i] = 0x13579bdfu + i;
++                        c.r[R_ECX] = count;
++                        c.r[R_ESI] = src + (df && count ? (count - 1) * unit : 0);
++                        c.r[R_EDI] = dst + (df && count ? (count - 1) * unit : 0);
++                        c.eflags_df = df;
++                        c.eflags_cf = c.eflags_zf = c.eflags_af = 1;
++                        c.eflags_pf = c.eflags_sf = c.eflags_of = 1;
++                        c.eflags_misc = 0x202;
++                        X86 reference = c;
++                        std::array<RecompDirty, RECOMP_DIRTY_SLOTS> dirty{{
++                            {dst, count * unit, 0xffffffffu, 0},
++                            {dst + unit - 1, unit + 7, 0xffffffffu, 0},
++                            {dst + count * unit / 2, offset % 3 ? unit + 1 : 0, dst + 3, dst + 5},
++                            {base + size - 100, 50, 0xffffffffu, 0},
++                        }};
++                        std::memcpy(g_dirty, dirty.data(), sizeof g_dirty);
++                        g_dirty_count = RECOMP_DIRTY_SLOTS;
++                        g_watch_base = dst + unit - 1;
++                        g_watch_len = offset & 1 ? unit + 1 : 0;
++                        expected = initial;
++                        std::memcpy(g_mem + base, initial.data(), size);
++                        std::vector<Watch> events;
++                        watched.clear();
++                        oracle(reference, unit, expected, dirty, events);
++                        if (unit == 1)
++                            rep_movsb(&c);
++                        else if (unit == 2)
++                            rep_movsw(&c);
++                        else
++                            rep_movsd(&c);
++                        CHECK(!std::memcmp(&c, &reference, sizeof c));
++                        CHECK(!std::memcmp(g_mem + base, expected.data(), size));
++                        CHECK(!std::memcmp(g_dirty, dirty.data(), sizeof g_dirty));
++                        CHECK(watched == events);
++                    }
++    g_dirty_count = g_watch_len = 0;
++}
++
++static void eligibility() {
++    X86 c{};
++    c.r[R_ESI] = base;
++    c.r[R_EDI] = base + size;
++    c.r[R_ECX] = 64;
++    CHECK(rep_movs_bulk(&c, 4));
++    CHECK(c.r[R_ESI] == base + 256 && c.r[R_EDI] == base + size + 256 && !c.r[R_ECX]);
++    for (uint32_t df : {0u, 1u}) {
++        c.r[R_ECX] = 64;
++        c.eflags_df = df;
++        c.r[R_ESI] = base + 1024;
++        c.r[R_EDI] = c.r[R_ESI] + (df ? 4u : 0u - 4u);
++        const X86 before = c;
++        CHECK(rep_movs_bulk(&c, 4)); // safe overlapping rows go through memmove
++        CHECK(!c.r[R_ECX] && c.r[R_ESI] == before.r[R_ESI] + (df ? 0u - 256u : 256u));
++        c = before;
++        c.r[R_ESI] = before.r[R_EDI];
++        c.r[R_EDI] = before.r[R_ESI];
++        CHECK(!rep_movs_bulk(&c, 4)); // opposite direction must retain x86 smear
++        c = before;
++        g_watch_len = 1;
++        CHECK(!rep_movs_bulk(&c, 4));
++        g_watch_len = 0;
++    }
++    c.r[R_ECX] = 0;
++    c.r[R_ESI] = c.r[R_EDI] = 0xffffffffu;
++    const X86 zero = c;
++    CHECK(rep_movs_bulk(&c, 4) && !std::memcmp(&c, &zero, sizeof c));
++    // Rejection itself cannot mutate the CPU or any watched range. Do not
++    // execute the original scalar operation on these intentionally bad spans.
++    for (uint32_t df : {0u, 1u})
++        for (uint32_t count : {64u, 0x40000000u, 0xffffffffu})
++            for (uint32_t src : {0u, 0xffffu, GUEST_SIZE + 4, 0xffffffffu}) {
++                c.r[R_ESI] = src;
++                c.r[R_EDI] = base + size;
++                c.r[R_ECX] = count;
++                c.eflags_df = df;
++                const X86 before = c;
++                CHECK(!rep_movs_bulk(&c, 4));
++                CHECK(!std::memcmp(&c, &before, sizeof c));
++            }
++}
++
++#if defined(__GNUC__) || defined(__clang__)
++#define NOINLINE __attribute__((noinline))
++#else
++#define NOINLINE
++#endif
++NOINLINE static void scalar_copy(X86 *c) {
++    while (c->r[R_ECX]) {
++        movsd(c);
++        --c->r[R_ECX];
++    }
++}
++NOINLINE static void bulk_copy(X86 *c) {
++    rep_movsd(c);
++}
++static double measure(void (*fn)(X86 *), uint32_t bytes, int delta, uint64_t &sum) {
++    std::memset(g_mem + base - 8192, 0x39, size * 3);
++    const auto begin = std::chrono::steady_clock::now();
++    for (unsigned i = 0; i < 20000; ++i) {
++        g_mem[base + 1024 + 1] = uint8_t(i);
++        X86 c{};
++        c.r[R_ESI] = base + 1024;
++        c.r[R_EDI] = base + 1024 + delta;
++        c.r[R_ECX] = bytes / 4;
++        fn(&c);
++        sum += g_mem[base + 1024 + delta + 1] + c.r[R_ESI] + c.r[R_EDI] + c.r[R_ECX];
++    }
++    return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - begin)
++        .count();
++}
++int main(int argc, char **argv) {
++    g_mem = static_cast<uint8_t *>(std::calloc(GUEST_SIZE, 1));
++    if (!g_mem)
++        return 2;
++    differential();
++    eligibility();
++    if (argc == 2 && std::strcmp(argv[1], "--benchmark") == 0) {
++        g_dirty_count = RECOMP_DIRTY_SLOTS;
++        for (int delta : {int(size), -16, 16})
++            for (uint32_t bytes : {64u, 256u, 1280u, 2560u, 7680u}) {
++                for (auto &d : g_dirty)
++                    d = {base + 1024 + uint32_t(delta) + 3, size / 2, 0xffffffffu, 0};
++                uint64_t a = 0, b = 0;
++                const double old_ms = measure(scalar_copy, bytes, delta, a);
++                const double new_ms = measure(bulk_copy, bytes, delta, b);
++                CHECK(a == b);
++                std::printf("{\"bytes\":%u,\"delta\":%d,\"scalarMs\":%.3f,\"bulkMs\":%.3f}\n",
++                            bytes, delta, old_ms, new_ms);
++            }
++    }
++    std::printf("REP MOVS: %u checks, %u failures\n", checks, failures);
++    std::free(g_mem);
++    return failures ? 1 : 0;
++}
+--- a/tools/recomp/tests/test_translate_insns.py
++++ b/tools/recomp/tests/test_translate_insns.py
+@@ -135,0 +136,10 @@
++def movs_setup(rng, unit, backwards):
++    """Zero/short/bulk counts, disjoint rows and overlapping x86 smear."""
++    count = rng.choice([0, 1, 7, 8, 16, 32, 64, 127, 256])
++    source = SCRATCH + 0x1000 + rng.randrange(16)
++    dest = source + rng.choice([-33, -7, -1, 0, 1, 7, 33, 0x1000])
++    step_back = (count - 1) * unit if backwards and count else 0
++    return {"regs": rand_regs(rng, ECX=count, ESI=source + step_back, EDI=dest + step_back),
++            "mem": [(SCRATCH, bytes(rng.getrandbits(8) for _ in range(0x3000)))]}
++
++
+@@ -252,0 +263,11 @@
++    *[Case("REP MOVS%d %s preserves x86 bytes registers and flags" %
++           (unit * 8, "backward" if backwards else "forward"),
++           0x0D02FE00 + index * 0x20,
++           [(0, "STD" if backwards else "CLD"), (1, "STC"),
++            (2, "MOVS%s.REP ES:EDI,ESI" % suffix), (2 + len(bytes.fromhex(opcode)), "RET")],
++           ("FD" if backwards else "FC") + " F9 " + opcode + " C3",
++           lambda rng, u=unit, b=backwards: movs_setup(rng, u, b))
++      for index, (unit, suffix, opcode, backwards) in enumerate(
++          (u, s, op, b) for u, s, op in [(1, "B", "F3 A4"),
++                                        (2, "W", "F3 66 A5"),
++                                        (4, "D", "F3 A5")] for b in [False, True])],

@@ -1,0 +1,16 @@
+{
+  "format": "majesty-community-integer-helper-source-v1",
+  "repository": "https://github.com/Phantomstar721/majesty-gold-hd-mod-manager",
+  "commit": "b7b36f17cd897c5f95d9e84d6b99194ad6cae6bb",
+  "files": {
+    "NativeTiming.h": {
+      "bytes": 940,
+      "sha256": "3df8db0a1f852b317b3326b1168d7d545f15cf200b815321ab522a460e859bcc"
+    },
+    "EarnedRewards.h": {
+      "bytes": 823,
+      "sha256": "755d58129f47dcdd2fdfed657ac93ef5182940cbafb2eb69c6f6b94a59ea8d27"
+    }
+  },
+  "license": "MIT; preserved in third_party/majesty-mod-manager/LICENSE"
+}

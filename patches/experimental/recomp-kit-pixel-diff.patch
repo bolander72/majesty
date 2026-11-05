@@ -1,0 +1,360 @@
+--- a/dx/ddraw.cpp
++++ b/dx/ddraw.cpp
+@@ -1,4 +1,5 @@
+ #include "pixel_compare.h"
++#include "pixel_diff.h"
+ #include "../runtime/gdi32_internal.h"
+ #include "../runtime/display_seam.h"
+ #include "passes.h"
+@@ -2552,8 +2553,8 @@
+     // The changed pixels, and their bounding box. A decoder rewrites the whole
+     // region; a menu writes a few words of it. Recording the box rather than
+     // the lock keeps the payload the size of the write.
+-    // Only the band of rows that differ gets a mask: a text draw locks the
+-    // whole back buffer and changes a line of it.
++    // Exact changed runs are merged as they are found; a text draw locking
++    // the whole back buffer needs no full-surface pixel mask.
+     auto row_now = [&](int32_t y) {
+         return (const uint8_t *)gm_ptr(
+             s->pixels + (uint32_t)((sh.r[1] + y) * (int32_t)s->pitch + sh.r[0] * (int32_t)bb));
+@@ -2571,14 +2572,10 @@
+             return baseline_row(*base, sh.r[1] + y) + (size_t)sh.r[0] * bb;
+         return sh.bytes.data() + (size_t)y * sh.row_bytes;
+     };
+-    auto row_differs = [&](int32_t y) {
+-        return !pixel_bytes_equal(row_was(y), row_now(y), (size_t)sh.row_bytes);
+-    };
+     int32_t band0 = 0, band1 = lh - 1;
+     if (narrowed) {
+         if (written_lo >= written_hi)
+             return false; // nothing was written through the pointer
+-        // The rows of the lock the written span touches.
+         const int64_t first = (int64_t)(written_lo - s->pixels) / (int64_t)s->pitch - sh.r[1];
+         const int64_t last = (int64_t)(written_hi - 1 - s->pixels) / (int64_t)s->pitch - sh.r[1];
+         if (last < 0 || first >= lh)
+@@ -2586,97 +2583,22 @@
+         band0 = (int32_t)std::max<int64_t>(first, 0);
+         band1 = (int32_t)std::min<int64_t>(last, lh - 1);
+     }
+-    while (band0 <= band1 && !row_differs(band0))
+-        ++band0;
+-    if (band0 > band1)
++    auto boxes = pixel_difference_rects<HostDirtyRect>(lw, band0, band1 + 1, bb, row_was, row_now);
++    if (boxes.empty())
+         return false;
+-    while (band1 > band0 && !row_differs(band1))
+-        --band1;
+-    const int32_t band_h = band1 - band0 + 1;
+-    std::vector<uint8_t> changed((size_t)lw * band_h, 0);
+     int32_t x0 = lw, y0 = lh, x1 = -1, y1 = -1;
+-    for (int32_t y = band0; y <= band1; ++y) {
+-        const uint8_t *was = row_was(y);
+-        const uint8_t *now = row_now(y);
+-        if (pixel_bytes_equal(was, now, (size_t)sh.row_bytes))
+-            continue;
+-        // Unchanged stretches are skipped eight bytes at a time, whole pixels
+-        // of them when the pixel size divides eight; what is left is compared
+-        // a pixel at a time without a call.
+-        const int32_t step = bb == 3 ? 0 : int32_t(8 / bb);
+-        for (int32_t x = 0; x < lw; ++x) {
+-            if (step && x + step <= lw) {
+-                uint64_t a, b;
+-                memcpy(&a, was + (size_t)x * bb, 8);
+-                memcpy(&b, now + (size_t)x * bb, 8);
+-                if (a == b) {
+-                    x += step - 1;
+-                    continue;
+-                }
+-            }
+-            bool differs;
+-            if (bb == 2) {
+-                uint16_t a, b;
+-                memcpy(&a, was + (size_t)x * 2, 2);
+-                memcpy(&b, now + (size_t)x * 2, 2);
+-                differs = a != b;
+-            } else if (bb == 4) {
+-                uint32_t a, b;
+-                memcpy(&a, was + (size_t)x * 4, 4);
+-                memcpy(&b, now + (size_t)x * 4, 4);
+-                differs = a != b;
+-            } else if (bb == 1) {
+-                differs = was[x] != now[x];
+-            } else {
+-                differs = memcmp(was + (size_t)x * bb, now + (size_t)x * bb, bb) != 0;
+-            }
+-            if (!differs)
+-                continue;
+-            changed[(size_t)(y - band0) * lw + x] = 1;
+-            if (x < x0)
+-                x0 = x;
+-            if (x > x1)
+-                x1 = x;
+-            if (y < y0)
+-                y0 = y;
+-            if (y > y1)
+-                y1 = y;
+-        }
+-    }
+-    if (x1 < 0)
+-        return false;
+-
+-    std::vector<HostDirtyRect> boxes;
+-    std::map<std::pair<int, int>, size_t> previous;
+-    for (int y = band0; y <= band1; ++y) {
+-        std::map<std::pair<int, int>, size_t> next;
+-        const size_t base = (size_t)(y - band0) * lw;
+-        for (int x = 0; x < lw;) {
+-            if (!changed[base + x]) {
+-                ++x;
+-                continue;
+-            }
+-            int start = x;
+-            while (x < lw && changed[base + x])
+-                ++x;
+-            auto span = std::make_pair(start, x);
+-            auto old = previous.find(span);
+-            if (old != previous.end()) {
+-                boxes[old->second].y1 = y + 1;
+-                next[span] = old->second;
+-            } else {
+-                next[span] = boxes.size();
+-                boxes.push_back({start, y, x, y + 1});
+-            }
+-        }
+-        previous = std::move(next);
+-    }
+     for (auto &box : boxes) {
++        x0 = std::min(x0, box.x0);
++        x1 = std::max(x1, box.x1 - 1);
++        y0 = std::min(y0, box.y0);
++        y1 = std::max(y1, box.y1 - 1);
+         box.x0 += sh.r[0];
+         box.x1 += sh.r[0];
+         box.y0 += sh.r[1];
+         box.y1 += sh.r[1];
+     }
++    band0 = y0;
++    band1 = y1;
+     record_cpu_write_rects(s, boxes);
+     // The baseline is the "before" of every open lock on this surface too, so
+     // bringing the changed band up to date re-bases them all at once - the
+--- /dev/null
++++ b/dx/pixel_diff.h
+@@ -0,0 +1,123 @@
++#pragma once
++#include "pixel_compare.h"
++#include <cstdint>
++#include <cstring>
++#include <utility>
++#include <vector>
++
++// Emit exact half-open changed runs. SIMD compares whole pixels, including
++// unaligned inputs; no vector load reaches beyond the caller's row. Adjacent
++// runs crossing a vector/scalar boundary are joined before publication.
++template <unsigned Bytes, class Emit>
++void pixel_difference_runs(const uint8_t *before, const uint8_t *after, int width, Emit emit) {
++    int begin = -1, end = 0;
++    const auto append = [&](int first, int last) {
++        if (begin >= 0 && first != end) {
++            emit(begin, end);
++            begin = -1;
++        }
++        if (begin < 0)
++            begin = first;
++        end = last;
++    };
++    int x = 0;
++#ifdef __wasm_simd128__
++    if constexpr (Bytes != 3) {
++        constexpr unsigned lanes = 16 / Bytes, all = (1u << lanes) - 1;
++        for (; x <= width - int(lanes); x += lanes) {
++            const auto a = wasm_v128_load(before + size_t(x) * Bytes);
++            const auto b = wasm_v128_load(after + size_t(x) * Bytes);
++            unsigned equal;
++            if constexpr (Bytes == 1)
++                equal = wasm_i8x16_bitmask(wasm_i8x16_eq(a, b));
++            else if constexpr (Bytes == 2)
++                equal = wasm_i16x8_bitmask(wasm_i16x8_eq(a, b));
++            else
++                equal = wasm_i32x4_bitmask(wasm_i32x4_eq(a, b));
++            unsigned changed = ~equal & all;
++            while (changed) {
++                const unsigned first = __builtin_ctz(changed);
++                // shifted has at most 16 low bits, so its complement is
++                // nonzero even when the entire remaining vector differs.
++                const unsigned count = __builtin_ctz(~(changed >> first));
++                append(x + int(first), x + int(first + count));
++                changed &= ~(((1u << count) - 1) << first);
++            }
++        }
++    }
++#endif
++    for (; x < width; ++x) {
++        // The portable path skips unchanged words without alignment or
++        // aliasing assumptions. RGB24 uses pixel-wise comparison.
++        if constexpr (Bytes != 3) {
++            constexpr int step = 8 / Bytes;
++            if (x <= width - step) {
++                uint64_t a, b;
++                std::memcpy(&a, before + size_t(x) * Bytes, 8);
++                std::memcpy(&b, after + size_t(x) * Bytes, 8);
++                if (a == b) {
++                    x += step - 1;
++                    continue;
++                }
++            }
++        }
++        if (std::memcmp(before + size_t(x) * Bytes, after + size_t(x) * Bytes, Bytes))
++            append(x, x + 1);
++    }
++    if (begin >= 0)
++        emit(begin, end);
++}
++
++// Rows arrive left-to-right, so matching the preceding row needs only two
++// sorted span vectors. This preserves the original exact rectangle partition
++// without a width*height mask, a second pixel scan, or per-span tree nodes.
++template <class Rect, class Before, class After>
++std::vector<Rect> pixel_difference_rects(int width, int row0, int row1, unsigned bytes,
++                                         Before before, After after) {
++    struct Span {
++        int first, last;
++        size_t box;
++    };
++    std::vector<Rect> boxes;
++    std::vector<Span> previous, current;
++    for (int y = row0; y < row1; ++y) {
++        const auto *a = before(y), *b = after(y);
++        current.clear();
++        if (!pixel_bytes_equal(a, b, size_t(width) * bytes)) {
++            size_t old = 0;
++            const auto emit = [&](int first, int last) {
++                const auto key = std::make_pair(first, last);
++                while (old < previous.size() &&
++                       std::make_pair(previous[old].first, previous[old].last) < key)
++                    ++old;
++                size_t index;
++                if (old < previous.size() && previous[old].first == first &&
++                    previous[old].last == last) {
++                    index = previous[old].box;
++                    boxes[index].y1 = y + 1;
++                } else {
++                    index = boxes.size();
++                    boxes.push_back({first, y, last, y + 1});
++                }
++                current.push_back({first, last, index});
++            };
++            switch (bytes) {
++            case 1:
++                pixel_difference_runs<1>(a, b, width, emit);
++                break;
++            case 2:
++                pixel_difference_runs<2>(a, b, width, emit);
++                break;
++            case 3:
++                pixel_difference_runs<3>(a, b, width, emit);
++                break;
++            case 4:
++                pixel_difference_runs<4>(a, b, width, emit);
++                break;
++            }
++        }
++        // An unchanged row must break vertical merging too.
++        previous.swap(current);
++    }
++    return boxes;
++}
+--- a/host/tests/pixel_kernel_tests.cpp
++++ b/host/tests/pixel_kernel_tests.cpp
+@@ -1,5 +1,7 @@
+ #include "../rgb565.h"
+ #include "../../dx/pixel_compare.h"
++#include "../../dx/pixel_diff.h"
++#include <map>
+ #include <cstdio>
+ #include <vector>
+ 
+@@ -31,6 +33,83 @@
+         }
+         check(out.front() == 0xcd && out.back() == 0xcd);
+     }
++    struct Rect {
++        int x0, y0, x1, y1;
++    };
++    const auto reference = [](const auto &before, const auto &after, int width, int height,
++                              unsigned bytes, int pitch, int offset) {
++        std::vector<Rect> boxes;
++        std::map<std::pair<int, int>, size_t> previous;
++        for (int y = 0; y < height; ++y) {
++            std::map<std::pair<int, int>, size_t> current;
++            const auto changed = [&](int x) {
++                const auto i = size_t(offset) + size_t(y) * pitch + size_t(x) * bytes;
++                return std::memcmp(before.data() + i, after.data() + i, bytes) != 0;
++            };
++            for (int x = 0; x < width;) {
++                if (!changed(x)) {
++                    ++x;
++                    continue;
++                }
++                int first = x++;
++                while (x < width && changed(x))
++                    ++x;
++                const auto key = std::make_pair(first, x);
++                auto old = previous.find(key);
++                if (old != previous.end()) {
++                    boxes[old->second].y1 = y + 1;
++                    current[key] = old->second;
++                } else {
++                    current[key] = boxes.size();
++                    boxes.push_back({first, y, x, y + 1});
++                }
++            }
++            previous = std::move(current);
++        }
++        return boxes;
++    };
++    const auto compare = [&](const auto &before, const auto &after, int width, int height,
++                             unsigned bytes, int pitch, int offset) {
++        auto expected = reference(before, after, width, height, bytes, pitch, offset);
++        auto actual = pixel_difference_rects<Rect>(
++            width, 0, height, bytes,
++            [&](int y) { return before.data() + offset + size_t(y) * pitch; },
++            [&](int y) { return after.data() + offset + size_t(y) * pitch; });
++        check(actual.size() == expected.size());
++        for (size_t i = 0; i < actual.size() && i < expected.size(); ++i) {
++            const auto a = actual[i], b = expected[i];
++            check(a.x0 == b.x0 && a.y0 == b.y0 && a.x1 == b.x1 && a.y1 == b.y1);
++        }
++    };
++    // Every possible 16-pixel changed pattern. Byte offsets exercise all
++    // alignment classes; changing each channel covers RGB24 and whole-pixel SIMD.
++    for (unsigned bytes : {1u, 2u, 3u, 4u})
++        for (unsigned pattern = 0; pattern < 65536; ++pattern) {
++            const int offset = int(pattern % 16), pitch = 16 * bytes + 3;
++            std::vector<uint8_t> before(size_t(offset + pitch), 0x23), after = before;
++            for (unsigned x = 0; x < 16; ++x)
++                if (pattern & (1u << x))
++                    after[offset + x * bytes + (pattern + x) % bytes] ^= 0x80;
++            compare(before, after, 16, 1, bytes, pitch, offset);
++        }
++    // Runs cross vector boundaries and scalar tails; identical neighboring
++    // spans merge, empty rows separate them, and unequal spans stay separate.
++    for (unsigned bytes : {1u, 2u, 3u, 4u})
++        for (int width : {1, 3, 7, 8, 9, 15, 16, 17, 31, 32, 33, 65})
++            for (unsigned seed = 0; seed < 64; ++seed) {
++                constexpr int height = 7;
++                const int offset = seed % 16, pitch = width * bytes + 3;
++                std::vector<uint8_t> before(size_t(offset + pitch * height), 0x23), after = before;
++                for (int y = 0; y < height; ++y)
++                    for (int x = 0; x < width; ++x) {
++                        const unsigned pattern =
++                            seed < 4 ? seed : (seed * 1103515245u + (x / 3) * 12345u);
++                        if (y != 3 && (pattern == 1 || (pattern > 3 && ((pattern >> (y / 2)) & 1))))
++                            after[offset + size_t(y) * pitch + x * bytes + (seed + x) % bytes] ^=
++                                0x80;
++                    }
++                compare(before, after, width, height, bytes, pitch, offset);
++            }
+     uint8_t a[160], b[160];
+     for (size_t offset = 0; offset < 16; ++offset)
+         for (size_t n = 0; n <= 96; ++n) {

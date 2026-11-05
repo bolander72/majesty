@@ -1,0 +1,135 @@
+--- a/dx/pixel_compare.h
++++ b/dx/pixel_compare.h
+@@ -12,6 +12,26 @@
+     const auto *a = static_cast<const uint8_t *>(left);
+     const auto *b = static_cast<const uint8_t *>(right);
+ #ifdef __wasm_simd128__
++    // Keep the first mismatch cheap: changing rows commonly differ near the
++    // left edge. Unchanged long rows then compare four vectors per branch.
++    if (bytes >= 16) {
++        if (wasm_v128_any_true(wasm_v128_xor(wasm_v128_load(a), wasm_v128_load(b))))
++            return false;
++        a += 16;
++        b += 16;
++        bytes -= 16;
++    }
++    while (bytes >= 64) {
++        const v128_t d0 = wasm_v128_xor(wasm_v128_load(a), wasm_v128_load(b));
++        const v128_t d1 = wasm_v128_xor(wasm_v128_load(a + 16), wasm_v128_load(b + 16));
++        const v128_t d2 = wasm_v128_xor(wasm_v128_load(a + 32), wasm_v128_load(b + 32));
++        const v128_t d3 = wasm_v128_xor(wasm_v128_load(a + 48), wasm_v128_load(b + 48));
++        if (wasm_v128_any_true(wasm_v128_or(wasm_v128_or(d0, d1), wasm_v128_or(d2, d3))))
++            return false;
++        a += 64;
++        b += 64;
++        bytes -= 64;
++    }
+     while (bytes >= 16) {
+         if (wasm_v128_any_true(wasm_v128_xor(wasm_v128_load(a), wasm_v128_load(b))))
+             return false;
+--- a/host/tests/pixel_kernel_tests.cpp
++++ b/host/tests/pixel_kernel_tests.cpp
+@@ -31,9 +31,9 @@
+         }
+         check(out.front() == 0xcd && out.back() == 0xcd);
+     }
+-    uint8_t a[160], b[160];
++    uint8_t a[320], b[320];
+     for (size_t offset = 0; offset < 16; ++offset)
+-        for (size_t n = 0; n <= 96; ++n) {
++        for (size_t n = 0; n <= 256; ++n) {
+             memset(a, 0x12, sizeof a);
+             memset(b, 0x34, sizeof b);
+             memcpy(b + 15 - offset, a + offset, n);
+--- a/host/CMakeLists.txt
++++ b/host/CMakeLists.txt
+@@ -19,6 +19,19 @@
+   add_test(NAME pixel_kernel_tests COMMAND pixel_kernel_tests)
+ endif()
+ set_tests_properties(pixel_kernel_tests PROPERTIES LABELS nogame)
++
++# Explicit benchmark target; excluded from normal test builds and labels.
++add_executable(pixel_compare_bench EXCLUDE_FROM_ALL ${HOST}/tests/pixel_compare_bench.cpp)
++target_compile_options(pixel_compare_bench PRIVATE ${POP_WARN_STRICT})
++pop_optimize(pixel_compare_bench 2)
++if(EMSCRIPTEN)
++  target_compile_options(pixel_compare_bench PRIVATE -msimd128)
++  target_link_options(pixel_compare_bench PRIVATE -sENVIRONMENT=node -sEXIT_RUNTIME=1)
++  add_test(NAME pixel_compare_bench COMMAND ${PIXEL_TEST_NODE} $<TARGET_FILE:pixel_compare_bench>)
++else()
++  add_test(NAME pixel_compare_bench COMMAND pixel_compare_bench)
++endif()
++set_tests_properties(pixel_compare_bench PROPERTIES LABELS benchmark TIMEOUT 30)
+ 
+ # Portable host code shared by every host that boots the guest.
+ add_library(host_common OBJECT boot.cpp report_lock.cpp)
+--- /dev/null
++++ b/host/tests/pixel_compare_bench.cpp
+@@ -0,0 +1,67 @@
++// Focused, allocation-bounded comparison with the previous SIMD equality loop.
++#include "../../dx/pixel_compare.h"
++#include <chrono>
++#include <cstdio>
++#include <vector>
++
++#if defined(__clang__) || defined(__GNUC__)
++#define NOINLINE __attribute__((noinline))
++#else
++#define NOINLINE
++#endif
++NOINLINE bool previous_equal(const void *left, const void *right, size_t bytes) {
++    const auto *a = static_cast<const uint8_t *>(left);
++    const auto *b = static_cast<const uint8_t *>(right);
++#ifdef __wasm_simd128__
++    while (bytes >= 16) {
++        if (wasm_v128_any_true(wasm_v128_xor(wasm_v128_load(a), wasm_v128_load(b))))
++            return false;
++        a += 16;
++        b += 16;
++        bytes -= 16;
++    }
++#endif
++    return !bytes || std::memcmp(a, b, bytes) == 0;
++}
++NOINLINE bool current_equal(const void *a, const void *b, size_t n) {
++    return pixel_bytes_equal(a, b, n);
++}
++using Compare = bool (*)(const void *, const void *, size_t);
++double measure(Compare fn, size_t length, unsigned mismatch, unsigned offset, unsigned *sum) {
++    std::vector<uint8_t> left(length + 32, 0x31), right(left);
++    if (mismatch)
++        right[offset + (mismatch == 1 ? 0 : mismatch == 2 ? length / 2 : length - 1)] ^= 1;
++    constexpr unsigned rounds = 200000;
++    unsigned count = 0;
++    const auto begin = std::chrono::steady_clock::now();
++    for (unsigned i = 0; i < rounds; ++i) {
++        // Mutate both equal bytes so the comparison cannot be loop-invariant.
++        left[offset + length / 4] = right[offset + length / 4] = uint8_t(i);
++        count += fn(left.data() + offset, right.data() + offset, length);
++    }
++    *sum = count;
++    return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - begin)
++        .count();
++}
++int main() {
++    unsigned failed = 0;
++    for (const size_t length : {256, 1280, 2560, 7680})
++        for (const unsigned offset : {0, 1, 15})
++            for (unsigned mismatch = 0; mismatch < 4; ++mismatch) {
++                unsigned a = 0, b = 0;
++                // Alternate order to reduce a systematic warm-up advantage.
++                double oldMs, newMs;
++                if ((offset + mismatch) & 1) {
++                    newMs = measure(current_equal, length, mismatch, offset, &b);
++                    oldMs = measure(previous_equal, length, mismatch, offset, &a);
++                } else {
++                    oldMs = measure(previous_equal, length, mismatch, offset, &a);
++                    newMs = measure(current_equal, length, mismatch, offset, &b);
++                }
++                failed += a != b || a != (mismatch ? 0u : 200000u);
++                std::printf("{\"bytes\":%zu,\"offset\":%u,\"mismatch\":%u,\"oldMs\":%.3f,\"newMs\":"
++                            "%.3f,\"checksum\":%u}\n",
++                            length, offset, mismatch, oldMs, newMs, b);
++            }
++    return failed ? 1 : 0;
++}

@@ -1,0 +1,110 @@
+{
+  "format": "majesty-community-recruitment-owner-verification-v1",
+  "date": "2026-10-16",
+  "sourceFiles": {
+    "native/community/recruitment_panel_owner.h": {
+      "bytes": 10236,
+      "sha256": "631c8e97f271cdaf57dcbfe34d1f6d1c14c1969cf502e8fc6b3ac240885ac2fe"
+    },
+    "native/community/recruitment_panel_owner_tests.cpp": {
+      "bytes": 10711,
+      "sha256": "f59b096163268a539391090331ffd1a430d08447246fac575c7e616f8f098445"
+    },
+    "native/community/recruitment_panel_runtime.h": {
+      "bytes": 1592,
+      "sha256": "bb65e9ea1c06ab38bd68ad9e99f0999efa66875e8887f4145f3d498fb2c374d0"
+    },
+    "native/community/recruitment_panel_runtime.cpp": {
+      "bytes": 11086,
+      "sha256": "d23aed6a8a4d135248635c9bd8e81cc866e53c185fa0b79d466ebf2adea2ab26"
+    },
+    "native/community/community_panels.cpp": {
+      "bytes": 7256,
+      "sha256": "2b3897c011505995a002788185c387a565f4a6e8ffef4bee453135b3d067a981"
+    },
+    "native/community/private_template_execution_tests.cpp": {
+      "bytes": 15347,
+      "sha256": "4506bc4bb9667a09a07355f608c79ab9391534197089c873b5035b52019b3142"
+    },
+    "scripts/prepare-community-template-fixture.py": {
+      "bytes": 13104,
+      "sha256": "10799c2d90f9dfab201417fcc8248252b9071605391a1d2bb79ba993fc8ec351"
+    }
+  },
+  "originalExecutableSha256": "654365fd1bdefa6d7f2349d162869f255388fadcb1bb8db9f7db2f3468dd5542",
+  "originalAP52TableSha256": "116ab671abc4e384150bb2c6c007af7227bb33176e071a938d714236830bed29",
+  "controllerRegistry": {
+    "bytes": 1860,
+    "sha256": "5087186afe2c2aa724dd72168fe45934a1b55cc6c183118483fa5b8432a04d0d"
+  },
+  "registryVersion": 21,
+  "registryNamespace": "Fixture-only allocations; final production bindings still required",
+  "nativeResults": {
+    "community_recruitment_owner_tests": {
+      "terminal": true,
+      "exitCode": 0,
+      "stopReason": null,
+      "peakOwnedRssMiB": 89.3,
+      "rssCeilingMiB": 2048
+    },
+    "community_recruitment_runtime_execution_tests": {
+      "terminal": true,
+      "exitCode": 0,
+      "stopReason": null,
+      "peakOwnedRssMiB": 103.7,
+      "rssCeilingMiB": 2048
+    },
+    "community_private_template_execution_tests": {
+      "terminal": true,
+      "exitCode": 0,
+      "stopReason": null,
+      "peakOwnedRssMiB": 34.9,
+      "rssCeilingMiB": 2048
+    }
+  },
+  "focusedPythonTestsPassed": 39,
+  "focusedPythonTestsSkipped": 0,
+  "implemented": [
+    "Both private dialogs use the original Old AP52 factory and all17 native slots",
+    "Private68-byte per-instance table; seven separately addressed process-lifetime guest bridges",
+    "Native factory argument/result preservation and RET4/RET12/RET16 bridge conventions",
+    "Controller generation/window/context and original-resolved actor identity/family ownership",
+    "Original opaque controller context is not treated as a unit pointer",
+    "Child secondary flag uses Old+0x20; modern+0x30 remains untouched",
+    "Parent hidden recruitment input/presentation suppression",
+    "Child native recruitment/Back/tracking/hiring ownership; hidden utilities/upgrade/repair blocked",
+    "Research state excludes raw recruit presenters, recruitment commands and tooltips",
+    "Native capacity notification refresh through guarded owner methods",
+    "Original scalar destructor/table restoration and independent parent/child ownership",
+    "Explicit ownership reset before original world disposal",
+    "Mandatory research/hiring/presentation service callbacks, no default unsupported-feature disabling"
+  ],
+  "actualTranslatedModulesExecuted": true,
+  "actualFirstPartyRuntimeOwnerExecuted": true,
+  "testedOwnerBranches": [
+    "Private original factory capture for parent and child",
+    "Setup, hidden parent rows, blocked parent recruit orders",
+    "Native event and capacity count dispatch",
+    "Child research disables rows and blocks orders and tooltips",
+    "Actual three translated construction presenters through owner refresh",
+    "Idle command forwards unchanged to explicit original-command fixture",
+    "Original-class teardown and UI-ownership reset release private tables only"
+  ],
+  "externalNativeServicesAreFixtures": true,
+  "callbackBookkeepingIsFixture": true,
+  "allocatorIsFixtureInExecutionTest": true,
+  "researchAndHiringServicesAreFixtures": true,
+  "sourceBackedResearchHiringServicesConnected": false,
+  "finalResourceCollectionConnected": false,
+  "livePaidOrdersQualified": false,
+  "liveAbilitiesQualified": false,
+  "saveReloadQualified": false,
+  "nativeSEHQualified": false,
+  "nativeGameLaunched": false,
+  "browserLaunched": false,
+  "mmcrProductionGateUnchanged": true,
+  "productionChanged": false,
+  "playerProfilesAccessed": false,
+  "published": false,
+  "scope": "First-party private native ownership and ABI execution with actual original translated presenter bodies. Does not qualify a live kingdom, rendered native UI, paid recruitment, abilities, VM continuation/save compatibility or browser play."
+}

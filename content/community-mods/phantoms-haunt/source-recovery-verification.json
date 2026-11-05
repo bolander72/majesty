@@ -1,0 +1,58 @@
+{
+  "format": "majesty-phantom-workshop-source-recovery-v1",
+  "publicSourceCommit": "fed7058cd342a5f9568f964cebdc8797ef6a82e2",
+  "originalWorkshopBytecode": {
+    "bytes": 798273,
+    "sha256": "d8c5b84660a2a26907ab26034588443efe72a4fbbfdef5ca9180f1c3f0f20284"
+  },
+  "recoveredSourceFiles": {
+    "Phantom.gpl": {
+      "bytes": 111049,
+      "sha256": "8d55960b650680d68145525330bf8d7f165fb750d083c30220e7cae120333362"
+    },
+    "Phantom.gplproj": {
+      "bytes": 150,
+      "sha256": "ba2d995db3f8d7cfb2cf84535e0554b8fb9d188d8fd2b22aa718050ec0f742dc"
+    },
+    "Phantom_Building_Data.dat": {
+      "bytes": 1332,
+      "sha256": "6f277847452d615bf906a105f92166ce71baa49e3df9b9c340da9fdb99b6a252"
+    },
+    "Phantom_Hero_Data.dat": {
+      "bytes": 920,
+      "sha256": "95781e3f76c123652663bdf4ddf1dfd27140408df371a909abcfb0261a992c75"
+    },
+    "Phantom_Hero_Prototype.gpl": {
+      "bytes": 4630,
+      "sha256": "3aa52e3c633d5148620d88fb0fd8f68edbb31da3707704fd6e9618348ff2d160"
+    },
+    "Phantom_Items_Data.dat": {
+      "bytes": 3143,
+      "sha256": "8d1e9447a13b0222d84f144426304f648ed807411485a82747e274f170f4012d"
+    }
+  },
+  "instructionRecordsCompared": 164,
+  "instructionRecordsMatchingOutsideIndependentLineShiftOffsets": 164,
+  "lineProbeShifts": [
+    257,
+    514
+  ],
+  "exactTypedPrototypeSignature": true,
+  "exactDATRecords": 38,
+  "addedSourceDefinitions": [
+    "Guild_Title",
+    "Phantom_Hero"
+  ],
+  "restoredBehavior": [
+    "Should_Kite=true and KitingTime=0 in Phantom DAT",
+    "Private Hero prototype with all59 original members",
+    "Original Phantom guild lookup",
+    "Nested attacktype/attack_action existence guards",
+    "Priestess assignment uses a local result instead of returning inside foreach"
+  ],
+  "byteIdenticalCompilation": false,
+  "scope": "Recovered instruction-graph and data correspondence only. Compiled function symbol/value tables differ; their runtime implications, whole-binary equivalence and browser gameplay remain unqualified.",
+  "nativeRuntimeQualified": false,
+  "browserPlayable": false,
+  "compiledSymbolValueTablesDiffer": true
+}

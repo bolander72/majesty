@@ -5,6 +5,552 @@ Lab**, including its original animated Alchemist, three building stages, voices,
 reagent economy, research and combat/sovereign alchemy. Lost Trail, Wayfinder and
 Trail Lodge remain retired. Production still runs the original game.
 
+## Alchemist fog-of-war compatibility (October 15)
+
+Old's original sight-circle callback `0042ee50` accepts descriptor resource IDs
+only when their second byte is V or B. The genuine `ALC1` character fails that
+legacy test, even though its authored and saved SightRange is260. This explains
+an Alchemist walking across black terrain without revealing it.
+
+`native/community/fog_reveal_identity.h` admits that exact character/descriptor
+pair only during the synchronous original reveal callback. It restores the
+descriptor before returning and never changes the actor ID. The original engine
+still computes the circle, reads the current sight attribute, checks indoor/dead
+state, applies the owning player's reveal-sharing mask and stores exploration.
+Stock heroes, buildings and effects are unchanged. There is no per-frame world
+scan, fixed global reveal radius, map-wide reveal or new saved-game schema.
+
+The selection-engine preparation script also verifies the callback's original
+machine bytes and declares its entry. Official generation retained all native
+instruction bodies and address indexes; two generated files changed only a
+diagnostic function name. A copied, previously built native executable used the
+new officially generated symbol resource for isolated native controls. A fresh
+browser build compiled the adapter and official generated metadata through
+`tools/build.py`, with no manual edits to generated translations.
+
+On the same preserved Day12 Rat Scouts save, control1613 recorded11 Alchemist
+callbacks, all with zero newly revealed cells. Fixed1614 recorded10 callbacks,
+including reveal increases of162,16,27,11 and2 cells, with both real and
+descriptor IDs restored toALC1 afterward. It generated an ordinary GMP.
+Browser1619 loaded the original pre-fix save, displayed the native sight circle
+around the Alchemist, opened Ameline Amberglass's native character card, and
+saved normally. Its generated373915-byte GMP has SHA256
+`3ce671acb8dcdd534c029e7ffa72c4907d4b17bdb5064f22e73261f59de3fc90`;
+a stopped audit finds original ALC1 heroes1670/1719 and no temporary AVC1 bytes.
+The input is the existing level1000 test save; no new test statistic or movement
+flags are enabled in either browser run. This verifies compatibility, not balance.
+
+Fresh browser1621 reloaded that exact generated save, continued into Day13,
+and showed both Alchemists exploring further through newly revealed snow.
+Both owned browser sessions closed normally below the2.4GiB guard. See
+`deploy/alchemist-fog-verification.json` for source/build bindings and limits.
+
+The content collection remains `majesty-alchemist-v1-campaign3`: only the engine
+changes, and existing profiles and saved exploration remain in place. Save a
+running game before refreshing the page, then load it to use the new engine.
+
+## Original campaign recruitment compatibility (October 14)
+
+Original Majesty quests do not load every Northern Expansion GPL helper that
+Freestyle supplies. The genuine community Alchemist calls `GetTruePalace` at
+birth and the Bazaar shopping library afterward. Missing functions resolved to
+`NullFunction`; missing item expressions became void values. Assigning those
+values to typed agents/lists exited with `0xe06d7363` (3765269347).
+
+`scripts/prepare-alchemist-campaign-functions.py` recursively follows the
+referenced official SDK definitions, including nested TaskModules. It imports
+eight functions and 29 expressions without changing the existing 215 authored
+definitions, DAT, canonical GUID or shared-function alias routes. The original
+SDK compiler produced 2,067,851 bytes, SHA256
+`2bfb4cb9ccc53b6789c85995fdbf4b0a5511b5ceddf1116dcf4b4b01a902cd09`.
+The engine remains the qualified `alchemist-selection1528` WASM.
+
+Native1597 resumed the same pre-recruit Brashnard save that reproduced the
+production exception, recruited through the normal Lab button, executed the
+formerly missing Bazaar helpers and saved normally. Its isolated test harness
+used the ordinary Restoration cheat to keep the besieged Palace alive; this is
+crash-path coverage, not a campaign balance or victory qualification.
+Browser1598 restored that campaign, paid 600 gold for another Alchemist and
+created an ordinary Day2 save (SHA256
+`c3a81eda1d13dd36fccd86325c0a3e5b2e6795199c622fd08f3d653d4355dcac`).
+A stopped-save audit found live ALC1 hero4937 and the prior dead Alchemist;
+browser1599 loaded this exact save in a fresh silent session and continued
+without the exception. Neither browser used native test injury/restore flags.
+Native1601 also restored the existing Day12 Rat Scouts Freestyle save and
+continued normally. The source preparation, cache revision and release gate
+have focused tests. See `deploy/alchemist-campaign-verification.json` for
+compiler bindings, individual checks and test limits.
+
+The new `majesty-alchemist-v1-campaign3` content collection preserves earlier
+collections and all original Majesty profile paths. It refreshes script data
+for returning players without requiring a save migration. Earlier Scions of
+Chaos entry checks exercised an expansion quest; they did not cover original
+Majesty hero recruitment. Deployment now requires that separate qualification.
+
+## Latest mechanics qualification (October 14)
+
+The building-list title correction keeps `ABx1`, `ABx2`, and `ABx3` identities,
+prices and gameplay descriptors intact while displaying “Alchemy Lab”,
+“Alchemy Lab Level 2”, and “Alchemy Lab Level 3”. Only the three UNTN records
+in the original and community interface text archives change. Revisioned game
+data `majesty-alchemist-v1-labels2` refreshes existing browser installations
+without deleting their older collection or moving their Majesty profiles.
+
+
+Release candidate `alchemist-lab1417` uses WASM SHA256
+`b5f8ef6f939cd8da5ae39742892559e0d67a3cebbdefba8ec817bbfa5613a6af`.
+Browser1410 restored the original Phoenix-revived save1327 without test injury
+flags, continued normally, and generated a new original GMP. Hero1719 remains
+alive at4977HP; both heroes subsequently own actual index113 Phials. Native1416
+started the original Scions of Chaos quest with the exact candidate1299 and
+exited normally at168.6MiB peak RSS. GoldHD's original campaign uses the fixed
+DataMX GPL; no unqualified unified-Data candidate was selected for release.
+The25 actual creator resources are commit-pinned in the public asset branch.
+
+The release preserves the original Majesty profile identity and installs a
+separate immutable `majesty-alchemist-v1` game-data collection. Existing base
+collections and backups remain intact. Community content is qualified for
+single-player; its sovereign actions have not been qualified for multiplayer.
+Vigor's actual buff persists and expires across saves, but its progress display
+is not reconstructed after reload. This remaining cosmetic limitation is
+explicitly recorded in the release manifest.
+
+
+Browser trial1363 now proves ordinary root entry, an original native Day10
+save restore, authentic completed Lab3 art, ordinary paid recruitment, native
+Brewing controls and both completed research flags. It generated an original
+Day11 GMP (receipt1377) and restored it in a fresh WASM engine (screenshot1381).
+Low-level heroes died during ordinary combat, so this is not balanced-survival
+qualification. A separate controlled funded input1313 then used normal browser
+clicks for Vigor (14→13 reagents) and Philosopher's Stone against a visible
+hostile (13→3, gold award, exact native source/target callback). Repeating the
+unaffordable action produced no second callback. Generated browser save1394
+persists3 reagents and both research unlocks. The browser closed normally at
+1828.9MiB peak owned RSS. Base/original-campaign shared GPL, Phoenix browser
+lifecycle and the remaining negative controls still require verification;
+production remains unchanged.
+
+
+Philosopher's Stone now uses the original native spell packet, preserving the
+player, world position and exact clicked target. A private mode carries the
+source Laboratory's stable unit ID. The receiver validates ownership, Lab3
+and the ten-reagent requirement, creates the authored ALS1 spell through the
+original creation path, and invokes `Philosophers_Stone_Hit(Spell, Lab, Target)`
+through the original GPL call wrapper. Stock spells retain their normal path.
+Native trial1354 submitted a controlled packet against existing hostile1797:
+the original callback ran, reagent stock14 became4, and the hostile no longer
+appeared in the generated original save (receipt1355). This proves the native
+backend with a controlled packet; ordinary mouse-target casting and protected
+or insufficient-resource controls remain pending. The sender/receiver path is
+not a claim that multiplayer has been qualified.
+
+WASM build1359 completed through official tools/build.py using the same adapter
+source, C++ builtin support and original creator parsers. It peaked at1704MiB
+owned RSS. Recovered SDK JavaScript dependencies were installed from its pinned
+lockfile after the prior link attempt reported missing acorn. Browser gameplay
+and deployment remain pending. The private content overlay binds25 resources
+(28,853,565bytes) to exact original archive replacement hashes. It preserves the
+base collection and uses the original Majesty save identity. Public activation
+is still absent from the deployed catalog.
+
+Ordinary native progression now includes paid Lab2 (1800 gold), completed
+336HP construction, Phoenix research (750 gold), paid Lab3 (2200 gold), its
+444HP finished creator artwork, and another ordinary 600-gold recruit. The
+unchanged original Day10 save is bound by private receipt1261; research and
+level3 state survive native save/reload. Weapon Oil research was independently
+qualified by receipt1252. These checks supersede earlier pending-research
+notes retained below as investigation history.
+
+The private sovereign bridge submits the original four-word Rage command for
+one exact Laboratory. Only that command's scoped native TString construction
+substitutes the declared GPL callback; nested stock commands cannot inherit it.
+The original script owns resource/gold debits and effects. Unit identity,
+controller generation and quest teardown retire pending host references.
+Focused official native tests cover nested dispatch, address reuse and reset.
+
+Vigor trial1290 started from a deliberately supplied 25-reagent test fixture,
+charged exactly1500 gold and one reagent, and saved the normal Alchemist at
+31HP instead of11. Trial1303 freshly reloaded that original active save, let
+its timed effect expire, and saved the hero back at11HP. The same trial then
+invoked Arcane Infusion normally: stock24 became14, the creator effect appeared,
+the action became disabled, the hero's native resistance bonus increased25,
+and its persisted AlchemistArcaneInfusionApplied boolean is true. These are
+controlled resource-precondition tests, not ordinary collection qualification.
+The numeric reagent binding is now shown alongside its native label.
+
+Trial1288 established a legacy linker problem: monster deaths called stock
+`dropgoldinradius`, bypassing the authored reagent function; weapon-oil hit
+callbacks were also absent. The original registry keeps the first same-name
+function. `scripts/prepare-alchemist-shared-functions.py` therefore appends
+source-identical `MJA_` exports while preserving every original export, body,
+DAT and project. The official SDK compiled all97 aliases successfully in1297,
+producing1943189 bytes, SHA256
+`ae72ff05716fd94dcc9d46a6af5993972fd893596c8a550fe32d9368238e8ae6`.
+Private candidate1299 preserves candidate1093 and its original bytecode.
+
+The opt-in `RECOMP_ALCHEMIST_SHARED_FUNCTIONS=1` adapter reads the staged route
+map and resolves both function pointers and return types through the original
+registry before native argument/local-frame preparation. It validates matching
+interpreted dispatch/return types. Positive resolutions cache only original
+function objects, scoped to their registry and cleared at original quest
+teardown; declaration-time misses are not cached. It never swaps executing
+bytecode blocks or patches generated translation metadata.
+
+Native1299 replayed a fixed encounter with an explicitly controlled level1000
+party. It witnessed the authored reagent-award, Transmutation Oil, Flash Flask,
+Stun Serum and Miasma callbacks and saved both living Alchemists carrying one
+actual collected reagent each. Receipt1301 binds the358394-byte generated save,
+SHA256`589bdfcb262f283a3037241954a4e46c8b9a815bfa7f36deecbbc8b85bb08bc9`.
+The encounter proves real collection and execution; it does not qualify normal
+low-level survival, numerical combat effects or Phoenix resurrection.
+Trial1306 then restored that exact save without reapplying the level cheat:
+one Alchemist returned to the authentic Laboratory, its carried count became0,
+and the native Lab's num_resources/APV0 became1. Receipt1309 binds this natural
+deposit. Trial1308 freshly restored Arcane state and refused a second click
+without another reagent charge; trial1312 paid600 gold for a new Alchemist,
+whose persisted AlchemistArcaneInfusionApplied flag is also true. The first
+1308 recruit attempt clicked the wrong row and created no hero;1312 corrects it.
+
+Ordinary paid exploration in trial1314 funded the heroes' actual shopping
+choices. Both executed Purchase_Phoenix_Phial and saved the real index113 item
+in their native inventory (receipt1317). Both reagent loads also deposited;
+the Lab stock is2. No inventory or purse fixture was used in this branch.
+
+Phoenix qualification deliberately applies a test-only lethal injury through
+the original unit HP setter; the original death observer, inventory transaction,
+chance roll, effect and revival callbacks remain untouched. Trial1319 exercised
+the failed chance outcome: the exact hero's item disappeared and the stock grave
+path continued. Trial1323 allowed ten seconds of ordinary simulation before the
+same controlled injury and exercised success. Its original
+Phoenix_Phial_Resurrection_End returned with HP1244/MaxHP4977, exactly integer
+25%, followed by ordinary fleeing/rest behavior and an original generated GMP
+(receipt1327). The other hero's unused Phial remains present. Do not confuse these
+controlled death tests with ordinary low-level combat survival.
+
+The kit now compiles C++ builtin plugins and separately compiled `support/`
+implementation files. The actual C/C++ ABI/link fixture passes through official
+tools/test.py, including the companion implementation and no phantom plugin
+registration. Core resources now retain binary registries and TSV route maps;
+24 focused packaging tests pass. Private source-bound browser engine1325 stages
+the same tested adapter and original community parsers without changing the
+production launcher or assets. Its WASM build/browser qualification remains
+pending. SDK source recovery1328 preserves the original iCloud-offloaded SDK.
+
+The official focused controller fixture passes, and63 focused Python tests
+run with five unavailable optional fixtures skipped. Compiler1297 was silent,
+guarded and closed normally. Native1299/1303 exited0 below150MiB owned RSS.
+Browser integration, Phoenix purchase/consume/resurrection, Philosopher targeting, full effect/reload controls and public rollout
+remain pending. No public Alchemist assets or production runtime changed.
+There are no production data migrations for these private source changes;
+release still requires source-bound browser packaging and gameplay qualification.
+
+## Earlier native qualification
+
+Candidate1093 now passes ordinary paid Laboratory construction. Trial1125
+spends1400 gold at a normally revealed, unobstructed site and saves completed
+ABx1 unit915, original agent40 (`AlchemistsLaboratory`), at153/235HP. Trial1129
+restores that exact original save and displays the authentic finished building,
+interior panel,600-gold Alchemist control and Brewing control. This supersedes
+the earlier unsuccessful placement/construction trials described below.
+
+Ordinary paid native recruitment is now qualified. Trial1161 charges600 gold,
+shows the native recruitment notification and saves living ALC1 unit1076,
+agent44, title `Alchemist`, at15HP. Trial1163 restores that exact original GMP
+in a fresh owned profile. Its native Laboratory roster shows Ameline Amberglass
+alive at level3; trial1165 selects the hero and displays the authentic portrait,
+Alchemist class, health and native Spells/Items/Stats controls. Later combat in
+trial1163 kills this fragile hero normally, and the engine saves and exits
+without a crash. Preserve living receipt1162 separately from dead receipt1164.
+
+The private native probe has an opt-in
+`RECOMP_ALCHEMIST_ATTRIBUTE_COMPAT=1` adapter for the author's boolean, integer
+and function attributes. It uses original GPL value allocation/copying,
+original agent attribute insertion and original function registration, keeping
+state in native agents and leaving the package and compiled GPL unchanged.
+The original save and fresh reload retain Should_Kite=False, KitingTime=0,
+AlchemistBaseMovementApplied=True and the actual Alchemist_Recruitment_Voice
+function context; Home still references the Laboratory's original agent40.
+
+An earlier adapter bug registered AddAttribute with result type10. That is the
+function registry's missing-symbol fallback, not void. Allocating it from the
+nine native value buckets overlaps the pool's growth settings. Trial1155
+witnesses a corrupted boolean-growth request of17,527,268 objects; trial1153
+witnesses a returned value with zero type/vtable immediately before the failed
+comparison. The adapter now registers result type0, independently verified
+against the original SetAttribute binding. Registration checks that result,
+and insertion checks the original typed allocation, independent map ownership
+and all nine unchanged growth settings. The previous later-AI-crash checkpoint
+is superseded; do not add speculative AI replacements or reset growth fields.
+
+These earlier construction/recruitment checks are supplemented by the latest
+mechanics qualification above. Full Phoenix and browser publication remain pending.
+
+`RECOMP_ALCHEMIST_RECRUIT_TRACE=1` optionally observes native GPL calls,
+operator signatures and distinct function-registry misses. Output is bounded;
+constant probes beginning with `#` are excluded because their function-registry
+misses are expected. This observer neither changes a query nor suppresses an
+exception. Native fixture builds use the official `tools/test.py`, with the
+already installed Command Line Tools selected by `DEVELOPER_DIR` when the
+machine's selected Xcode requests license acceptance. No license is accepted
+or system developer-directory preference changed by the build.
+
+Next activate and qualify the remaining research/alchemy controllers, then
+qualify the actual mechanics and browser integration before publishing assets.
+All these trials are private, muted and
+guarded; public runtime/content and player data remain unchanged.
+
+## Private Brewing navigation and research descriptors
+
+`RECOMP_ALCHEMIST_PANEL_BRIDGE=1` now enables a source adapter attached only to
+owned private CG02/AP69 controller instances. It copies the eleven original
+32-bit virtual entries, redirects only the RET4 control and RET16 event slots
+through verified stock AP10 entries, and delegates to the original AP69 methods
+with their original arguments. Back substitutes the declared CG01 parent ID.
+The original global tables and generated eligibility metadata remain unchanged;
+the previously prepared AP69 module is not required for this private dispatch.
+Destructor generations prevent stale teardown from releasing a replacement
+instance; plugin teardown restores any surviving owned table before freeing
+its separate allocation. Other stock controllers pass through normally.
+
+Native1175 opens the authentic Brewing panel and returns to the original Lab
+with Back. Native1177/1179 repeat that navigation with research descriptors and
+normal original saving/exit, below156MiB peak RSS. The focused official native
+fixture verifies unchanged stock entries, wrong-layout/allocation refusal,
+address reuse and teardown, plus descriptor collision/renewal boundaries.
+
+Two20-byte descriptors are cloned into the original AP99 registry through its
+own map and allocator: Weapon Oil10771 is level1/250gold with completion
+attribute2A425041; Phoenix Phial10774 is level2/750gold with attribute29425041.
+All opaque template fields are retained. Native1179 independently reads those
+values back and observes both completion attributes and current research as0.
+The original row presenter owns availability/price presentation, including its
+building-health check. Private idle progress overlays are hidden, and higher
+level powers follow the creator's level requirements. The test Lab is damaged
+and under attack; its disabled row is not evidence of a completed research.
+
+Payment, asynchronous research ownership, timed completion, simultaneous
+recruitment, upgrade gating, research-state save/reload and all remaining powers
+are **not qualified or enabled by this milestone**. The next implementation must
+port the creator's BeginPrivateResearch/CaptureSubmittedResearch/completion
+route, preserving the AP10 recruitment tuple. Old native research submission
+is00495900; its stock command reads the selected unit's command owner at+84.
+Old research rows refresh at004748C0 and descriptors live in map006D81D0.
+CanSubmitResearch00474C10 and bulk refresh00474BB0 were independently located
+in the pinned executable but are absent from the current generated entries;
+do not call an undiscovered address through the mod API or edit generated flags.
+Prepare a proper source/API translation path or faithfully port the audited
+native eligibility calculation before enabling submission.
+
+The source now ports the literal affordability calculation from00474C10,
+using the original command-owner discount lookup, fixed-point helpers0051F310/
+0051F2D0 and current-player gold. This is affordability only, not permission
+to bypass level, completion, health or native command validation. The private
+readback reports affordability without submitting an order.
+Native1190 reports both declared recipes affordable in the restored original
+Lab world, with completion/current-research still zero. Brewing opens, returns,
+reopens and returns again; ordinary save/exit succeeds at147.9MiB peak RSS.
+Official fixture1189 passes with the final plugin source.
+
+`ResearchActivity` ports the creator's separate pending/active research owner.
+Its fixture covers delayed submission, unrelated tuples, zero duration,
+duplicate submission, wrong-building/wrong-event completion, a native callback
+that retains the order, and restoration of concurrent recruitment after actual
+native retirement. This owner is not wired into live submission/completion yet;
+passing those controls does not qualify paid research or persistence.
+
+The private event bridge now follows the original AP99 notification filter,
+instead of refreshing compound research controls on every event. Original
+event2009's dispatch is independently bound in the pinned Old image: slot
+006C202C points to004ABF70, between event IDs2009 and200B. That routine uses
+the original descriptor resolver00474480 and packed-attribute setter at
+vtable+124. Current native534 classifies004ABF70 as a non-hookable block.
+Curate its real entry through source/config and official regeneration before
+installing the completion wrapper; never change generated hookability flags.
+
+Native1197 independently observes the active original world table00682950 and
+its simulation-update slot+8C at005D9680. The main-loop caller4179DB invokes
+that slot only during phase3, and native534 already carries a hookable entry
+for005D9680. The muted observation trial exits normally at155.8MiB peak RSS.
+
+The private `RECOMP_ALCHEMIST_RESEARCH_BRIDGE=1` implementation now connects
+the owner to native submission00495900, capture immediately after original
+simulation update005D9680, and literal completion004ABF70. The wrapper restores
+AP10 recruitment around native completion, verifies the original descriptor
+identity, suppresses AP69 rendering during that staged callback, and drops raw
+owner references at the original quest/GPL teardown00628E60. Native gold,
+timing, completion attribute, alerts and cleanup remain original. This code
+compiles in official fixture1198, but the flag stays off in native534 trials:
+that older binary cannot install the completion entry hook. No paid research
+or completion is claimed by the compilation result.
+
+`scripts/prepare-alchemist-research-engine.py` prepares a separate engine
+directory, verifies the pinned executable and literal dispatch/prologue bytes,
+and adds only00474C10/004ABF70 to source `entry_points`. Original instruction
+patches, overrides and gameplay settings remain exact. It snapshots native
+source bytes and preserves earlier builds. Four focused tests cover independent
+executable/config pins, dispatch mismatch and idempotent scoped curation.
+
+The full official regeneration in1195 stopped while reading an original
+Ghidra listing offloaded to iCloud, before compilation. Finder reports full
+iCloud storage; Download Now has not restored the first missing input
+`functions/004017E0.asm` (lowercase filename on disk). Do not restart this
+build until the actual original listing files are local. No source, game or
+save file was deleted to free storage, and no generated metadata was edited.
+Engine1194 is staged, not built or qualified. The private progress presenter
+uses Old AP10's actual streamed-message slot+68 (native callsites46577F/465790),
+not the newer Mod Manager's+74. Its simulation clock0071C6A8 is independently
+read by original research submission at4AC383 and AP10 progress at46574A.
+The creator's action/price/progress/active-display controls receive the original
+four-word progress message, using captured native timing. Controller generation
+checks and quest teardown prevent updates to retired panels. The original
+fixture compiles this code; live progress presentation, upgrade gating, paid
+execution and in-progress/completed save/reload remain unqualified and required
+before browser qualification and publication.
+
+The parent CG01/AP10 panel now applies the creator's declared upgrade gates
+under the private panel bridge: level1 requires Weapon Oil, level2 requires
+Phoenix Phial. It reads the original completion attribute from the registered
+descriptor, or the declared native stock completion template before Brewing
+has initialized the private rows. The original setup/event presenter runs
+first; an unmet prerequisite disables the existing upgrade control8007 and
+hides price8015. The control handler also refuses that upgrade command while
+the prerequisite is unmet. A completed prerequisite delegates all normal tier,
+gold, health and construction checks to the original handler.
+
+The focused fixture covers each tier independently, missing unit/descriptor,
+unrelated stock panels and the absence of a further level3 prerequisite.
+Native1206 observes the actual Lab at level1 with research completion false;
+it opens Brewing and returns twice, then saves/exits normally at149.5MiB RSS.
+This confirms the real prerequisite query/presentation runs without affecting
+stock navigation. The Lab is also damaged: this observation does not isolate
+research as the only disabled-upgrade condition, prove a paid tier upgrade,
+or qualify positive research completion. Those ordinary-play gates remain
+pending the rebuilt engine and actual paid research.
+
+The iCloud dependency is now resolved without user action. Official Ghidra12.1.3
+regenerated all14953 original function listings in a separate local analysis
+directory, with zero decompilation failures. Official engine build1217 then
+completed successfully, using source-curated real entries for00474C10 and
+004ABF70; generated hookability metadata was not edited. The separate engine's
+SHA256 is `16d0e677aec39b1a7b5b890f350f10b7b17d42cae21bc3cc83a471a75b4dd031`.
+This supersedes the earlier1195 missing-file limitation.
+
+Native1220 enables the private research bridge, restores the exact original
+completed-Lab save, opens/returns/reopens Brewing and saves normally. All
+required native hooks install; both private descriptor values are read back.
+It exits normally with muted audio at150.8MiB peak RSS. Receipt1224 binds its
+generated Day6 GMP,367209bytes, SHA256
+`4566cb61b0c2de7ae216d05a0dbd2d239af16f4933041944548b396fd783cb6e`.
+This qualifies route initialization and world/navigation/save continuity only.
+Paid research, timed completion and research-state persistence remain pending.
+
+The Laboratory is under ordinary hostile attack and remains below full health.
+Native1222's repair tooltip says “Remove this building from the repair route,”
+confirming repair is already enabled. Preserve the native health guard; ordinary
+defense and repair must precede the positive paid-research trial. Trial1226
+places a hostile reward but accidentally adds another to the friendly Lab when
+selection is attempted without cancelling flag placement. Preserve that fork
+for diagnosis only; it is not the next research checkpoint.
+
+The private research submission identity guard now follows the original
+command serializer00495900: building identity is at+60, while+70 is the
+player number used by native discount lookup00474860. The prior adapter
+treated player zero as a missing building and returned before native health
+or gold validation. Trial1238 witnesses actual command10771 reaching that
+early return. The corrected helper accepts a valid player-zero building and
+refuses missing unit identity or command owner; those regression controls
+pass the official controller lifecycle fixture1240. Keep the native health,
+construction, level and affordability checks. Live payment/completion still
+needs independent evidence; fixture success does not establish it.
+
+Native1241 now reaches original validation with level1, constructed1,
+damaged0 and native-can-submit1. The normal250-gold row queues Weapon Oil,
+shows the creator's research progress UI and receives the original event2009
+completion. Its genuine generated GMP preserves the completion attribute as1.
+This first positive run also exposed a cleanup error: native dispatch installed
+research before the update wrapper captured its supposed recruitment tuple,
+so the adapter later restored the research command as if it were recruitment.
+Do not use that fork as a clean completed-research checkpoint.
+
+`ResearchActivity` now retains the genuine recruitment tuple supplied at begin.
+If native dispatch has already installed this research command before the
+update hook, capture restores that retained tuple instead. An unrelated genuine
+recruitment order observed at capture still takes precedence. Fixture1244
+checks the early-dispatch case through completion alongside the existing
+concurrent-recruitment and completion guards. Native cleanup and a fresh
+original save/reload must still confirm this correction.
+
+Those checks now pass in native1245/1248. Normal Weapon Oil research shows
+the progress bar and completes through original event2009. At the matching
+Day8 checkpoint, the prior same-input no-order control1230 has18940 gold;
+the completed research world has18690, consistent with the normal250-gold
+charge. This is a matched-world comparison, not an atomic debit trace.
+The genuine generated345249-byte GMP (SHA256
+`2c81ccdda7795d167ef8675954e481afa0c51a1672878773a583ccc1fc13ed66`)
+contains Weapon Oil completion1 with command/start/duration all0. A fresh
+owned profile1248 restores it; the native research and upgrade queries read
+completion1 and activity0. Its newly generated346172-byte GMP preserves
+those values (SHA256
+`427e7a6211750cfdef987919a12b13c9f71946c3e663bce45c835b0fc29c57b5`).
+Qualification1252 binds these observations. Both silent trials exit normally
+below155MiB owned RSS. In-progress research reload, live concurrent recruitment,
+paid upgrades, Phoenix/reagents/oils/sovereign mechanics and browser integration
+remain unqualified; no Alchemist content is published.
+
+## Recovering offloaded analysis inputs
+
+The offloaded original listings can be regenerated from the exact pinned
+executable with the unchanged [upstream analyzer](https://github.com/veritr1x/majesty-recomp/blob/main/tools/analyze.py).
+Recovery pins that script's Git blob to
+`bd067f15b7f33e199d750e71b1e331605cb596de`. The official
+[Ghidra12.1.3 release](https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_12.1.3_build)
+archive is569445154bytes, SHA256
+`93a5d11a9ad510622acaaf908c556a7b9b764d338e78a7567f3689bf5081fd54`.
+Its bundled Gradle wrapper builds the required Mac native tools through the
+vendor's `buildNatives` target, with one worker and a768MiB JVM heap. Recovery
+trial1210 succeeds below852MiB owned RSS. Zip extraction must preserve the
+archive's executable mode bits; this does not modify script contents.
+
+`scripts/prepare-alchemist-analysis-recovery.py` copies a separate source-bound
+game view and unchanged analyzer/exporter/config loader. It rejects a changed
+executable or analyzer and any existing output. Ghidra rejects hidden elements
+in a project path, so use a visible local directory outside Documents/iCloud,
+such as `~/majesty-analysis-work/<fresh-name>`. The helper checks that restriction
+including resolved parent symlinks. The original analysis, game and player
+files stay untouched. Four focused tests cover those preparation guards.
+
+Run the staged original `tools/analyze.py` with Ghidra12.1.3, the installed JDK,
+`--max-memory 1G` and an isolated `application.settingsdir`. A guarded process
+group owns the analysis/export; no other intensive engine/build runs alongside
+it. Trial1214 passes Ghidra's original executable analysis and begins exporting
+real function listings. Export completion, required entry validation, full
+engine regeneration/build and research gameplay qualification remain separate
+gates. Do not treat a growing functions index as a complete input set, point
+the engine at it early, edit generated metadata, or silently accept a truncated
+analysis after a resource stop.
+
+Recovery1214 is now complete:14953 discovered/decompiled functions, zero
+export failures, and every indexed assembly file is present locally. The
+unchanged upstream script records the exact pinned executable SHA and
+Ghidra12.1.3 in `inputs.json`; qualification1215 verifies that binding and the
+complete file set. Owned analysis peak RSS was1547.7MiB and exit was0.
+Fresh engine view1216 points only its analysis input at this completed local
+export and retains the1194 source curation/patches/native-source snapshot.
+Original iCloud files remain untouched. Official regeneration/build1217 is
+the next gate; restored inputs alone do not qualify native research or browser
+play. No player-data migration or public asset change is needed for recovery.
+Official translation1217 succeeds with the recovered inputs. Its unmodified
+generated metadata independently identifies474C10 and4ABF70 as real hookable
+entries with config provenance, and5D9680/628E60 as real hookable entries too.
+Proof1218 records those exact four entries. Native engine compilation is still
+a separate gate; this resolves the missing completion-entry metadata without
+changing generated flags by hand.
+
+Rollout/manual-data audit: none required for this private source checkpoint.
+The audited surfaces are native function/attribute registries, original GMP
+ownership, build flags and production asset inclusion. Existing public players
+have no Alchemist state to migrate; this probe is not a production launch input.
+
 ## Source and package
 
 - [Alchemist source](https://github.com/Phantomstar721/majesty-gold-hd-custom-guild-alchemist),
@@ -426,3 +972,250 @@ This passes as an isolated fixture. Native world rendering, clicking Brewing,
 real reagent changes, research, upgrades, Vigor, Arcane Infusion, Philosopher's
 Stone, AP78 oil rows and original save/reload are still unqualified. Both
 community override headers remain uninstalled and the public game stays stock.
+
+## First native live-probe integration
+
+The real Workshop media, original community panels and freshly SDK-compiled
+composed GPL now load in an isolated native collection and reach the normal
+Majesty menu. The private native probe module loads through the official
+mod API in the qualified native534 engine; its six supported hooks preserve
+the original factory, name lifecycle, ownership and initial reagent presenter.
+The other two UI methods (0047a790 and 0047aae0) are currently classified as
+non-hookable recovered data blocks in generated symbol metadata. They remain
+unhooked: proper function discovery through the official translator is required
+before full Back/event handling, rather than changing generated eligibility
+flags. Paid construction/recruitment and name generation remain unverified.
+
+`native/community/native_probe_plugin.cpp` is a private qualification probe,
+not a release plugin or a claim of complete runtime support. All research,
+upgrade, sovereign, oil-row, inventory and browser qualification requirements
+remain. Native trials are muted and owned; no player saves are loaded.
+
+Private staging was recovered from Steam after its cache directories disappeared.
+New resident working files now live outside Library/Caches and outside iCloud,
+under `/Users/mike/.local/share/majesty-work`. The original 42-file package was
+reverified against its pinned hashes. Original game files and source links were
+not changed. One native trial hit the old harness's resolution-change assertion;
+no game or host-app crash fix is claimed. Construction/recruitment and complete
+runtime support still need qualification.
+
+## Native world entry and collection preparation
+
+The private probe now reaches the ordinary quest selector and generates a
+stock Beginner Freestyle kingdom. Live NM18 registration reports successful
+installation through the original name-generator lifecycle. An ordinary native
+world save was generated and restored in fresh owned profiles. This proves
+world entry, registration and the initial stock-world save path; it does not
+prove Alchemist recruitment, generated hero names or content save compatibility.
+
+Native menu automation must wait for the actual menu to finish loading. Use
+absolute `move` followed by explicit `button left down` / `button left up`
+steps separated by a short wait. Two stock/mod controls stalled during a modal
+transition with the frame-count-based click helper; explicit releases passed.
+Avoid relative input mixed with window cursor synchronization, and avoid an
+early dump that establishes the old harness's fixed pointer-space assertion
+before a resolution transition. No runtime/input code was changed for these
+private trials.
+
+`scripts/merge-alchemist-native-dependencies.py` prepares a separate private
+collection from the existing verified candidate. It:
+
+- Adds the acquired Laboratory's Palace-level-2 BDEP expression to the actual
+  original and expansion tables, preserving all existing prerequisite bytes
+  and the required final blank line.
+- Attaches the real resource archives to original and expansion classification
+  groups while retaining existing load order. The original edition has three
+  groups; the expansion has six applicable groups.
+- Materializes 26 authored native unit descriptions and 13 actions in the
+  native catalogs. Existing unit identities are never replaced. The six
+  acquired Bazaar potion actions are deliberate authored overrides and require
+  the exact original action identity/name; unrelated action payloads remain
+  unchanged.
+- Adds missing semantic text keys to native unit/help/activity/item tables
+  while preserving every existing stock row. Linked purchased files become
+  owned copies before writes; earlier candidates and originals stay intact.
+
+Ten focused tests pass, covering destination isolation, stock preservation, prerequisite collisions,
+classification coverage, native catalog collisions, potion override identity
+and semantic text merging. The script is private staging, not release activation.
+
+The normal four-hero gate was met through paid recruitment at existing temples:
+two healers and two monks survive in original saves. The ordinary paid Palace
+upgrade completed. The Laboratory still failed to appear, isolating a native
+filter rather than a prerequisite problem.
+
+Pinned Old AP03 list construction at `00468a80..00468a97` masks the descriptor's
+second byte with `ff00`, requires `4200` and then requires first byte `41`.
+Only `AB` building IDs pass; the acquired `ALB1` does not. This is verified
+original code, not an inferred restriction from an unsuccessful literal scan.
+
+`scripts/alias-alchemist-native-buildings.py` assigns unused `ABx1..ABx3`
+identities to the actual Laboratory tiers. It adapts only the HEAD identity,
+upgrade references, directory/title/dependency keys and native controller family.
+Names, PRIM artwork/audio/geometry, prices, HP, income, hero slots, the produced
+actual Alchemist and compiled GPL stay unchanged. No stock actor is renamed or
+replaced. Occupied IDs are refused. Four focused alias tests pass.
+
+Private native trial1053 displays **Alchemy Lab, 1400 gold** with its original
+framed flask icon. Its genuine circular construction artwork also renders in
+the placement preview. Ordinary construction, completion and Alchemist
+recruitment remain unqualified; crowded starting locations produced red previews.
+Do not repeat the completed selector/menu discovery.
+
+Every new save selection must exclude **all** copied input GMP hashes. A
+profile can contain both Day0 and Day1 worlds. Trials that resume a specific
+receipt should copy only that bound GMP into a fresh owned save directory,
+preventing an older listed file from being mistaken for the intended world.
+
+Rollout/manual-data audit: none for this source checkpoint. The new script only
+creates private candidate files. Production assets, launcher configuration,
+profile schemas and runtime remain unchanged; no Alchemist content is public.
+
+## AP69 partial translation and native module
+
+The Old control method `0047a790` and event method `0047aae0` are independently
+audited vtable entries with RET4/RET16 respectively. Declaring their real starts
+in a private `game.toml` produces hookable function-entry metadata through the
+official translator; no generated eligibility flags are edited.
+
+Partial-module translation previously failed on three unrelated routines that
+whole-image discovery inspected but the module did not carry. The scoped kit
+fix in `patches/recomp-kit-partial-module-failure-scope.patch` retains those
+diagnostics as `module_omitted_failures`, keeps selected-function errors fatal,
+and explicitly rejects a requested export that was not emitted. The full-image
+path is unchanged. All 166 driver tests pass in an isolated kit checkout based
+on `fd660e2c03c482785853f82b7906aaf55d3f39a7`.
+
+Private trial1072 translates both selected methods successfully. Trial1073
+builds their generated C module through the official `tools/test.py` fixture;
+the original controller-lifecycle test also passes. Native1075 loads and
+registers the two translated functions, then restores the original test world
+and reaches the normal building list. These are module preparation/load checks,
+not live Back/event or research qualification. The base image is consulted
+first, so a supplementary module does not replace entries already carried by
+native534; a complete curated runtime build remains necessary for activation.
+
+Construction is still unqualified. The controlled stock Blacksmith placement
+at the same investigated location also reports occupied units/buildings and
+spends no gold; this does not establish an Alchemist-specific collision defect.
+
+## Ordinary Lab placement causes
+
+The opt-in, read-only `RECOMP_BROWSER_BUILD_DEBUG=1` observer in the qualified
+native534 engine identifies two separate placement constraints without changing
+any query result. In owned trial1077, site54,190 is blocked by the existing
+Temple to Krypta (`ABT1`, unit532). In trial1079, site60,192 passes the actual
+15-by-12 footprint query (`1800`) but fails the wider31-by-22 spacing query
+(`1100`) against that same temple. The authentic Lab descriptor and spacing
+art remain unchanged. The eastern site tested in1078 instead returns native
+reason2 (unexplored ground), so moving farther east requires normal exploration.
+
+These trials restore the exact paid-Palace2 Day1 input bound by receipt1051,
+copy only that GMP into owned profiles, and exit normally under silent resource
+guards. No Laboratory has yet been purchased, constructed or recruited from;
+failed previews and stopped actor audits are not construction qualification.
+
+Trial1081 places an ordinary1000-gold exploration reward east of the temple
+through Palace Rewards (explore-plus173,370; flag100,332; ground620,200).
+Gold drops15646->14646, stock heroes respond and the previously black eastern
+ground is revealed. The generated Day2 GMP is419481bytes, SHA256
+`3b9b38e99777b4119cfba8985df7a525e70e2356080ae37dc0ab58f4bfc5ea03`;
+receipt1082 excludes the copied Day1 hash. All four prerequisite heroes remain
+alive. This is ordinary preparation for construction, not Laboratory gameplay
+qualification. The purple HUD shortcut193,155 selects the Palace without
+relying on a saved camera position.
+
+Trial1083 then passes both original placement masks at72,192 (world1152,3072)
+and purchases the Lab for1400 gold. After25seconds the generated world retains
+its destroyed building record (unit822, state528), so construction completion
+is not qualified. A separate immediate-save fork1085 captures the live native
+agent88, title`AlchemistsLaboratory`, type`building`, HP1 and state512. Its
+424681-byte generated GMP has SHA256
+`63d8a5c056cd159eff17fecb43c95f48d1bb3dd19298bd01b2d11790303c7ccb`.
+This establishes ordinary paid creation and script initialization, not completed
+construction, recruitment or browser play. The later world has multiple nearby
+hostile Skeleton/Zombie actors; the exact killing event was not traced. Keep
+this immediate-save fork separate from the destroyed-world receipt1084.
+
+The stopped original actor title identifies the spacing blocker532 as
+`Temple_Krypta`; earlier scratch notes calling ABT1 Fervus were incorrect.
+Construction testing moves to an ordinary New Settlement freestyle world with
+Rat Scouts and no wandering monsters or special events. This is the stock setup
+UI, using only the authentic Alchemist candidate; retired content remains off.
+
+The initial private alias candidate1052 used ABs1..ABs3. Those IDs occur in
+archived Trail Lodge saves and must remain reserved after that pack's retirement.
+The authoring helper now assigns ABx1..ABx3, which are unoccupied in both editions
+of the original/native merged catalogs and absent from tracked prior content.
+Its controller owner follows ABx. Existing private ABs Lab worlds remain archived
+with their exact candidate; do not resume them under the replacement candidate.
+The clean stock New Settlement save has no Lab and can safely start the new
+qualification branch. Original art/audio/geometry, actor names and statistics,
+ALC1 hero identity, canonical GUID and compiled GPL remain unchanged.
+
+The New Settlement branch also lost its first stock Rogues Guild to ratmen
+before construction completed; do not resume its destroyed Day4 world as
+progress. Trial1098 instead selects the stock Fortified Palace preset (force
+row309), with30000 gold, Rat Scouts, no wandering monsters/events and seed
+150700822. It starts a completed700HP Warriors Guild,200HP Guardhouse and550HP
+level-one Palace. These are unchanged original classes. Generated receipt1099
+binds the314666-byte starting GMP, SHA256
+`8a695441297a2eff601f91e8376320a3c228d8967a26acd68c0435acc526d2d6`.
+Minimap140,26 then world500,300 selects the existing Warriors Guild normally;
+its recruitment price is450. New private candidate1093 uses ABx identities.
+
+Rollout/manual-data audit for this source helper change: none required. The
+surfaces inspected are native description/controller mappings, archived player
+identities, original stock catalogs, private stage boundaries and production
+asset inclusion. ABs Lab prototypes remain private and bound to candidate1052;
+no public Alchemist records or assets exist to migrate. Public game assets,
+player schemas and runtime launch configuration are unchanged. Do not release
+candidate1093 until ordinary Lab construction/recruitment and the remaining
+mechanics/browser gates pass.
+
+
+### Map selection compatibility — October 14, 2026
+
+The original map predicates reject every character whose unit-code second byte
+is L, P or R. The authentic community `ALC1` identifier collides with that
+legacy filter. The hero is correctly classified as a character and its native
+AP20 card works through Lab Members, but clicking its world sprite was rejected.
+
+`native/community/map_selection_identity.h` scopes a predicate-only identity to
+ALC1 actors with the original character family and a matching descriptor ID at
+descriptor offset4. Descriptor offset0 is the virtual table, not the unit code.
+Only the audited IsCharacter return sites inside the native map predicates use
+the compatibility identity. Restore the original ALC1 code before card dispatch
+and at the outer callback boundary. Unit identity guards reject stale storage;
+stock actors and ordinary AI/card predicates remain unchanged.
+
+`python3 scripts/prepare-alchemist-selection-engine.py --game OWNED_GAME_DIR`
+checks the pinned executable and declares original entries0043dfc0,0043e250 and
+005b6670. Regenerate metadata through the official game build tools. Never edit
+generated translations. The official regeneration changes hook eligibility;
+all123 translated chunks/runtime declarations matched prior instruction bodies.
+The browser build includes that exact generated symbol resource and the source
+adapter. The optional stationary movement helper used for native click controls
+is private and is absent from the deployed browser source.
+
+Owned native trial1509 opens both Adalia Smokesleeve and Ameline Amberglass
+cards through ordinary left clicks, with only movement suppressed for coordinate
+control. Earlier phase7 trials cannot qualify clicks because that state blocks
+part of normal map input. Browser trial1512 runs normal simulation: a world
+click opens Adalia's actual Alchemist portrait/HP/Spells/Items/Stats card; Stats
+shows Artifice, and a stock Ratman remains selectable. Ordinary saving creates
+Day13,363009bytes,SHA256
+`a1ccab8f81cd29858d1c378ade78827a704651fd2d5e43442eaead10fbc93dfd`.
+It reloads normally at13057gold; its bytes contain three ALC1 occurrences and
+zero temporary AVC1 occurrences. These raw counts confirm identity persistence,
+not an independent actor census. Browser peak owned RSS was1606.7MiB; all owned
+games and browsers closed normally. Evidence is the resident
+`alchemist1527-map-selection-qualified.json` receipt and its screenshots.
+
+Rollout audit: no player-data migration, content reimport or account action.
+Keep collection `majesty-alchemist-v1-labels2`, canonical GUID, original save/profile
+paths and every asset binding. Publish the new immutable JS/data/WASM archive,
+then update both engine-bound release descriptors together. Previous full
+alchemy-mechanics qualification remains historical evidence; this regression
+check covers map selection, the card, normal simulation and save/reload. Rollback
+restores the previous descriptors/archive; it does not rewrite player saves.

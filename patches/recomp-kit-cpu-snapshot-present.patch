@@ -1,0 +1,387 @@
+--- a/dx/coherence.h
++++ b/dx/coherence.h
+@@ -42,0 +43,3 @@
++// Read-only under the guest baton. True only for an existing renderer slot
++// with this exact backing generation; this query never creates a GPU surface.
++int host_d3d_has_surface_generation(uint32_t surface, uint32_t generation);
+--- a/dx/d3d.cpp
++++ b/dx/d3d.cpp
+@@ -2744,0 +2745,6 @@
++    // Pure CPU surfaces have neither a renderer copy to upload nor GPU-dirty
++    // pixels to clean. Do not scan their coverage or describe the surface.
++    // Query each write: a later draw or storage swap can change eligibility.
++    if (!host_d3d_has_surface_generation(s->id, r->dst_generation) &&
++        !host_d3d_dirty_rect(s->id, r->dst_generation, nullptr))
++        return;
+--- a/dx/ddraw.cpp
++++ b/dx/ddraw.cpp
+@@ -1082,0 +1083,2 @@
++    bool cpu_snapshot = false;
++    int cpu_snapshot_option = -1;
+@@ -1112,0 +1115,2 @@
++    f.cpu_snapshot = false;
++    f.cpu_snapshot_option = -1;
+@@ -1210 +1214,2 @@
+-    return !f.records.empty() || !f.draws.empty() || f.had_draws || f.palette_changed;
++    return !f.records.empty() || !f.draws.empty() || f.had_draws || f.palette_changed ||
++           f.cpu_snapshot;
+@@ -1732,0 +1738,4 @@
++int host_frame_cpu_snapshot(HostFrameHandle f) {
++    auto it = frames().find(f.id);
++    return it != frames().end() && it->second.cpu_snapshot;
++}
+@@ -1914,0 +1924,4 @@
++    // Never mix omitted CPU records with later GPU draws in one frame. A
++    // device transition ends the CPU image before entering exact recording.
++    if (present && current_frame().cpu_snapshot)
++        seal_frame("CPU snapshot before device");
+@@ -2421,0 +2435,26 @@
++// The opt-in promises a whole-image presenter, not a layered replay consumer.
++// Cache the option only for this frame; never cache device/surface eligibility.
++// Textures, GPU-backed generations and mixed GPU frames always keep exact records.
++bool cpu_snapshot_eligible(ComObj *s) {
++    if (!present_seal || !present_first_write || g_device_present || (s->caps & DDSCAPS_TEXTURE) ||
++        s->texture_handle)
++        return false;
++    Frame &f = current_frame();
++    if (f.had_draws || !f.draws.empty())
++        return false;
++    if (f.cpu_snapshot_option < 0) {
++        const char *v = recomp_env("DDRAW_CPU_SNAPSHOT_ONLY");
++        f.cpu_snapshot_option = v && !strcmp(v, "1");
++    }
++    if (!f.cpu_snapshot_option)
++        return false;
++    const auto generation = ddraw_surface_generation(s->id);
++    return !host_d3d_has_surface_generation(s->id, generation) &&
++           !host_d3d_dirty_rect(s->id, generation, nullptr);
++}
++void note_cpu_snapshot() {
++    log_once("ddraw.cpu_snapshot",
++             "ddraw: complete CPU snapshots active; exact GPU and texture records retained");
++    presenter_write();
++    current_frame().cpu_snapshot = true;
++}
+@@ -2422,0 +2462,4 @@
++    if (!boxes.empty() && cpu_snapshot_eligible(s)) {
++        note_cpu_snapshot();
++        return;
++    }
+@@ -2604 +2647,4 @@
+-    std::vector<uint8_t> changed((size_t)lw * band_h, 0);
++    const bool snapshot = cpu_snapshot_eligible(s);
++    std::vector<uint8_t> changed;
++    if (!snapshot)
++        changed.resize((size_t)lw * band_h, 0);
+@@ -2611,2 +2657,3 @@
+-        const auto span =
+-            pixel_change_mask(was, now, (size_t)lw, bb, changed.data() + (size_t)(y - band0) * lw);
++        const auto span = snapshot ? pixel_change_bounds(was, now, (size_t)lw, bb)
++                                   : pixel_change_mask(was, now, (size_t)lw, bb,
++                                                       changed.data() + (size_t)(y - band0) * lw);
+@@ -2623,9 +2670,27 @@
+-    std::vector<HostDirtyRect> boxes;
+-    std::map<std::pair<int, int>, size_t> previous;
+-    for (int y = band0; y <= band1; ++y) {
+-        std::map<std::pair<int, int>, size_t> next;
+-        const size_t base = (size_t)(y - band0) * lw;
+-        for (int x = 0; x < lw;) {
+-            if (!changed[base + x]) {
+-                ++x;
+-                continue;
++    if (snapshot) {
++        note_cpu_snapshot();
++    } else {
++        std::vector<HostDirtyRect> boxes;
++        std::map<std::pair<int, int>, size_t> previous;
++        for (int y = band0; y <= band1; ++y) {
++            std::map<std::pair<int, int>, size_t> next;
++            const size_t base = (size_t)(y - band0) * lw;
++            for (int x = 0; x < lw;) {
++                if (!changed[base + x]) {
++                    ++x;
++                    continue;
++                }
++                int start = x;
++                while (x < lw && changed[base + x])
++                    ++x;
++                auto span = std::make_pair(start, x);
++                auto old = previous.find(span);
++                if (old != previous.end()) {
++                    boxes[old->second].y1 = y + 1;
++                    // The exact span continues on this row. Transfer its existing
++                    // node instead of allocating/freeing the same key every row.
++                    next.insert(previous.extract(old));
++                } else {
++                    next[span] = boxes.size();
++                    boxes.push_back({start, y, x, y + 1});
++                }
+@@ -2633,12 +2698 @@
+-            int start = x;
+-            while (x < lw && changed[base + x])
+-                ++x;
+-            auto span = std::make_pair(start, x);
+-            auto old = previous.find(span);
+-            if (old != previous.end()) {
+-                boxes[old->second].y1 = y + 1;
+-                next[span] = old->second;
+-            } else {
+-                next[span] = boxes.size();
+-                boxes.push_back({start, y, x, y + 1});
+-            }
++            previous = std::move(next);
+@@ -2646,9 +2700,8 @@
+-        previous = std::move(next);
+-    }
+-    for (auto &box : boxes) {
+-        box.x0 += sh.r[0];
+-        box.x1 += sh.r[0];
+-        box.y0 += sh.r[1];
+-        box.y1 += sh.r[1];
+-    }
+-    record_cpu_write_rects(s, boxes);
++        for (auto &box : boxes) {
++            box.x0 += sh.r[0];
++            box.x1 += sh.r[0];
++            box.y0 += sh.r[1];
++            box.y1 += sh.r[1];
++        }
++        record_cpu_write_rects(s, boxes);
++    }
+--- a/dx/host_api.cpp
++++ b/dx/host_api.cpp
+@@ -301,0 +302,4 @@
++extern "C" HOST_DEFAULT int host_d3d_has_surface_generation(uint32_t, uint32_t) {
++    return 0;
++}
++
+@@ -308,0 +313,3 @@
++__attribute__((weak)) int host_frame_cpu_snapshot(HostFrameHandle) {
++    return 0;
++}
+--- a/dx/passes.h
++++ b/dx/passes.h
+@@ -8,0 +9,3 @@
++// Opted-in CPU-only frames publish a complete immutable image. Their lock
++// writes are deliberately not reconstructible from individual blit records.
++int host_frame_cpu_snapshot(HostFrameHandle frame);
+--- a/dx/pixel_change_mask.h
++++ b/dx/pixel_change_mask.h
+@@ -16 +16,2 @@
+-inline PixelChangeSpan pixel_change_mask(const uint8_t *was, const uint8_t *now, size_t pixels,
++template <bool WriteMask>
++inline PixelChangeSpan pixel_change_scan(const uint8_t *was, const uint8_t *now, size_t pixels,
+@@ -30,3 +31,5 @@
+-            const v128_t bytes = wasm_v128_and(
+-                wasm_i8x16_narrow_i16x8(different, wasm_i16x8_splat(0)), wasm_i8x16_splat(1));
+-            wasm_v128_store64_lane(mask + x, bytes, 0);
++            if constexpr (WriteMask) {
++                const v128_t bytes = wasm_v128_and(
++                    wasm_i8x16_narrow_i16x8(different, wasm_i16x8_splat(0)), wasm_i8x16_splat(1));
++                wasm_v128_store64_lane(mask + x, bytes, 0);
++            }
+@@ -67 +70,2 @@
+-            mask[x] = 1;
++            if constexpr (WriteMask)
++                mask[x] = 1;
+@@ -74,0 +79,11 @@
++
++inline PixelChangeSpan pixel_change_mask(const uint8_t *was, const uint8_t *now, size_t pixels,
++                                         unsigned bb, uint8_t *mask) {
++    return pixel_change_scan<true>(was, now, pixels, bb, mask);
++}
++// Same exact bounds without a mask allocation or writes. CPU snapshot frames
++// still need these bounds to rebase overlapping locks correctly.
++inline PixelChangeSpan pixel_change_bounds(const uint8_t *was, const uint8_t *now, size_t pixels,
++                                           unsigned bb) {
++    return pixel_change_scan<false>(was, now, pixels, bb, nullptr);
++}
+--- a/dx/tests/dx_tests.cpp
++++ b/dx/tests/dx_tests.cpp
+@@ -2997,0 +2998,71 @@
++static void test_cpu_snapshot_frames() {
++    const char *v = recomp_env("DDRAW_CPU_SNAPSHOT_ONLY");
++    const bool had = v != nullptr;
++    const std::string old = v ? v : "";
++    os_setenv("RECOMP_DDRAW_CPU_SNAPSHOT_ONLY", "1");
++    rec_reset();
++    uint32_t primary = make_primary_chain_for_test();
++    ComObj *o = rec_obj(primary);
++    CHECK(o != nullptr);
++    if (o) {
++        reset_ddraw_for_test();
++        ddraw_set_present_callbacks(recorder_present_write, recorder_present_seal);
++        uint32_t desc = sc(0xa80);
++        gm_zero(desc, DDSD_SIZE);
++        wr32(desc, DDSD_SIZE);
++        auto frame = host_frame_current();
++        CHECK_EQ(call_method(primary, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++        wr8(o->pixels + 10 * o->pitch + 7, 17);
++        CHECK_EQ(call_method(primary, S_Unlock, {0}), DD_OK);
++        CHECK(host_frame_cpu_snapshot(frame));
++        CHECK_EQ(host_frame_record_count(frame), 0u);
++        CHECK(!g_presents.empty());
++        if (!g_presents.empty())
++            CHECK_EQ(g_presents.back().pixels[10 * g_presents.back().pitch + 7], 17);
++        pump_present_for_test();
++        CHECK(host_frame_current().id != frame.id);
++        // No-op locks must not become new content or create extra frames.
++        auto idle = host_frame_current();
++        CHECK_EQ(call_method(primary, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++        CHECK_EQ(call_method(primary, S_Unlock, {0}), DD_OK);
++        pump_present_for_test();
++        CHECK_EQ(host_frame_current().id, idle.id);
++        CHECK(!host_frame_cpu_snapshot(idle));
++        // Genuine texture resources retain exact records, even without a GPU.
++        uint32_t texture = rec_make_surface(8, 8, 8, DDSCAPS_TEXTURE);
++        ComObj *tex = rec_obj(texture);
++        CHECK(tex != nullptr);
++        if (tex) {
++            CHECK_EQ(call_method(texture, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++            wr8(tex->pixels, 31);
++            CHECK_EQ(call_method(texture, S_Unlock, {0}), DD_OK);
++            CHECK(host_frame_record_count(idle) > 0);
++            CHECK(!host_frame_cpu_snapshot(idle));
++        }
++        // The pointer remains writable after Unlock, and a later present
++        // must publish its changed byte as another complete image.
++        wr8(o->pixels + 12 * o->pitch + 9, 23);
++        ddraw_present(o);
++        CHECK(host_frame_cpu_snapshot(idle));
++        CHECK_EQ(host_frame_record_count(idle), tex ? 1u : 0u);
++        if (!g_presents.empty())
++            CHECK_EQ(g_presents.back().pixels[12 * g_presents.back().pitch + 9], 23);
++        // A device transition seals the CPU frame before any GPU work.
++        ddraw_note_device(1);
++        CHECK(host_frame_current().id != idle.id);
++        auto gpu_frame = host_frame_current();
++        CHECK_EQ(call_method(primary, S_Lock, {0, desc, DDLOCK_WAIT, 0}), DD_OK);
++        wr8(o->pixels + 14 * o->pitch + 10, 29);
++        CHECK_EQ(call_method(primary, S_Unlock, {0}), DD_OK);
++        CHECK(!host_frame_cpu_snapshot(gpu_frame));
++        CHECK(host_frame_record_count(gpu_frame) > 0);
++        ddraw_note_device(0);
++        pump_present_for_test();
++        ddraw_set_present_callbacks(nullptr, nullptr);
++    }
++    if (had)
++        os_setenv("RECOMP_DDRAW_CPU_SNAPSHOT_ONLY", old.c_str());
++    else
++        os_unsetenv("RECOMP_DDRAW_CPU_SNAPSHOT_ONLY");
++}
++
+@@ -5682,0 +5754,47 @@
++// A CPU write still cleans exactly its covered GPU-dirty pixels even when
++// no renderer exists. Pure CPU surfaces and stale generations create no state.
++static void test_cpu_write_without_renderer() {
++    rec_reset();
++    uint32_t iface = make_offscreen_for_test(8, 8, 16);
++    ComObj *o = rec_obj(iface);
++    CHECK(o != nullptr);
++    if (!o)
++        return;
++    const uint32_t generation = ddraw_surface_generation(o->id);
++    CHECK(!host_d3d_has_surface_generation(o->id, generation));
++    uint8_t pixels[32]{}, mask[16]{};
++    for (int i = 0; i < 16; ++i)
++        mask[i] = i % 3 == 0;
++    HostBlitRecord record{};
++    record.dst = o->id;
++    record.dst_generation = generation;
++    record.dst_x = record.dst_y = 2;
++    record.w = record.h = 4;
++    record.cpu_bpp = 16;
++    record.cpu_pitch = 8;
++    record.cpu_pixels = pixels;
++    record.coverage = mask;
++    d3d_cpu_write(o, &record);
++    CHECK(!host_d3d_dirty_rect(o->id, generation, nullptr));
++    host_d3d_mark_dirty(o->id, generation, {0, 0, 8, 8});
++    record.dst_generation = generation + 1;
++    d3d_cpu_write(o, &record);
++    CHECK(host_d3d_dirty_rect(o->id, generation, nullptr));
++    record.dst_generation = generation;
++    d3d_cpu_write(o, &record);
++    HostD3DSurface surface{};
++    surface.id = o->id;
++    surface.width = surface.height = 8;
++    surface.pitch = o->pitch;
++    surface.bpp = 16;
++    surface.pixels = gm_ptr(o->pixels);
++    for (int y = 0; y < 8; ++y)
++        for (int x = 0; x < 8; ++x) {
++            const bool covered = x >= 2 && x < 6 && y >= 2 && y < 6 && mask[(y - 2) * 4 + x - 2];
++            HostDirtyRect r{x, y, x + 1, y + 1};
++            CHECK_EQ(host_d3d_make_coherent(&surface, generation, &r, HOST_READ_LOCK),
++                     covered ? 0 : 1);
++        }
++    CHECK(!host_d3d_dirty_rect(o->id, generation, nullptr));
++}
++
+@@ -14364,0 +14483,2 @@
++        {"CPU snapshot frames", test_cpu_snapshot_frames},
++        {"CPU writes without renderer", test_cpu_write_without_renderer},
+--- a/host/d3d_render.cpp
++++ b/host/d3d_render.cpp
+@@ -3679,0 +3680,5 @@
++extern "C" int host_d3d_has_surface_generation(uint32_t surface, uint32_t generation) {
++    auto *renderer = D3DRenderer::shared();
++    return renderer && renderer->slotFor(surface, generation) >= 0;
++}
++
+--- a/host/tests/host_tests.cpp
++++ b/host/tests/host_tests.cpp
+@@ -4071,0 +4072,3 @@
++    CHECK(host_d3d_has_surface_generation(surface.desc.id, 1));
++    CHECK(!host_d3d_has_surface_generation(surface.desc.id, 2));
++    CHECK(!host_d3d_has_surface_generation(surface.desc.id + 100000, 1));
+--- a/host/tests/pixel_kernel_tests.cpp
++++ b/host/tests/pixel_kernel_tests.cpp
+@@ -76,0 +77,3 @@
++                    const auto bounds = pixel_change_bounds(before.data() + offset,
++                                                            after.data() + 15 - offset, width, bb);
++                    check(bounds.begin == first && bounds.end == end);
+--- a/host/tests/test_frame_builder.cpp
++++ b/host/tests/test_frame_builder.cpp
+@@ -76,0 +77,4 @@
++int host_frame_cpu_snapshot(HostFrameHandle f) {
++    auto *b = get(f);
++    return b && b->cpu_snapshot;
++}
+--- a/host/tests/test_frame_builder.h
++++ b/host/tests/test_frame_builder.h
+@@ -24,0 +25 @@
++    bool cpu_snapshot = false;
+--- a/host/tests/ui_layer_tests.cpp
++++ b/host/tests/ui_layer_tests.cpp
+@@ -394,0 +395,19 @@
++static void test_cpu_snapshot_bypasses_partial_ui() {
++    test_frame_builder b;
++    solid(b, 2);
++    b.blit(2, 10, 20, 16, 16);
++    UiFrame previous{}, out{};
++    ui_layer_extract(b.frame, 640, 480, nullptr, &previous);
++    CHECK(!previous.elements.empty());
++    b.cpu_snapshot = true;
++    const auto reads = b.record_reads;
++    ui_layer_extract(b.frame, 640, 480, &previous, &out);
++    CHECK(out.elements.empty());
++    CHECK(b.record_reads == reads);
++    CHECK(b.balanced());
++    b.cpu_snapshot = false;
++    ui_layer_extract(b.frame, 640, 480, &out, &previous);
++    CHECK(!previous.elements.empty());
++    CHECK(b.balanced());
++}
++
+@@ -399,0 +419 @@
++        {"CPU snapshots bypass partial UI", test_cpu_snapshot_bypasses_partial_ui},
+--- a/host/ui_layer.cpp
++++ b/host/ui_layer.cpp
+@@ -1,0 +2 @@
++#include "../dx/passes.h"
+@@ -238 +239,3 @@
+-    if (cls == HOST_SCREEN_FMV) {
++    // A CPU snapshot frame already owns the final image, including its cursor.
++    // Extracting a partial UI from its remaining blits would be incomplete.
++    if (cls == HOST_SCREEN_FMV || host_frame_cpu_snapshot(f)) {

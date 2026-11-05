@@ -13,6 +13,7 @@ bool PresentResourceMeter(Ops &ops, std::uint32_t controller,
     const auto value = ops.attribute(unit, meter.attributeId);
     ops.visible(window, meter.labelControlId, true);
     ops.visible(window, meter.countControlId, true);
+    ops.visible(window, meter.bindingControlId, true);
     // Use the authored numeric binding (not the surrounding text control), as
     // the original AP22 quantity presenter does. Reading never spends reagents.
     ops.integer(window, meter.bindingControlId, value < 0 ? 0 : value);

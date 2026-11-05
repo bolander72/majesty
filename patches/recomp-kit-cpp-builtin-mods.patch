@@ -1,0 +1,218 @@
+diff --git a/cmake/BuiltinMods.cmake b/cmake/BuiltinMods.cmake
+index a8447d0..d79afb4 100644
+--- a/cmake/BuiltinMods.cmake
++++ b/cmake/BuiltinMods.cmake
+@@ -1,6 +1,6 @@
+ # pop_builtin_mods(<target> [RESOURCES <dir>]): compile the game's core mods
+ # into <target> for platforms that cannot load a plugin at run time (iOS, the
+-# web). Each <mods/core>/<mod>/*.c is built with its entry points renamed to
++# web). Each <mods/core>/<mod>/*.{c,cpp} entry is built with its entry points renamed to
+ # recomp_builtin_<stem>_{abi,init,exit}; a generated table lists them for the
+ # loader (mods/builtin_mods.h), which finds a manifest's plugin by its stem.
+ # RESOURCES, when given, is where the mods' manifests and assets are copied
+@@ -11,7 +11,7 @@ function(pop_builtin_mods target)
+   if(NOT EXISTS ${core})
+     return()
+   endif()
+-  file(GLOB sources CONFIGURE_DEPENDS ${core}/*/*.c)
++  file(GLOB sources CONFIGURE_DEPENDS ${core}/*/*.c ${core}/*/*.cpp)
+   set(table ${CMAKE_BINARY_DIR}/generated/${target}_builtin_mods.c)
+   set(decls "")
+   set(rows "")
+@@ -19,12 +19,22 @@ function(pop_builtin_mods target)
+     get_filename_component(stem ${src} NAME_WE)
+     string(MAKE_C_IDENTIFIER ${stem} id)
+     set(lib ${target}_mod_${id})
+-    add_library(${lib} OBJECT ${src})
+-    target_include_directories(${lib} PRIVATE ${POP_ROOT}/mods)
++    if(TARGET ${lib})
++      message(FATAL_ERROR "Duplicate builtin mod entry stem: ${stem}")
++    endif()
++    get_filename_component(module_dir ${src} DIRECTORY)
++    # Companion implementation files have no plugin entry points. Keeping
++    # them under support/ lets a C++ plugin retain portable parsers as separate
++    # translation units instead of textually including their implementation.
++    file(GLOB support CONFIGURE_DEPENDS ${module_dir}/support/*.c
++                                       ${module_dir}/support/*.cpp)
++    add_library(${lib} OBJECT ${src} ${support})
++    target_include_directories(${lib} PRIVATE ${POP_ROOT}/mods ${module_dir}
++                                              ${module_dir}/support)
+     target_compile_definitions(${lib} PRIVATE pop_mod_abi=recomp_builtin_${id}_abi
+                                               pop_mod_init=recomp_builtin_${id}_init
+                                               pop_mod_exit=recomp_builtin_${id}_exit)
+-    set_target_properties(${lib} PROPERTIES C_STANDARD 11)
++    set_target_properties(${lib} PROPERTIES C_STANDARD 11 CXX_STANDARD 17)
+     pop_optimize(${lib} 1)
+     target_sources(${target} PRIVATE $<TARGET_OBJECTS:${lib}>)
+     string(APPEND decls "extern const PopModAbi recomp_builtin_${id}_abi;\n"
+diff --git a/docs/testing.md b/docs/testing.md
+index bb8776b..0ac3758 100644
+--- a/docs/testing.md
++++ b/docs/testing.md
+@@ -83,3 +83,17 @@ The initial publication additionally runs the source-only CI checks and local
+ native suites built through CMake from the standalone checkout, and the Linux and
+ Windows portable-layer suites in CI. Long campaign completion, multiplayer
+ and sustained 4K120 remain unverified; publish measurements with their conditions.
++
++## Builtin C/C++ plugins
++
++`pop_builtin_mods` accepts one plugin entry translation unit per unique stem
++under `mods/core/<mod>`, using either `.c` or `.cpp`. Its ABI entry points retain
++C linkage through `pop_mod_api.h`. Optional `.c`/`.cpp` companions under the same
++mod's `support/` directory compile into that entry object target and are not
++registered as independent plugins. Portable core resource staging also retains `.bin` registries and `.tsv` route
++maps while excluding source and native libraries. Both directories are include paths; retain
++third-party notices when staging portable support sources. A duplicate entry
++stem fails configuration rather than producing ambiguous loader registrations.
++
++This capability only links the plugin. Game-backed browser play must separately
++qualify hooks, resources, native transactions and original saves/reloads.
+diff --git a/host/CMakeLists.txt b/host/CMakeLists.txt
+index 58e79fd..c7a7f38 100644
+--- a/host/CMakeLists.txt
++++ b/host/CMakeLists.txt
+@@ -271,7 +271,7 @@ if(TARGET recomp_gen)
+     endif()
+     if(EXISTS ${RECOMP_GAME_DIR}/mods/core)
+       file(COPY ${RECOMP_GAME_DIR}/mods/core DESTINATION ${web_resources}/mods FILES_MATCHING PATTERN "*.toml"
+-           PATTERN "*.json" PATTERN "*.lua" PATTERN "*.png" PATTERN "*.bmp" PATTERN "*.txt")
++           PATTERN "*.json" PATTERN "*.lua" PATTERN "*.png" PATTERN "*.bmp" PATTERN "*.txt" PATTERN "*.bin" PATTERN "*.tsv")
+     endif()
+     # The player page (tools/web_launcher.py --web-build places it beside the launcher).
+     set(APP ${RECOMP_APP_NAME})
+diff --git a/mods/CMakeLists.txt b/mods/CMakeLists.txt
+index 92f27b0..aaed982 100644
+--- a/mods/CMakeLists.txt
++++ b/mods/CMakeLists.txt
+@@ -127,3 +127,18 @@ if(TARGET recomp_gen AND NOT IOS AND NOT ANDROID)
+   add_test(NAME mods_tests COMMAND mods_tests WORKING_DIRECTORY ${POP_ROOT})
+   set_tests_properties(mods_tests PROPERTIES LABELS mods ENVIRONMENT RECOMP_BUILD_ROOT=${POP_BUILD_ROOT})
+ endif()
++
++# Exercise actual C and C++ entry linkage and companion registration without a
++# guest or renderer. The local game directory applies only inside this function.
++if(NOT WIN32)
++  function(pop_builtin_link_fixture)
++    set(RECOMP_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/builtin)
++    add_executable(builtin_mods_tests tests/builtin_mods_test.c)
++    target_include_directories(builtin_mods_tests PRIVATE ${POP_ROOT}/mods)
++    pop_builtin_mods(builtin_mods_tests)
++    pop_test_binary(builtin_mods_tests)
++    add_test(NAME builtin_mods_tests COMMAND builtin_mods_tests)
++    set_tests_properties(builtin_mods_tests PROPERTIES LABELS nogame TIMEOUT 15)
++  endfunction()
++  pop_builtin_link_fixture()
++endif()
+diff --git a/mods/tests/builtin_mods_test.c b/mods/tests/builtin_mods_test.c
+new file mode 100644
+index 0000000..1c6e9cb
+--- /dev/null
++++ b/mods/tests/builtin_mods_test.c
+@@ -0,0 +1,22 @@
++#include "builtin_mods.h"
++#include <assert.h>
++#include <string.h>
++
++int main(void) {
++    unsigned seen = 0;
++    for (const RecompBuiltinMod *mod = recomp_builtin_mods; mod->stem; ++mod) {
++        assert(mod->abi && mod->abi->api_version == POP_MOD_API_VERSION);
++        if (!strcmp(mod->stem, "c_entry")) {
++            assert(mod->init(0) == 3);
++            seen |= 1;
++        } else if (!strcmp(mod->stem, "cpp_entry")) {
++            assert(mod->init(0) == 7);
++            seen |= 2;
++        } else {
++            assert(!"support source registered as a plugin");
++        }
++        assert(mod->exit && mod->exit() == POP_OK);
++    }
++    assert(seen == 3);
++    return 0;
++}
+diff --git a/mods/tests/fixtures/builtin/mods/core/c/c_entry.c b/mods/tests/fixtures/builtin/mods/core/c/c_entry.c
+new file mode 100644
+index 0000000..b9401c0
+--- /dev/null
++++ b/mods/tests/fixtures/builtin/mods/core/c/c_entry.c
+@@ -0,0 +1,9 @@
++#include "pop_mod_api.h"
++POP_MOD_DECLARE_ABI();
++PopModStatus pop_mod_init(const PopModApi *api) {
++    (void)api;
++    return 3;
++}
++PopModStatus pop_mod_exit(void) {
++    return POP_OK;
++}
+diff --git a/mods/tests/fixtures/builtin/mods/core/cpp/cpp_entry.cpp b/mods/tests/fixtures/builtin/mods/core/cpp/cpp_entry.cpp
+new file mode 100644
+index 0000000..3556df0
+--- /dev/null
++++ b/mods/tests/fixtures/builtin/mods/core/cpp/cpp_entry.cpp
+@@ -0,0 +1,9 @@
++#include "pop_mod_api.h"
++#include "companion.h"
++POP_MOD_DECLARE_ABI();
++extern "C" PopModStatus pop_mod_init(const PopModApi *) {
++    return companion_value();
++}
++extern "C" PopModStatus pop_mod_exit(void) {
++    return POP_OK;
++}
+diff --git a/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.cpp b/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.cpp
+new file mode 100644
+index 0000000..0dc09a8
+--- /dev/null
++++ b/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.cpp
+@@ -0,0 +1,6 @@
++#include "companion.h"
++#include <vector>
++int companion_value() {
++    const std::vector<int> values{3, 4};
++    return values[0] + values[1];
++}
+diff --git a/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.h b/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.h
+new file mode 100644
+index 0000000..0546eca
+--- /dev/null
++++ b/mods/tests/fixtures/builtin/mods/core/cpp/support/companion.h
+@@ -0,0 +1,2 @@
++#pragma once
++int companion_value();
+diff --git a/tools/copy_core_mods.py b/tools/copy_core_mods.py
+index 6e060fa..a092290 100644
+--- a/tools/copy_core_mods.py
++++ b/tools/copy_core_mods.py
+@@ -10,7 +10,7 @@ def copy_core_mods(game_dir, destination):
+     if destination.exists():
+         shutil.rmtree(destination)
+     source = Path(game_dir) / "mods/core"
+-    allowed = {".toml", ".json", ".lua", ".png", ".bmp", ".txt"}
++    allowed = {".toml", ".json", ".lua", ".png", ".bmp", ".txt", ".bin", ".tsv"}
+     files = []
+     for path in source.rglob("*") if source.exists() else []:
+         if path.is_file() and not path.is_symlink() and path.suffix.lower() in allowed:
+diff --git a/tools/tests/test_build.py b/tools/tests/test_build.py
+index 4e1f116..b3d8e40 100644
+--- a/tools/tests/test_build.py
++++ b/tools/tests/test_build.py
+@@ -52,7 +52,7 @@ def test_android_core_assets_replace_stale_manifests_without_shipping_binaries(t
+     game = tmp_path / "game"
+     core = game / "mods/core/display"
+     core.mkdir(parents=True)
+-    for name in ("mod.toml", "palette.json", "display.c", "display.dylib", "display.so"):
++    for name in ("mod.toml", "palette.json", "features.bin", "routes.tsv", "display.c", "display.cpp", "display.dylib", "display.so"):
+         (core / name).write_text(name)
+     out = tmp_path / "apk"
+     stale = out / "app/src/main/assets/mods/core/stale/mod.toml"
+@@ -64,7 +64,7 @@ def test_android_core_assets_replace_stale_manifests_without_shipping_binaries(t
+     build.android_stage_core_assets(out, game)
+     staged = out / "app/src/main/assets/mods/core"
+     assert sorted(p.relative_to(staged).as_posix() for p in staged.rglob("*") if p.is_file()) == [
+-        "display/mod.toml", "display/palette.json"]
++        "display/features.bin", "display/mod.toml", "display/palette.json", "display/routes.tsv"]
+     assert profile.read_text() == "keep"
+     (core / "mod.toml").write_text("new")
+     build.android_stage_core_assets(out, game)

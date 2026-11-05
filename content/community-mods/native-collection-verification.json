@@ -1,0 +1,896 @@
+{
+  "format": "majesty-community-native-collection-verification-v1",
+  "date": "2026-10-16",
+  "sourceFiles": {
+    "native/community/community_names.h": {
+      "bytes": 1845,
+      "sha256": "ad399d027e3f8c583129e0f7e002cb7a0e7dc125a2d67eec5e1d373bfb738894"
+    },
+    "native/community/name_registration.h": {
+      "bytes": 1797,
+      "sha256": "d060dba6780bbf5d2eb4ac3c9a04257f9f3f130c37bfb88d94a21df586a84f26"
+    },
+    "native/community/name_registration_tests.cpp": {
+      "bytes": 4111,
+      "sha256": "6f866d87adc723642392de6ce96db0946f2f229293f952356c5e903789d9d53f"
+    },
+    "native/community/native_probe_plugin.cpp": {
+      "bytes": 141611,
+      "sha256": "4469a6d4c3f241058b15dd4774ec1b893ec8419b70a7cdce521073e9c3d988b7"
+    },
+    "native/community/guild_gameplay_runtime.cpp": {
+      "bytes": 16433,
+      "sha256": "d643b2329b8fee8f017181d476590edcd2419ca94aa0b51ec9e7907afaacbc1e"
+    },
+    "native/community/guild_gameplay_runtime.h": {
+      "bytes": 959,
+      "sha256": "c4a6240c8f0d1abcc78b3b874137f39af1779bbb791724345070b7790c74c2b0"
+    },
+    "native/community/recruitment_panel_owner.h": {
+      "bytes": 10959,
+      "sha256": "906f12572c3bf6870a1c072791bb83fcc5c47379844fba48e150ae0fc1128063"
+    },
+    "native/community/recruitment_panel_owner_tests.cpp": {
+      "bytes": 11034,
+      "sha256": "39e44f05cd199c5e689abe27d3280dbe6a691d62089c8266723b1b58f256a7d0"
+    },
+    "native/community/recruitment_panel_runtime.cpp": {
+      "bytes": 14345,
+      "sha256": "2635953dde81a68d5e1282890375066284a32daaeda34f3eceef7878a99e4311"
+    },
+    "native/community/private_template_execution_tests.cpp": {
+      "bytes": 16168,
+      "sha256": "491169686385bb2d6306937f6a1ef023f7597f7fde13a9ec68151c1941157d3d"
+    },
+    "scripts/prepare-community-native-candidate.py": {
+      "bytes": 12780,
+      "sha256": "4e2cb3cbaa15dc33e2d96b3383d0e7141f0e45a55ed8c5b00c8b909fe476c9dc"
+    },
+    "scripts/prepare-community-process-engine.py": {
+      "bytes": 13676,
+      "sha256": "bfce843e55dccbde94ab0b60e3d5ded92580d7fe2833b51918cfe01016829a3c"
+    },
+    "tests/test_community_native_candidate.py": {
+      "bytes": 4633,
+      "sha256": "d497771ae2dd4014c6e7b2463ae70d7cb1c14679077889d9bdb92f95ada362fb"
+    },
+    "native/community/guild_gameplay_services_tests.cpp": {
+      "bytes": 7712,
+      "sha256": "18e24a2a9c35b744fc239e7fa4be43d5a780d77ee7d6fdddc51e16b311973940"
+    }
+  },
+  "candidate": {
+    "bytes": 11127,
+    "sha256": "f9e903ed6c903cc5fdf1b4964c3390153fb2942506c3084bed0c3785b9896053"
+  },
+  "boundOutputFiles": 54,
+  "allFinalOutputHashesVerified": true,
+  "originalSdkInputsByteIdentical": true,
+  "effectiveBaselineFiles": 36,
+  "retainsAlchemistMjaContinuations": true,
+  "editionRoutesShareMJCNames": true,
+  "originalEngineLink": {
+    "format": "majesty-community-process-engine-linked-v1",
+    "nativeExecutableSha256": "cc12439d79c8184c92899909f6bfac1298da7c393685881f57157230238a5a84",
+    "nativeBuildQualified": true,
+    "qualificationScope": "Official link only; live process bootstrap pending",
+    "engineStageSha256": "920a7554d53fdc9811ea69cfc2704d7e4f5ed31aa4f1e4c9cd203b8ab7ffe751",
+    "build": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community2029-process-default-provider-engine/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community2029-process-default-provider-engine",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792182667,
+      "terminal": true,
+      "peakOwnedRssMiB": 299.8,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 62543,
+      "endedAtUnix": 1792182691
+    },
+    "coreBuiltin": true,
+    "gameplayQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "nameProviderRegression": "/Users/mike/.local/share/majesty-work/community2031-native-name-regression.json"
+  },
+  "nativeGuildServicesBoundary": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_guild_gameplay_services_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792180811,
+    "terminal": true,
+    "peakOwnedRssMiB": 174.6,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 18859,
+    "endedAtUnix": 1792180814
+  },
+  "nameRegistrationRegression": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community2029-process-default-provider-engine/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community2029-process-default-provider-engine",
+      "--native-test",
+      "community_name_registration_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792182706,
+    "terminal": true,
+    "peakOwnedRssMiB": 142.6,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 74139,
+    "endedAtUnix": 1792182709
+  },
+  "nativeNameGenerators": [
+    "NM18",
+    "NMBD",
+    "NMBS",
+    "NMBT",
+    "NMPH"
+  ],
+  "stockNamesPreserved": [
+    "NM11",
+    "HN41",
+    "HN42"
+  ],
+  "fixedNameProviderGuard": {
+    "reproduction": "community2027-native-bards-visible-site",
+    "nativeExitCode": 6,
+    "guardStopped": false,
+    "originalProvider": 0,
+    "registrationStatus": "NotReady",
+    "stockFallback": "004f6710 resolves0 through0054c3c0; preserve original constructor semantics",
+    "testScope": "Both explicit and default providers install; unready/collision/construction/allocation refusals remain"
+  },
+  "originalWorldSave": {
+    "path": "/Users/mike/.local/share/majesty-work/community2014-native-bards-paid/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 0 Days.GMP",
+    "bytes": 352825,
+    "sha256": "c397b8633ec5f8ed17f9d94a9f6acf2fa66a8b7dff65d72eae3c850975ebba40",
+    "kind": "Original final-library Freestyle baseline; no paid Bards construction",
+    "inputSave": null
+  },
+  "scopes": {
+    "originalFreestyleEntry": true,
+    "originalFreestyleSaveReload": true,
+    "allFiveGeneratorsObserved": true,
+    "paidNewGuildConstruction": true,
+    "newHeroRecruitment": true,
+    "fullAlchemistCoexistence": false,
+    "allRequiredCapabilities": false,
+    "browserPlayable": false,
+    "published": false,
+    "nativeBardsWorldReload": true,
+    "nativeBardsParentCard": true,
+    "nativeBardsParentSaveReloadCycle": true,
+    "nativeBardsRecruitmentChild": true,
+    "nativeBardsRecruitmentSave": true,
+    "nativeBardsFreshHeroReload": true,
+    "nativeBardsAllThreeCharacterCards": true,
+    "nativeBardsPaidTier2": true,
+    "nativeBardsPaidTier3": true,
+    "nativeBardsEpicChroniclesSaved": true,
+    "nativeBardsEpicChroniclesFreshReload": true,
+    "nativePhantomPaidConstruction": true,
+    "nativePhantomPaidRecruitment": true,
+    "nativePhantomCharacterCard": true,
+    "nativePhantomFreshHeroReload": true,
+    "nativePhantomPaidTier2": true,
+    "nativePhantomPaidTier3": true,
+    "nativeAlchemyPaidCombinedConstruction": true,
+    "nativeAlchemyCombinedRecruitAndDeath": true
+  },
+  "limits": [
+    "Bootstrap uses older original native archive: Alchemist panel/research bridges disabled because fog entry remains unhookable in that archive. This is not a release configuration.",
+    "Trials2012/2014/2017/2019/2025/2033/2034 did not establish paid Bards construction; wrong-row, existing-building/mobile-unit and fog refusals were retained as failed attempts.",
+    "Chronicles gold/XP are source GPL wrappers, not missing native award observers; native visual ownership/world-ready events remain pending.",
+    "The earlier three-argument factory fixture was insufficient. Original PE returns RET16; native2056 used RET12 and corrupted the caller. Current source and execution fixture preserve all four arguments and16-byte cleanup.",
+    "Trials2061/2077 parent cards opened but Recruit was inert: direct generated factory RET skipped owner attachment. Trial2088 corrects it and saves all three paid living heroes. Fresh hero reload and cards subsequently passed; advanced mechanisms and browser remain unqualified.",
+    "Research execution/completion now use nested original callbacks and exit ResearchFlight before native RET; Official native2098 link passes; native paid research and fresh reload subsequently passed.",
+    "Unpatched common1920 fails nested street-show cancellation after upgrade3. Current candidate2130/common2126 reacquires the root after cancellation; exact native2135 replay passes and saves. Native Haunt construction/recruitment/card/tier2 subsequently passed; advanced mechanics and full browser/Alchemy qualification remain pending."
+  ],
+  "paidBardsConstruction": {
+    "trial": {
+      "nativeExecutableSha256": "cc12439d79c8184c92899909f6bfac1298da7c393685881f57157230238a5a84",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2032-process-engine-linked.json",
+      "startedAtUnix": 1792183512,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 170.3,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "c397b8633ec5f8ed17f9d94a9f6acf2fa66a8b7dff65d72eae3c850975ebba40",
+        "bytes": 352825
+      },
+      "ownedNativePid": 79012,
+      "endedAtUnix": 1792183630
+    },
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2042-native-bards-construction-save/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 1 Day.GMP",
+      "bytes": 365544,
+      "sha256": "7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176",
+      "profile": "/Users/mike/.local/share/majesty-work/community2042-native-bards-construction-save/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2042-native-bards-construction-save/trial/run.json",
+      "inputSha256": "c397b8633ec5f8ed17f9d94a9f6acf2fa66a8b7dff65d72eae3c850975ebba40"
+    },
+    "actors": [
+      {
+        "id": 561,
+        "description": "ABt1",
+        "owner": 0,
+        "hp": 300,
+        "maxhp": 300,
+        "completed": 1,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 672,
+          "y": 3264
+        },
+        "title": "Bards_Hall",
+        "type": "building"
+      }
+    ],
+    "initialListedPrice": 800,
+    "nextListedPrice": 1600,
+    "cheatsUsed": false,
+    "ownedFixturePreparation": "Warriors Guild removed through ordinary native demolition and Yes confirmation; no input/player save edited"
+  },
+  "lastOrdinaryControllerEngine": {
+    "format": "majesty-community-process-engine-linked-v1",
+    "nativeExecutableSha256": "ed08e75e070302759d2f00d8091da73e8823f2a400fda123291e2c6f9556f738",
+    "nativeBuildQualified": true,
+    "qualificationScope": "Official native link with nested factory/research original callbacks; actual Bards gameplay and research scope separately recorded.",
+    "engineStageSha256": "3e774d2a68adaf7e99e7e4890c22839c7660c3971e7097b3048e63bd6b0a1c92",
+    "build": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community2097-process-research-callback-engine/kit/tools/build.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community2097-process-research-callback-engine",
+        "--target",
+        "smoke",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792186406,
+      "terminal": true,
+      "peakOwnedRssMiB": 302.9,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 76853,
+      "endedAtUnix": 1792186504
+    },
+    "coreBuiltin": true,
+    "gameplayQualified": false,
+    "browserPlayable": false,
+    "published": false,
+    "nameProviderRegression": "/Users/mike/.local/share/majesty-work/community2031-native-name-regression.json",
+    "nativeOwnerRegression": "/Users/mike/.local/share/majesty-work/community2051-native-owner-identity.json",
+    "nativeOwnerRuntimeABI": "/Users/mike/.local/share/majesty-work/community2052-native-owner-runtime-ABI.json",
+    "nativeFactoryRegression": "/Users/mike/.local/share/majesty-work/community2057-native-four-argument-factory.json",
+    "originalFactoryArguments": 4,
+    "originalFactoryCleanupBytes": 16,
+    "callbackReturnRegression": "/Users/mike/.local/share/majesty-work/community2094-native-callback-return-boundary.json"
+  },
+  "originalFactoryABI": {
+    "entry": "004ca4f0",
+    "stackArguments": 4,
+    "cleanupBytes": 16,
+    "fourthArgumentPreserved": true,
+    "originalCaller": "004168b3..004168c2",
+    "originalRetExamples": [
+      "004ca58f C2 10 00",
+      "004ca5cf C2 10 00"
+    ],
+    "positiveFixture": {
+      "command": [
+        "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+        "--game-dir",
+        "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+        "--native-test",
+        "community_recruitment_runtime_execution_tests",
+        "--jobs",
+        "1",
+        "--preset",
+        "alchemist1009-probe"
+      ],
+      "startedAtUnix": 1792184454,
+      "terminal": true,
+      "peakOwnedRssMiB": 117.7,
+      "rssCeilingMiB": 2048,
+      "stopReason": null,
+      "exitCode": 0,
+      "productionChanged": false,
+      "browserPlayable": false,
+      "ownedPid": 9110,
+      "endedAtUnix": 1792184457
+    }
+  },
+  "nativeOwnerIdentityRegression": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_recruitment_owner_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792184025,
+    "terminal": true,
+    "peakOwnedRssMiB": 219.9,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 94715,
+    "endedAtUnix": 1792184027
+  },
+  "nativeOwnerContextContract": "Original00481b70 takes the actual unit pointer, stores its ID at controller+1c, and stores a separate global context token at+18. Unit/identity/family/window/vtable checks remain enforced.",
+  "postControllerSave": {
+    "path": "/Users/mike/.local/share/majesty-work/community2061-native-bards-recruitment/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 2 Days.GMP",
+    "bytes": 374772,
+    "sha256": "0f7954d95768fd6c1698a52c2c59e882948cd7071616f81d856b27502f8d9f39",
+    "profile": "/Users/mike/.local/share/majesty-work/community2061-native-bards-recruitment/trial/profile",
+    "trial": "/Users/mike/.local/share/majesty-work/community2061-native-bards-recruitment/trial/run.json",
+    "inputSha256": "7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176"
+  },
+  "postControllerSaveActors": [
+    {
+      "id": 561,
+      "description": "ABt1",
+      "owner": 0,
+      "hp": 300,
+      "maxhp": 300,
+      "completed": 1,
+      "live": true,
+      "parent": 0,
+      "mapPosition": {
+        "x": 672,
+        "y": 3264
+      },
+      "title": "Bards_Hall",
+      "type": "building"
+    }
+  ],
+  "paidBardsRecruitment": {
+    "trial": {
+      "nativeExecutableSha256": "763490ff41fd2f5baaf3fe687701b61e52322f2d3a83ce0961240935f8981630",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2084-process-engine-linked.json",
+      "startedAtUnix": 1792186171,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 177.9,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176",
+        "bytes": 365544
+      },
+      "ownedNativePid": 74934,
+      "endedAtUnix": 1792186265
+    },
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 2 Days.GMP",
+      "bytes": 391089,
+      "sha256": "a87fc6396a42ad0a120bea6bdc97159f26392577e3dc3e6c7ecb9c6ae2d192e3",
+      "profile": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/run.json",
+      "inputSha256": "7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176"
+    },
+    "actors": [
+      {
+        "id": 561,
+        "description": "ABt1",
+        "owner": 0,
+        "hp": 300,
+        "maxhp": 300,
+        "completed": 1,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 672,
+          "y": 3264
+        },
+        "title": "Bards_Hall",
+        "type": "building"
+      },
+      {
+        "id": 585,
+        "description": "AVt1",
+        "owner": 0,
+        "hp": 31,
+        "maxhp": 31,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 80,
+          "y": 1280
+        },
+        "title": "Blade_Dancer",
+        "type": "hero"
+      },
+      {
+        "id": 603,
+        "description": "AVu1",
+        "owner": 0,
+        "hp": 13,
+        "maxhp": 13,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 1583,
+          "y": 2271
+        },
+        "title": "Spellsinger",
+        "type": "hero"
+      },
+      {
+        "id": 627,
+        "description": "AVv1",
+        "owner": 0,
+        "hp": 14,
+        "maxhp": 14,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 1558,
+          "y": 2537
+        },
+        "title": "Troubadour",
+        "type": "hero"
+      }
+    ],
+    "costPerHero": 500,
+    "sourceClasses": [
+      "Blade_Dancer",
+      "Spellsinger",
+      "Troubadour"
+    ],
+    "nativeAliases": [
+      "AVt1",
+      "AVu1",
+      "AVv1"
+    ],
+    "parentCountsObserved": [
+      1,
+      1,
+      1
+    ],
+    "cheatsUsed": false,
+    "screenshots": [
+      "/Users/mike/.local/share/majesty-work/community2093-three-bards-parent.png"
+    ],
+    "freshHeroReloadQualified": true,
+    "fullMechanicsQualified": false
+  },
+  "callbackBoundaryRegression": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_recruitment_runtime_execution_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792186286,
+    "terminal": true,
+    "peakOwnedRssMiB": 173.1,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 75932,
+    "endedAtUnix": 1792186288
+  },
+  "privateTemplateRegression": {
+    "command": [
+      "/Users/mike/.local/share/majesty-work/tools-venv/bin/python",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture/kit/tools/test.py",
+      "--game-dir",
+      "/Users/mike/.local/share/majesty-work/community1872-private-template-fixture",
+      "--native-test",
+      "community_private_template_execution_tests",
+      "--jobs",
+      "1",
+      "--preset",
+      "alchemist1009-probe"
+    ],
+    "startedAtUnix": 1792186288,
+    "terminal": true,
+    "peakOwnedRssMiB": 3.9,
+    "rssCeilingMiB": 2048,
+    "stopReason": null,
+    "exitCode": 0,
+    "productionChanged": false,
+    "browserPlayable": false,
+    "ownedPid": 76013,
+    "endedAtUnix": 1792186289
+  },
+  "callbackBoundary": {
+    "originalFactoryReturn": "Original generated RET16 reaches callback sentinel; direct fn call skips host capture",
+    "fix": "Nested generated-original guest_call through separate registered entry, followed by owned capture and RET16",
+    "regression": "Owner execution fixture now uses nested setjmp/longjmp and requires post-factory vtable capture and later controls",
+    "researchFix": "Same boundary applied to original research calls; no RET while ResearchFlight scope active",
+    "researchLiveQualified": false
+  },
+  "freshBardsHeroReload": {
+    "trial": {
+      "nativeExecutableSha256": "763490ff41fd2f5baaf3fe687701b61e52322f2d3a83ce0961240935f8981630",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2084-process-engine-linked.json",
+      "startedAtUnix": 1792186310,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 183.3,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "a87fc6396a42ad0a120bea6bdc97159f26392577e3dc3e6c7ecb9c6ae2d192e3",
+        "bytes": 391089
+      },
+      "ownedNativePid": 76288,
+      "endedAtUnix": 1792186379
+    },
+    "inputSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 2 Days.GMP",
+      "bytes": 391089,
+      "sha256": "a87fc6396a42ad0a120bea6bdc97159f26392577e3dc3e6c7ecb9c6ae2d192e3",
+      "profile": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2088-native-bards-three-heroes-save/trial/run.json",
+      "inputSha256": "7a37512013191ad6fbcc7a3f54e3b152e92e08c81630df8db6ae1860fe729176"
+    },
+    "sourceClasses": [
+      "Blade_Dancer",
+      "Spellsinger",
+      "Troubadour"
+    ],
+    "nativeMemberList": {
+      "Riley the Gallant": {
+        "level": 4,
+        "hp": 37,
+        "maxhp": 37
+      },
+      "Morgan Chimeweaver": {
+        "level": 2,
+        "hp": 13,
+        "maxhp": 13
+      },
+      "Linden Wanderwell": {
+        "level": 1,
+        "hp": 14,
+        "maxhp": 14
+      }
+    },
+    "characterCardQualified": false,
+    "screenshots": [
+      "/Users/mike/.local/share/majesty-work/community2099-first-bard-card.png"
+    ],
+    "scope": "Original fresh profile loads3paid heroes, completed Hall and native Members list. No browser or full mechanics claim."
+  },
+  "focusedPythonTests": {
+    "tests": 74,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "passed": true
+  },
+  "currentPrivateCandidate": {
+    "path": "/Users/mike/.local/share/majesty-work/community2130-reentrant-native-candidate/candidate.json",
+    "sha256": "f3615f4e5d49fd97c93820aced9867c2dedf0f0730ca52aee12938846e0113c5",
+    "replacesCandidate2028CommonOnly": true,
+    "runtimeResourcesIdentical": true
+  },
+  "bardsTier3AndResearch": {
+    "trial": {
+      "nativeExecutableSha256": "ed08e75e070302759d2f00d8091da73e8823f2a400fda123291e2c6f9556f738",
+      "nativeBuild": "/Users/mike/.local/share/majesty-work/community2132-source-bound-engine-reuse.json",
+      "startedAtUnix": 1792188039,
+      "deadlineSeconds": 210,
+      "rssCeilingMiB": 1024,
+      "peakRssMiB": 183.7,
+      "stopReason": null,
+      "nativeExitCode": 0,
+      "nativeSessionTerminal": true,
+      "audioMuted": true,
+      "freshOwnedProfile": true,
+      "inputSave": {
+        "sha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d",
+        "bytes": 399441
+      },
+      "ownedNativePid": 97767,
+      "endedAtUnix": 1792188176
+    },
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 5 Days.GMP",
+      "bytes": 393874,
+      "sha256": "12b973434c66f748d8ce3fdbccc3874e066e45b4df280e747dacc85b4d4f8547",
+      "profile": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2135-native-reentrant-root-replay/trial/run.json",
+      "inputSha256": "7fa96f4b730e01e1c33de34fdb5f4fc2163ec1cf68e387546c29520d3124111d"
+    },
+    "actors": [
+      {
+        "id": 561,
+        "description": "ABt3",
+        "owner": 0,
+        "hp": 700,
+        "maxhp": 700,
+        "completed": 1,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 672,
+          "y": 3264
+        },
+        "title": "Bards_Hall",
+        "type": "building"
+      },
+      {
+        "id": 585,
+        "description": "AVt1",
+        "owner": 0,
+        "hp": 17,
+        "maxhp": 51,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 432,
+          "y": 783
+        },
+        "title": "Blade_Dancer",
+        "type": "hero"
+      },
+      {
+        "id": 603,
+        "description": "AVu1",
+        "owner": 0,
+        "hp": 10,
+        "maxhp": 17,
+        "live": true,
+        "parent": 561,
+        "mapPosition": null,
+        "title": "Spellsinger",
+        "type": "hero"
+      },
+      {
+        "id": 627,
+        "description": "AVv1",
+        "owner": 0,
+        "hp": 25,
+        "maxhp": 25,
+        "live": true,
+        "parent": 0,
+        "mapPosition": {
+          "x": 464,
+          "y": 968
+        },
+        "title": "Troubadour",
+        "type": "hero"
+      }
+    ],
+    "upgradeCosts": [
+      2500,
+      3500
+    ],
+    "researchCost": 3000,
+    "researchDonePlayers": [
+      0
+    ],
+    "researchPendingCount": 0,
+    "researchAvailableHallAgent": 36,
+    "freshReloadQualified": false,
+    "activityReentrancyProof": "content/community-mods/activity-reentrancy-verification.json",
+    "fullBenefitsAndLifecycleQualified": false
+  },
+  "nativePhantomGuild": {
+    "paidConstructionGold": 1400,
+    "completedTier1Hp": 250,
+    "paidPhantomRecruitmentGold": 700,
+    "recruitedNativeType": "AVp1",
+    "recruitedName": "Fen Shadowfiend",
+    "directCharacterCard": true,
+    "freshOriginalSaveReload": true,
+    "paidTier2Gold": 1800,
+    "completedTier2Hp": 350,
+    "latestSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 8 Days.GMP",
+      "bytes": 409986,
+      "sha256": "2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5",
+      "profile": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2154-native-phantom-card-haunt-upgrade/trial/run.json",
+      "inputSha256": "e3f9fa0950fdd404e2ef4a723362915e01874f738c4cdb37c2a5abda10271ee7"
+    },
+    "evidence": {
+      "community2149-haunt-generated-save.json": {
+        "bytes": 567,
+        "sha256": "9055909cbf347882d03e54828f53fa7c76d588a71c28de53e691d1cf88fc4c55"
+      },
+      "community2153-haunt-generated-save.json": {
+        "bytes": 585,
+        "sha256": "4c482b08fbaf25678e3d01a11c4157d6bae22a7e7d31a585c4e04d1aa9d6f3d2"
+      },
+      "community2156-haunt-upgrade-generated-save.json": {
+        "bytes": 597,
+        "sha256": "05634040ed7a499fa69c60f2cee23f4f52952eff478acd54a9df0eb466092904"
+      },
+      "community2156-haunt-upgrade-saved-actors.json": {
+        "bytes": 2461,
+        "sha256": "f6608880ae9e2f881bbf61a53a0d6a6ea9dd074778e3d8229efa737ad5ba64f8"
+      },
+      "community2155-phantom-character-card.png": {
+        "bytes": 702422,
+        "sha256": "def74df264e6982b2f013720d54baf574465b2bd3bbadeb2e666cc93eb91da3a"
+      },
+      "community2146-native-haunt-north-site": {
+        "receipt": {
+          "bytes": 614,
+          "sha256": "bbb52e8067bcaf90c7248958a2931326095e3c06758905cc7d4f2bd0f64bb443"
+        },
+        "peakRssMiB": 212.6,
+        "exitCode": 0,
+        "audioMuted": true
+      },
+      "community2154-native-phantom-card-haunt-upgrade": {
+        "receipt": {
+          "bytes": 615,
+          "sha256": "9cc87f214a4c421d940f79226a340b37e34db27f099eb42b437bc6160f224058"
+        },
+        "peakRssMiB": 202.8,
+        "exitCode": 0,
+        "audioMuted": true
+      }
+    },
+    "scope": "Ordinary native guild play and saves only; advanced abilities and browser remain unqualified",
+    "paidTier3Gold": 2200,
+    "completedTier3Hp": 475,
+    "tier3Save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 9 Days.GMP",
+      "bytes": 399549,
+      "sha256": "9a3f32be693bd6a8ba77551674adb6fd250cad39776fb1d4e1949c4edab348e3",
+      "profile": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2210-native-full-runtime-haunt3/trial/run.json",
+      "inputSha256": "2520b936789298f1eb87214af0ae923f8795690de4aeb2dafda2ef91656780a5"
+    },
+    "tier3Actors": {
+      "bytes": 2360,
+      "sha256": "ad8f211d9214ae872d38f627396d3dc3d4fbb52dba13dce20b63583d79e89a2a"
+    }
+  },
+  "nativeAlchemyCombinedWorld": {
+    "buildingNativeType": "ABx1",
+    "buildingId": 1812,
+    "paidBuildingGold": 1400,
+    "completedHp": 235,
+    "paidRecruitGold": 600,
+    "firstRecruitName": "Arcane Amberglass",
+    "firstRecruitId": 2079,
+    "firstRecruitDied": true,
+    "deathCauseQualified": false,
+    "normalSaveAfterDeath": true,
+    "otherFourCommunityHeroesAlive": true,
+    "save": {
+      "path": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 408111,
+      "sha256": "8ea4dd493fba40ce8524b8d9145ab94556903bbf9145fc1bf3cb1fdb89584b50",
+      "profile": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2214-native-paid-alchemy-coexistence/trial/run.json",
+      "inputSha256": "9a3f32be693bd6a8ba77551674adb6fd250cad39776fb1d4e1949c4edab348e3"
+    },
+    "savedActors": {
+      "bytes": 2947,
+      "sha256": "6648c44d8a8edcc13c76520d5b66974202c9142a0331559e46a7764aa478da7b"
+    },
+    "nativeExitCode": 0,
+    "peakRssMiB": 200.6,
+    "livingAlchemistFreshReloadQualified": true,
+    "movementAdapterLimit": "Native2210/2214 used old loan+20; native2234 separately qualified corrected loan+18 speed/expiry. Native2240 ordinary coexistence uses the corrected adapter.",
+    "livingCombinedSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 403232,
+      "sha256": "bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df",
+      "profile": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2240-native-recruitment-completion/trial/run.json",
+      "inputSha256": "76c9eb9ce451c350645a89f72456e87a0dc8c52ca6e87045fe78b25158529953"
+    },
+    "livingCombinedActors": {
+      "bytes": 2948,
+      "sha256": "28c626cea1a08fbe9fb0cc54dcf79bfd295a1c550c7b806932eec778c208baa7"
+    },
+    "livingAlchemistCard": {
+      "bytes": 686863,
+      "sha256": "435a354890bb0a7c162888222526f15c8b25370f0ef0c9c37701bc4350b54042"
+    },
+    "livingRecruit": {
+      "id": 2143,
+      "name": "Adalia Smokesleeve",
+      "hp": 11,
+      "maxHp": 11,
+      "paidRecruitmentResumedFromOriginalSave": true
+    },
+    "allFiveHeroTypesAlive": true,
+    "reloadedCombinedSave": {
+      "path": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/profile/Documents/My Games/MajestyHD/SaveGame/(Freestyle Game) 11 Days.GMP",
+      "bytes": 400021,
+      "sha256": "5126a2cca05310966f96f93f55eff097a3cd73b45ad20d23a7ef25da45f6fb1c",
+      "profile": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/profile",
+      "trial": "/Users/mike/.local/share/majesty-work/community2248-native-five-hero-reload/trial/run.json",
+      "inputSha256": "bf1c69f427723f0ed845129a90f89f9f57df2154f48d427e1ab8b1c35f1287df"
+    },
+    "reloadedCombinedActors": {
+      "bytes": 2932,
+      "sha256": "66263ca4dc1651d9b21df69c4c4df1f459756f338abb4e5a864c6531be7988c7"
+    },
+    "reloadedAlchemistCard": {
+      "bytes": 693322,
+      "sha256": "bcc1a2374f1334509ea21466502514c0df57d0b4bcc149a6e69055ee136591fe"
+    },
+    "reloadTrial": {
+      "receipt": {
+        "bytes": 610,
+        "sha256": "d4cba0d04ee98d9112c7cc133765cea08db2c049ea56db71fdcc3177ef158d0c"
+      },
+      "peakRssMiB": 203.4,
+      "exitCode": 0,
+      "audioMuted": true,
+      "allFiveHeroTypesAlive": true,
+      "allThreeGuildsCompleted": true
+    }
+  }
+}

@@ -1,0 +1,368 @@
+--- a/host/d3d_render.cpp
++++ b/host/d3d_render.cpp
+@@ -3648,9 +3648,12 @@
+     return renderer && renderer->coherentSurface(s, g, r, n) ? 1 : 0;
+ }
+ extern "C" void host_d3d_apply_cpu(const HostD3DSurface *s, const HostBlitRecord *r) {
+-    if (!host_d3d_legacy_writeback())
+-        if (auto *renderer = D3DRenderer::shared())
+-            renderer->applyCPU(s, r);
++    auto *renderer = D3DRenderer::shared();
++    // CPU-only surfaces have no GPU copy to update. Reject those writes before
++    // reading the dynamic compatibility setting on every recorded pixel span.
++    if (renderer && r && renderer->slotFor(r->dst, r->dst_generation) >= 0 &&
++        !host_d3d_legacy_writeback())
++        renderer->applyCPU(s, r);
+ }
+ extern "C" void host_d3d_swap_generations(uint32_t a, uint32_t ag, uint32_t b, uint32_t bg) {
+     if (auto *r = D3DRenderer::shared())
+@@ -3676,7 +3679,7 @@
+ 
+ extern "C" void host_d3d_prepare_cpu_write(const HostD3DSurface *s, uint32_t g, uint64_t f) {
+     D3DRenderer *renderer = D3DRenderer::shared();
+-    if (!host_d3d_legacy_writeback() && renderer && renderer->slotFor(s->id, g) >= 0)
++    if (renderer && renderer->slotFor(s->id, g) >= 0 && !host_d3d_legacy_writeback())
+         renderer->bindSurface(s, g, f);
+ }
+ 
+--- a/host/tests/host_tests.cpp
++++ b/host/tests/host_tests.cpp
+@@ -4069,7 +4069,33 @@
+     record.cpu_bpp = 16;
+     record.cpu_pitch = 8;
+     record.coverage = coverage.data();
++    // An absent/stale generation must neither create a scene nor change the
++    // current one. A CPU-only write is uploaded only if a later draw needs it.
++    record.dst_generation = 2;
++    host_d3d_prepare_cpu_write(&surface.desc, 2, 7005);
+     host_d3d_apply_cpu(&surface.desc, &record);
++    CHECK_EQ(renderer->slotFor(surface.desc.id, 2), -1);
++    CHECK(renderer->slotFor(surface.desc.id, 1) >= 0);
++    record.dst_generation = 1;
++    const char *saved = recomp_env("LEGACY_WRITEBACK");
++    const std::string old = saved ? saved : "";
++    const bool had_setting = saved != nullptr;
++    os_setenv("RECOMP_LEGACY_WRITEBACK", "1");
++    host_d3d_apply_cpu(&surface.desc, &record);
++    Readback untouched = read_target(renderer);
++    int red, green, blue, alpha;
++    untouched.rgb(21, 21, &red, &green, &blue, &alpha);
++    CHECK_EQ(red, 0x17);
++    CHECK_EQ(green, 0x2b);
++    CHECK_EQ(blue, 0x3f);
++    // The setting remains dynamic; a previous early return must not cache it.
++    os_setenv("RECOMP_LEGACY_WRITEBACK", "0");
++    host_d3d_prepare_cpu_write(&surface.desc, 1, 7005);
++    host_d3d_apply_cpu(&surface.desc, &record);
++    if (had_setting)
++        os_setenv("RECOMP_LEGACY_WRITEBACK", old.c_str());
++    else
++        os_unsetenv("RECOMP_LEGACY_WRITEBACK");
+     Readback rb = read_target(renderer);
+     CHECK_EQ(rb.w, 1280);
+     CHECK_EQ(rb.h, 960);
+--- a/dx/ddraw.cpp
++++ b/dx/ddraw.cpp
+@@ -1,4 +1,5 @@
+ #include "pixel_compare.h"
++#include "pixel_change_mask.h"
+ #include "../runtime/gdi32_internal.h"
+ #include "../runtime/display_seam.h"
+ #include "passes.h"
+@@ -2607,48 +2608,14 @@
+         const uint8_t *now = row_now(y);
+         if (pixel_bytes_equal(was, now, (size_t)sh.row_bytes))
+             continue;
+-        // Unchanged stretches are skipped eight bytes at a time, whole pixels
+-        // of them when the pixel size divides eight; what is left is compared
+-        // a pixel at a time without a call.
+-        const int32_t step = bb == 3 ? 0 : int32_t(8 / bb);
+-        for (int32_t x = 0; x < lw; ++x) {
+-            if (step && x + step <= lw) {
+-                uint64_t a, b;
+-                memcpy(&a, was + (size_t)x * bb, 8);
+-                memcpy(&b, now + (size_t)x * bb, 8);
+-                if (a == b) {
+-                    x += step - 1;
+-                    continue;
+-                }
+-            }
+-            bool differs;
+-            if (bb == 2) {
+-                uint16_t a, b;
+-                memcpy(&a, was + (size_t)x * 2, 2);
+-                memcpy(&b, now + (size_t)x * 2, 2);
+-                differs = a != b;
+-            } else if (bb == 4) {
+-                uint32_t a, b;
+-                memcpy(&a, was + (size_t)x * 4, 4);
+-                memcpy(&b, now + (size_t)x * 4, 4);
+-                differs = a != b;
+-            } else if (bb == 1) {
+-                differs = was[x] != now[x];
+-            } else {
+-                differs = memcmp(was + (size_t)x * bb, now + (size_t)x * bb, bb) != 0;
+-            }
+-            if (!differs)
+-                continue;
+-            changed[(size_t)(y - band0) * lw + x] = 1;
+-            if (x < x0)
+-                x0 = x;
+-            if (x > x1)
+-                x1 = x;
+-            if (y < y0)
+-                y0 = y;
+-            if (y > y1)
+-                y1 = y;
+-        }
++        const auto span =
++            pixel_change_mask(was, now, (size_t)lw, bb, changed.data() + (size_t)(y - band0) * lw);
++        if (!span.end)
++            continue;
++        x0 = std::min(x0, (int32_t)span.begin);
++        x1 = std::max(x1, (int32_t)span.end - 1);
++        y0 = std::min(y0, y);
++        y1 = y;
+     }
+     if (x1 < 0)
+         return false;
+--- /dev/null
++++ b/dx/pixel_change_mask.h
+@@ -0,0 +1,74 @@
++#pragma once
++#include <cstddef>
++#include <cstdint>
++#include <cstring>
++#ifdef __wasm_simd128__
++#include <wasm_simd128.h>
++#endif
++
++struct PixelChangeSpan {
++    size_t begin, end;
++};
++
++// One byte per pixel, exactly 0 or 1. The caller supplies a zeroed mask that
++// does not overlap either input. Bounds are [begin, end), or {pixels, 0} when
++// unchanged. Loads never cross the requested row, including unaligned tails.
++inline PixelChangeSpan pixel_change_mask(const uint8_t *was, const uint8_t *now, size_t pixels,
++                                         unsigned bb, uint8_t *mask) {
++    PixelChangeSpan span{pixels, 0};
++    size_t x = 0;
++#ifdef __wasm_simd128__
++    if (bb == 2) {
++        for (; pixels - x >= 8; x += 8) {
++            const v128_t different =
++                wasm_i16x8_ne(wasm_v128_load(was + x * 2), wasm_v128_load(now + x * 2));
++            const unsigned bits = wasm_i16x8_bitmask(different);
++            if (!bits)
++                continue;
++            // Signed narrowing preserves the all-ones comparison lanes; the
++            // low bit then gives the recorder's existing 0/1 coverage convention.
++            const v128_t bytes = wasm_v128_and(
++                wasm_i8x16_narrow_i16x8(different, wasm_i16x8_splat(0)), wasm_i8x16_splat(1));
++            wasm_v128_store64_lane(mask + x, bytes, 0);
++            if (span.begin == pixels)
++                span.begin = x + __builtin_ctz(bits);
++            span.end = x + 32 - __builtin_clz(bits);
++        }
++    }
++#endif
++    const size_t step = bb == 1 ? 8 : bb == 2 ? 4 : bb == 4 ? 2 : 0;
++    for (; x < pixels; ++x) {
++        if (step && pixels - x >= step) {
++            uint64_t a, b;
++            std::memcpy(&a, was + x * bb, 8);
++            std::memcpy(&b, now + x * bb, 8);
++            if (a == b) {
++                x += step - 1;
++                continue;
++            }
++        }
++        bool differs;
++        if (bb == 2) {
++            uint16_t a, b;
++            std::memcpy(&a, was + x * 2, 2);
++            std::memcpy(&b, now + x * 2, 2);
++            differs = a != b;
++        } else if (bb == 4) {
++            uint32_t a, b;
++            std::memcpy(&a, was + x * 4, 4);
++            std::memcpy(&b, now + x * 4, 4);
++            differs = a != b;
++        } else if (bb == 1) {
++            differs = was[x] != now[x];
++        } else {
++            differs = std::memcmp(was + x * bb, now + x * bb, bb) != 0;
++        }
++        if (differs) {
++            mask[x] = 1;
++            if (span.begin == pixels)
++                span.begin = x;
++            span.end = x + 1;
++        }
++    }
++    return span;
++}
+--- a/host/tests/pixel_kernel_tests.cpp
++++ b/host/tests/pixel_kernel_tests.cpp
+@@ -1,5 +1,6 @@
+ #include "../rgb565.h"
+ #include "../../dx/pixel_compare.h"
++#include "../../dx/pixel_change_mask.h"
+ #include <cstdio>
+ #include <vector>
+ 
+@@ -45,6 +46,65 @@
+             }
+         }
+     check(pixel_bytes_equal(nullptr, nullptr, 0));
++    // All pixel formats, vector boundaries, tails and independently unaligned
++    // inputs. Compare exact masks and bounds against a byte-wise oracle.
++    for (unsigned bb : {1u, 2u, 3u, 4u})
++        for (size_t width = 0; width <= 67; ++width)
++            for (size_t offset = 0; offset < 16; ++offset)
++                for (unsigned pattern = 0; pattern < 8; ++pattern) {
++                    std::vector<uint8_t> before(width * bb + 32, 0x39), after(before);
++                    for (size_t x = 0; x < width; ++x)
++                        if ((x * 13 + pattern) % 17 < pattern)
++                            after[15 - offset + x * bb + x % bb] ^= uint8_t(1u << (x % 8));
++                    std::vector<uint8_t> mask(width + 2, 0);
++                    mask.front() = mask.back() = 0xcd;
++                    const auto span =
++                        pixel_change_mask(before.data() + offset, after.data() + 15 - offset, width,
++                                          bb, mask.data() + 1);
++                    size_t first = width, end = 0;
++                    for (size_t x = 0; x < width; ++x) {
++                        const bool different =
++                            std::memcmp(before.data() + offset + x * bb,
++                                        after.data() + 15 - offset + x * bb, bb) != 0;
++                        check(mask[x + 1] == unsigned(different));
++                        if (different) {
++                            if (first == width)
++                                first = x;
++                            end = x + 1;
++                        }
++                    }
++                    check(span.begin == first && span.end == end);
++                    check(mask.front() == 0xcd && mask.back() == 0xcd);
++                }
++    // Every combination of the eight SIMD lanes, changing upper or lower
++    // bytes, plus a scalar ninth pixel. Negative comparison lanes must narrow
++    // to 1, rather than saturating to zero.
++    for (unsigned bits = 0; bits < 256; ++bits)
++        for (size_t offset = 0; offset < 16; ++offset) {
++            uint8_t before[50]{}, after[50]{};
++            for (unsigned x = 0; x < 9; ++x)
++                if (x < 8 ? (bits & (1u << x)) : (bits & 1))
++                    after[15 - offset + x * 2 + x % 2] = x % 2 ? 0x80 : 1;
++            uint8_t mask[11]{};
++            mask[0] = mask[10] = 0xcd;
++            const auto span =
++                pixel_change_mask(before + offset, after + 15 - offset, 9, 2, mask + 1);
++            size_t first = 9, end = 0;
++            for (unsigned x = 0; x < 9; ++x) {
++                const bool changed = x < 8 ? (bits & (1u << x)) != 0 : (bits & 1) != 0;
++                check(mask[x + 1] == unsigned(changed));
++                if (changed) {
++                    if (first == 9)
++                        first = x;
++                    end = x + 1;
++                }
++            }
++            check(span.begin == first && span.end == end);
++            check(mask[0] == 0xcd && mask[10] == 0xcd);
++        }
++    const auto empty = pixel_change_mask(nullptr, nullptr, 0, 2, nullptr);
++    check(empty.begin == 0 && empty.end == 0);
++
+ #ifdef __wasm_simd128__
+     constexpr const char *mode = "WASM SIMD";
+ #else
+--- a/host/tests/pixel_compare_bench.cpp
++++ b/host/tests/pixel_compare_bench.cpp
+@@ -1,5 +1,6 @@
+ // Focused, allocation-bounded comparison with the previous SIMD equality loop.
+ #include "../../dx/pixel_compare.h"
++#include "../../dx/pixel_change_mask.h"
+ #include <chrono>
+ #include <cstdio>
+ #include <vector>
+@@ -43,6 +44,55 @@
+     return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - begin)
+         .count();
+ }
++// The pre-change 16-bit mask loop, retaining its eight-byte equal runs.
++NOINLINE PixelChangeSpan previous_mask(const uint8_t *was, const uint8_t *now, size_t pixels,
++                                       uint8_t *mask) {
++    PixelChangeSpan span{pixels, 0};
++    for (size_t x = 0; x < pixels; ++x) {
++        if (pixels - x >= 4) {
++            uint64_t a, b;
++            std::memcpy(&a, was + x * 2, 8);
++            std::memcpy(&b, now + x * 2, 8);
++            if (a == b) {
++                x += 3;
++                continue;
++            }
++        }
++        uint16_t a, b;
++        std::memcpy(&a, was + x * 2, 2);
++        std::memcpy(&b, now + x * 2, 2);
++        if (a != b) {
++            mask[x] = 1;
++            if (span.begin == pixels)
++                span.begin = x;
++            span.end = x + 1;
++        }
++    }
++    return span;
++}
++NOINLINE PixelChangeSpan current_mask(const uint8_t *a, const uint8_t *b, size_t pixels,
++                                      uint8_t *mask) {
++    return pixel_change_mask(a, b, pixels, 2, mask);
++}
++using MaskFn = PixelChangeSpan (*)(const uint8_t *, const uint8_t *, size_t, uint8_t *);
++double measure_mask(MaskFn fn, size_t pixels, unsigned pattern, unsigned offset, size_t *checksum) {
++    std::vector<uint8_t> before(pixels * 2 + 32, 0x39), after(before), mask(pixels, 0);
++    for (size_t x = 0; x + 1 < pixels; ++x)
++        if (pattern == 3 || (pattern == 1 && x % 37 == 0) ||
++            (pattern == 2 && x >= pixels / 3 && x < pixels * 2 / 3))
++            after[offset + x * 2 + x % 2] ^= 0x80;
++    size_t sum = 0;
++    const auto begin = std::chrono::steady_clock::now();
++    for (unsigned i = 0; i < 10000; ++i) {
++        before[offset + pixels * 2 - 1] = after[offset + pixels * 2 - 1] = uint8_t(i);
++        std::memset(mask.data(), 0, pixels);
++        const auto span = fn(before.data() + offset, after.data() + offset, pixels, mask.data());
++        sum += span.begin + span.end + mask[pixels / 2];
++    }
++    *checksum = sum;
++    return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - begin)
++        .count();
++}
+ int main() {
+     unsigned failed = 0;
+     for (const size_t length : {256, 1280, 2560, 7680})
+@@ -63,5 +113,22 @@
+                             "%.3f,\"checksum\":%u}\n",
+                             length, offset, mismatch, oldMs, newMs, b);
+             }
++    for (size_t pixels : {640, 1280})
++        for (unsigned offset : {0, 1, 15})
++            for (unsigned pattern = 0; pattern < 4; ++pattern) {
++                size_t a = 0, b = 0;
++                double oldMs, newMs;
++                if ((offset + pattern) & 1) {
++                    newMs = measure_mask(current_mask, pixels, pattern, offset, &b);
++                    oldMs = measure_mask(previous_mask, pixels, pattern, offset, &a);
++                } else {
++                    oldMs = measure_mask(previous_mask, pixels, pattern, offset, &a);
++                    newMs = measure_mask(current_mask, pixels, pattern, offset, &b);
++                }
++                failed += a != b;
++                std::printf("{\"kind\":\"mask\",\"pixels\":%zu,\"offset\":%u,\"pattern\":%u,"
++                            "\"oldMs\":%.3f,\"newMs\":%.3f,\"checksum\":%zu}\n",
++                            pixels, offset, pattern, oldMs, newMs, b);
++            }
+     return failed ? 1 : 0;
+ }

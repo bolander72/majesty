@@ -4,14 +4,15 @@ Local WebAssembly build of the original Majesty engine, using
 [majesty-recomp](https://github.com/veritr1x/majesty-recomp) and its
 [recomp-kit](https://github.com/veritr1x/recomp-kit) runtime.
 
-This is an active development project. Local browser gameplay, two-player
-co-op save/resume, responsive rendering, regional world travel and portable
-player backups have been exercised in bounded trials. The Wayfinder hero and
-Trail Lodge building pass private native and browser construction, recruitment
-and save/reload trials; general installation and matching-content co-op remain
-unfinished. The restored Chapter 3 co-op mission has not yet reached victory.
-Separate-network full matches and the historical host-app crash cause remain
-unverified. Later sections retain individual qualification limits.
+The browser build runs the original engine and native menus. Alchemist Lab,
+with the community's artwork and alchemy mechanics, and the restored Vampiric
+Revenge demo mission are deployed. Bards Hall and Phantoms Haunt are being
+integrated; neither is enabled on the live site yet.
+
+Local two-player co-op save/resume and experimental regional world travel have
+been exercised in bounded trials. Separate-network full matches, seamless
+regional travel and the historical host-app crash cause remain unverified.
+Later sections retain individual qualification limits.
 
 The public repository contains the authored browser source, tooling, tests,
 content and patches on `main`. Distribution assets are on
@@ -23,10 +24,11 @@ translations and local trial output are excluded. See
 ## Current content milestone
 
 Lost Trail, Wayfinder and Trail Lodge were retired at Mike's request; their
-sources and prior saves are preserved. The active milestone is the community's
-actual Alchemist Lab, with original art, audio and alchemy mechanics. Creator
-permission is confirmed, but native/browser gameplay integration is unfinished
-and the mod is not yet published. See [integration status](docs/community-alchemist-browser.md)
+sources and prior saves are preserved. The active milestone integrates
+Phantomstar's authentic Bards Hall and Phantoms Haunt alongside Alchemist Lab.
+Original packages and creator redistribution permission are confirmed. Combined
+scripts compile with the official SDK; native controls and browser gameplay
+qualification remain in progress. See [guild integration status](docs/community-guild-integration.md)
 and [creator credits](CREDITS.md).
 
 Co-op joining, shared saves and resume have already been exercised. Completing
