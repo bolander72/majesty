@@ -15,7 +15,8 @@ test('composed community admission binds all resources and rejects changed recip
   const recipe = derivedDescriptor(plan, COMMUNITY_STORAGE_ID);
   assert.equal(recipe.contentSet, 'community-guilds-v1');
   assert.equal(recipe.baseId, 'majesty');
-  assert.equal(recipe.patches.length, 54);
+  // The published collection includes both edition-specific intent registries.
+  assert.equal(recipe.patches.length, 56);
   for (const change of [
     r => {r.patches[0].bytes++;},
     r => {r.patches[0].sha256 = '0'.repeat(64);},

@@ -1,5 +1,10 @@
 # Changelog
 
+## Bards Hall world scale — November 12, 2026
+
+- Publish Bards Hall at 70% of its previous width and height in all three tiers, with matching placement geometry and animation attachments. Preserve framed sidebar artwork, other guilds, gameplay libraries and existing saves.
+- Bind the qualified art to both original and Northern collections, accepting the previous published version during automatic updates. Preserve the centered loading screen and direct root game launch.
+
 ## Direct game launch repair — November 12, 2026
 
 - Keep Git deployments on the already published player and content bindings, preventing legitimate cached game resources from being misidentified as custom content after a merge.
