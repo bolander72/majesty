@@ -4,6 +4,7 @@
 
 - Keep Git deployments on the already published player and content bindings, preventing legitimate cached game resources from being misidentified as custom content after a merge.
 - Preserve direct loading and native game startup at the root URL, all PR #1 source changes, player saves and custom-content protection. Fail the build when the published release pointer is missing.
+- Center the initializing canvas in larger windows and route legacy game-page links through the centered root loading screen, preserving the selected profile and URL fragment.
 
 ## Guild scale review — private candidates, November 12, 2026
 
