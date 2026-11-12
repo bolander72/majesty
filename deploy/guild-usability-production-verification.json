@@ -1,0 +1,186 @@
+{
+  "url": "https://majesty.boland.co",
+  "target": "production",
+  "ready": true,
+  "mainDomainVerified": true,
+  "newEngineCacheUrlsVerified": true,
+  "allFilesMatchStagedProduction": true,
+  "engineSha256": "e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8",
+  "activeGuilds": [
+    "adventurers-guild",
+    "royal-menagerie",
+    "dark-paladin"
+  ],
+  "otherMoreHeroesAdmissionsDisabled": true,
+  "files": {
+    "index.html": {
+      "bytes": 22927,
+      "sha256": "d43d489a74005bcdaeaa8d0a0905f9aabb12af95473393a0d3e5e26ca6360376"
+    },
+    "games.json": {
+      "bytes": 3695,
+      "sha256": "7ae468864678b15103528d58de563101add0c73b3fc5e0715c76778df704d30d"
+    },
+    "hosting/automatic-assets.json": {
+      "bytes": 48100,
+      "sha256": "c029596092de5247af49ce95094adb1fafe0bf2b1e3b6b667422b7a93b853a03"
+    },
+    "content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "3c21d28f75b90783c9857d96546366369852d7891b8d0f8606e2feed6f7afe21"
+    },
+    "hosting/community-updates.mjs": {
+      "bytes": 16740,
+      "sha256": "32e59565e0f45976b6c923a461eb1a60b6e891ce3a458a2dc03d3e1d32f01964"
+    },
+    "majesty/MajestyRecomp.js": {
+      "bytes": 473595,
+      "sha256": "8c3e133dd33166c9ab71f9ac26eece21acb5f6b29904573f42f285143cda7f1b"
+    },
+    "majesty/MajestyRecomp.wasm.br": {
+      "bytes": 6793541,
+      "sha256": "74bc26d68452eff7f8203fc9cf43b0ae6788521db20f1e0a8f2d9cf608d48e11"
+    },
+    "majesty/MajestyRecomp.data": {
+      "bytes": 5109855,
+      "sha256": "4d2b364f7ecc4afaa3255c188fda4ce470eea1733a66e8e90ac88b00fcc6c939"
+    }
+  },
+  "deployment": {
+    "id": "dpl_51voVfCSUpoVWwn9Y5p2eBhU7ipB",
+    "url": "majesty-b3refhohf-bolander72-01.vercel.app",
+    "projectId": "prj_B7rHdDZTN89cQisZqwlM9aGtmRyY",
+    "readyState": "READY",
+    "target": "production",
+    "release": "guild-usability-v1",
+    "sourceCommit": "0d37df3c983e00dcd576ff600dedda9dc03e7cfe"
+  },
+  "sameTestedDeploymentPromoted": true,
+  "nativeResourcesHttpQualified": true,
+  "nativeResourceFiles": {
+    "Data/Community-gpltext.cam": {
+      "bytes": 84333,
+      "sha256": "d8b97e4e014d705fb1b44fa59fd0a5ecabfe7fbf3780c93a51e85d1652887287"
+    },
+    "Data/Community-main.cam": {
+      "bytes": 43445265,
+      "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+    },
+    "Data/Community-textdata.cam": {
+      "bytes": 63603,
+      "sha256": "5e0e7a6c3a7ac4d9fb0427111cdc2538a63673fc8414bc56d37becd212140b7e"
+    },
+    "Data/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "Data/Community_Common.bcd": {
+      "bytes": 37409957,
+      "sha256": "d0902fa5653d87cd6c5e0d57eb02941ffa3c5c9c3a166d5aca74be8d04b5c741"
+    },
+    "Data/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "Data/gpltext.cam": {
+      "bytes": 160433,
+      "sha256": "27d8306bbcf72fac457b61bf9605b322046b7b4ca3fbc3795dddd8c92e8cb22e"
+    },
+    "Data/mx_gpltext.cam": {
+      "bytes": 145263,
+      "sha256": "6027d6255039c7b89aad4140c9cd054e5c319874be60a7ecebd43c6bd680b525"
+    },
+    "Data/mx_textdata.cam": {
+      "bytes": 139523,
+      "sha256": "4e02d2c9ee898b1f1180f1b6a691b5eafd9ebb0f7ea5a9a94b928b47040817d9"
+    },
+    "Data/textdata.cam": {
+      "bytes": 417629,
+      "sha256": "dac5cdb39f328ce20b459cf8822cf42c1e1cd6ba97cafe32db8abc90b5d02508"
+    },
+    "Data/unittype.cam": {
+      "bytes": 204116,
+      "sha256": "3835f92878d7723f234f40ac0b8f1d957e681546e980f00c5b1cf30ce761732a"
+    },
+    "DataMX/Community-gpltext.cam": {
+      "bytes": 94073,
+      "sha256": "35eb5b9b59e6d9db23622448ec65419f1f09f379cb866df1043032af005300de"
+    },
+    "DataMX/Community-main.cam": {
+      "bytes": 43445265,
+      "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+    },
+    "DataMX/Community-textdata.cam": {
+      "bytes": 64955,
+      "sha256": "504cdb2bff6a95334cc0210b4a3755f222d85763481282646efdb484f6e4aa09"
+    },
+    "DataMX/Community_Base.bcd": {
+      "bytes": 946028,
+      "sha256": "85cbbbd1dd63fe3db48e25e5cfea97ecb1d8fe67e88c80c3656ea50d489521f1"
+    },
+    "DataMX/Community_Common.bcd": {
+      "bytes": 37409957,
+      "sha256": "d0902fa5653d87cd6c5e0d57eb02941ffa3c5c9c3a166d5aca74be8d04b5c741"
+    },
+    "DataMX/Community_Expansion.bcd": {
+      "bytes": 1738800,
+      "sha256": "9513523bf234bb7676c0bc846e3617b04f23a5c06ee9dc98632ceb01b1462190"
+    },
+    "DataMX/mx_Unittype.cam": {
+      "bytes": 121480,
+      "sha256": "d982cdce224914b8f2dff39cfcd03b9d008e33f2309e54adecb2a59b2ba47f34"
+    },
+    "DataMX/mx_gpltext.cam": {
+      "bytes": 169751,
+      "sha256": "dc7685d5b18c85c9b16ee4875d43d458f60fdd215b52ce37a38b79d8fa4cc75d"
+    },
+    "DataMX/mx_textdata.cam": {
+      "bytes": 204426,
+      "sha256": "d0da74365a10b16898ef66dc6da37ab25e5166d6b265d4b3862795278e19ca8c"
+    }
+  },
+  "sourceBuildAll149FilesExact": true,
+  "sourceQualification": {
+    "bytes": 7963,
+    "sha256": "cb58fafbcd37f0783fe08c8a2554fafc37885c042b0ebbf92fe90f31b8221873"
+  },
+  "releaseDescriptor": {
+    "bytes": 48483,
+    "sha256": "906b084031808669409843583fb68cdb468fcce6722a282bc2cd4122526f4ad1"
+  },
+  "rollout": {
+    "state": "completed",
+    "environment": "production",
+    "domain": "https://majesty.boland.co",
+    "playerSaveMigrationRequired": false,
+    "secretsChanged": false,
+    "nativeResourcesUpdateThroughExistingIntegrityCheckedInstaller": true,
+    "verifiedMainDeploymentId": "dpl_51voVfCSUpoVWwn9Y5p2eBhU7ipB"
+  },
+  "receipts": {
+    "source-build-verification.json": {
+      "bytes": 209,
+      "sha256": "4a32bd21895cede6af7b511e9612245fea2b942a6034e792b3194cca46681f48"
+    },
+    "staged-production-verification.json": {
+      "bytes": 1368,
+      "sha256": "08a82f74486f7affca4d8f308b0e12ce699f94fb3d38639ba2b70fcf1f3e26dd"
+    },
+    "native-assets-http-verification.json": {
+      "bytes": 3049,
+      "sha256": "ee20c101ddbcb47d5a2d816eb9d97e19685589f4c2aa8b0a37eb6a5c3099eb8b"
+    },
+    "main-before-promotion.json": {
+      "bytes": 128,
+      "sha256": "911e62ce2f931c7d5d41ad304642fad3346af0e45be7b972747cef5bf07e750c"
+    },
+    "main-deployment-identity-verification.json": {
+      "bytes": 301,
+      "sha256": "1a821dfe8aeac7e1540c050dbcda85b861fa5eccd21d810d51ec462cff6a5101"
+    },
+    "promote-production-v1.json": {
+      "bytes": 201,
+      "sha256": "936e7c3ba56d11549cc931a292f4f9f97afb1715555ff5cc8e2aaac025dd0570"
+    }
+  }
+}
