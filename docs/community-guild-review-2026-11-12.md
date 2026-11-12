@@ -131,3 +131,59 @@ upstream/majesty-recomp/.venv/bin/python scripts/prepare-community-building-scal
 No deployment, merge or environment publication was performed. The source-only
 changes are prepared for PR review; private inputs and runtime receipts stay local.
 The PR branch also passes all 13 focused building/health/Phantom tests on current main.
+
+## PR #1 verification in the fresh macOS checkout
+
+The current live automatic-assets manifest still identifies the pinned input
+CAM above. A new download was size- and SHA256-verified, and the combined scale
+tool reproduced `0829ca89365657851f5b92d9295b03abad11a3e6603e84b0991a8b1760b616a5`
+exactly. Its preservation checks passed. Independently,
+`majesty_cam.art.parse_best_imag_tile_references` accepted all 1,976 references
+in the nine resized building-tier images. This verifies preparation and archive
+structure; it does not qualify in-engine placement or save/reload.
+
+Review found that the health preparer silently replaced a pre-existing
+`Any/HighLevelHealth.gpl` module in the output stage. The original PR head was
+reproduced doing so with an independently authored fixture. The preparer now
+refuses that collision before creating any output. New stage-level tests also
+verify source and edition/DAT preservation, changed-input refusal, manifest
+hashes, both helper definitions and the unqualified output flags.
+
+Fresh focused validation: **21 passed** using Python 3.12.13 and the pinned
+`scripts/requirements-art.txt` dependency:
+
+```bash
+.venv-pr/bin/python -m pytest -q \
+  tests/test_community_building_scale.py tests/test_high_level_health.py \
+  tests/test_phantom_resilience.py tests/test_phantom_workshop_source.py \
+  tests/test_community_phantom_ui.py
+```
+
+The earlier retained-checkout suite results above are historical. The fresh
+checkout has no `upstream/majesty-recomp`, original SDK/game fixture, or complete
+current GPL source stage. Full suites were compared against an unmodified
+archive of base commit `83649beaef4a1b8d5f6604a9709b7fe26148ba79` in the same
+environment:
+
+| Suite | PR with preservation fix | Unchanged base | Comparison |
+| --- | --- | --- | --- |
+| Python / pytest | 852 passed, 20 failed, 13 errors, 19 skipped | 839 passed, 20 failed, 13 errors, 19 skipped | Exact same failure/error cases; 13 added passing tests |
+| JavaScript / Node 26.8.1 | 1,283 passed, 17 failed, 22 skipped | 1,283 passed, 17 failed, 22 skipped | Exact same failing tests |
+
+Both Python runs additionally passed 385 subtests. Missing upstream/SDK/native
+capture fixtures block legacy/native tests; JavaScript also retains baseline
+saved-realm, crossing and map-close failures. These suites are **not green** in
+this checkout. No unrelated failure or fixture gate was changed. Full logs,
+the baseline comparison and new art receipts remain in
+`output/pr-1-verification/` (untracked).
+
+No browser or native game was launched in this verification. The complete
+post-usability GPL source and official game/SDK tooling are still required to
+integrate and qualify the health candidate. The old 718-definition output must
+not replace the deployed 1,108-definition library.
+
+Rollout/manual-data audit: **none required for this source-only PR**. Reviewed
+the preparation scripts, authored GPL helper, deployment descriptors and
+resource bindings: this PR does not install generated resources or change any
+release binding, environment configuration, player data or save format. Any
+future gameplay installation requires a separate, qualified release change.

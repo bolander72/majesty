@@ -1,10 +1,13 @@
 """Execute the authored GPL arithmetic with bounded VM-sized intermediates."""
 import ast
 import importlib.util
+import json
 from pathlib import Path
 import random
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'third_party/majesty-mod-manager/src'))
@@ -105,10 +108,7 @@ class HighLevelHealthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'already present'):
             policy.adapt(b'// MJP_Health_Percent', '')
 
-    def test_adapter_preserves_damage_and_unrelated_function_bodies(self):
-        spec = importlib.util.spec_from_file_location('health_policy', ROOT / 'scripts/prepare-community-high-level-health.py')
-        policy = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(policy)
+    def source_fixture(self):
         source = '''function Eternal_Soul_Begin(agent thisagent, agent target)
 declare integer bonus_max_hp,base_max_hp,boosted_hp,current_hp,boosted_max_hp;
 begin
@@ -138,6 +138,13 @@ begin
 if (((HP * 100) / maxHP) <= thisagent's "PercentageHPretreat") return TRUE;
 else return FALSE;
 end'''
+        return source, stock
+
+    def test_adapter_preserves_damage_and_unrelated_function_bodies(self):
+        spec = importlib.util.spec_from_file_location('health_policy', ROOT / 'scripts/prepare-community-high-level-health.py')
+        policy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(policy)
+        source, stock = self.source_fixture()
         result = policy.adapt(source.encode(), stock).decode()
         before = {i.key: i.text for i in parse_gpl(source).items}
         after = {i.key: i.text for i in parse_gpl(result).items}
@@ -146,6 +153,86 @@ end'''
         rule = after[DefinitionKind.FUNCTION, 'haslowhp']
         self.assertIn('$MJP_Health_Percent(HP, maxHP)', rule)
         self.assertIn('PercentageHPretreat', rule)
+
+    def prepare_fixture(self, root):
+        spec = importlib.util.spec_from_file_location('health_policy', ROOT / 'scripts/prepare-community-high-level-health.py')
+        policy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(policy)
+        source_text, stock = self.source_fixture()
+        source = root / 'original'
+        payloads = {'Any/Merged.gpl': source_text.encode(), 'Any/Merged.dat': b'[end]\n',
+                    'Any/Unrelated.gpl': b'// preserve unrelated module\n',
+                    'Majesty/Merged.gpl': b'// original campaign\n',
+                    'MajestyExpansion/Merged.gpl': b'// Northern campaign\n'}
+        for name, raw in payloads.items():
+            p = source / 'sources' / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(raw)
+        proof = dict(format='majesty-community-combined-creator-gpl-stage-v1',
+                     files={name: policy.digest(raw) for name, raw in payloads.items()})
+        (source / 'source-stage.json').write_text(json.dumps(proof))
+        sdk_name = 'SDK/OriginalQuests/GPL/LowLevel.gpl'
+        sdk = root / '.tools/majesty-sdk' / sdk_name
+        sdk.parent.mkdir(parents=True)
+        sdk.write_bytes(stock.encode())
+        manifest = root / 'output/recovery-2026-11-08/sdk-manifest.json'
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps(dict(files={sdk_name: policy.digest(sdk.read_bytes())})))
+        for name in ('phantoms-haunt/resilience.gpl', 'high-level-health.gpl'):
+            target = root / 'content/community-mods' / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / 'content/community-mods' / name).read_bytes())
+        return policy, source, payloads, proof
+
+    def test_complete_stage_preserves_sources_and_is_not_runtime_qualified(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            policy, source, payloads, _ = self.prepare_fixture(root)
+            prior_proof = (source / 'source-stage.json').read_bytes()
+            out = root / 'adapted'
+            with patch.object(policy, 'ROOT', root):
+                policy.prepare(source, out)
+                with self.assertRaisesRegex(ValueError, 'Preserve earlier'):
+                    policy.prepare(source, out)
+            self.assertEqual((source / 'source-stage.json').read_bytes(), prior_proof)
+            for name, raw in payloads.items():
+                self.assertEqual((source / 'sources' / name).read_bytes(), raw)
+                if name != 'Any/Merged.gpl':
+                    self.assertEqual((out / 'sources' / name).read_bytes(), raw)
+            proof = json.loads((out / 'source-stage.json').read_bytes())
+            for name, expected in proof['files'].items():
+                self.assertEqual(policy.digest((out / 'sources' / name).read_bytes()), expected)
+            helpers = parse_gpl((out / 'sources/Any/HighLevelHealth.gpl').read_text())
+            for name in ('MJP_Scale_Living_HP', 'MJP_Health_Percent'):
+                helpers.require(DefinitionKind.FUNCTION, name)
+            for flag in ('compiled', 'targetNativeABIQualified', 'browserPlayable', 'published'):
+                self.assertFalse(proof[flag])
+
+    def test_existing_health_module_is_refused_before_writing(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            policy, source, _, proof = self.prepare_fixture(root)
+            name, raw = 'Any/HighLevelHealth.gpl', b'// existing independent source\n'
+            (source / 'sources' / name).write_bytes(raw)
+            proof['files'][name] = policy.digest(raw)
+            (source / 'source-stage.json').write_text(json.dumps(proof))
+            out = root / 'refused'
+            with patch.object(policy, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'Preserve existing HighLevelHealth'):
+                    policy.prepare(source, out)
+            self.assertFalse(out.exists())
+            self.assertEqual((source / 'sources' / name).read_bytes(), raw)
+
+    def test_changed_stage_file_is_refused_before_writing(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            policy, source, _, _ = self.prepare_fixture(root)
+            (source / 'sources/Majesty/Merged.gpl').write_bytes(b'// changed campaign\n')
+            out = root / 'refused'
+            with patch.object(policy, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'Source changed: Majesty/Merged.gpl'):
+                    policy.prepare(source, out)
+            self.assertFalse(out.exists())
 
 
 if __name__ == '__main__':

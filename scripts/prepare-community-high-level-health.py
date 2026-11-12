@@ -71,6 +71,8 @@ def prepare(source, out):
     proof = json.loads(proof_raw)
     if proof.get('format') != 'majesty-community-combined-creator-gpl-stage-v1':
         raise ValueError('Require a source-bound community stage')
+    if 'Any/HighLevelHealth.gpl' in proof['files']:
+        raise ValueError('Preserve existing HighLevelHealth module; reconcile that source first')
     files = {}
     for name, expected in proof['files'].items():
         path = Path(name)

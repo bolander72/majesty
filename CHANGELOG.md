@@ -4,6 +4,7 @@
 
 - Prepare Bards Hall and Alchemist Lab at 78% of their current world scale, and Dark Paladin's Guild at 90%, including all three tiers and matching placement geometry. Preserve native UI artwork, original art slots, Adventurers Guild and Zoo. Candidates are not installed or published; runtime qualification is tracked in `docs/community-guild-review-2026-11-12.md`.
 - Identify shared high-health percentage arithmetic overflow and compile an arithmetic-only candidate against the retained older source stage. Preserve the already shipped Phantom fix; full current-source integration remains pending recovery of the later combined GPL stage.
+- Refuse health-stage module collisions before writing output, preserving existing authored modules. Verify stage hashes, unchanged campaign sources and candidate-only qualification flags.
 
 ## Zoo capture cursor preview — October 29, 2026
 
