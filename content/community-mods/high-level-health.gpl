@@ -1,0 +1,35 @@
+// Exact floor(HP * 100 / MaxHP), without a large intermediate product.
+// GPL expressions use bounded Q22.10 arithmetic. Keep remainders below MaxHP
+// and the quotient at or below100. This preserves the original percentage rule.
+function MJP_Health_Percent(integer HP, integer MaxHP) is integer
+declare
+    integer Multiplier, Whole, Part, Scaled, Remainder;
+begin
+    if (MaxHP < 1 || HP < 1) return 0;
+    if (HP >= MaxHP) return 100;
+    Multiplier = 100;
+    Whole = 0;
+    Part = HP;
+    Scaled = 0;
+    Remainder = 0;
+    while (Multiplier > 0) do begin
+        if (Multiplier % 2 == 1) begin
+            Scaled += Whole;
+            if (Remainder >= MaxHP - Part) begin
+                Remainder -= MaxHP - Part;
+                Scaled += 1;
+            end
+            else Remainder += Part;
+        end
+        Multiplier = Multiplier / 2;
+        if (Multiplier > 0) begin
+            Whole = Whole * 2;
+            if (Part >= MaxHP - Part) begin
+                Part -= MaxHP - Part;
+                Whole += 1;
+            end
+            else Part = Part * 2;
+        end
+    end
+    return Scaled;
+end

@@ -1,5 +1,10 @@
 # Changelog
 
+## Guild scale review — private candidates, November 12, 2026
+
+- Prepare Bards Hall and Alchemist Lab at 78% of their current world scale, and Dark Paladin's Guild at 90%, including all three tiers and matching placement geometry. Preserve native UI artwork, original art slots, Adventurers Guild and Zoo. Candidates are not installed or published; runtime qualification is tracked in `docs/community-guild-review-2026-11-12.md`.
+- Identify shared high-health percentage arithmetic overflow and compile an arithmetic-only candidate against the retained older source stage. Preserve the already shipped Phantom fix; full current-source integration remains pending recovery of the later combined GPL stage.
+
 ## Zoo capture cursor preview — October 29, 2026
 
 - Restore the native green capture flag and reward amount beside the pointer before placement. Extend the active cursor table with the existing Zoo artwork so another interface archive cannot hide it.
