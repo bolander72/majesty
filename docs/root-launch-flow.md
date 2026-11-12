@@ -38,6 +38,25 @@ and Common library retained their exact bytes, hashes and modification times. No
 page errors were recorded. Deployment results are recorded in the repair PR;
 private captures and logs remain in `output/root-launch-flow/`.
 
+## Centered startup and legacy entries
+
+The older `/majesty/` page bypassed the root loading artwork. It now redirects to
+`/` before initializing any engine, retaining its query and fragment (including
+selected save profiles). The root canvas is centered in the viewport even while
+the native initialization uses its initial dimensions.
+
+Warm-cache startup also waits for the original loading image to decode and paint
+before starting the engine. This prevents initialization from blocking its first
+visible frame. At 1440×1000, the original 800×600 loading artwork was verified at
+(320,200), exactly centered, followed by native menu startup at the root URL.
+Browser captures show the centered loading artwork and subsequent native menu. The historical
+published artifact still verifies first; only its two HTML entry pages then change.
+All 147 engine, game-content, updater and support files remain byte-identical.
+
+Nineteen focused build/presentation tests and 14 subtests pass. New executable
+checks verify image-decode/paint ordering and preservation of profiles/fragments
+when redirecting old links. This follow-up changes presentation and routing only.
+
 ## Rollout / Manual Operations
 
 State: **none required** beyond the normal site deployment. Existing known release
