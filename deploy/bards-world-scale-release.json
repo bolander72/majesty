@@ -1,0 +1,48 @@
+{
+  "format": "majesty-bards-world-scale-release-v1",
+  "percent": 70,
+  "sourceCam": {
+    "bytes": 43445265,
+    "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+  },
+  "cam": {
+    "bytes": 45174784,
+    "sha256": "0baa6c3051eb16a0de9ae024e07c941ff6bcb426b564ee0803b3654a06e5d765"
+  },
+  "assetCommit": "9baa5de2c97fccd6e584d10fdfc454e4e3a8cfbc",
+  "previousCamHashes": [
+    "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+  ],
+  "priorBindings": {
+    "content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "3c21d28f75b90783c9857d96546366369852d7891b8d0f8606e2feed6f7afe21"
+    },
+    "hosting/automatic-assets.json": {
+      "bytes": 48100,
+      "sha256": "c029596092de5247af49ce95094adb1fafe0bf2b1e3b6b667422b7a93b853a03"
+    },
+    "hosting/community-updates.mjs": {
+      "bytes": 16740,
+      "sha256": "32e59565e0f45976b6c923a461eb1a60b6e891ce3a458a2dc03d3e1d32f01964"
+    }
+  },
+  "bindings": {
+    "content/community-files.mjs": {
+      "bytes": 9488,
+      "sha256": "5435d3744b51f68ef3d7220ccfa6f4981f17251a25b76206c665e4b79a46cd2b"
+    },
+    "hosting/automatic-assets.json": {
+      "bytes": 48092,
+      "sha256": "27bf60a48e6722c6ed30bc8378b946c5358c65f04cac95db07907f5431393cab"
+    },
+    "hosting/community-updates.mjs": {
+      "bytes": 16884,
+      "sha256": "45b114f83c2822c961ff62a313f4aeb46e8233c9edbcce4f8ffc0b37a426bbc4"
+    }
+  },
+  "qualification": {
+    "bytes": 5404,
+    "sha256": "59a34cc4471c2adf84be2719d56eabdf40500cc559562f43e46096abd8633cff"
+  }
+}

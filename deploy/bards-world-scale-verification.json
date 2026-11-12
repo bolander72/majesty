@@ -1,0 +1,167 @@
+{
+  "format": "majesty-bards-world-scale-qualification-v1",
+  "date": "2026-11-12",
+  "percent": 70,
+  "sourceCam": {
+    "bytes": 43445265,
+    "sha256": "9a392451bbd208b4623f06172b1eca0ec6814e0056ca2be46dd02b41aa0e84ed"
+  },
+  "cam": {
+    "bytes": 45174784,
+    "sha256": "0baa6c3051eb16a0de9ae024e07c941ff6bcb426b564ee0803b3654a06e5d765"
+  },
+  "onlyBardsWorldArtChanged": true,
+  "originalTileSlotsPreserved": true,
+  "sidebarArtPreserved": true,
+  "nativePlacementQualified": true,
+  "nativeUpgradeChainQualified": true,
+  "existingSaveQualified": true,
+  "freshReloadQualified": true,
+  "ownedBrowsersClosed": true,
+  "independentlyParsedReferences": 208,
+  "representativeBounds": {
+    "BDG1": {
+      "before": [
+        222,
+        203
+      ],
+      "after": [
+        155,
+        141
+      ]
+    },
+    "BDG2": {
+      "before": [
+        232,
+        294
+      ],
+      "after": [
+        162,
+        204
+      ]
+    },
+    "BDG3": {
+      "before": [
+        241,
+        338
+      ],
+      "after": [
+        169,
+        236
+      ]
+    }
+  },
+  "sourcePolicies": {
+    "scripts/prepare-bards-world-scale.py": {
+      "bytes": 2273,
+      "sha256": "5bf216ab6e31b15551144acc74ca2ca55603fa602fe0f0954864c1cf2454308a"
+    },
+    "scripts/lib/community_building_scale.py": {
+      "bytes": 10583,
+      "sha256": "e091f016a5b56704cfe02307a39a99a4398a901826823d2c5445699fb8cab041"
+    },
+    "scripts/lib/bards_world_scale_release.py": {
+      "bytes": 4940,
+      "sha256": "fca0b30e56266e158869cdc76952374610d8befcf24be3a9e46af48d21751165"
+    }
+  },
+  "engineSha256": "e37eb16601316c3322018e54391414bee3c63bb92366921b3dabd6ba0bb1c1f8",
+  "mountedResources": [
+    {
+      "path": "Data/Community-main.cam",
+      "bytes": 45174784,
+      "sha256": "0baa6c3051eb16a0de9ae024e07c941ff6bcb426b564ee0803b3654a06e5d765"
+    },
+    {
+      "path": "DataMX/Community-main.cam",
+      "bytes": 45174784,
+      "sha256": "0baa6c3051eb16a0de9ae024e07c941ff6bcb426b564ee0803b3654a06e5d765"
+    },
+    {
+      "path": "Data/Community_Common.bcd",
+      "bytes": 37409957,
+      "sha256": "d0902fa5653d87cd6c5e0d57eb02941ffa3c5c9c3a166d5aca74be8d04b5c741"
+    }
+  ],
+  "saves": [
+    {
+      "name": "(Freestyle Game) 13 Days.GMP",
+      "bytes": 343193,
+      "sha256": "7cca33296d94bf1a9c00878404a70198232a2aa6627733a6ffb30e3b2cda3f2e"
+    },
+    {
+      "name": "(Freestyle Game) 10 Days.GMP",
+      "bytes": 342035,
+      "sha256": "aa09e0d80e89ef521633da0f85ac24a524b8aff11d9223dee72387ee4d98df62"
+    }
+  ],
+  "trials": [
+    {
+      "name": "bards-baseline-001",
+      "purpose": "Load and resave the prior world with the original published CAM; compare the full Hall beside stock Warriors Guild."
+    },
+    {
+      "name": "bards-candidate-002",
+      "purpose": "Automatically update both editions from the published CAM, load the exact original-art ten-day save, verify existing Hall3 700 HP and one hero; blocked and green clear-ground placement; construct Hall1 300 HP and upgrade to Hall2 500 HP then Hall3 700 HP; native save at day13."
+    },
+    {
+      "name": "bards-reload-003",
+      "purpose": "Fresh browser and engine load the exact 343193-byte day13 native save; both Hall3 positions and health retained, old Hall one hero and new Hall zero heroes; both save files unchanged by loading."
+    }
+  ],
+  "limitations": [
+    "Restoration and build-anything cheats bound construction and raid interference; this is not an economy/balance qualification.",
+    "Owned isolated Chrome only, one native engine at a time, explicit muted audio and deadline/RSS guards.",
+    "No paired co-op or host-crash fix claimed."
+  ],
+  "privateEvidence": {
+    "independent-preservation.json": {
+      "bytes": 713,
+      "sha256": "295238368461c9b9260cf4879577655ab66437da7d32660a6605ab9fbc0a60e9"
+    },
+    "original-hall3-full.png": {
+      "bytes": 813746,
+      "sha256": "b90fcaec2d388718b7a7971034da77e618061cecf7be226e13a02b805f29380d"
+    },
+    "smaller-existing-hall3.png": {
+      "bytes": 833782,
+      "sha256": "6dd08a3d7ee607d573ad2ea7b88335b44d88798ee7a5f195ef06c9ec099120a0"
+    },
+    "placement-invalid.png": {
+      "bytes": 864843,
+      "sha256": "b62ed265a7538f0ee1f26ed466ff966e7b6c0c95daf25de87915bdb3ada9faca"
+    },
+    "placement-valid.png": {
+      "bytes": 837631,
+      "sha256": "080695297f26b534451a7736727e81835c328742f5eea18f5f6b99451117760b"
+    },
+    "tier1-built.png": {
+      "bytes": 878423,
+      "sha256": "c2a11af6518311d402be2cc252bd992c0b5f7179b5079b1b76bf6fb74284e7db"
+    },
+    "tier2-built.png": {
+      "bytes": 873536,
+      "sha256": "8b254d8bda2b0869ee63716f7969f779cdb3b7ae5a2203f8dc202bf2d9c1cdc5"
+    },
+    "tier3-built.png": {
+      "bytes": 878114,
+      "sha256": "7ffad64ccd8f1b1cbc2db4ca5f6b2a391b786fca7724d0469a3326ed092770f2"
+    },
+    "reloaded-world.png": {
+      "bytes": 876041,
+      "sha256": "d679e7c80cbca72694f1f2d003c1d9d2d85d764b66f830dcc7c3674039575d5a"
+    },
+    "reloaded-existing-hall3.png": {
+      "bytes": 840503,
+      "sha256": "bbe9517e37645d68e8a8891c011f6a71279053fb3a8b114df753c3d03cb1ffc0"
+    },
+    "candidate-saves-mounted.json": {
+      "bytes": 680,
+      "sha256": "768fa2f606a4c4ee5449469db82b2578c337529c3cab585ad0c85bade64f2ddc"
+    },
+    "reloaded-saves-mounted.json": {
+      "bytes": 863,
+      "sha256": "4f1c46e328c19f9d8e44e944755f50b723de527e61e5aedb429f6b38dee1801a"
+    }
+  }
+}
