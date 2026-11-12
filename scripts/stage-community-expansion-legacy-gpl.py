@@ -106,8 +106,9 @@ def stage(args):
         raise ValueError('Preserve prior source stages; choose a fresh output')
     ancestor_raw, ancestor, _, old = load(args.creator_baseline)
     qualified = json.loads((ROOT / 'content/community-mods/source-preparation-verification.json').read_text())
-    if digest(ancestor_raw) != qualified['sourceStage']:
-        raise ValueError('Creator baseline differs from the qualified original SDK source')
+    from lib.community_creator_baseline import verify_creator_baseline
+    creator_verification = verify_creator_baseline(args.creator_baseline, qualified,
+                                                   getattr(args, 'creator_compiled', None))
     current_raw, current, current_files, live = load(args.current)
     candidate_raw, candidate, _, new = load(args.candidate)
     if (not current.get('phantomResilience') or candidate.get('priorStage') != digest(current_raw)
@@ -227,6 +228,7 @@ def stage(args):
         resourceFiles=candidate['resourceFiles'], privateActivityTexts=candidate['privateActivityTexts'],
         legacyRoutes={edition: digest(raw) for edition, raw in routes.items()},
         communityExpansions=dict(priorStage=digest(current_raw), creatorStage=digest(candidate_raw),
+            creatorBaselineVerification=creator_verification,
             ancestorStage=digest(ancestor_raw), policy=digest(Path(__file__).read_bytes()),
             modifications=replacements, scopeMoves=moved, addedStockAliases=added,
             standardSourceCompletion=standard,
@@ -242,4 +244,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('creator-baseline', 'current', 'candidate', 'standard-package', 'out'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--creator-compiled', type=Path,
+        help='Fresh compiler proof and all three original byte-identical outputs for a recovered baseline')
     print(json.dumps(stage(parser.parse_args())))

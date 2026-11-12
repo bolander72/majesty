@@ -154,6 +154,65 @@ end'''
         self.assertIn('$MJP_Health_Percent(HP, maxHP)', rule)
         self.assertIn('PercentageHPretreat', rule)
 
+    def test_current_adapter_preserves_shipped_phantom_and_updates_both_healing_exports(self):
+        spec = importlib.util.spec_from_file_location('health_policy_current', ROOT / 'scripts/prepare-community-high-level-health.py')
+        policy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(policy)
+        source, stock = self.source_fixture()
+        healing = parse_gpl(source).require(DefinitionKind.FUNCTION, 'Eval_For_Healing').text
+        source += '\n' + healing.replace('Eval_For_Healing', 'MJC_Eval_For_Healing')
+        source += '\nfunction MJP_Scale_Living_HP(integer HP, integer OldMax, integer NewMax) is integer declare begin return HP; end'
+        result = policy.adapt_current(source.encode(), stock).decode()
+        before = {i.key: i.text for i in parse_gpl(source).items}
+        after = {i.key: i.text for i in parse_gpl(result).items}
+        changed = {key[1] for key in before if before[key].rstrip() != after[key].rstrip()}
+        self.assertEqual(changed, {'eval_for_healing', 'mjc_eval_for_healing'})
+        public = after[DefinitionKind.FUNCTION, 'haslowhp']
+        alias = after[DefinitionKind.FUNCTION, 'mjc_haslowhp']
+        self.assertEqual(public.replace('haslowHP', 'MJC_haslowHP', 1), alias)
+        self.assertIn('PercentageHPretreat', alias)
+        with self.assertRaisesRegex(ValueError, 'already present'):
+            policy.adapt_current(result.encode(), stock)
+
+    def test_current_stage_routes_low_health_and_preserves_edition_sources(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            policy, source, payloads, proof = self.prepare_fixture(root)
+            text = payloads['Any/Merged.gpl'].decode()
+            healing = parse_gpl(text).require(DefinitionKind.FUNCTION, 'Eval_For_Healing').text
+            text += '\n' + healing.replace('Eval_For_Healing', 'MJC_Eval_For_Healing')
+            text += '\nfunction MJP_Scale_Living_HP(integer HP, integer OldMax, integer NewMax) is integer declare begin return HP; end'
+            raw = text.encode()
+            (source / 'sources/Any/Merged.gpl').write_bytes(raw)
+            proof['files']['Any/Merged.gpl'] = policy.digest(raw)
+            stock_name = 'SDK/OriginalQuests/GPL/LowLevel.gpl'
+            stock = (root / '.tools/majesty-sdk' / stock_name).read_bytes()
+            target = source / 'stock-fixture' / stock_name
+            target.parent.mkdir(parents=True)
+            target.write_bytes(stock)
+            proof['stockFixture'] = {'inputs': {stock_name: policy.digest(stock)}}
+            proof['legacyFunctionAliases'] = {'Any': {'Eval_For_Healing': 'MJC_Eval_For_Healing'}, 'Majesty': {}, 'MajestyExpansion': {}}
+            route = b'majesty-community-shared-gpl-v2\nEval_For_Healing\tMJC_Eval_For_Healing\n'
+            proof['legacyRoutes'] = {}
+            for scope in ('Majesty', 'MajestyExpansion'):
+                target = source / 'routes' / scope / 'shared-overrides.tsv'
+                target.parent.mkdir(parents=True)
+                target.write_bytes(route)
+                proof['legacyRoutes'][scope] = policy.digest(route)
+            (source / 'source-stage.json').write_text(json.dumps(proof))
+            with patch.object(policy, 'ROOT', root), patch.object(policy, 'verify_compiled_baseline', return_value={'mode': 'test-boundary'}), patch.object(policy, 'CURRENT_ROUTES', proof['legacyRoutes'].copy()), patch.object(policy, 'CURRENT_STOCK', policy.digest(stock)):
+                out = root / 'current-adapted'
+                policy.prepare(source, out, root / 'compiled')
+                for scope in ('Majesty', 'MajestyExpansion'):
+                    self.assertEqual((out / 'sources' / scope / 'Merged.gpl').read_bytes(), payloads[scope + '/Merged.gpl'])
+                    self.assertEqual((out / 'routes' / scope / 'shared-overrides.tsv').read_bytes(), route + b'haslowHP\tMJC_haslowHP\n')
+                helper = (out / 'sources/Any/HighLevelHealth.gpl').read_text()
+                self.assertNotIn('function MJP_Scale_Living_HP', helper)
+                (source / 'routes/Majesty/shared-overrides.tsv').write_bytes(route + b'changed')
+                with self.assertRaisesRegex(ValueError, 'routes changed'):
+                    policy.prepare(source, root / 'refused', root / 'compiled')
+                self.assertFalse((root / 'refused').exists())
+
     def prepare_fixture(self, root):
         spec = importlib.util.spec_from_file_location('health_policy', ROOT / 'scripts/prepare-community-high-level-health.py')
         policy = importlib.util.module_from_spec(spec)

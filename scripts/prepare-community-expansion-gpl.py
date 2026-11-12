@@ -238,8 +238,9 @@ def prepare(args):
     from lib.community_expansion_source_resolutions import resolve as resolve_expansion
     creator_raw = (args.creator_baseline / 'source-stage.json').read_bytes()
     qualified_creator = json.loads((ROOT / 'content/community-mods/source-preparation-verification.json').read_text())
-    if digest(creator_raw) != qualified_creator['sourceStage']:
-        raise ValueError('Require the compiler-qualified original three-guild source stage')
+    from lib.community_creator_baseline import verify_creator_baseline
+    creator_verification = verify_creator_baseline(args.creator_baseline, qualified_creator,
+                                                   getattr(args, 'creator_compiled', None))
     creator = json.loads(creator_raw)
     old_raw = (args.creator_baseline / 'sources/Any/Merged.gpl').read_bytes()
     if digest(old_raw) != creator['files']['Any/Merged.gpl']:
@@ -292,6 +293,7 @@ def prepare(args):
     result = dict(format='majesty-community-expansion-creator-source-stage-v1',
         managerCommit=original.MANAGER_COMMIT, packageInspections=inspections,
         sourceContracts=contracts, priorStage=digest(prior_raw),
+        creatorBaselineVerification=creator_verification,
         files=files, resourceFiles={name: digest(raw) for name, raw in payloads.items()},
         existingDialogIDsPreserved=True, privateActivityTexts=len(texts),
         sourceCompositionQualified=True, existingLegacyAdaptationsReapplied=False,
@@ -315,6 +317,8 @@ if __name__ == '__main__':
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--sdk-runner', type=Path,
         help='Optional executable launcher for the unchanged original SDK compiler proof')
+    parser.add_argument('--creator-compiled', type=Path,
+        help='Fresh compiler proof and all three original byte-identical outputs for a recovered baseline')
     parser.add_argument('--more-heroes-compatible', type=Path,
         help='Verified private paired-cleanup candidate; original package is still required')
     args = parser.parse_args()

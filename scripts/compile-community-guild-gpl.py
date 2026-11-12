@@ -27,6 +27,25 @@ def read(path, limit=16 * 1024 * 1024):
     return path.read_bytes()
 
 
+def trial_rss_mib(rows, root, initial_pids):
+    owned = {root}
+    # Wine's macOS PE processes and server can be reparented to launchd.
+    # Conservatively budget all newly started Wine/PE processes too. Existing
+    # processes stay excluded; cleanup still targets only this trial's prefix.
+    for row in rows:
+        if len(row) != 4 or int(row[0]) in initial_pids:
+            continue
+        name = Path(row[3]).name.casefold()
+        if name.endswith('.exe') or name in {
+                'wine', 'wine64', 'wineserver', 'wine-preloader', 'wine64-preloader'}:
+            owned.add(int(row[0]))
+    for _ in range(12):
+        owned.update(int(row[0]) for row in rows
+                     if len(row) == 4 and int(row[1]) in owned)
+    return sum(int(row[2]) for row in rows
+               if len(row) == 4 and int(row[0]) in owned) / 1024
+
+
 def prepare_inputs(source, compiler, output):
     if output.exists():
         raise ValueError('Preserve prior compiler outputs; choose a fresh directory')
@@ -75,8 +94,12 @@ def compile_sources(args):
     from majesty_cam.bcd import definition_keys
     from majesty_cam.gpl import parse_gpl, parse_dat
 
+    wine_arch = getattr(args, 'wine_arch', 'win32')
+    wine_version = subprocess.check_output([str(args.wine.resolve()), '--version'], text=True).strip()
+    initial_pids = {int(row.split()[0]) for row in subprocess.check_output(
+        ['ps', '-axo', 'pid='], text=True).splitlines() if row.strip()}
     env = dict(os.environ, WINEPREFIX=str(args.out.resolve() / 'wine-prefix'),
-               WINEARCH='win32', WINEDEBUG='-all',
+               WINEARCH=wine_arch, WINEDEBUG='-all',
                WINEDLLOVERRIDES='winemenubuilder.exe=d;mscoree=d;mshtml=d')
     started, peak, outputs = time.monotonic(), 0, {}
     process = None
@@ -90,12 +113,7 @@ def compile_sources(args):
                 while process.poll() is None:
                     rows = [row.split(None, 3) for row in subprocess.check_output(
                         ['ps', '-axo', 'pid=,ppid=,rss=,comm='], text=True).splitlines()]
-                    owned = {process.pid}
-                    for _ in range(12):
-                        owned.update(int(row[0]) for row in rows
-                                     if len(row) == 4 and int(row[1]) in owned)
-                    rss = sum(int(row[2]) for row in rows
-                              if len(row) == 4 and int(row[0]) in owned) / 1024
+                    rss = trial_rss_mib(rows, process.pid, initial_pids)
                     peak = max(peak, rss)
                     if rss > 2048 or time.monotonic() - started > 180:
                         raise ValueError('Original SDK trial exceeded its resource/deadline guard')
@@ -131,6 +149,8 @@ def compile_sources(args):
                        capture_output=True, timeout=10)
     receipt = dict(format='majesty-community-original-sdk-compile-v1',
         compilerSha256=COMPILER_SHA, sourceStage=proof_digest, outputs=outputs,
+        wineVersion=wine_version, wineArch=wine_arch,
+        rssIncludesNewDetachedWineProcesses=True,
         elapsedSeconds=round(time.monotonic() - started, 2), peakRssMiB=round(peak, 1),
         compiled=True, compilerSourceDefinitionsQualified=True,
         compiledBytesExportedQualified=True, playerProfilesAccessed=False,
@@ -143,6 +163,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('source', 'compiler', 'manager', 'wine', 'wineserver', 'out'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--wine-arch', choices=('win32', 'win64'), default='win32',
+                        help='Architecture of the fresh prefix; qualify the original SDK on this runner first')
     args = parser.parse_args()
     try:
         receipt = compile_sources(args)
