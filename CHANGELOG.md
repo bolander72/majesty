@@ -1,5 +1,10 @@
 # Changelog
 
+## Direct game launch repair — November 12, 2026
+
+- Keep Git deployments on the already published player and content bindings, preventing legitimate cached game resources from being misidentified as custom content after a merge.
+- Preserve direct loading and native game startup at the root URL, all PR #1 source changes, player saves and custom-content protection. Fail the build when the published release pointer is missing.
+
 ## Guild scale review — private candidates, November 12, 2026
 
 - Prepare Bards Hall and Alchemist Lab at 78% of their current world scale, and Dark Paladin's Guild at 90%, including all three tiers and matching placement geometry. Preserve native UI artwork, original art slots, Adventurers Guild and Zoo. Candidates are not installed or published; runtime qualification is tracked in `docs/community-guild-review-2026-11-12.md`.
